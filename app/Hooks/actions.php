@@ -21,3 +21,5 @@ $app->addAction('admin_menu', 'AdminMenuHandler@add');
 
 // $app->addAction('init', 'CPTHandler@registerPostTypes');
 
+
+(new \FluentCartElementorBlocks\App\Modules\Integrations\Elementor\ElementorIntegration())->register();

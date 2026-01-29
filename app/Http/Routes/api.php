@@ -1,11 +1,17 @@
 <?php
 
+
+
 /**
- * @var $router WPFluentMicro\Framework\Http\Router\Router
+ * @var $router Router
  */
 
+use FluentCart\Framework\Http\Router;
+use FluentCartElementorBlocks\App\Http\Controllers\ProductController;
 use FluentCartElementorBlocks\App\Http\Policies\UserPolicy;
 
-$router->withPolicy(UserPolicy::class)->group(function($router) {
-	$router->get('/demo-users', 'UserController@users');
+$router->prefix('products')->withPolicy('ProductPolicy')->group(function (Router $router) {
+    $router->get('/search-product-variant-options', [ProductController::class, 'searchProductVariantOptions'])->meta([
+        'permissions' => 'products/view'
+    ]);
 });

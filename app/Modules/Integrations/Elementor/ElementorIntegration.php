@@ -2,11 +2,12 @@
 
 namespace FluentCartElementorBlocks\App\Modules\Integrations\Elementor;
 
-use FluentCart\App\Modules\Integrations\Elementor\Widgets\AddToCartWidget;
-use FluentCart\App\Modules\Integrations\Elementor\Widgets\BuyNowWidget;
-use FluentCart\App\Modules\Integrations\Elementor\Controls\ProductSelectControl;
+
 use FluentCart\App\Helpers\Helper;
-use FluentCart\App\Vite;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Controls\ProductSelectControl;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\AddToCartWidget;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\BuyNowWidget;
+use FluentCartElementorBlocks\App\Utils\Enqueuer\Enqueue;
 
 class ElementorIntegration
 {
@@ -29,16 +30,15 @@ class ElementorIntegration
 
     public function registerControls($controls_manager)
     {
-        if (class_exists('\FluentCart\App\Modules\Integrations\Elementor\Controls\ProductSelectControl')) {
-            $controls_manager->register(new ProductSelectControl());
-        }
+        $controls_manager->register(new ProductSelectControl());
     }
 
     public function enqueueEditorScripts()
     {
         $restInfo = Helper::getRestInfo();
 
-        Vite::enqueueScript(
+
+        Enqueue::script(
             'fluent-cart-elementor-editor',
             'elementor/editor.js',
             ['elementor-editor', 'jquery'],
