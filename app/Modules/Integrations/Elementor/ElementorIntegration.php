@@ -4,6 +4,7 @@ namespace FluentCartElementorBlocks\App\Modules\Integrations\Elementor;
 
 
 use FluentCart\App\Helpers\Helper;
+use FluentCart\App\Services\Renderer\MiniCartRenderer;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Controls\ProductSelectControl;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\AddToCartWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\BuyNowWidget;
@@ -27,7 +28,10 @@ class ElementorIntegration
     {
         $widgets_manager->register(new AddToCartWidget());
         $widgets_manager->register(new BuyNowWidget());
-        $widgets_manager->register(new MiniCartWidget());
+        if(class_exists(MiniCartRenderer::class)){
+            $widgets_manager->register(new MiniCartWidget());
+        }
+
     }
 
     public function registerControls($controls_manager)
