@@ -79,9 +79,17 @@ class ElementorShopAppRenderer extends ShopAppRenderer
         ?>
         <div class="fct-products-wrapper" data-fluent-cart-shop-app data-fluent-cart-product-wrapper role="main" aria-label="<?php esc_attr_e('Products', 'fluent-cart'); ?>">
             <?php
-            // Render before-wrapper sections (view_switcher, sort_by)
-            foreach ($beforeWrapper as $type) {
-                $this->renderLayoutSection($type, $filterRenderer);
+            // Render before-wrapper sections (view_switcher, sort_by) in a shared container
+            if (!empty($beforeWrapper)) {
+                ?>
+                <div class="fct-shop-toolbar">
+                    <?php
+                    foreach ($beforeWrapper as $type) {
+                        $this->renderLayoutSection($type, $filterRenderer);
+                    }
+                    ?>
+                </div>
+                <?php
             }
 
             if (!empty($insideWrapper)) {
@@ -148,7 +156,7 @@ class ElementorShopAppRenderer extends ShopAppRenderer
     {
         if ($this->isFilterEnabled) {
             ?>
-            <div class="fct-shop-view-switcher-wrap">
+            <div class="fct-shop-sort-by-wrap">
                 <?php $this->renderSortByFilter(); ?>
             </div>
             <?php
