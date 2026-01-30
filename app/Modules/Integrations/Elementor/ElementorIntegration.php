@@ -9,6 +9,7 @@ use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Controls\Produc
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\AddToCartWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\BuyNowWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\MiniCartWidget;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ShopAppWidget;
 use FluentCartElementorBlocks\App\Utils\Enqueuer\Enqueue;
 
 class ElementorIntegration
@@ -31,6 +32,7 @@ class ElementorIntegration
         if(class_exists(MiniCartRenderer::class)){
             $widgets_manager->register(new MiniCartWidget());
         }
+        $widgets_manager->register(new ShopAppWidget());
 
     }
 
