@@ -41,6 +41,26 @@ class ShopAppWidget extends Widget_Base
         return ['products', 'shop', 'store', 'commerce', 'fluent', 'grid', 'list'];
     }
 
+    public function get_style_depends()
+    {
+        // Register+enqueue FluentCart product archive styles so they're
+        // available in the Elementor editor preview iframe.
+        AssetLoader::loadProductArchiveAssets();
+
+        $app = \FluentCart\App\App::getInstance();
+        $slug = $app->config->get('app.slug');
+
+        return [
+            'fluentcart-product-card-page-css',
+            'fluentcart-single-product-css',
+            'fluentcart-similar-product-css',
+            'fluentcart-add-to-cart-btn-css',
+            'fluentcart-direct-checkout-btn-css',
+            $slug . '-fluentcart-product-page-css',
+            $slug . '-fluentcart-product-filter-slider-css',
+        ];
+    }
+
     protected function register_controls()
     {
         $this->registerContentControls();
