@@ -11,12 +11,19 @@ class ElementorShopAppHandler extends ShopAppHandler
 {
     protected $cardElements = [];
 
+    protected $shopLayout = [];
+
     protected $clientId = '';
 
     public function setCardElements(array $cardElements)
     {
         $this->cardElements = $cardElements;
         $this->clientId = 'el_' . md5(wp_json_encode($cardElements) . wp_unique_id());
+    }
+
+    public function setShopLayout(array $shopLayout)
+    {
+        $this->shopLayout = $shopLayout;
     }
 
     public function renderView()
@@ -96,6 +103,7 @@ class ElementorShopAppHandler extends ShopAppHandler
         $config = $this->buildQueryConfig();
         $config['card_elements'] = $this->cardElements;
         $config['client_id'] = $this->clientId;
+        $config['shop_layout'] = $this->shopLayout;
         return $config;
     }
 }

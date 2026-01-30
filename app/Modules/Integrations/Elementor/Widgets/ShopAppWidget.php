@@ -64,6 +64,7 @@ class ShopAppWidget extends Widget_Base
     protected function register_controls()
     {
         $this->registerContentControls();
+        $this->registerShopLayoutControls();
         $this->registerCardLayoutControls();
         $this->registerFilterControls();
         $this->registerStyleControls();
@@ -185,6 +186,54 @@ class ShopAppWidget extends Widget_Base
                 'label_off'    => esc_html__('No', 'fluent-cart'),
                 'return_value' => 'yes',
                 'default'      => 'yes',
+            ]
+        );
+
+        $this->end_controls_section();
+    }
+
+    private function registerShopLayoutControls()
+    {
+        $this->start_controls_section(
+            'shop_layout_section',
+            [
+                'label' => esc_html__('Shop Layout', 'fluent-cart'),
+                'tab'   => Controls_Manager::TAB_CONTENT,
+            ]
+        );
+
+        $repeater = new Repeater();
+
+        $repeater->add_control(
+            'element_type',
+            [
+                'label'   => esc_html__('Section', 'fluent-cart'),
+                'type'    => Controls_Manager::SELECT,
+                'default' => 'view_switcher',
+                'options' => [
+                    'view_switcher' => esc_html__('View Switcher', 'fluent-cart'),
+                    'sort_by'       => esc_html__('Sort By', 'fluent-cart'),
+                    'filter'        => esc_html__('Filter', 'fluent-cart'),
+                    'product_grid'  => esc_html__('Product Grid', 'fluent-cart'),
+                    'paginator'     => esc_html__('Paginator', 'fluent-cart'),
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'shop_layout',
+            [
+                'label'       => esc_html__('Layout Sections', 'fluent-cart'),
+                'type'        => Controls_Manager::REPEATER,
+                'fields'      => $repeater->get_controls(),
+                'default'     => [
+                    ['element_type' => 'view_switcher'],
+                    ['element_type' => 'sort_by'],
+                    ['element_type' => 'filter'],
+                    ['element_type' => 'product_grid'],
+                    ['element_type' => 'paginator'],
+                ],
+                'title_field' => '{{{ {"view_switcher":"View Switcher","sort_by":"Sort By","filter":"Filter","product_grid":"Product Grid","paginator":"Paginator"}[element_type] || element_type }}}',
             ]
         );
 
@@ -727,8 +776,17 @@ class ShopAppWidget extends Widget_Base
             ['element_type' => 'button'],
         ];
 
+        // Extract shop layout sections from the repeater
+        $shopLayout = $settings['shop_layout'] ?? [
+            ['element_type' => 'view_switcher'],
+            ['element_type' => 'sort_by'],
+            ['element_type' => 'filter'],
+            ['element_type' => 'product_grid'],
+            ['element_type' => 'paginator'],
+        ];
+
         // Build a transient cache key based on the relevant settings
-        $cacheKey = 'fce_shop_app_' . md5(wp_json_encode($shortcodeAtts) . wp_json_encode($cardElements));
+        $cacheKey = 'fce_shop_app_' . md5(wp_json_encode($shortcodeAtts) . wp_json_encode($cardElements) . wp_json_encode($shopLayout));
 
         if (!$isEditor) {
             $cached = get_transient($cacheKey);
@@ -741,6 +799,7 @@ class ShopAppWidget extends Widget_Base
 
         $handler = new ElementorShopAppHandler();
         $handler->setCardElements($cardElements);
+        $handler->setShopLayout($shopLayout);
         $output  = $handler->handelShortcodeCall($shortcodeAtts);
 
         $html = '<div class="fluent-cart-elementor-shop-app">' . $output . '</div>';
