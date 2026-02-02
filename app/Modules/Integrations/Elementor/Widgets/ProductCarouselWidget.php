@@ -13,6 +13,7 @@ use FluentCart\App\Models\Product;
 use FluentCart\App\Modules\Templating\AssetLoader;
 use FluentCart\App\Services\Renderer\ProductCardRender;
 use FluentCart\App\Vite;
+use FluentCartElementorBlocks\App\Utils\Enqueuer\Enqueue;
 
 class ProductCarouselWidget extends Widget_Base
 {
@@ -66,6 +67,7 @@ class ProductCarouselWidget extends Widget_Base
         return [
             $slug . '-fluentcart-swiper-js',
             'fluentcart-product-carousel',
+            'fluentcart-product-carousel-elementor',
         ];
     }
 
@@ -100,6 +102,15 @@ class ProductCarouselWidget extends Widget_Base
             'fluentcart-product-carousel',
             'public/carousel/products/product-carousel.js',
             [$slug . '-fluentcart-swiper-js']
+        );
+
+        // Register Elementor frontend handler for editor re-initialization
+        Enqueue::script(
+            'fluentcart-product-carousel-elementor',
+            'elementor/product-carousel-elementor.js',
+            ['jquery', 'fluentcart-product-carousel'],
+            FLUENTCART_VERSION,
+            true
         );
     }
 
