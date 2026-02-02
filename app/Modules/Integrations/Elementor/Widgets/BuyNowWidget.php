@@ -12,6 +12,7 @@ use FluentCart\App\Models\Product;
 use FluentCart\App\Models\ProductVariation;
 use FluentCart\App\Services\Renderer\ProductRenderer;
 use FluentCart\App\Modules\Templating\AssetLoader;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Controls\ProductVariationSelectControl;
 
 class BuyNowWidget extends Widget_Base
 {
@@ -55,7 +56,7 @@ class BuyNowWidget extends Widget_Base
             'variant_id',
             [
                 'label' => esc_html__('Select Product Variation', 'fluent-cart'),
-                'type' => 'fluent_product_select',
+                'type' => (new ProductVariationSelectControl())->get_type(),
                 'label_block' => true,
                 'description' => esc_html__('Search and select the product variation (Non-subscription only).', 'fluent-cart'),
                 'default' => '',
@@ -243,6 +244,7 @@ class BuyNowWidget extends Widget_Base
 
     protected function render()
     {
+
         $settings = $this->get_settings_for_display();
         $variantId = $settings['variant_id'];
 

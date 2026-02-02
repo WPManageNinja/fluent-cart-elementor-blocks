@@ -13,6 +13,7 @@ use FluentCart\App\Models\Product;
 use FluentCart\App\Modules\Templating\AssetLoader;
 use FluentCart\App\Services\Renderer\ProductCardRender;
 use FluentCart\App\Vite;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Controls\ProductSelectControl;
 use FluentCartElementorBlocks\App\Utils\Enqueuer\Enqueue;
 
 class ProductCarouselWidget extends Widget_Base
@@ -142,7 +143,7 @@ class ProductCarouselWidget extends Widget_Base
             'product_ids',
             [
                 'label'       => esc_html__('Select Products', 'fluent-cart'),
-                'type'        => 'fluent_product_select',
+                'type'        => (new ProductSelectControl())->get_type(),
                 'multiple'    => true,
                 'label_block' => true,
                 'description' => esc_html__('Search and select the products to display in the carousel.', 'fluent-cart'),
