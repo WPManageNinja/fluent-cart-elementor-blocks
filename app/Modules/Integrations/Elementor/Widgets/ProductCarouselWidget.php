@@ -44,6 +44,7 @@ class ProductCarouselWidget extends Widget_Base
     public function get_style_depends()
     {
         AssetLoader::loadProductArchiveAssets();
+        $this->registerCarouselAssets();
 
         $app = \FluentCart\App\App::getInstance();
         $slug = $app->config->get('app.slug');
@@ -51,17 +52,55 @@ class ProductCarouselWidget extends Widget_Base
         return [
             'fluentcart-product-card-page-css',
             $slug . '-fluentcart-swiper-css',
+            'fluentcart-product-carousel',
         ];
     }
 
     public function get_script_depends()
     {
+        $this->registerCarouselAssets();
+
         $app = \FluentCart\App\App::getInstance();
         $slug = $app->config->get('app.slug');
 
         return [
             $slug . '-fluentcart-swiper-js',
+            'fluentcart-product-carousel',
         ];
+    }
+
+    private function registerCarouselAssets()
+    {
+        static $registered = false;
+        if ($registered) {
+            return;
+        }
+        $registered = true;
+
+        $app = \FluentCart\App\App::getInstance();
+        $slug = $app->config->get('app.slug');
+
+        Vite::enqueueStaticScript(
+            $slug . '-fluentcart-swiper-js',
+            'public/lib/swiper/swiper-bundle.min.js',
+            []
+        );
+
+        Vite::enqueueStaticStyle(
+            $slug . '-fluentcart-swiper-css',
+            'public/lib/swiper/swiper-bundle.min.css'
+        );
+
+        Vite::enqueueStyle(
+            'fluentcart-product-carousel',
+            'public/carousel/products/style/product-carousel.scss'
+        );
+
+        Vite::enqueueScript(
+            'fluentcart-product-carousel',
+            'public/carousel/products/product-carousel.js',
+            [$slug . '-fluentcart-swiper-js']
+        );
     }
 
     protected function register_controls()
@@ -779,9 +818,9 @@ class ProductCarouselWidget extends Widget_Base
             return;
         }
 
-        // Load assets
+        // Load assets (also registered in get_style_depends/get_script_depends for editor)
         AssetLoader::loadProductArchiveAssets();
-        $this->enqueueCarouselAssets();
+        $this->registerCarouselAssets();
 
         // Fetch products
         $products = Product::query()
@@ -810,34 +849,6 @@ class ProductCarouselWidget extends Widget_Base
 
         // Render carousel
         $this->renderCarousel($products, $carouselSettings, $cardElements, $priceFormat);
-    }
-
-    private function enqueueCarouselAssets()
-    {
-        $app = \FluentCart\App\App::getInstance();
-        $slug = $app->config->get('app.slug');
-
-        Vite::enqueueStaticScript(
-            $slug . '-fluentcart-swiper-js',
-            'public/lib/swiper/swiper-bundle.min.js',
-            [$slug . '-app']
-        );
-
-        Vite::enqueueStaticStyle(
-            $slug . '-fluentcart-swiper-css',
-            'public/lib/swiper/swiper-bundle.min.css'
-        );
-
-        Vite::enqueueStyle(
-            'fluentcart-product-carousel',
-            'public/carousel/products/style/product-carousel.scss'
-        );
-
-        Vite::enqueueScript(
-            'fluentcart-product-carousel',
-            'public/carousel/products/product-carousel.js',
-            []
-        );
     }
 
     private function buildCarouselSettings(array $settings): array
