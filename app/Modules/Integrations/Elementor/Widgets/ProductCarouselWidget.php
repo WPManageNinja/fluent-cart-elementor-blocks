@@ -889,32 +889,32 @@ class ProductCarouselWidget extends Widget_Base
                             </div>
                         <?php endforeach; ?>
                     </div>
+
+                    <?php if ($carouselSettings['arrows'] === 'yes') : ?>
+                        <div class="fct-carousel-controls fct-arrows-<?php echo esc_attr($arrowsSize); ?>">
+                            <div class="swiper-button-prev" aria-label="<?php esc_attr_e('Previous slide', 'fluent-cart'); ?>">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                                     stroke="currentColor" stroke-width="2"
+                                     stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="15 18 9 12 15 6"></polyline>
+                                </svg>
+                            </div>
+                            <div class="swiper-button-next" aria-label="<?php esc_attr_e('Next slide', 'fluent-cart'); ?>">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                                     stroke="currentColor" stroke-width="2"
+                                     stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="9 18 15 12 9 6"></polyline>
+                                </svg>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php if ($carouselSettings['dots'] === 'yes') : ?>
+                        <div class="fct-carousel-pagination fct-pagination-<?php echo esc_attr($paginationType); ?>">
+                            <div class="swiper-pagination"></div>
+                        </div>
+                    <?php endif; ?>
                 </div>
-
-                <?php if ($carouselSettings['arrows'] === 'yes') : ?>
-                    <div class="fct-carousel-controls fct-arrows-<?php echo esc_attr($arrowsSize); ?>">
-                        <div class="swiper-button-prev" aria-label="<?php esc_attr_e('Previous slide', 'fluent-cart'); ?>">
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
-                                 stroke="currentColor" stroke-width="2"
-                                 stroke-linecap="round" stroke-linejoin="round">
-                                <polyline points="15 18 9 12 15 6"></polyline>
-                            </svg>
-                        </div>
-                        <div class="swiper-button-next" aria-label="<?php esc_attr_e('Next slide', 'fluent-cart'); ?>">
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
-                                 stroke="currentColor" stroke-width="2"
-                                 stroke-linecap="round" stroke-linejoin="round">
-                                <polyline points="9 18 15 12 9 6"></polyline>
-                            </svg>
-                        </div>
-                    </div>
-                <?php endif; ?>
-
-                <?php if ($carouselSettings['dots'] === 'yes') : ?>
-                    <div class="fct-carousel-pagination fct-pagination-<?php echo esc_attr($paginationType); ?>">
-                        <div class="swiper-pagination"></div>
-                    </div>
-                <?php endif; ?>
             </div>
         </div>
         <?php
