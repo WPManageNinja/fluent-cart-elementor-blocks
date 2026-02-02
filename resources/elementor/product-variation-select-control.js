@@ -21,7 +21,7 @@
             return;
         }
 
-        var FluentProductSelect = ControlBaseData.extend({
+        var FluentProductVariationSelect = ControlBaseData.extend({
             // Explicitly define UI map
             ui: function() {
                 return {
@@ -156,7 +156,7 @@
             }
         });
 
-        elementor.addControlView('fluent_product_select', FluentProductSelect);
+        elementor.addControlView('fluent_product_variation_select', FluentProductVariationSelect);
     };
 
     // Attempt to init immediately
