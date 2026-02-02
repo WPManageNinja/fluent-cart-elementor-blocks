@@ -7,11 +7,13 @@ use FluentCart\App\Helpers\Helper;
 use FluentCart\App\Services\Renderer\MiniCartRenderer;
 use FluentCart\App\Services\Renderer\ProductCardRender;
 use FluentCart\Framework\Support\Arr;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Controls\ProductSelectControl;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Controls\ProductVariationSelectControl;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Renderers\ElementorShopAppRenderer;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\AddToCartWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\BuyNowWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\MiniCartWidget;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ProductCarouselWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ShopAppWidget;
 use FluentCartElementorBlocks\App\Utils\Enqueuer\Enqueue;
 
@@ -38,12 +40,13 @@ class ElementorIntegration
             $widgets_manager->register(new MiniCartWidget());
         }
         $widgets_manager->register(new ShopAppWidget());
-
+        $widgets_manager->register(new ProductCarouselWidget());
     }
 
     public function registerControls($controls_manager)
     {
         $controls_manager->register(new ProductVariationSelectControl());
+        $controls_manager->register(new ProductSelectControl());
     }
 
     public function preloadProductCollectionsAjax($view, $args)
@@ -87,10 +90,17 @@ class ElementorIntegration
     {
         $restInfo = Helper::getRestInfo();
 
-
         Enqueue::script(
             'fluent-cart-elementor-editor',
             'elementor/product-variation-select-control.js',
+            ['elementor-editor', 'jquery'],
+            FLUENTCART_VERSION,
+            true
+        );
+
+        Enqueue::script(
+            'fluent-cart-elementor-product-select',
+            'elementor/product-select-control.js',
             ['elementor-editor', 'jquery'],
             FLUENTCART_VERSION,
             true
