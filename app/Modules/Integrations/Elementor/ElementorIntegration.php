@@ -14,6 +14,7 @@ use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\AddToCa
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\BuyNowWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\MiniCartWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ProductCarouselWidget;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ProductCategoriesListWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ShopAppWidget;
 use FluentCartElementorBlocks\App\Utils\Enqueuer\Enqueue;
 
@@ -41,6 +42,7 @@ class ElementorIntegration
         }
         $widgets_manager->register(new ShopAppWidget());
         $widgets_manager->register(new ProductCarouselWidget());
+        $widgets_manager->register(new ProductCategoriesListWidget());
     }
 
     public function registerControls($controls_manager)
