@@ -92,7 +92,11 @@ fi
 echo -e "${BLUE}📊 Found approximately $TOTAL_FILES files to zip${NC}"
 
 # Progress bar function
+PROGRESS_COMPLETED=false
 show_progress() {
+    # Skip if already at 100%
+    [[ "$PROGRESS_COMPLETED" == true ]] && return
+
     local current=$1
     local total=$2
     local width=50
@@ -102,8 +106,11 @@ show_progress() {
     local remaining=$(( width - completed ))
 
     local bar=""
-    if [[ "$current" -eq "$total" ]]; then
+    if [[ "$current" -ge "$total" ]]; then
         bar=$(printf '█%.0s' $(seq 1 $width))
+        PROGRESS_COMPLETED=true
+        percentage=100
+        current=$total
     else
         bar=$(printf '█%.0s' $(seq 1 $completed))
         bar+=$(printf '░%.0s' $(seq 1 $remaining))
