@@ -8,7 +8,7 @@ use FluentCartElementorBlocks\Framework\Framework\Support\Arr;
 class Vite extends Enqueuer
 {
 
-    protected static $env = 'DEVELOPMENT_MODE';
+    protected static $env = 'PRODUCTION_MODE';
 
     /**
      * @method static enqueueScript(string $handle, string $src, array $dependency = [], string|null $version = null, bool|null $inFooter = false)
@@ -45,7 +45,7 @@ class Vite extends Enqueuer
             return;
         }
 
-        $manifestPath = App::make('path.assets') . 'manifest.json';
+        $manifestPath = App::make('path.assets') .DIRECTORY_SEPARATOR. '.vite/manifest.json';
 
         if (!file_exists($manifestPath)) {
             throw new \Exception('Vite Manifest Not Found. Run : npm run dev or npm run prod');
