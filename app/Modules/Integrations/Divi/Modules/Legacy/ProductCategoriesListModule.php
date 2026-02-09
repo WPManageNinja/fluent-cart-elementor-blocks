@@ -12,8 +12,17 @@ class ProductCategoriesListModule extends \ET_Builder_Module
 
     public function init()
     {
-        $this->name = esc_html__('FluentCart Product Categories', 'fluentcart-elementor-blocks');
-        $this->icon = 'N';
+        $this->name             = esc_html__('FluentCart Product Categories', 'fluentcart-elementor-blocks');
+        $this->icon             = 'N';
+        $this->main_css_element = '%%order_class%%';
+
+        $this->settings_modal_toggles = [
+            'general' => [
+                'toggles' => [
+                    'main_content' => esc_html__('Content', 'fluentcart-elementor-blocks'),
+                ],
+            ],
+        ];
     }
 
     public function get_fields()
@@ -68,31 +77,35 @@ class ProductCategoriesListModule extends \ET_Builder_Module
 
     public function render($attrs, $content, $render_slug)
     {
-        $app = \FluentCart\App\App::getInstance();
-        $slug = $app->config->get('app.slug');
+        try {
+            $app = \FluentCart\App\App::getInstance();
+            $slug = $app->config->get('app.slug');
 
-        Vite::enqueueStyle(
-            $slug . '-product-categories-list',
-            'public/product-categories-list/product-categories-list.scss'
-        );
+            Vite::enqueueStyle(
+                $slug . '-product-categories-list',
+                'public/product-categories-list/product-categories-list.scss'
+            );
 
-        Vite::enqueueScript(
-            $slug . '-product-categories-list-js',
-            'public/product-categories-list/product-categories-list.js'
-        );
+            Vite::enqueueScript(
+                $slug . '-product-categories-list-js',
+                'public/product-categories-list/product-categories-list.js'
+            );
 
-        $atts = [
-            'display_style'      => $this->props['display_style'] ?? 'list',
-            'show_product_count' => ($this->props['show_product_count'] ?? 'on') === 'on',
-            'show_hierarchy'     => ($this->props['show_hierarchy'] ?? 'on') === 'on',
-            'show_empty'         => ($this->props['show_empty'] ?? 'off') === 'on',
-            'is_shortcode'       => true,
-        ];
+            $atts = [
+                'display_style'      => $this->props['display_style'] ?? 'list',
+                'show_product_count' => ($this->props['show_product_count'] ?? 'on') === 'on',
+                'show_hierarchy'     => ($this->props['show_hierarchy'] ?? 'on') === 'on',
+                'show_empty'         => ($this->props['show_empty'] ?? 'off') === 'on',
+                'is_shortcode'       => true,
+            ];
 
-        ob_start();
-        (new ProductCategoriesListRenderer())->render($atts);
-        $html = ob_get_clean();
+            ob_start();
+            (new ProductCategoriesListRenderer())->render($atts);
+            $html = ob_get_clean();
 
-        return sprintf('<div class="fluent-cart-divi-categories-list">%s</div>', $html);
+            return sprintf('<div class="fluent-cart-divi-categories-list">%s</div>', $html);
+        } catch (\Throwable $e) {
+            return '<div class="fluent-cart-divi-categories-list"><p>' . esc_html__('Product Categories', 'fluentcart-elementor-blocks') . '</p></div>';
+        }
     }
 }

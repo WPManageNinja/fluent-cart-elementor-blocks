@@ -14,8 +14,17 @@ class BuyNowModule extends \ET_Builder_Module
 
     public function init()
     {
-        $this->name = esc_html__('FluentCart Buy Now', 'fluentcart-elementor-blocks');
-        $this->icon = 'N';
+        $this->name             = esc_html__('FluentCart Buy Now', 'fluentcart-elementor-blocks');
+        $this->icon             = 'N';
+        $this->main_css_element = '%%order_class%%';
+
+        $this->settings_modal_toggles = [
+            'general' => [
+                'toggles' => [
+                    'main_content' => esc_html__('Content', 'fluentcart-elementor-blocks'),
+                ],
+            ],
+        ];
     }
 
     public function get_fields()
@@ -54,32 +63,36 @@ class BuyNowModule extends \ET_Builder_Module
         $variantId = $this->props['variant_id'] ?? '';
 
         if (empty($variantId)) {
-            return '';
+            return '<div class="fluent-cart-divi-buy-now"><p>' . esc_html__('Please enter a Product Variation ID.', 'fluentcart-elementor-blocks') . '</p></div>';
         }
 
-        $variation = ProductVariation::query()->find($variantId);
-        if (!$variation) {
-            return '';
+        try {
+            $variation = ProductVariation::query()->find($variantId);
+            if (!$variation) {
+                return '<div class="fluent-cart-divi-buy-now"><p>' . esc_html__('Variation not found.', 'fluentcart-elementor-blocks') . '</p></div>';
+            }
+
+            $product = Product::query()->find($variation->post_id);
+            if (!$product) {
+                return '<div class="fluent-cart-divi-buy-now"><p>' . esc_html__('Product not found.', 'fluentcart-elementor-blocks') . '</p></div>';
+            }
+
+            AssetLoader::loadAddToCartCss();
+
+            $attributes = [
+                'variant_ids'           => [$variantId],
+                'text'                  => $this->props['button_text'] ?? esc_html__('Buy Now', 'fluentcart-elementor-blocks'),
+                'enable_modal_checkout' => ($this->props['enable_modal_checkout'] ?? 'off') === 'on',
+                'is_shortcode'          => true,
+            ];
+
+            ob_start();
+            (new ProductRenderer($product, ['default_variation_id' => $variantId]))->renderBuyNowButtonBlock($attributes);
+            $html = ob_get_clean();
+
+            return sprintf('<div class="fluent-cart-divi-buy-now">%s</div>', $html);
+        } catch (\Throwable $e) {
+            return '<div class="fluent-cart-divi-buy-now"><p>' . esc_html__('Buy Now', 'fluentcart-elementor-blocks') . '</p></div>';
         }
-
-        $product = Product::query()->find($variation->post_id);
-        if (!$product) {
-            return '';
-        }
-
-        AssetLoader::loadAddToCartCss();
-
-        $attributes = [
-            'variant_ids'           => [$variantId],
-            'text'                  => $this->props['button_text'] ?? esc_html__('Buy Now', 'fluentcart-elementor-blocks'),
-            'enable_modal_checkout' => ($this->props['enable_modal_checkout'] ?? 'off') === 'on',
-            'is_shortcode'          => true,
-        ];
-
-        ob_start();
-        (new ProductRenderer($product, ['default_variation_id' => $variantId]))->renderBuyNowButtonBlock($attributes);
-        $html = ob_get_clean();
-
-        return sprintf('<div class="fluent-cart-divi-buy-now">%s</div>', $html);
     }
 }

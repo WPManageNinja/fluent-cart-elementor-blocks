@@ -16,8 +16,17 @@ class CheckoutModule extends \ET_Builder_Module
 
     public function init()
     {
-        $this->name = esc_html__('FluentCart Checkout', 'fluentcart-elementor-blocks');
-        $this->icon = 'N';
+        $this->name             = esc_html__('FluentCart Checkout', 'fluentcart-elementor-blocks');
+        $this->icon             = 'N';
+        $this->main_css_element = '%%order_class%%';
+
+        $this->settings_modal_toggles = [
+            'general' => [
+                'toggles' => [
+                    'main_content' => esc_html__('Content', 'fluentcart-elementor-blocks'),
+                ],
+            ],
+        ];
     }
 
     public function get_fields()
@@ -39,32 +48,36 @@ class CheckoutModule extends \ET_Builder_Module
 
     public function render($attrs, $content, $render_slug)
     {
-        $this->loadCheckoutStyles();
-        AssetLoader::loadCheckoutAssets();
+        try {
+            $this->loadCheckoutStyles();
+            AssetLoader::loadCheckoutAssets();
 
-        $cart = CartHelper::getCart();
+            $cart = CartHelper::getCart();
 
-        if (!$cart || empty(Arr::get($cart, 'cart_data', []))) {
+            if (!$cart || empty(Arr::get($cart, 'cart_data', []))) {
+                ob_start();
+                (new CartRenderer())->renderEmpty();
+                $emptyHtml = ob_get_clean();
+
+                return sprintf(
+                    '<div class="fluent-cart-divi-checkout"><div class="fce-checkout-empty-cart">%s</div></div>',
+                    $emptyHtml
+                );
+            }
+
+            $checkoutRenderer = new CheckoutRenderer($cart);
+            $layoutType = $this->props['layout_type'] ?? 'two-column';
+
             ob_start();
-            (new CartRenderer())->renderEmpty();
-            $emptyHtml = ob_get_clean();
+            $checkoutRenderer->render([
+                'layout' => $layoutType,
+            ]);
+            $html = ob_get_clean();
 
-            return sprintf(
-                '<div class="fluent-cart-divi-checkout"><div class="fce-checkout-empty-cart">%s</div></div>',
-                $emptyHtml
-            );
+            return sprintf('<div class="fluent-cart-divi-checkout">%s</div>', $html);
+        } catch (\Throwable $e) {
+            return '<div class="fluent-cart-divi-checkout"><p>' . esc_html__('Checkout', 'fluentcart-elementor-blocks') . '</p></div>';
         }
-
-        $checkoutRenderer = new CheckoutRenderer($cart);
-        $layoutType = $this->props['layout_type'] ?? 'two-column';
-
-        ob_start();
-        $checkoutRenderer->render([
-            'layout' => $layoutType,
-        ]);
-        $html = ob_get_clean();
-
-        return sprintf('<div class="fluent-cart-divi-checkout">%s</div>', $html);
     }
 
     private function loadCheckoutStyles()

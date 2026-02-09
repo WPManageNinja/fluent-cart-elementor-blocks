@@ -14,8 +14,17 @@ class ProductCarouselModule extends \ET_Builder_Module
 
     public function init()
     {
-        $this->name = esc_html__('FluentCart Product Carousel', 'fluentcart-elementor-blocks');
-        $this->icon = 'N';
+        $this->name             = esc_html__('FluentCart Product Carousel', 'fluentcart-elementor-blocks');
+        $this->icon             = 'N';
+        $this->main_css_element = '%%order_class%%';
+
+        $this->settings_modal_toggles = [
+            'general' => [
+                'toggles' => [
+                    'main_content' => esc_html__('Content', 'fluentcart-elementor-blocks'),
+                ],
+            ],
+        ];
     }
 
     public function get_fields()
@@ -125,40 +134,44 @@ class ProductCarouselModule extends \ET_Builder_Module
         $productIdsRaw = $this->props['product_ids'] ?? '';
 
         if (empty($productIdsRaw)) {
-            return '';
+            return '<div class="fluent-cart-divi-product-carousel"><p>' . esc_html__('Please enter Product IDs.', 'fluentcart-elementor-blocks') . '</p></div>';
         }
 
-        $productIds = array_map('intval', array_filter(explode(',', $productIdsRaw)));
-        if (empty($productIds)) {
-            return '';
+        try {
+            $productIds = array_map('intval', array_filter(explode(',', $productIdsRaw)));
+            if (empty($productIds)) {
+                return '<div class="fluent-cart-divi-product-carousel"><p>' . esc_html__('No valid Product IDs.', 'fluentcart-elementor-blocks') . '</p></div>';
+            }
+
+            AssetLoader::loadProductArchiveAssets();
+            $this->loadCarouselAssets();
+
+            $products = Product::query()->whereIn('id', $productIds)->get();
+            if ($products->isEmpty()) {
+                return '<div class="fluent-cart-divi-product-carousel"><p>' . esc_html__('No products found.', 'fluentcart-elementor-blocks') . '</p></div>';
+            }
+
+            $carouselSettings = [
+                'slidesToShow'   => intval($this->props['slides_to_show'] ?? 3),
+                'spaceBetween'   => intval($this->props['space_between'] ?? 16),
+                'autoplay'       => ($this->props['autoplay'] ?? 'on') === 'on' ? 'yes' : 'no',
+                'autoplayDelay'  => intval($this->props['autoplay_speed'] ?? 3000),
+                'infinite'       => ($this->props['infinite_loop'] ?? 'off') === 'on' ? 'yes' : 'no',
+                'arrows'         => ($this->props['show_arrows'] ?? 'on') === 'on' ? 'yes' : 'no',
+                'dots'           => ($this->props['show_pagination'] ?? 'on') === 'on' ? 'yes' : 'no',
+                'paginationType' => 'dots',
+            ];
+
+            $cardElementsRaw = $this->props['card_elements'] ?? 'image,title,price,button';
+            $cardElements = array_map('trim', explode(',', $cardElementsRaw));
+            $priceFormat = $this->props['price_format'] ?? 'starts_from';
+
+            ob_start();
+            $this->renderCarousel($products, $carouselSettings, $cardElements, $priceFormat);
+            return ob_get_clean();
+        } catch (\Throwable $e) {
+            return '<div class="fluent-cart-divi-product-carousel"><p>' . esc_html__('Product Carousel', 'fluentcart-elementor-blocks') . '</p></div>';
         }
-
-        AssetLoader::loadProductArchiveAssets();
-        $this->loadCarouselAssets();
-
-        $products = Product::query()->whereIn('id', $productIds)->get();
-        if ($products->isEmpty()) {
-            return '';
-        }
-
-        $carouselSettings = [
-            'slidesToShow'   => intval($this->props['slides_to_show'] ?? 3),
-            'spaceBetween'   => intval($this->props['space_between'] ?? 16),
-            'autoplay'       => ($this->props['autoplay'] ?? 'on') === 'on' ? 'yes' : 'no',
-            'autoplayDelay'  => intval($this->props['autoplay_speed'] ?? 3000),
-            'infinite'       => ($this->props['infinite_loop'] ?? 'off') === 'on' ? 'yes' : 'no',
-            'arrows'         => ($this->props['show_arrows'] ?? 'on') === 'on' ? 'yes' : 'no',
-            'dots'           => ($this->props['show_pagination'] ?? 'on') === 'on' ? 'yes' : 'no',
-            'paginationType' => 'dots',
-        ];
-
-        $cardElementsRaw = $this->props['card_elements'] ?? 'image,title,price,button';
-        $cardElements = array_map('trim', explode(',', $cardElementsRaw));
-        $priceFormat = $this->props['price_format'] ?? 'starts_from';
-
-        ob_start();
-        $this->renderCarousel($products, $carouselSettings, $cardElements, $priceFormat);
-        return ob_get_clean();
     }
 
     private function loadCarouselAssets()
