@@ -2,22 +2,27 @@
 
 namespace FluentCartElementorBlocks\App\Modules\Integrations\Divi;
 
-use ET_Builder_Module;
+use FluentCartElementorBlocks\App\Modules\Integrations\Divi\Modules\Legacy\AddToCartModule;
+use FluentCartElementorBlocks\App\Modules\Integrations\Divi\Modules\Legacy\BuyNowModule;
+use FluentCartElementorBlocks\App\Modules\Integrations\Divi\Modules\Legacy\CheckoutModule;
+use FluentCartElementorBlocks\App\Modules\Integrations\Divi\Modules\Legacy\MiniCartModule;
+use FluentCartElementorBlocks\App\Modules\Integrations\Divi\Modules\Legacy\ProductCarouselModule;
+use FluentCartElementorBlocks\App\Modules\Integrations\Divi\Modules\Legacy\ProductCategoriesListModule;
 
 class DiviIntegration
 {
     public function register()
     {
-        // ET_Builder_Module requires the builder to be loaded
-        if (!class_exists(ET_Builder_Module::class)) {
-            return;
-        }
-
         \add_action('et_builder_ready', [$this, 'registerModules']);
     }
 
     public function registerModules()
     {
-        new Modules\TestModule();
+        new MiniCartModule();
+        new AddToCartModule();
+        new BuyNowModule();
+        new ProductCategoriesListModule();
+        new ProductCarouselModule();
+        new CheckoutModule();
     }
 }
