@@ -3,7 +3,7 @@
 /*
 Plugin Name: FluentCart Elementor Blocks
 Description: FluentCart Elementor Blocks WordPress plugin to extend Elementor with FluentCart specific widgets and features.
-Version: 1.0.3
+Version: 1.0.0
 Author:
 Author URI:
 Plugin URI:
