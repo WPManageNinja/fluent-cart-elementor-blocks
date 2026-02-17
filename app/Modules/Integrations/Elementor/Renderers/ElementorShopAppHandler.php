@@ -104,6 +104,9 @@ class ElementorShopAppHandler extends ShopAppHandler
         $config['card_elements'] = $this->cardElements;
         $config['client_id'] = $this->clientId;
         $config['shop_layout'] = $this->shopLayout;
+        $config['view_mode'] = $this->shortcodeAttributes['view_mode'];
+        $config['product_box_grid_size'] = $this->shortcodeAttributes['product_box_grid_size'];
+        $config['price_format'] = $this->shortcodeAttributes['price_format'];
         return $config;
     }
 }

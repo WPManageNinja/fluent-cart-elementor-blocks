@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(wp eval:*)",
+      "mcp__plugin_playwright_playwright__browser_navigate",
+      "Bash(wp post get:*)",
+      "mcp__plugin_playwright_playwright__browser_evaluate",
+      "mcp__plugin_playwright_playwright__browser_fill_form",
+      "mcp__plugin_playwright_playwright__browser_snapshot",
+      "mcp__plugin_playwright_playwright__browser_wait_for"
+    ]
+  }
+}
