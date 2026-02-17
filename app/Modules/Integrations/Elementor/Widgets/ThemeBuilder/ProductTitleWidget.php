@@ -1,0 +1,187 @@
+<?php
+
+namespace FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ThemeBuilder;
+
+use Elementor\Widget_Base;
+use Elementor\Controls_Manager;
+use Elementor\Group_Control_Typography;
+use FluentCart\App\Models\Product;
+use FluentCart\App\Modules\Data\ProductDataSetup;
+use FluentCart\App\Modules\Templating\AssetLoader;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Controls\ProductSelectControl;
+
+if (!defined('ABSPATH')) {
+    exit;
+}
+
+class ProductTitleWidget extends Widget_Base
+{
+    public function get_name()
+    {
+        return 'fluentcart_product_title';
+    }
+
+    public function get_title()
+    {
+        return esc_html__('Product Title', 'fluent-cart');
+    }
+
+    public function get_icon()
+    {
+        return 'eicon-product-title';
+    }
+
+    public function get_categories()
+    {
+        return ['fluentcart-elements-single', 'fluent-cart'];
+    }
+
+    public function get_keywords()
+    {
+        return ['product', 'title', 'heading', 'name', 'fluent'];
+    }
+
+    protected function register_controls()
+    {
+        $this->start_controls_section(
+            'content_section',
+            [
+                'label' => esc_html__('Content', 'fluent-cart'),
+                'tab'   => Controls_Manager::TAB_CONTENT,
+            ]
+        );
+
+        $this->add_control(
+            'product_id',
+            [
+                'label'       => esc_html__('Select Product', 'fluent-cart'),
+                'type'        => (new ProductSelectControl())->get_type(),
+                'label_block' => true,
+                'multiple'    => false,
+                'description' => esc_html__('Leave empty to auto-detect from current product context.', 'fluent-cart'),
+                'default'     => '',
+            ]
+        );
+
+        $this->add_control(
+            'html_tag',
+            [
+                'label'   => esc_html__('HTML Tag', 'fluent-cart'),
+                'type'    => Controls_Manager::SELECT,
+                'default' => 'h1',
+                'options' => [
+                    'h1'   => 'H1',
+                    'h2'   => 'H2',
+                    'h3'   => 'H3',
+                    'h4'   => 'H4',
+                    'h5'   => 'H5',
+                    'h6'   => 'H6',
+                    'div'  => 'div',
+                    'span' => 'span',
+                    'p'    => 'p',
+                ],
+            ]
+        );
+
+        $this->add_responsive_control(
+            'align',
+            [
+                'label'     => esc_html__('Alignment', 'fluent-cart'),
+                'type'      => Controls_Manager::CHOOSE,
+                'options'   => [
+                    'left'   => ['title' => esc_html__('Left', 'fluent-cart'), 'icon' => 'eicon-text-align-left'],
+                    'center' => ['title' => esc_html__('Center', 'fluent-cart'), 'icon' => 'eicon-text-align-center'],
+                    'right'  => ['title' => esc_html__('Right', 'fluent-cart'), 'icon' => 'eicon-text-align-right'],
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .fluentcart-product-title' => 'text-align: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->end_controls_section();
+
+        // Style Section
+        $this->start_controls_section(
+            'style_section',
+            [
+                'label' => esc_html__('Style', 'fluent-cart'),
+                'tab'   => Controls_Manager::TAB_STYLE,
+            ]
+        );
+
+        $this->add_control(
+            'title_color',
+            [
+                'label'     => esc_html__('Text Color', 'fluent-cart'),
+                'type'      => Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .fluentcart-product-title' => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_group_control(
+            Group_Control_Typography::get_type(),
+            [
+                'name'     => 'title_typography',
+                'selector' => '{{WRAPPER}} .fluentcart-product-title',
+            ]
+        );
+
+        $this->end_controls_section();
+    }
+
+    protected function render()
+    {
+        $settings = $this->get_settings_for_display();
+        $product = $this->getProduct($settings);
+
+        if (!$product) {
+            $this->renderPlaceholder(__('Please select a product or use this widget inside a product template.', 'fluent-cart'));
+            return;
+        }
+
+        $tag = $settings['html_tag'] ?: 'h1';
+        $allowed_tags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div', 'span', 'p'];
+        if (!in_array($tag, $allowed_tags)) {
+            $tag = 'h1';
+        }
+
+        printf(
+            '<%1$s class="fluentcart-product-title">%2$s</%1$s>',
+            $tag,
+            esc_html($product->post_title)
+        );
+    }
+
+    protected function getProduct($settings)
+    {
+        $productId = !empty($settings['product_id']) ? (int) $settings['product_id'] : 0;
+
+        if ($productId) {
+            return ProductDataSetup::getProductModel($productId);
+        }
+
+        // Try to get from global context
+        if (isset($GLOBALS['fct_product']) && $GLOBALS['fct_product'] instanceof Product) {
+            return $GLOBALS['fct_product'];
+        }
+
+        $postId = get_the_ID();
+        if ($postId && get_post_type($postId) === 'fluent-products') {
+            return ProductDataSetup::getProductModel($postId);
+        }
+
+        return null;
+    }
+
+    protected function renderPlaceholder($message)
+    {
+        if (\Elementor\Plugin::$instance->editor->is_edit_mode()) {
+            echo '<div class="fluent-cart-placeholder" style="text-align:center; padding: 20px; background: #f0f0f1; border: 1px dashed #ccc;">';
+            echo '<p>' . esc_html($message) . '</p>';
+            echo '</div>';
+        }
+    }
+}

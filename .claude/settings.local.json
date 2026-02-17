@@ -15,7 +15,8 @@
       "Bash(npm run dev:*)",
       "mcp__plugin_playwright_playwright__browser_handle_dialog",
       "mcp__plugin_playwright_playwright__browser_console_messages",
-      "Bash(gh auth:*)"
+      "Bash(gh auth:*)",
+      "Bash(find:*)"
     ]
   }
 }
