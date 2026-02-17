@@ -1176,7 +1176,7 @@ class CheckoutWidget extends Widget_Base
                         'label'     => esc_html__('Total Color', 'fluent-cart'),
                         'type'      => Controls_Manager::COLOR,
                         'selectors' => [
-                                '{{WRAPPER}} .fct_summary_items_total' => 'color: {{VALUE}};',
+                                '{{WRAPPER}} .fct_summary_items_list li.fct_summary_items_total .fct_summary_label, {{WRAPPER}} .fct_summary_items_list li.fct_summary_items_total .fct_summary_value' => 'color: {{VALUE}};',
                         ],
                 ]
         );
