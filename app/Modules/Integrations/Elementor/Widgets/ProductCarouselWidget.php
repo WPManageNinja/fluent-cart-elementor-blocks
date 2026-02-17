@@ -14,7 +14,6 @@ use FluentCart\App\Modules\Templating\AssetLoader;
 use FluentCart\App\Services\Renderer\ProductCardRender;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Controls\ProductSelectControl;
 use FluentCartElementorBlocks\App\Utils\Enqueuer\Enqueue;
-use FluentCartElementorBlocks\App\Utils\Enqueuer\Vite;
 
 class ProductCarouselWidget extends Widget_Base
 {
@@ -83,23 +82,24 @@ class ProductCarouselWidget extends Widget_Base
         $app = \FluentCart\App\App::getInstance();
         $slug = $app->config->get('app.slug');
 
-        Vite::enqueueStaticScript(
+        // Use FluentCart core's Vite since these assets live in the core plugin
+        \FluentCart\App\Vite::enqueueStaticScript(
             $slug . '-fluentcart-swiper-js',
             'public/lib/swiper/swiper-bundle.min.js',
             []
         );
 
-        Vite::enqueueStaticStyle(
+        \FluentCart\App\Vite::enqueueStaticStyle(
             $slug . '-fluentcart-swiper-css',
             'public/lib/swiper/swiper-bundle.min.css'
         );
 
-        Vite::enqueueStyle(
+        \FluentCart\App\Vite::enqueueStyle(
             'fluentcart-product-carousel',
             'public/carousel/products/style/product-carousel.scss'
         );
 
-        Vite::enqueueScript(
+        \FluentCart\App\Vite::enqueueScript(
             'fluentcart-product-carousel',
             'public/carousel/products/product-carousel.js',
             [$slug . '-fluentcart-swiper-js']

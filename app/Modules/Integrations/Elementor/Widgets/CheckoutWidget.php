@@ -12,7 +12,6 @@ use Elementor\Repeater;
 use FluentCart\App\Modules\Templating\AssetLoader;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Renderers\ElementorCheckoutRenderer;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Renderers\DummyCheckoutRenderer;
-use FluentCartElementorBlocks\App\Utils\Enqueuer\Vite;
 
 class CheckoutWidget extends Widget_Base
 {
@@ -61,7 +60,7 @@ class CheckoutWidget extends Widget_Base
     }
 
     /**
-     * Load checkout styles directly using FluentCart's Vite
+     * Load checkout styles directly using FluentCart core's Vite
      * This bypasses the cart check in AssetLoader::loadCheckoutAssets()
      */
     private function loadCheckoutStyles()
@@ -75,13 +74,13 @@ class CheckoutWidget extends Widget_Base
         // Load cart assets first (base styles)
         AssetLoader::loadCartAssets();
 
-        // Directly enqueue checkout styles with specific handles
-        Vite::enqueueStyle(
+        // Use FluentCart core's Vite since these SCSS files live in the core plugin
+        \FluentCart\App\Vite::enqueueStyle(
                 'fce-checkout-page-css',
                 'public/checkout/style/checkout.scss'
         );
 
-        Vite::enqueueStyle(
+        \FluentCart\App\Vite::enqueueStyle(
                 'fce-checkout-select-css',
                 'public/components/select/style/style.scss'
         );
@@ -1122,6 +1121,25 @@ class CheckoutWidget extends Widget_Base
                         ],
                         'selectors' => [
                                 '{{WRAPPER}} .fct_summary_items_list li' => 'border-bottom-style: {{VALUE}};',
+                        ],
+                ]
+        );
+
+        $this->add_control(
+                'summary_separator_width',
+                [
+                        'label'      => esc_html__('Separator Width', 'fluent-cart'),
+                        'type'       => Controls_Manager::SLIDER,
+                        'size_units' => ['px'],
+                        'range'      => [
+                                'px' => ['min' => 0, 'max' => 10],
+                        ],
+                        'default'    => ['size' => 1, 'unit' => 'px'],
+                        'selectors'  => [
+                                '{{WRAPPER}} .fct_summary_items_list li' => 'border-bottom-width: {{SIZE}}{{UNIT}};',
+                        ],
+                        'condition'  => [
+                                'summary_separator_style!' => 'none',
                         ],
                 ]
         );

@@ -7,9 +7,6 @@ use Elementor\Controls_Manager;
 use Elementor\Group_Control_Typography;
 use Elementor\Group_Control_Border;
 use FluentCart\App\Services\Renderer\ProductCategoriesListRenderer;
-use FluentCartElementorBlocks\App\Utils\Enqueuer\Vite;
-
-
 class ProductCategoriesListWidget extends Widget_Base
 {
     public function get_name()
@@ -72,12 +69,13 @@ class ProductCategoriesListWidget extends Widget_Base
         $app = \FluentCart\App\App::getInstance();
         $slug = $app->config->get('app.slug');
 
-        Vite::enqueueStyle(
+        // Use FluentCart core's Vite since these assets live in the core plugin
+        \FluentCart\App\Vite::enqueueStyle(
             $slug . '-product-categories-list',
             'public/product-categories-list/product-categories-list.scss'
         );
 
-        Vite::enqueueScript(
+        \FluentCart\App\Vite::enqueueScript(
             $slug . '-product-categories-list-js',
             'public/product-categories-list/product-categories-list.js'
         );

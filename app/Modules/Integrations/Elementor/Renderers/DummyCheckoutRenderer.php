@@ -4,7 +4,7 @@ namespace FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Renderers
 
 use FluentCart\App\Services\Renderer\CheckoutRenderer;
 use FluentCart\App\Models\Cart;
-use FluentCartElementorBlocks\App\Utils\Enqueuer\Vite;
+use FluentCart\App\Vite;
 
 
 /**
