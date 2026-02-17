@@ -7,7 +7,8 @@ use Elementor\Controls_Manager;
 use Elementor\Group_Control_Typography;
 use Elementor\Group_Control_Border;
 use FluentCart\App\Services\Renderer\ProductCategoriesListRenderer;
-use FluentCart\App\Vite;
+use FluentCartElementorBlocks\App\Utils\Enqueuer\Vite;
+
 
 class ProductCategoriesListWidget extends Widget_Base
 {

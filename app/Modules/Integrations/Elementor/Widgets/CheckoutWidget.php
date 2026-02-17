@@ -10,9 +10,9 @@ use Elementor\Group_Control_Box_Shadow;
 use Elementor\Group_Control_Background;
 use Elementor\Repeater;
 use FluentCart\App\Modules\Templating\AssetLoader;
-use FluentCart\App\Vite;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Renderers\ElementorCheckoutRenderer;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Renderers\DummyCheckoutRenderer;
+use FluentCartElementorBlocks\App\Utils\Enqueuer\Vite;
 
 class CheckoutWidget extends Widget_Base
 {

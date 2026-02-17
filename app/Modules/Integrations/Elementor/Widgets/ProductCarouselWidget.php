@@ -12,9 +12,9 @@ use Elementor\Group_Control_Background;
 use FluentCart\App\Models\Product;
 use FluentCart\App\Modules\Templating\AssetLoader;
 use FluentCart\App\Services\Renderer\ProductCardRender;
-use FluentCart\App\Vite;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Controls\ProductSelectControl;
 use FluentCartElementorBlocks\App\Utils\Enqueuer\Enqueue;
+use FluentCartElementorBlocks\App\Utils\Enqueuer\Vite;
 
 class ProductCarouselWidget extends Widget_Base
 {

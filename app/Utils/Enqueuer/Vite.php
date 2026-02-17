@@ -38,6 +38,21 @@ class Vite extends Enqueuer
         return call_user_func_array(array(static::$instance, $method), $params);
     }
 
+    public static function getAssetUrl($path = ''): string
+    {
+        return esc_url(static::$instance->get_asset_url($path) ?? '');
+    }
+
+    private function get_asset_url($path = ''): string
+    {
+
+        if (!self::isOnDevMode()) {
+            return FLUENTCART_ELEMENTOR_BLOCKS_URL . 'assets' . '/' . $path;
+        } else {
+            return $this->getVitePath() . $path;
+        }
+    }
+
     private function loadViteManifest()
     {
 
@@ -50,6 +65,7 @@ class Vite extends Enqueuer
 
     private function enqueueScript($handle, $src, $dependency = [], $version = null, $inFooter = false)
     {
+        $version = $version ?? FLUENTCART_ELEMENTOR_BLOCKS_VERSION;
         if (in_array($handle, (static::$instance)->moduleScripts)) {
             if (self::isOnDevMode()) {
                 $callerReference = (debug_backtrace()[2]);
@@ -133,6 +149,7 @@ class Vite extends Enqueuer
 
     private function enqueueStyle($handle, $src, $dependency = [], $version = null)
     {
+        $version = $version ?? FLUENTCART_ELEMENTOR_BLOCKS_VERSION;
         if (!static::isOnDevMode()) {
             $assetFile = (static::$instance)->getFileFromManifest($src);
             $srcPath = static::getProductionFilePath($assetFile);
@@ -150,6 +167,7 @@ class Vite extends Enqueuer
 
     private function enqueueStaticScript($handle, $src, $dependency = [], $version = null, $inFooter = false)
     {
+        $version = $version ?? FLUENTCART_ELEMENTOR_BLOCKS_VERSION;
         wp_enqueue_script(
             $handle,
             static::getEnqueuePath($src),
@@ -161,6 +179,7 @@ class Vite extends Enqueuer
 
     private function enqueueStaticStyle($handle, $src, $dependency = [], $version = null)
     {
+        $version = $version ?? FLUENTCART_ELEMENTOR_BLOCKS_VERSION;
         wp_enqueue_style(
             $handle,
             static::getEnqueuePath($src),
