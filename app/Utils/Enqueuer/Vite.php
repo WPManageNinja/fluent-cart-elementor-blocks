@@ -8,7 +8,7 @@ use FluentCartElementorBlocks\Framework\Framework\Support\Arr;
 class Vite extends Enqueuer
 {
 
-    protected static $env = 'DEVELOPMENT_MODE';
+    protected static $env = 'PRODUCTION_MODE';
 
     /**
      * @method static enqueueScript(string $handle, string $src, array $dependency = [], string|null $version = null, bool|null $inFooter = false)

@@ -10,20 +10,24 @@ The ShopAppWidget (`app/Modules/Integrations/Elementor/Widgets/ShopAppWidget.php
 
 ## Style Section Registration Order
 
+Card-related style controls (sections 1, 3–7) are now delegated to `ProductCardWidget` static methods. Grid, Filter, and Pagination remain local to ShopAppWidget.
+
 ```php
 private function registerStyleControls()
 {
-    $this->registerProductCardStyleControls();    // 1. Product Card
-    $this->registerGridStyleControls();           // 2. Grid Layout
-    $this->registerProductImageStyleControls();   // 3. Product Image
-    $this->registerProductTitleStyleControls();   // 4. Product Title
-    $this->registerProductExcerptStyleControls(); // 5. Product Excerpt
-    $this->registerProductPriceStyleControls();   // 6. Product Price
-    $this->registerProductButtonStyleControls();  // 7. Product Button
-    $this->registerFilterStyleControls();         // 8. Filter
-    $this->registerPaginationStyleControls();     // 9. Pagination
+    // 1. Product Card       — ProductCardWidget::registerCardStyleControls()
+    $this->registerGridStyleControls();           // 2. Grid Layout (local)
+    // 3. Product Image      — ProductCardWidget::registerCardImageStyleControls()
+    // 4. Product Title      — ProductCardWidget::registerCardTitleStyleControls()
+    // 5. Product Excerpt    — ProductCardWidget::registerCardExcerptStyleControls()
+    // 6. Product Price      — ProductCardWidget::registerCardPriceStyleControls()
+    // 7. Product Button     — ProductCardWidget::registerCardButtonStyleControls()
+    $this->registerFilterStyleControls();         // 8. Filter (local)
+    $this->registerPaginationStyleControls();     // 9. Pagination (local)
 }
 ```
+
+See [`refs/claude/ProductCard/STYLE-CONTROLS.md`](../ProductCard/STYLE-CONTROLS.md) for full details on the shared static methods.
 
 ---
 
@@ -193,3 +197,4 @@ The same button selectors apply to `ProductCarouselWidget.php`.
 
 - **2026-01-30**: Initial implementation with 4 style sections (Product Card, Product Image, Product Title, Product Price, Product Button)
 - **2026-02-18**: Expanded to 9 style sections. Fixed critical button selector bug (`.fct-button` -> `.fct-product-view-button, .fluent-cart-add-to-cart-button`). Added Grid Layout, Product Excerpt, Filter, Pagination sections. Enhanced existing sections with title_spacing, compare_price_color, price_spacing, product_button_width controls. Refactored from monolithic `registerStyleControls()` to 9 separate methods. Same button selector fix applied to `ProductCarouselWidget.php`.
+- **2026-02-18**: Refactored card-related style controls (sections 1, 3–7) to use `ProductCardWidget` static methods. Grid, Filter, Pagination remain local. Control IDs unchanged for backward compatibility.
