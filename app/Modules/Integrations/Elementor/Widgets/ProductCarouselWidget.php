@@ -585,11 +585,17 @@ class ProductCarouselWidget extends Widget_Base
             ]
         );
 
+        // The actual button classes in ProductCardRender are:
+        // - .fct-product-view-button (View Options / Buy Now)
+        // - .fluent-cart-add-to-cart-button (Add To Cart)
+        $btnSelector = '{{WRAPPER}} .fct-product-card .fct-product-view-button, {{WRAPPER}} .fct-product-card .fluent-cart-add-to-cart-button';
+        $btnHoverSelector = '{{WRAPPER}} .fct-product-card .fct-product-view-button:hover, {{WRAPPER}} .fct-product-card .fluent-cart-add-to-cart-button:hover';
+
         $this->add_group_control(
             Group_Control_Typography::get_type(),
             [
                 'name'     => 'product_button_typography',
-                'selector' => '{{WRAPPER}} .fct-product-card .fct-button',
+                'selector' => $btnSelector,
             ]
         );
 
@@ -608,7 +614,7 @@ class ProductCarouselWidget extends Widget_Base
                 'label'     => esc_html__('Text Color', 'fluent-cart'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
-                    '{{WRAPPER}} .fct-product-card .fct-button' => 'color: {{VALUE}};',
+                    $btnSelector => 'color: {{VALUE}};',
                 ],
             ]
         );
@@ -618,7 +624,7 @@ class ProductCarouselWidget extends Widget_Base
             [
                 'name'     => 'product_button_background',
                 'types'    => ['classic', 'gradient'],
-                'selector' => '{{WRAPPER}} .fct-product-card .fct-button',
+                'selector' => $btnSelector,
             ]
         );
 
@@ -626,7 +632,7 @@ class ProductCarouselWidget extends Widget_Base
             Group_Control_Border::get_type(),
             [
                 'name'     => 'product_button_border',
-                'selector' => '{{WRAPPER}} .fct-product-card .fct-button',
+                'selector' => $btnSelector,
             ]
         );
 
@@ -637,7 +643,7 @@ class ProductCarouselWidget extends Widget_Base
                 'type'       => Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', '%', 'em'],
                 'selectors'  => [
-                    '{{WRAPPER}} .fct-product-card .fct-button' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                    $btnSelector => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
                 ],
             ]
         );
@@ -649,7 +655,7 @@ class ProductCarouselWidget extends Widget_Base
                 'type'       => Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', 'em', '%'],
                 'selectors'  => [
-                    '{{WRAPPER}} .fct-product-card .fct-button' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                    $btnSelector => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
                 ],
             ]
         );
@@ -669,7 +675,7 @@ class ProductCarouselWidget extends Widget_Base
                 'label'     => esc_html__('Text Color', 'fluent-cart'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
-                    '{{WRAPPER}} .fct-product-card .fct-button:hover' => 'color: {{VALUE}};',
+                    $btnHoverSelector => 'color: {{VALUE}};',
                 ],
             ]
         );
@@ -679,7 +685,7 @@ class ProductCarouselWidget extends Widget_Base
             [
                 'name'     => 'product_button_hover_background',
                 'types'    => ['classic', 'gradient'],
-                'selector' => '{{WRAPPER}} .fct-product-card .fct-button:hover',
+                'selector' => $btnHoverSelector,
             ]
         );
 
@@ -687,7 +693,7 @@ class ProductCarouselWidget extends Widget_Base
             Group_Control_Border::get_type(),
             [
                 'name'     => 'product_button_hover_border',
-                'selector' => '{{WRAPPER}} .fct-product-card .fct-button:hover',
+                'selector' => $btnHoverSelector,
             ]
         );
 
@@ -904,7 +910,8 @@ class ProductCarouselWidget extends Widget_Base
         <style>
             .fct-elementor-preview a,
             .fct-elementor-preview button,
-            .fct-elementor-preview .fct-button,
+            .fct-elementor-preview .fct-product-view-button,
+            .fct-elementor-preview .fluent-cart-add-to-cart-button,
             .fct-elementor-preview [data-fct-product-card] {
                 pointer-events: none;
             }
