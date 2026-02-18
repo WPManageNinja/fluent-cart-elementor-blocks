@@ -2,6 +2,7 @@
 
 namespace FluentCartElementorBlocks\App\Http\Controllers;
 
+use FluentCart\App\Helpers\Helper;
 use FluentCart\App\Models\Product;
 use FluentCart\App\Models\ProductVariation;
 use FluentCart\Framework\Http\Request\Request;
@@ -18,24 +19,34 @@ class ProductController extends Controller
             'subscription_status' => 'sanitize_text_field',
         ]);
 
+        $subscription_status = Arr::get($data, 'subscription_status');
         $search = Arr::get($data, 'search', '');
         $includeIds = Arr::get($data, 'include_ids', []);
 
-        $productsQuery = Product::query();
-        $subscription_status = Arr::get($data,'subscription_status');
+        $productsQuery = Product::query()
+            ->where('post_status', 'publish');
 
-        if($subscription_status === 'not_subscribable'){
-
-            $productsQuery = $productsQuery->with(['variants' => function ($query) use ($includeIds) {
+        $productsQuery->with(['detail', 'variants' => function ($query) use ($subscription_status) {
+            if ($subscription_status === 'not_subscribable') {
                 $query->where('payment_type', '!=', 'subscription');
-            }]);
-        }else{
-            $productsQuery = $productsQuery->with(['variants']);
+            }
+        }]);
+
+        $scopes = Arr::get($data, 'scopes', []);
+        if ($scopes) {
+            $productsQuery = $productsQuery->scopes($scopes);
         }
 
-
         if ($search) {
-            $productsQuery->where('post_title', 'like', '%' . $search . '%');
+            $productsQuery->where(function ($query) use ($search, $subscription_status) {
+                $query->where('post_title', 'like', '%' . $search . '%')
+                    ->orWhereHas('variants', function ($query) use ($search, $subscription_status) {
+                        $query->where('variation_title', 'like', "%$search%");
+                        if ($subscription_status === 'not_subscribable') {
+                            $query->where('payment_type', '!=', 'subscription');
+                        }
+                    });
+            });
         }
 
         $productsQuery->limit(20);
@@ -45,8 +56,12 @@ class ProductController extends Controller
         $pushedVariationIds = [];
         $formattedProducts = [];
 
-
         foreach ($products as $product) {
+            $detail = $product->detail;
+            if ($detail && $detail->manage_stock && $detail->stock_availability !== Helper::IN_STOCK) {
+                continue;
+            }
+
             $formatted = [
                 'value' => 'product_' . $product->ID,
                 'label' => $product->post_title,
@@ -56,6 +71,9 @@ class ProductController extends Controller
 
             $children = [];
             foreach ($variants as $variant) {
+                if ($variant->manage_stock && $variant->stock_status !== Helper::IN_STOCK) {
+                    continue;
+                }
                 $pushedVariationIds[] = $variant->id;
                 $children[] = [
                     'value' => $variant->id,
@@ -76,15 +94,24 @@ class ProductController extends Controller
         if ($leftVariationIds) {
             $leftVariants = ProductVariation::query()
                 ->whereIn('id', $leftVariationIds)
-                ->with('product')
+                ->with(['product' => function ($query) {
+                    $query->where('post_status', 'publish');
+                }, 'product.detail'])
                 ->get();
 
             foreach ($leftVariants as $variant) {
                 if ($subscription_status == 'not_subscribable' && $variant->payment_type === 'subscription') {
                     continue;
                 }
+                if ($variant->manage_stock && $variant->stock_status !== Helper::IN_STOCK) {
+                    continue;
+                }
                 $product = $variant->product;
                 if (!$product) {
+                    continue;
+                }
+                $detail = $product->detail;
+                if ($detail && $detail->manage_stock && $detail->stock_availability !== Helper::IN_STOCK) {
                     continue;
                 }
                 if (isset($formattedProducts[$product->ID])) {
