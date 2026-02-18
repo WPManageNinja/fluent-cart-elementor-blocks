@@ -336,6 +336,26 @@ These endpoints already exist in fluent-cart core.
 
 ---
 
+## Post-Implementation Notes
+
+### Button Selector Fix (2026-02-18)
+
+The Product Button style controls originally used `.fct-button` as the CSS selector. This class does **not exist** in the rendered HTML. The actual button classes from `ProductCardRender.php` are:
+
+- `.fct-product-view-button` — View Options / Buy Now buttons
+- `.fluent-cart-add-to-cart-button` — Add to Cart buttons
+
+Both `ProductCarouselWidget.php` and `ShopAppWidget.php` were fixed to use the correct selectors:
+
+```php
+$btnSelector = '{{WRAPPER}} .fct-product-card .fct-product-view-button, {{WRAPPER}} .fct-product-card .fluent-cart-add-to-cart-button';
+$btnHoverSelector = '{{WRAPPER}} .fct-product-card .fct-product-view-button:hover, {{WRAPPER}} .fct-product-card .fluent-cart-add-to-cart-button:hover';
+```
+
+The inline CSS in the editor preview section was also fixed (`.fct-elementor-preview .fct-button` -> `.fct-elementor-preview .fct-product-view-button, .fct-elementor-preview .fluent-cart-add-to-cart-button`).
+
+---
+
 ## Notes
 
 - The Block Editor version uses React + InnerBlocks for complex nested editing
