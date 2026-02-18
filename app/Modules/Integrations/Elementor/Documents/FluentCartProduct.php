@@ -55,9 +55,6 @@ class FluentCartProduct extends Single_Base
     protected static function get_editor_panel_categories()
     {
         $categories = [
-            'fluentcart-elements-single' => [
-                'title' => esc_html__('Product', 'fluent-cart'),
-            ],
             'fluent-cart' => [
                 'title'  => esc_html__('FluentCart', 'fluent-cart'),
                 'active' => true,

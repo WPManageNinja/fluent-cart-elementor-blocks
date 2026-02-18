@@ -65,11 +65,6 @@ class ElementorIntegration
             'title' => esc_html__('FluentCart', 'fluent-cart'),
             'icon'  => 'fa fa-shopping-cart',
         ]);
-
-        $elements_manager->add_category('fluentcart-elements-single', [
-            'title' => esc_html__('FluentCart Product', 'fluent-cart'),
-            'icon'  => 'fa fa-shopping-cart',
-        ]);
     }
 
     public function registerWidgets($widgets_manager)

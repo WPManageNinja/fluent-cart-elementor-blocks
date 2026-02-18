@@ -34,7 +34,7 @@ class ProductStockWidget extends Widget_Base
 
     public function get_categories()
     {
-        return ['fluentcart-elements-single', 'fluent-cart'];
+        return ['fluent-cart'];
     }
 
     public function get_keywords()

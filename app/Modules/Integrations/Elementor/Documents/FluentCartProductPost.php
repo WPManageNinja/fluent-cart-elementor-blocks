@@ -47,8 +47,8 @@ class FluentCartProductPost extends Post
             $categories,
             'theme-elements',
             [
-                'fluentcart-elements-single' => [
-                    'title'  => esc_html__('Product', 'fluent-cart'),
+                'fluent-cart' => [
+                    'title'  => esc_html__('FluentCart', 'fluent-cart'),
                     'active' => false,
                 ],
             ]
