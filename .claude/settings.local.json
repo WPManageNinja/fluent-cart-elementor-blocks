@@ -15,7 +15,22 @@
       "Bash(npm run dev:*)",
       "mcp__plugin_playwright_playwright__browser_handle_dialog",
       "mcp__plugin_playwright_playwright__browser_console_messages",
-      "Bash(gh auth:*)"
+      "Bash(gh auth:*)",
+      "Bash(find:*)",
+      "mcp__plugin_playwright_playwright__browser_select_option",
+      "Bash(wp post meta update:*)",
+      "mcp__plugin_playwright_playwright__browser_drag",
+      "Bash(wp post list:*)",
+      "Bash(wp post meta get:*)",
+      "Bash(wp post meta delete:*)",
+      "mcp__plugin_playwright_playwright__browser_close",
+      "Bash(pkill:*)",
+      "Bash(ls:*)",
+      "Bash(php -l:*)",
+      "mcp__plugin_playwright_playwright__browser_run_code",
+      "mcp__plugin_playwright_playwright__browser_install",
+      "mcp__plugin_playwright_playwright__browser_tabs",
+      "Bash(python3:*)"
     ]
   }
 }

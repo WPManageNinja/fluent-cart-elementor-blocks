@@ -44,6 +44,7 @@ ShopAppWidget::render()
 - Added `registerShopLayoutControls()` — defines the Repeater control with 5 section types
 - Updated `register_controls()` to call it
 - Updated `render()` to extract `shop_layout` from settings, pass to handler, and include in cache key
+- **(2026-02-18)** Refactored `registerStyleControls()` into 9 separate methods. Fixed button selectors from `.fct-button` (non-existent) to `.fct-product-view-button, .fluent-cart-add-to-cart-button`. Added 5 new style sections: Grid Layout, Product Excerpt, Filter, Pagination. Enhanced existing sections. See `refs/claude/shopapp/STYLE-CONTROLS.md` for full reference.
 
 ### `app/Modules/Integrations/Elementor/Renderers/ElementorShopAppHandler.php`
 - Added `$shopLayout` property

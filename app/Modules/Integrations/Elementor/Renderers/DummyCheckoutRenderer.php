@@ -71,6 +71,9 @@ class DummyCheckoutRenderer
                     </div>
                     <div class="fce-checkout-summary-column fct_checkout_summary <?php echo $stickySummary ? 'is-sticky' : ''; ?>">
                         <?php $this->renderSummaryElements(); ?>
+                        <?php if (!$this->hasFormElement('order_notes')): ?>
+                            <?php $this->renderOrderNotes(); ?>
+                        <?php endif; ?>
 
                         <?php
                             $summaryElements = $this->settings['summary_elements'] ?? [];
@@ -88,7 +91,7 @@ class DummyCheckoutRenderer
                     </div>
                 </div>
             <?php else: ?>
-                <div class="fce-checkout-single-column fct_checkout_inner">
+                <div class="fce-checkout-single-column">
                     <div class="fct_checkout_form">
                         <div class="fct_checkout_form_items">
                             <?php $this->renderFormElements(); ?>
@@ -96,6 +99,19 @@ class DummyCheckoutRenderer
                     </div>
                     <div class="fct_checkout_summary">
                         <?php $this->renderSummaryElements(); ?>
+                        <?php if (!$this->hasFormElement('order_notes')): ?>
+                            <?php $this->renderOrderNotes(); ?>
+                        <?php endif; ?>
+                        <?php
+                            $summaryElements = $this->settings['summary_elements'] ?? [];
+                            foreach ($summaryElements as $element) {
+                                $type = $element['element_type'] ?? '';
+                                if ($type === 'order_bump') {
+                                    $this->renderOrderBump();
+                                    break;
+                                }
+                            }
+                        ?>
                     </div>
                 </div>
             <?php endif; ?>
@@ -356,9 +372,13 @@ class DummyCheckoutRenderer
         $heading = $customHeading ?: __('Order Notes', 'fluent-cart');
         ?>
         <div class="fct_checkout_form_section fct_order_notes_section">
-            <h3 class="fct_form_section_heading"><?php echo esc_html($heading); ?></h3>
-            <div class="fct_form_group">
-                <textarea class="fct_form_control" rows="3" placeholder="<?php esc_attr_e('Notes about your order, e.g. special notes for delivery.', 'fluent-cart'); ?>" disabled></textarea>
+            <div class="fct_form_section_header">
+                <h4 class="fct_form_section_header_label"><?php echo esc_html($heading); ?></h4>
+            </div>
+            <div class="fct_form_section_body">
+                <div class="fct_input_wrapper fct_input_wrapper_textarea">
+                    <textarea class="fct-input fct-input-textarea" rows="3" placeholder="<?php esc_attr_e('Notes about your order, e.g. special notes for delivery.', 'fluent-cart'); ?>" disabled></textarea>
+                </div>
             </div>
         </div>
         <?php
@@ -575,6 +595,22 @@ class DummyCheckoutRenderer
             </ul>
         </div>
         <?php
+    }
+
+    /**
+     * Check if a given element type exists and is visible in the form_elements repeater.
+     */
+    protected function hasFormElement(string $type): bool
+    {
+        $formElements = $this->settings['form_elements'] ?? [];
+
+        foreach ($formElements as $element) {
+            if (($element['element_type'] ?? '') === $type && ($element['element_visibility'] ?? 'yes') === 'yes') {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

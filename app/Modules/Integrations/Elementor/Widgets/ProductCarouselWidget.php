@@ -4,11 +4,7 @@ namespace FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets;
 
 use Elementor\Widget_Base;
 use Elementor\Controls_Manager;
-use Elementor\Group_Control_Typography;
-use Elementor\Group_Control_Border;
-use Elementor\Group_Control_Box_Shadow;
 use Elementor\Repeater;
-use Elementor\Group_Control_Background;
 use FluentCart\App\Models\Product;
 use FluentCart\App\Modules\Templating\AssetLoader;
 use FluentCart\App\Services\Renderer\ProductCardRender;
@@ -120,11 +116,74 @@ class ProductCarouselWidget extends Widget_Base
         $this->registerProductSelectionControls();
         $this->registerCarouselSettingsControls();
         $this->registerCardLayoutControls();
-        $this->registerCardStyleControls();
-        $this->registerImageStyleControls();
-        $this->registerTitleStyleControls();
-        $this->registerPriceStyleControls();
-        $this->registerButtonStyleControls();
+        $this->registerStyleControls();
+    }
+
+    private function registerStyleControls()
+    {
+        $this->start_controls_section(
+            'card_style_section',
+            [
+                'label' => esc_html__('Product Card', 'fluent-cart'),
+                'tab'   => Controls_Manager::TAB_STYLE,
+            ]
+        );
+        ProductCardWidget::registerCardStyleControls($this, '{{WRAPPER}} .fct-product-card');
+        $this->end_controls_section();
+
+        $this->start_controls_section(
+            'image_style_section',
+            [
+                'label' => esc_html__('Product Image', 'fluent-cart'),
+                'tab'   => Controls_Manager::TAB_STYLE,
+            ]
+        );
+        ProductCardWidget::registerCardImageStyleControls($this, '{{WRAPPER}} .fct-product-card-image');
+        $this->end_controls_section();
+
+        $this->start_controls_section(
+            'title_style_section',
+            [
+                'label' => esc_html__('Product Title', 'fluent-cart'),
+                'tab'   => Controls_Manager::TAB_STYLE,
+            ]
+        );
+        ProductCardWidget::registerCardTitleStyleControls($this, '{{WRAPPER}} .fct-product-card-title');
+        $this->end_controls_section();
+
+        $this->start_controls_section(
+            'excerpt_style_section',
+            [
+                'label' => esc_html__('Product Excerpt', 'fluent-cart'),
+                'tab'   => Controls_Manager::TAB_STYLE,
+            ]
+        );
+        ProductCardWidget::registerCardExcerptStyleControls($this, '{{WRAPPER}} .fct-product-card-excerpt');
+        $this->end_controls_section();
+
+        $this->start_controls_section(
+            'price_style_section',
+            [
+                'label' => esc_html__('Product Price', 'fluent-cart'),
+                'tab'   => Controls_Manager::TAB_STYLE,
+            ]
+        );
+        ProductCardWidget::registerCardPriceStyleControls($this, '{{WRAPPER}} .fct-product-card-prices');
+        $this->end_controls_section();
+
+        $btnSelector = '{{WRAPPER}} .fct-product-card .fct-product-view-button, {{WRAPPER}} .fct-product-card .fluent-cart-add-to-cart-button';
+        $btnHoverSelector = '{{WRAPPER}} .fct-product-card .fct-product-view-button:hover, {{WRAPPER}} .fct-product-card .fluent-cart-add-to-cart-button:hover';
+
+        $this->start_controls_section(
+            'button_style_section',
+            [
+                'label' => esc_html__('Product Button', 'fluent-cart'),
+                'tab'   => Controls_Manager::TAB_STYLE,
+            ]
+        );
+        ProductCardWidget::registerCardButtonStyleControls($this, $btnSelector, $btnHoverSelector);
+        $this->end_controls_section();
+
         $this->registerNavigationStyleControls();
         $this->registerPaginationStyleControls();
     }
@@ -351,352 +410,6 @@ class ProductCarouselWidget extends Widget_Base
         $this->end_controls_section();
     }
 
-    private function registerCardStyleControls()
-    {
-        $this->start_controls_section(
-            'card_style_section',
-            [
-                'label' => esc_html__('Product Card', 'fluent-cart'),
-                'tab'   => Controls_Manager::TAB_STYLE,
-            ]
-        );
-
-        $this->add_group_control(
-            Group_Control_Background::get_type(),
-            [
-                'name'     => 'card_background',
-                'types'    => ['classic', 'gradient'],
-                'selector' => '{{WRAPPER}} .fct-product-card',
-            ]
-        );
-
-        $this->add_group_control(
-            Group_Control_Border::get_type(),
-            [
-                'name'     => 'card_border',
-                'selector' => '{{WRAPPER}} .fct-product-card',
-            ]
-        );
-
-        $this->add_control(
-            'card_border_radius',
-            [
-                'label'      => esc_html__('Border Radius', 'fluent-cart'),
-                'type'       => Controls_Manager::DIMENSIONS,
-                'size_units' => ['px', '%', 'em'],
-                'selectors'  => [
-                    '{{WRAPPER}} .fct-product-card' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-                ],
-            ]
-        );
-
-        $this->add_group_control(
-            Group_Control_Box_Shadow::get_type(),
-            [
-                'name'     => 'card_box_shadow',
-                'selector' => '{{WRAPPER}} .fct-product-card',
-            ]
-        );
-
-        $this->add_responsive_control(
-            'card_padding',
-            [
-                'label'      => esc_html__('Padding', 'fluent-cart'),
-                'type'       => Controls_Manager::DIMENSIONS,
-                'size_units' => ['px', 'em', '%'],
-                'selectors'  => [
-                    '{{WRAPPER}} .fct-product-card' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-                ],
-            ]
-        );
-
-        $this->end_controls_section();
-    }
-
-    private function registerImageStyleControls()
-    {
-        $this->start_controls_section(
-            'image_style_section',
-            [
-                'label' => esc_html__('Product Image', 'fluent-cart'),
-                'tab'   => Controls_Manager::TAB_STYLE,
-            ]
-        );
-
-        $this->add_responsive_control(
-            'image_height',
-            [
-                'label'      => esc_html__('Height', 'fluent-cart'),
-                'type'       => Controls_Manager::SLIDER,
-                'size_units' => ['px', 'em', 'vh'],
-                'range'      => [
-                    'px' => ['min' => 50, 'max' => 800],
-                    'em' => ['min' => 3, 'max' => 50],
-                    'vh' => ['min' => 5, 'max' => 100],
-                ],
-                'selectors'  => [
-                    '{{WRAPPER}} .fct-product-card-image' => 'height: {{SIZE}}{{UNIT}};',
-                ],
-            ]
-        );
-
-        $this->add_control(
-            'image_object_fit',
-            [
-                'label'     => esc_html__('Object Fit', 'fluent-cart'),
-                'type'      => Controls_Manager::SELECT,
-                'default'   => '',
-                'options'   => [
-                    ''        => esc_html__('Default', 'fluent-cart'),
-                    'cover'   => esc_html__('Cover', 'fluent-cart'),
-                    'contain' => esc_html__('Contain', 'fluent-cart'),
-                    'fill'    => esc_html__('Fill', 'fluent-cart'),
-                ],
-                'selectors' => [
-                    '{{WRAPPER}} .fct-product-card-image' => 'object-fit: {{VALUE}};',
-                ],
-            ]
-        );
-
-        $this->add_control(
-            'image_border_radius',
-            [
-                'label'      => esc_html__('Border Radius', 'fluent-cart'),
-                'type'       => Controls_Manager::DIMENSIONS,
-                'size_units' => ['px', '%', 'em'],
-                'selectors'  => [
-                    '{{WRAPPER}} .fct-product-card-image'      => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-                    '{{WRAPPER}} .fct-product-card-image-wrap' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-                ],
-            ]
-        );
-
-        $this->end_controls_section();
-    }
-
-    private function registerTitleStyleControls()
-    {
-        $this->start_controls_section(
-            'title_style_section',
-            [
-                'label' => esc_html__('Product Title', 'fluent-cart'),
-                'tab'   => Controls_Manager::TAB_STYLE,
-            ]
-        );
-
-        $this->add_group_control(
-            Group_Control_Typography::get_type(),
-            [
-                'name'     => 'title_typography',
-                'selector' => '{{WRAPPER}} .fct-product-card-title',
-            ]
-        );
-
-        $this->add_control(
-            'title_color',
-            [
-                'label'     => esc_html__('Color', 'fluent-cart'),
-                'type'      => Controls_Manager::COLOR,
-                'selectors' => [
-                    '{{WRAPPER}} .fct-product-card-title'   => 'color: {{VALUE}};',
-                    '{{WRAPPER}} .fct-product-card-title a' => 'color: {{VALUE}};',
-                ],
-            ]
-        );
-
-        $this->add_control(
-            'title_hover_color',
-            [
-                'label'     => esc_html__('Hover Color', 'fluent-cart'),
-                'type'      => Controls_Manager::COLOR,
-                'selectors' => [
-                    '{{WRAPPER}} .fct-product-card-title:hover'   => 'color: {{VALUE}};',
-                    '{{WRAPPER}} .fct-product-card-title a:hover' => 'color: {{VALUE}};',
-                ],
-            ]
-        );
-
-        $this->add_responsive_control(
-            'title_margin',
-            [
-                'label'      => esc_html__('Margin', 'fluent-cart'),
-                'type'       => Controls_Manager::DIMENSIONS,
-                'size_units' => ['px', 'em', '%'],
-                'selectors'  => [
-                    '{{WRAPPER}} .fct-product-card-title' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-                ],
-            ]
-        );
-
-        $this->end_controls_section();
-    }
-
-    private function registerPriceStyleControls()
-    {
-        $this->start_controls_section(
-            'price_style_section',
-            [
-                'label' => esc_html__('Product Price', 'fluent-cart'),
-                'tab'   => Controls_Manager::TAB_STYLE,
-            ]
-        );
-
-        $this->add_group_control(
-            Group_Control_Typography::get_type(),
-            [
-                'name'     => 'price_typography',
-                'selector' => '{{WRAPPER}} .fct-product-card-prices',
-            ]
-        );
-
-        $this->add_control(
-            'price_color',
-            [
-                'label'     => esc_html__('Color', 'fluent-cart'),
-                'type'      => Controls_Manager::COLOR,
-                'selectors' => [
-                    '{{WRAPPER}} .fct-product-card-prices' => 'color: {{VALUE}};',
-                ],
-            ]
-        );
-
-        $this->add_responsive_control(
-            'price_margin',
-            [
-                'label'      => esc_html__('Margin', 'fluent-cart'),
-                'type'       => Controls_Manager::DIMENSIONS,
-                'size_units' => ['px', 'em', '%'],
-                'selectors'  => [
-                    '{{WRAPPER}} .fct-product-card-prices' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-                ],
-            ]
-        );
-
-        $this->end_controls_section();
-    }
-
-    private function registerButtonStyleControls()
-    {
-        $this->start_controls_section(
-            'button_style_section',
-            [
-                'label' => esc_html__('Product Button', 'fluent-cart'),
-                'tab'   => Controls_Manager::TAB_STYLE,
-            ]
-        );
-
-        $this->add_group_control(
-            Group_Control_Typography::get_type(),
-            [
-                'name'     => 'product_button_typography',
-                'selector' => '{{WRAPPER}} .fct-product-card .fct-button',
-            ]
-        );
-
-        $this->start_controls_tabs('tabs_product_button_style');
-
-        $this->start_controls_tab(
-            'tab_product_button_normal',
-            [
-                'label' => esc_html__('Normal', 'fluent-cart'),
-            ]
-        );
-
-        $this->add_control(
-            'product_button_text_color',
-            [
-                'label'     => esc_html__('Text Color', 'fluent-cart'),
-                'type'      => Controls_Manager::COLOR,
-                'selectors' => [
-                    '{{WRAPPER}} .fct-product-card .fct-button' => 'color: {{VALUE}};',
-                ],
-            ]
-        );
-
-        $this->add_group_control(
-            Group_Control_Background::get_type(),
-            [
-                'name'     => 'product_button_background',
-                'types'    => ['classic', 'gradient'],
-                'selector' => '{{WRAPPER}} .fct-product-card .fct-button',
-            ]
-        );
-
-        $this->add_group_control(
-            Group_Control_Border::get_type(),
-            [
-                'name'     => 'product_button_border',
-                'selector' => '{{WRAPPER}} .fct-product-card .fct-button',
-            ]
-        );
-
-        $this->add_control(
-            'product_button_border_radius',
-            [
-                'label'      => esc_html__('Border Radius', 'fluent-cart'),
-                'type'       => Controls_Manager::DIMENSIONS,
-                'size_units' => ['px', '%', 'em'],
-                'selectors'  => [
-                    '{{WRAPPER}} .fct-product-card .fct-button' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-                ],
-            ]
-        );
-
-        $this->add_responsive_control(
-            'product_button_padding',
-            [
-                'label'      => esc_html__('Padding', 'fluent-cart'),
-                'type'       => Controls_Manager::DIMENSIONS,
-                'size_units' => ['px', 'em', '%'],
-                'selectors'  => [
-                    '{{WRAPPER}} .fct-product-card .fct-button' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-                ],
-            ]
-        );
-
-        $this->end_controls_tab();
-
-        $this->start_controls_tab(
-            'tab_product_button_hover',
-            [
-                'label' => esc_html__('Hover', 'fluent-cart'),
-            ]
-        );
-
-        $this->add_control(
-            'product_button_hover_text_color',
-            [
-                'label'     => esc_html__('Text Color', 'fluent-cart'),
-                'type'      => Controls_Manager::COLOR,
-                'selectors' => [
-                    '{{WRAPPER}} .fct-product-card .fct-button:hover' => 'color: {{VALUE}};',
-                ],
-            ]
-        );
-
-        $this->add_group_control(
-            Group_Control_Background::get_type(),
-            [
-                'name'     => 'product_button_hover_background',
-                'types'    => ['classic', 'gradient'],
-                'selector' => '{{WRAPPER}} .fct-product-card .fct-button:hover',
-            ]
-        );
-
-        $this->add_group_control(
-            Group_Control_Border::get_type(),
-            [
-                'name'     => 'product_button_hover_border',
-                'selector' => '{{WRAPPER}} .fct-product-card .fct-button:hover',
-            ]
-        );
-
-        $this->end_controls_tab();
-        $this->end_controls_tabs();
-
-        $this->end_controls_section();
-    }
-
     private function registerNavigationStyleControls()
     {
         $this->start_controls_section(
@@ -904,7 +617,8 @@ class ProductCarouselWidget extends Widget_Base
         <style>
             .fct-elementor-preview a,
             .fct-elementor-preview button,
-            .fct-elementor-preview .fct-button,
+            .fct-elementor-preview .fct-product-view-button,
+            .fct-elementor-preview .fluent-cart-add-to-cart-button,
             .fct-elementor-preview [data-fct-product-card] {
                 pointer-events: none;
             }
