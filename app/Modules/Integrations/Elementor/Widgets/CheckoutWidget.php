@@ -104,6 +104,7 @@ class CheckoutWidget extends Widget_Base
         $this->registerSubmitButtonStyleControls();
         $this->registerSummaryBoxStyleControls();
         $this->registerSummaryItemsStyleControls();
+        $this->registerLineItemsStyleControls();
         $this->registerCouponFieldStyleControls();
         $this->registerPaymentMethodsStyleControls();
         $this->registerAddressFieldsStyleControls();
@@ -516,7 +517,18 @@ class CheckoutWidget extends Widget_Base
                 [
                         'name'     => 'label_typography',
                         'label'    => esc_html__('Label Typography', 'fluent-cart'),
-                        'selector' => '{{WRAPPER}} .fct_checkout label',
+                        'selector' => '{{WRAPPER}} .fct_checkout label, {{WRAPPER}} .fct_checkout .fct_input_label',
+                ]
+        );
+
+        $this->add_control(
+                'label_color',
+                [
+                        'label'     => esc_html__('Label Color', 'fluent-cart'),
+                        'type'      => Controls_Manager::COLOR,
+                        'selectors' => [
+                                '{{WRAPPER}} .fct_checkout label, {{WRAPPER}} .fct_checkout .fct_input_label' => 'color: {{VALUE}};',
+                        ],
                 ]
         );
 
@@ -660,7 +672,7 @@ class CheckoutWidget extends Widget_Base
                                 'px' => ['min' => 0, 'max' => 50],
                         ],
                         'selectors'  => [
-                                '{{WRAPPER}} .fct_checkout .fct_form_group' => 'margin-bottom: {{SIZE}}{{UNIT}};',
+                                '{{WRAPPER}} .fct_checkout .fct_input_wrapper' => 'margin-bottom: {{SIZE}}{{UNIT}};',
                         ],
                 ]
         );
@@ -693,11 +705,13 @@ class CheckoutWidget extends Widget_Base
                 ]
         );
 
+        $headingTextSelector = '{{WRAPPER}} .fct_checkout .fct_form_section_header_label, {{WRAPPER}} .fct_checkout .fct_form_section_header h3, {{WRAPPER}} .fct_checkout .fct_form_section_header h4';
+
         $this->add_group_control(
                 Group_Control_Typography::get_type(),
                 [
                         'name'     => 'section_heading_typography',
-                        'selector' => '{{WRAPPER}} .fct_checkout .fct_form_section_heading, {{WRAPPER}} .fct_checkout h3, {{WRAPPER}} .fct_checkout h4',
+                        'selector' => $headingTextSelector,
                 ]
         );
 
@@ -707,7 +721,7 @@ class CheckoutWidget extends Widget_Base
                         'label'     => esc_html__('Color', 'fluent-cart'),
                         'type'      => Controls_Manager::COLOR,
                         'selectors' => [
-                                '{{WRAPPER}} .fct_checkout .fct_form_section_heading, {{WRAPPER}} .fct_checkout h3, {{WRAPPER}} .fct_checkout h4' => 'color: {{VALUE}};',
+                                $headingTextSelector => 'color: {{VALUE}};',
                         ],
                 ]
         );
@@ -718,7 +732,7 @@ class CheckoutWidget extends Widget_Base
                         'label'     => esc_html__('Background Color', 'fluent-cart'),
                         'type'      => Controls_Manager::COLOR,
                         'selectors' => [
-                                '{{WRAPPER}} .fct_checkout .fct_form_section_heading' => 'background-color: {{VALUE}};',
+                                '{{WRAPPER}} .fct_checkout .fct_form_section_header' => 'background-color: {{VALUE}};',
                         ],
                 ]
         );
@@ -730,7 +744,7 @@ class CheckoutWidget extends Widget_Base
                         'type'       => Controls_Manager::DIMENSIONS,
                         'size_units' => ['px', 'em'],
                         'selectors'  => [
-                                '{{WRAPPER}} .fct_checkout .fct_form_section_heading' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                                '{{WRAPPER}} .fct_checkout .fct_form_section_header' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
                         ],
                 ]
         );
@@ -742,7 +756,7 @@ class CheckoutWidget extends Widget_Base
                         'type'       => Controls_Manager::DIMENSIONS,
                         'size_units' => ['px', 'em'],
                         'selectors'  => [
-                                '{{WRAPPER}} .fct_checkout .fct_form_section_heading' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                                '{{WRAPPER}} .fct_checkout .fct_form_section_header' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
                         ],
                 ]
         );
@@ -751,7 +765,7 @@ class CheckoutWidget extends Widget_Base
                 Group_Control_Border::get_type(),
                 [
                         'name'     => 'section_heading_border',
-                        'selector' => '{{WRAPPER}} .fct_checkout .fct_form_section_heading',
+                        'selector' => '{{WRAPPER}} .fct_checkout .fct_form_section_header',
                 ]
         );
 
@@ -771,11 +785,14 @@ class CheckoutWidget extends Widget_Base
                 ]
         );
 
+        $btnSelector = '{{WRAPPER}} .fct_checkout .fct_place_order_btn, {{WRAPPER}} .fct_checkout .fct_place_order_btn_wrap button[type="submit"]';
+        $btnHoverSelector = '{{WRAPPER}} .fct_checkout .fct_place_order_btn:hover, {{WRAPPER}} .fct_checkout .fct_place_order_btn_wrap button[type="submit"]:hover';
+
         $this->add_group_control(
                 Group_Control_Typography::get_type(),
                 [
                         'name'     => 'submit_button_typography',
-                        'selector' => '{{WRAPPER}} .fct_checkout .fct_checkout_btn, {{WRAPPER}} .fct_checkout button[type="submit"]',
+                        'selector' => $btnSelector,
                 ]
         );
 
@@ -794,7 +811,7 @@ class CheckoutWidget extends Widget_Base
                                 'full' => '100%',
                         ],
                         'selectors'            => [
-                                '{{WRAPPER}} .fct_checkout .fct_checkout_btn, {{WRAPPER}} .fct_checkout button[type="submit"]' => 'width: {{VALUE}};',
+                                $btnSelector => 'width: {{VALUE}};',
                         ],
                 ]
         );
@@ -810,7 +827,7 @@ class CheckoutWidget extends Widget_Base
                                 'right'  => ['title' => esc_html__('Right', 'fluent-cart'), 'icon' => 'eicon-text-align-right'],
                         ],
                         'selectors' => [
-                                '{{WRAPPER}} .fct_checkout .fct_checkout_btn_wrap' => 'text-align: {{VALUE}};',
+                                '{{WRAPPER}} .fct_checkout .fct_place_order_btn_wrap' => 'text-align: {{VALUE}};',
                         ],
                         'condition' => [
                                 'submit_button_width' => 'auto',
@@ -832,7 +849,7 @@ class CheckoutWidget extends Widget_Base
                         'label'     => esc_html__('Text Color', 'fluent-cart'),
                         'type'      => Controls_Manager::COLOR,
                         'selectors' => [
-                                '{{WRAPPER}} .fct_checkout .fct_checkout_btn, {{WRAPPER}} .fct_checkout button[type="submit"]' => 'color: {{VALUE}};',
+                                $btnSelector => 'color: {{VALUE}};',
                         ],
                 ]
         );
@@ -842,7 +859,7 @@ class CheckoutWidget extends Widget_Base
                 [
                         'name'     => 'submit_button_background',
                         'types'    => ['classic', 'gradient'],
-                        'selector' => '{{WRAPPER}} .fct_checkout .fct_checkout_btn, {{WRAPPER}} .fct_checkout button[type="submit"]',
+                        'selector' => $btnSelector,
                 ]
         );
 
@@ -850,7 +867,7 @@ class CheckoutWidget extends Widget_Base
                 Group_Control_Border::get_type(),
                 [
                         'name'     => 'submit_button_border',
-                        'selector' => '{{WRAPPER}} .fct_checkout .fct_checkout_btn, {{WRAPPER}} .fct_checkout button[type="submit"]',
+                        'selector' => $btnSelector,
                 ]
         );
 
@@ -858,7 +875,7 @@ class CheckoutWidget extends Widget_Base
                 Group_Control_Box_Shadow::get_type(),
                 [
                         'name'     => 'submit_button_shadow',
-                        'selector' => '{{WRAPPER}} .fct_checkout .fct_checkout_btn, {{WRAPPER}} .fct_checkout button[type="submit"]',
+                        'selector' => $btnSelector,
                 ]
         );
 
@@ -876,7 +893,7 @@ class CheckoutWidget extends Widget_Base
                         'label'     => esc_html__('Text Color', 'fluent-cart'),
                         'type'      => Controls_Manager::COLOR,
                         'selectors' => [
-                                '{{WRAPPER}} .fct_checkout .fct_checkout_btn:hover, {{WRAPPER}} .fct_checkout button[type="submit"]:hover' => 'color: {{VALUE}};',
+                                $btnHoverSelector => 'color: {{VALUE}};',
                         ],
                 ]
         );
@@ -886,7 +903,7 @@ class CheckoutWidget extends Widget_Base
                 [
                         'name'     => 'submit_button_hover_background',
                         'types'    => ['classic', 'gradient'],
-                        'selector' => '{{WRAPPER}} .fct_checkout .fct_checkout_btn:hover, {{WRAPPER}} .fct_checkout button[type="submit"]:hover',
+                        'selector' => $btnHoverSelector,
                 ]
         );
 
@@ -894,7 +911,7 @@ class CheckoutWidget extends Widget_Base
                 Group_Control_Border::get_type(),
                 [
                         'name'     => 'submit_button_hover_border',
-                        'selector' => '{{WRAPPER}} .fct_checkout .fct_checkout_btn:hover, {{WRAPPER}} .fct_checkout button[type="submit"]:hover',
+                        'selector' => $btnHoverSelector,
                 ]
         );
 
@@ -902,7 +919,7 @@ class CheckoutWidget extends Widget_Base
                 Group_Control_Box_Shadow::get_type(),
                 [
                         'name'     => 'submit_button_hover_shadow',
-                        'selector' => '{{WRAPPER}} .fct_checkout .fct_checkout_btn:hover, {{WRAPPER}} .fct_checkout button[type="submit"]:hover',
+                        'selector' => $btnHoverSelector,
                 ]
         );
 
@@ -932,7 +949,7 @@ class CheckoutWidget extends Widget_Base
                         'size_units' => ['px', '%'],
                         'separator'  => 'before',
                         'selectors'  => [
-                                '{{WRAPPER}} .fct_checkout .fct_checkout_btn, {{WRAPPER}} .fct_checkout button[type="submit"]' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                                $btnSelector => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
                         ],
                 ]
         );
@@ -944,7 +961,7 @@ class CheckoutWidget extends Widget_Base
                         'type'       => Controls_Manager::DIMENSIONS,
                         'size_units' => ['px', 'em'],
                         'selectors'  => [
-                                '{{WRAPPER}} .fct_checkout .fct_checkout_btn, {{WRAPPER}} .fct_checkout button[type="submit"]' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                                $btnSelector => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
                         ],
                 ]
         );
@@ -956,7 +973,7 @@ class CheckoutWidget extends Widget_Base
                         'type'      => Controls_Manager::NUMBER,
                         'default'   => 300,
                         'selectors' => [
-                                '{{WRAPPER}} .fct_checkout .fct_checkout_btn, {{WRAPPER}} .fct_checkout button[type="submit"]' => 'transition: all {{VALUE}}ms ease;',
+                                $btnSelector => 'transition: all {{VALUE}}ms ease;',
                         ],
                 ]
         );
@@ -981,7 +998,7 @@ class CheckoutWidget extends Widget_Base
                         ],
                         'default'   => ['size' => 0.6],
                         'selectors' => [
-                                '{{WRAPPER}} .fct_checkout .fct_checkout_btn:disabled, {{WRAPPER}} .fct_checkout .fct_checkout_btn.is-loading' => 'opacity: {{SIZE}};',
+                                '{{WRAPPER}} .fct_checkout .fct_place_order_btn:disabled, {{WRAPPER}} .fct_checkout .fct_place_order_btn_wrap button[type="submit"]:disabled' => 'opacity: {{SIZE}};',
                         ],
                 ]
         );
@@ -1214,6 +1231,111 @@ class CheckoutWidget extends Widget_Base
     }
 
     /**
+     * Line Items Style Controls (product cards in order summary)
+     */
+    private function registerLineItemsStyleControls()
+    {
+        $this->start_controls_section(
+                'line_items_style_section',
+                [
+                        'label' => esc_html__('Line Items', 'fluent-cart'),
+                        'tab'   => Controls_Manager::TAB_STYLE,
+                ]
+        );
+
+        $this->add_group_control(
+                Group_Control_Typography::get_type(),
+                [
+                        'name'     => 'line_item_title_typography',
+                        'label'    => esc_html__('Title Typography', 'fluent-cart'),
+                        'selector' => '{{WRAPPER}} .fct_item_title, {{WRAPPER}} .fct_item_title a',
+                ]
+        );
+
+        $this->add_control(
+                'line_item_title_color',
+                [
+                        'label'     => esc_html__('Title Color', 'fluent-cart'),
+                        'type'      => Controls_Manager::COLOR,
+                        'selectors' => [
+                                '{{WRAPPER}} .fct_item_title, {{WRAPPER}} .fct_item_title a' => 'color: {{VALUE}};',
+                        ],
+                ]
+        );
+
+        $this->add_group_control(
+                Group_Control_Typography::get_type(),
+                [
+                        'name'     => 'line_item_price_typography',
+                        'label'    => esc_html__('Price Typography', 'fluent-cart'),
+                        'selector' => '{{WRAPPER}} .fct_line_item_price, {{WRAPPER}} .fct_line_item_total',
+                ]
+        );
+
+        $this->add_control(
+                'line_item_price_color',
+                [
+                        'label'     => esc_html__('Price Color', 'fluent-cart'),
+                        'type'      => Controls_Manager::COLOR,
+                        'selectors' => [
+                                '{{WRAPPER}} .fct_line_item_price, {{WRAPPER}} .fct_line_item_total' => 'color: {{VALUE}};',
+                        ],
+                ]
+        );
+
+        $this->add_control(
+                'line_item_image_border_radius',
+                [
+                        'label'      => esc_html__('Image Border Radius', 'fluent-cart'),
+                        'type'       => Controls_Manager::DIMENSIONS,
+                        'size_units' => ['px', '%'],
+                        'separator'  => 'before',
+                        'selectors'  => [
+                                '{{WRAPPER}} .fct_item_image img' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                        ],
+                ]
+        );
+
+        $this->add_responsive_control(
+                'line_item_spacing',
+                [
+                        'label'      => esc_html__('Item Spacing', 'fluent-cart'),
+                        'type'       => Controls_Manager::SLIDER,
+                        'size_units' => ['px'],
+                        'range'      => [
+                                'px' => ['min' => 0, 'max' => 30],
+                        ],
+                        'selectors'  => [
+                                '{{WRAPPER}} .fct_line_item' => 'margin-bottom: {{SIZE}}{{UNIT}};',
+                        ],
+                ]
+        );
+
+        $this->add_group_control(
+                Group_Control_Border::get_type(),
+                [
+                        'name'     => 'line_item_border',
+                        'label'    => esc_html__('Item Border', 'fluent-cart'),
+                        'selector' => '{{WRAPPER}} .fct_line_item',
+                ]
+        );
+
+        $this->add_responsive_control(
+                'line_item_padding',
+                [
+                        'label'      => esc_html__('Item Padding', 'fluent-cart'),
+                        'type'       => Controls_Manager::DIMENSIONS,
+                        'size_units' => ['px', 'em'],
+                        'selectors'  => [
+                                '{{WRAPPER}} .fct_line_item' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                        ],
+                ]
+        );
+
+        $this->end_controls_section();
+    }
+
+    /**
      * Coupon Field Style Controls
      */
     private function registerCouponFieldStyleControls()
@@ -1226,13 +1348,16 @@ class CheckoutWidget extends Widget_Base
                 ]
         );
 
+        $couponBtnSelector = '{{WRAPPER}} .fct_coupon_field button[type="submit"]';
+        $couponBtnHoverSelector = '{{WRAPPER}} .fct_coupon_field button[type="submit"]:hover';
+
         $this->add_control(
                 'coupon_toggle_color',
                 [
                         'label'     => esc_html__('Toggle Link Color', 'fluent-cart'),
                         'type'      => Controls_Manager::COLOR,
                         'selectors' => [
-                                '{{WRAPPER}} .fct_coupon_toggle' => 'color: {{VALUE}};',
+                                '{{WRAPPER}} .fct_coupon_toggle, {{WRAPPER}} .fct_coupon_toggle a' => 'color: {{VALUE}};',
                         ],
                 ]
         );
@@ -1259,7 +1384,7 @@ class CheckoutWidget extends Widget_Base
                         'label'     => esc_html__('Text Color', 'fluent-cart'),
                         'type'      => Controls_Manager::COLOR,
                         'selectors' => [
-                                '{{WRAPPER}} .fct_coupon_apply_btn' => 'color: {{VALUE}};',
+                                $couponBtnSelector => 'color: {{VALUE}};',
                         ],
                 ]
         );
@@ -1270,7 +1395,7 @@ class CheckoutWidget extends Widget_Base
                         'label'     => esc_html__('Background', 'fluent-cart'),
                         'type'      => Controls_Manager::COLOR,
                         'selectors' => [
-                                '{{WRAPPER}} .fct_coupon_apply_btn' => 'background-color: {{VALUE}};',
+                                $couponBtnSelector => 'background-color: {{VALUE}};',
                         ],
                 ]
         );
@@ -1288,7 +1413,7 @@ class CheckoutWidget extends Widget_Base
                         'label'     => esc_html__('Text Color', 'fluent-cart'),
                         'type'      => Controls_Manager::COLOR,
                         'selectors' => [
-                                '{{WRAPPER}} .fct_coupon_apply_btn:hover' => 'color: {{VALUE}};',
+                                $couponBtnHoverSelector => 'color: {{VALUE}};',
                         ],
                 ]
         );
@@ -1299,7 +1424,7 @@ class CheckoutWidget extends Widget_Base
                         'label'     => esc_html__('Background', 'fluent-cart'),
                         'type'      => Controls_Manager::COLOR,
                         'selectors' => [
-                                '{{WRAPPER}} .fct_coupon_apply_btn:hover' => 'background-color: {{VALUE}};',
+                                $couponBtnHoverSelector => 'background-color: {{VALUE}};',
                         ],
                 ]
         );
@@ -1360,7 +1485,7 @@ class CheckoutWidget extends Widget_Base
                         'label'     => esc_html__('Background Color', 'fluent-cart'),
                         'type'      => Controls_Manager::COLOR,
                         'selectors' => [
-                                '{{WRAPPER}} .fct_payment_method_item' => 'background-color: {{VALUE}};',
+                                '{{WRAPPER}} .fct_payment_method_wrapper' => 'background-color: {{VALUE}};',
                         ],
                 ]
         );
@@ -1371,7 +1496,7 @@ class CheckoutWidget extends Widget_Base
                         'label'     => esc_html__('Selected Background', 'fluent-cart'),
                         'type'      => Controls_Manager::COLOR,
                         'selectors' => [
-                                '{{WRAPPER}} .fct_payment_method_item.is-selected' => 'background-color: {{VALUE}};',
+                                '{{WRAPPER}} .fct_payment_method_wrapper.active' => 'background-color: {{VALUE}};',
                         ],
                 ]
         );
@@ -1380,7 +1505,7 @@ class CheckoutWidget extends Widget_Base
                 Group_Control_Border::get_type(),
                 [
                         'name'     => 'payment_method_border',
-                        'selector' => '{{WRAPPER}} .fct_payment_method_item',
+                        'selector' => '{{WRAPPER}} .fct_payment_method_wrapper',
                 ]
         );
 
@@ -1390,7 +1515,7 @@ class CheckoutWidget extends Widget_Base
                         'label'     => esc_html__('Selected Border Color', 'fluent-cart'),
                         'type'      => Controls_Manager::COLOR,
                         'selectors' => [
-                                '{{WRAPPER}} .fct_payment_method_item.is-selected' => 'border-color: {{VALUE}};',
+                                '{{WRAPPER}} .fct_payment_method_wrapper.active' => 'border-color: {{VALUE}};',
                         ],
                 ]
         );
@@ -1402,7 +1527,7 @@ class CheckoutWidget extends Widget_Base
                         'type'       => Controls_Manager::DIMENSIONS,
                         'size_units' => ['px', '%'],
                         'selectors'  => [
-                                '{{WRAPPER}} .fct_payment_method_item' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                                '{{WRAPPER}} .fct_payment_method_wrapper' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
                         ],
                 ]
         );
@@ -1414,7 +1539,7 @@ class CheckoutWidget extends Widget_Base
                         'type'       => Controls_Manager::DIMENSIONS,
                         'size_units' => ['px', 'em'],
                         'selectors'  => [
-                                '{{WRAPPER}} .fct_payment_method_item' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                                '{{WRAPPER}} .fct_payment_method_wrapper' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
                         ],
                 ]
         );
@@ -1429,7 +1554,7 @@ class CheckoutWidget extends Widget_Base
                                 'px' => ['min' => 0, 'max' => 30],
                         ],
                         'selectors'  => [
-                                '{{WRAPPER}} .fct_payment_method_item' => 'margin-bottom: {{SIZE}}{{UNIT}};',
+                                '{{WRAPPER}} .fct_payment_method_wrapper' => 'margin-bottom: {{SIZE}}{{UNIT}};',
                         ],
                 ]
         );
@@ -1439,7 +1564,18 @@ class CheckoutWidget extends Widget_Base
                 [
                         'name'     => 'payment_method_title_typography',
                         'label'    => esc_html__('Title Typography', 'fluent-cart'),
-                        'selector' => '{{WRAPPER}} .fct_payment_method_title',
+                        'selector' => '{{WRAPPER}} .fct_payment_method_wrapper label',
+                ]
+        );
+
+        $this->add_control(
+                'payment_method_title_color',
+                [
+                        'label'     => esc_html__('Title Color', 'fluent-cart'),
+                        'type'      => Controls_Manager::COLOR,
+                        'selectors' => [
+                                '{{WRAPPER}} .fct_payment_method_wrapper label' => 'color: {{VALUE}};',
+                        ],
                 ]
         );
 
@@ -1448,7 +1584,18 @@ class CheckoutWidget extends Widget_Base
                 [
                         'name'     => 'payment_method_desc_typography',
                         'label'    => esc_html__('Description Typography', 'fluent-cart'),
-                        'selector' => '{{WRAPPER}} .fct_payment_method_description',
+                        'selector' => '{{WRAPPER}} .fct_payment_method_instructions',
+                ]
+        );
+
+        $this->add_control(
+                'payment_method_desc_color',
+                [
+                        'label'     => esc_html__('Description Color', 'fluent-cart'),
+                        'type'      => Controls_Manager::COLOR,
+                        'selectors' => [
+                                '{{WRAPPER}} .fct_payment_method_instructions' => 'color: {{VALUE}};',
+                        ],
                 ]
         );
 
@@ -1468,23 +1615,26 @@ class CheckoutWidget extends Widget_Base
                 ]
         );
 
+        $addressSectionSelector = '{{WRAPPER}} .fct_checkout_billing_and_shipping .fct_checkout_form_section';
+        $addressTitleSelector = '{{WRAPPER}} .fct_checkout_billing_and_shipping .fct_form_section_header_label';
+
         $this->add_group_control(
                 Group_Control_Border::get_type(),
                 [
                         'name'     => 'address_group_border',
-                        'label'    => esc_html__('Group Border', 'fluent-cart'),
-                        'selector' => '{{WRAPPER}} .fct_address_group',
+                        'label'    => esc_html__('Section Border', 'fluent-cart'),
+                        'selector' => $addressSectionSelector,
                 ]
         );
 
         $this->add_control(
                 'address_group_border_radius',
                 [
-                        'label'      => esc_html__('Group Border Radius', 'fluent-cart'),
+                        'label'      => esc_html__('Section Border Radius', 'fluent-cart'),
                         'type'       => Controls_Manager::DIMENSIONS,
                         'size_units' => ['px', '%'],
                         'selectors'  => [
-                                '{{WRAPPER}} .fct_address_group' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                                $addressSectionSelector => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
                         ],
                 ]
         );
@@ -1492,11 +1642,11 @@ class CheckoutWidget extends Widget_Base
         $this->add_responsive_control(
                 'address_group_padding',
                 [
-                        'label'      => esc_html__('Group Padding', 'fluent-cart'),
+                        'label'      => esc_html__('Section Padding', 'fluent-cart'),
                         'type'       => Controls_Manager::DIMENSIONS,
                         'size_units' => ['px', 'em'],
                         'selectors'  => [
-                                '{{WRAPPER}} .fct_address_group' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                                $addressSectionSelector => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
                         ],
                 ]
         );
@@ -1506,7 +1656,7 @@ class CheckoutWidget extends Widget_Base
                 [
                         'name'     => 'address_title_typography',
                         'label'    => esc_html__('Address Title Typography', 'fluent-cart'),
-                        'selector' => '{{WRAPPER}} .fct_address_title',
+                        'selector' => $addressTitleSelector,
                 ]
         );
 
@@ -1516,7 +1666,7 @@ class CheckoutWidget extends Widget_Base
                         'label'     => esc_html__('Address Title Color', 'fluent-cart'),
                         'type'      => Controls_Manager::COLOR,
                         'selectors' => [
-                                '{{WRAPPER}} .fct_address_title' => 'color: {{VALUE}};',
+                                $addressTitleSelector => 'color: {{VALUE}};',
                         ],
                 ]
         );
@@ -1544,7 +1694,7 @@ class CheckoutWidget extends Widget_Base
                         'type'      => Controls_Manager::COLOR,
                         'default'   => '#dc3545',
                         'selectors' => [
-                                '{{WRAPPER}} .fct_error_message, {{WRAPPER}} .fct_field_error' => 'color: {{VALUE}};',
+                                '{{WRAPPER}} .fct_form_error' => 'color: {{VALUE}};',
                         ],
                 ]
         );
@@ -1552,35 +1702,11 @@ class CheckoutWidget extends Widget_Base
         $this->add_control(
                 'error_border_color',
                 [
-                        'label'     => esc_html__('Error Border Color', 'fluent-cart'),
+                        'label'     => esc_html__('Error Field Border Color', 'fluent-cart'),
                         'type'      => Controls_Manager::COLOR,
                         'default'   => '#dc3545',
                         'selectors' => [
-                                '{{WRAPPER}} .fct_checkout input.has-error, {{WRAPPER}} .fct_checkout select.has-error' => 'border-color: {{VALUE}};',
-                        ],
-                ]
-        );
-
-        $this->add_control(
-                'success_message_color',
-                [
-                        'label'     => esc_html__('Success Message Color', 'fluent-cart'),
-                        'type'      => Controls_Manager::COLOR,
-                        'default'   => '#28a745',
-                        'selectors' => [
-                                '{{WRAPPER}} .fct_success_message' => 'color: {{VALUE}};',
-                        ],
-                ]
-        );
-
-        $this->add_control(
-                'required_indicator_color',
-                [
-                        'label'     => esc_html__('Required Indicator Color', 'fluent-cart'),
-                        'type'      => Controls_Manager::COLOR,
-                        'default'   => '#dc3545',
-                        'selectors' => [
-                                '{{WRAPPER}} .fct_checkout label .required' => 'color: {{VALUE}};',
+                                '{{WRAPPER}} .fct_checkout .has-error input, {{WRAPPER}} .fct_checkout .has-error select, {{WRAPPER}} .fct_checkout .has-error textarea' => 'border-color: {{VALUE}};',
                         ],
                 ]
         );
@@ -1590,7 +1716,7 @@ class CheckoutWidget extends Widget_Base
                 [
                         'name'     => 'error_message_typography',
                         'label'    => esc_html__('Error Message Typography', 'fluent-cart'),
-                        'selector' => '{{WRAPPER}} .fct_error_message, {{WRAPPER}} .fct_field_error',
+                        'selector' => '{{WRAPPER}} .fct_form_error',
                 ]
         );
 

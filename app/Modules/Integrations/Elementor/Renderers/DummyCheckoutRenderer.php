@@ -356,9 +356,13 @@ class DummyCheckoutRenderer
         $heading = $customHeading ?: __('Order Notes', 'fluent-cart');
         ?>
         <div class="fct_checkout_form_section fct_order_notes_section">
-            <h3 class="fct_form_section_heading"><?php echo esc_html($heading); ?></h3>
-            <div class="fct_form_group">
-                <textarea class="fct_form_control" rows="3" placeholder="<?php esc_attr_e('Notes about your order, e.g. special notes for delivery.', 'fluent-cart'); ?>" disabled></textarea>
+            <div class="fct_form_section_header">
+                <h4 class="fct_form_section_header_label"><?php echo esc_html($heading); ?></h4>
+            </div>
+            <div class="fct_form_section_body">
+                <div class="fct_input_wrapper fct_input_wrapper_textarea">
+                    <textarea class="fct-input fct-input-textarea" rows="3" placeholder="<?php esc_attr_e('Notes about your order, e.g. special notes for delivery.', 'fluent-cart'); ?>" disabled></textarea>
+                </div>
             </div>
         </div>
         <?php
