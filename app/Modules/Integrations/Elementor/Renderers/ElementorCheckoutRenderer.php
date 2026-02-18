@@ -149,7 +149,7 @@ class ElementorCheckoutRenderer
                     </div>
                 </div>
             <?php else: ?>
-                <div class="fce-checkout-single-column fct_checkout_inner">
+                <div class="fce-checkout-single-column">
                     <div class="fct_checkout_form">
                         <div class="fct_checkout_form_items">
                             <?php $this->renderFormElements(); ?>
@@ -432,6 +432,9 @@ class ElementorCheckoutRenderer
      */
     protected function renderSummaryExtras(array $summaryElements): void
     {
+        // Render order notes before order bumps (matching core FluentCart behavior)
+        $this->checkoutRenderer->renderOrderNoteField();
+
         foreach ($summaryElements as $element) {
             $type = $element['element_type'] ?? '';
             $visible = ($element['element_visibility'] ?? 'yes') === 'yes';
@@ -444,8 +447,6 @@ class ElementorCheckoutRenderer
                 $this->renderOrderBump();
             }
         }
-
-        do_action('fluent_cart/after_order_notes', ['cart' => $this->cart]);
     }
 
     /**

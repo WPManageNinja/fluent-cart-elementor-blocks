@@ -71,6 +71,7 @@ class DummyCheckoutRenderer
                     </div>
                     <div class="fce-checkout-summary-column fct_checkout_summary <?php echo $stickySummary ? 'is-sticky' : ''; ?>">
                         <?php $this->renderSummaryElements(); ?>
+                        <?php $this->renderOrderNotes(); ?>
 
                         <?php
                             $summaryElements = $this->settings['summary_elements'] ?? [];
@@ -88,7 +89,7 @@ class DummyCheckoutRenderer
                     </div>
                 </div>
             <?php else: ?>
-                <div class="fce-checkout-single-column fct_checkout_inner">
+                <div class="fce-checkout-single-column">
                     <div class="fct_checkout_form">
                         <div class="fct_checkout_form_items">
                             <?php $this->renderFormElements(); ?>
@@ -96,6 +97,17 @@ class DummyCheckoutRenderer
                     </div>
                     <div class="fct_checkout_summary">
                         <?php $this->renderSummaryElements(); ?>
+                        <?php $this->renderOrderNotes(); ?>
+                        <?php
+                            $summaryElements = $this->settings['summary_elements'] ?? [];
+                            foreach ($summaryElements as $element) {
+                                $type = $element['element_type'] ?? '';
+                                if ($type === 'order_bump') {
+                                    $this->renderOrderBump();
+                                    break;
+                                }
+                            }
+                        ?>
                     </div>
                 </div>
             <?php endif; ?>

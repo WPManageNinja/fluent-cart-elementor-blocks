@@ -1129,7 +1129,7 @@ class CheckoutWidget extends Widget_Base
                 [
                         'label'     => esc_html__('Separator Style', 'fluent-cart'),
                         'type'      => Controls_Manager::SELECT,
-                        'default'   => 'solid',
+                        'default'   => 'none',
                         'options'   => [
                                 'none'   => esc_html__('None', 'fluent-cart'),
                                 'solid'  => esc_html__('Solid', 'fluent-cart'),
