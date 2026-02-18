@@ -42,6 +42,28 @@ class ProductExcerptWidget extends Widget_Base
         return ['product', 'excerpt', 'description', 'short', 'fluent'];
     }
 
+    public static function registerExcerptStyleControls($widget, $selector = '{{WRAPPER}} .fluentcart-product-excerpt')
+    {
+        $widget->add_control(
+            'excerpt_color',
+            [
+                'label'     => esc_html__('Text Color', 'fluent-cart'),
+                'type'      => Controls_Manager::COLOR,
+                'selectors' => [
+                    $selector => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $widget->add_group_control(
+            Group_Control_Typography::get_type(),
+            [
+                'name'     => 'excerpt_typography',
+                'selector' => $selector,
+            ]
+        );
+    }
+
     protected function register_controls()
     {
         $this->start_controls_section(
@@ -82,24 +104,7 @@ class ProductExcerptWidget extends Widget_Base
             ]
         );
 
-        $this->add_control(
-            'excerpt_color',
-            [
-                'label'     => esc_html__('Text Color', 'fluent-cart'),
-                'type'      => Controls_Manager::COLOR,
-                'selectors' => [
-                    '{{WRAPPER}} .fluentcart-product-excerpt' => 'color: {{VALUE}};',
-                ],
-            ]
-        );
-
-        $this->add_group_control(
-            Group_Control_Typography::get_type(),
-            [
-                'name'     => 'excerpt_typography',
-                'selector' => '{{WRAPPER}} .fluentcart-product-excerpt',
-            ]
-        );
+        static::registerExcerptStyleControls($this);
 
         $this->end_controls_section();
     }

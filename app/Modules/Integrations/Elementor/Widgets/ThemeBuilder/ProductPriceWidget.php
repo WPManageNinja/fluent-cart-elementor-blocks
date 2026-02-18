@@ -42,6 +42,34 @@ class ProductPriceWidget extends Widget_Base
         return ['product', 'price', 'cost', 'amount', 'fluent'];
     }
 
+    public static function registerPriceStyleControls($widget, $selector = '{{WRAPPER}} .fluentcart-product-price')
+    {
+        $priceSelectors = $selector . ', '
+            . $selector . ' .fct-price-range, '
+            . $selector . ' .fct-product-prices, '
+            . $selector . ' .fct-max-price, '
+            . $selector . ' .fct-min-price';
+
+        $widget->add_control(
+            'price_color',
+            [
+                'label'     => esc_html__('Price Color', 'fluent-cart'),
+                'type'      => Controls_Manager::COLOR,
+                'selectors' => [
+                    $priceSelectors => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $widget->add_group_control(
+            Group_Control_Typography::get_type(),
+            [
+                'name'     => 'price_typography',
+                'selector' => $priceSelectors,
+            ]
+        );
+    }
+
     protected function register_controls()
     {
         $this->start_controls_section(
@@ -81,25 +109,7 @@ class ProductPriceWidget extends Widget_Base
             ]
         );
 
-        $this->add_control(
-            'price_color',
-            [
-                'label'     => esc_html__('Price Color', 'fluent-cart'),
-                'type'      => Controls_Manager::COLOR,
-                'selectors' => [
-                    '{{WRAPPER}} .fluentcart-product-price' => 'color: {{VALUE}};',
-                    '{{WRAPPER}} .fct-product-price-range'  => 'color: {{VALUE}};',
-                ],
-            ]
-        );
-
-        $this->add_group_control(
-            Group_Control_Typography::get_type(),
-            [
-                'name'     => 'price_typography',
-                'selector' => '{{WRAPPER}} .fluentcart-product-price, {{WRAPPER}} .fct-product-price-range',
-            ]
-        );
+        static::registerPriceStyleControls($this);
 
         $this->end_controls_section();
     }

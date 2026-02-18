@@ -41,19 +41,9 @@ class ProductGalleryWidget extends Widget_Base
         return ['product', 'gallery', 'images', 'photos', 'fluent'];
     }
 
-    protected function register_controls()
+    public static function registerGalleryContentControls($widget)
     {
-        $this->start_controls_section(
-            'content_section',
-            [
-                'label' => esc_html__('Content', 'fluent-cart'),
-                'tab'   => Controls_Manager::TAB_CONTENT,
-            ]
-        );
-
-        $this->registerProductSourceControls();
-
-        $this->add_control(
+        $widget->add_control(
             'thumb_position',
             [
                 'label'   => esc_html__('Thumbnail Position', 'fluent-cart'),
@@ -68,7 +58,7 @@ class ProductGalleryWidget extends Widget_Base
             ]
         );
 
-        $this->add_control(
+        $widget->add_control(
             'thumbnail_mode',
             [
                 'label'   => esc_html__('Thumbnail Mode', 'fluent-cart'),
@@ -81,6 +71,21 @@ class ProductGalleryWidget extends Widget_Base
                 ],
             ]
         );
+    }
+
+    protected function register_controls()
+    {
+        $this->start_controls_section(
+            'content_section',
+            [
+                'label' => esc_html__('Content', 'fluent-cart'),
+                'tab'   => Controls_Manager::TAB_CONTENT,
+            ]
+        );
+
+        $this->registerProductSourceControls();
+
+        static::registerGalleryContentControls($this);
 
         $this->end_controls_section();
     }

@@ -42,6 +42,39 @@ class ProductStockWidget extends Widget_Base
         return ['product', 'stock', 'availability', 'inventory', 'fluent'];
     }
 
+    public static function registerStockStyleControls($widget, $selector = '{{WRAPPER}} .fct-product-stock')
+    {
+        $widget->add_group_control(
+            Group_Control_Typography::get_type(),
+            [
+                'name'     => 'stock_typography',
+                'selector' => $selector . ' .fct-stock-status',
+            ]
+        );
+
+        $widget->add_control(
+            'in_stock_color',
+            [
+                'label'     => esc_html__('In Stock Color', 'fluent-cart'),
+                'type'      => Controls_Manager::COLOR,
+                'selectors' => [
+                    $selector . ':not(.out-of-stock) .fct-stock-status' => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $widget->add_control(
+            'out_of_stock_color',
+            [
+                'label'     => esc_html__('Out of Stock Color', 'fluent-cart'),
+                'type'      => Controls_Manager::COLOR,
+                'selectors' => [
+                    $selector . '.out-of-stock .fct-stock-status' => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+    }
+
     protected function register_controls()
     {
         $this->start_controls_section(
@@ -65,35 +98,7 @@ class ProductStockWidget extends Widget_Base
             ]
         );
 
-        $this->add_group_control(
-            Group_Control_Typography::get_type(),
-            [
-                'name'     => 'stock_typography',
-                'selector' => '{{WRAPPER}} .fct-product-stock .fct-stock-status',
-            ]
-        );
-
-        $this->add_control(
-            'in_stock_color',
-            [
-                'label'     => esc_html__('In Stock Color', 'fluent-cart'),
-                'type'      => Controls_Manager::COLOR,
-                'selectors' => [
-                    '{{WRAPPER}} .fct-product-stock:not(.out-of-stock) .fct-stock-status' => 'color: {{VALUE}};',
-                ],
-            ]
-        );
-
-        $this->add_control(
-            'out_of_stock_color',
-            [
-                'label'     => esc_html__('Out of Stock Color', 'fluent-cart'),
-                'type'      => Controls_Manager::COLOR,
-                'selectors' => [
-                    '{{WRAPPER}} .fct-product-stock.out-of-stock .fct-stock-status' => 'color: {{VALUE}};',
-                ],
-            ]
-        );
+        static::registerStockStyleControls($this);
 
         $this->end_controls_section();
     }

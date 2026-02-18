@@ -40,6 +40,28 @@ class ProductTitleWidget extends Widget_Base
         return ['product', 'title', 'heading', 'name', 'fluent'];
     }
 
+    public static function registerTitleStyleControls($widget, $selector = '{{WRAPPER}} .fluentcart-product-title')
+    {
+        $widget->add_control(
+            'title_color',
+            [
+                'label'     => esc_html__('Text Color', 'fluent-cart'),
+                'type'      => Controls_Manager::COLOR,
+                'selectors' => [
+                    $selector => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $widget->add_group_control(
+            Group_Control_Typography::get_type(),
+            [
+                'name'     => 'title_typography',
+                'selector' => $selector,
+            ]
+        );
+    }
+
     protected function register_controls()
     {
         $this->start_controls_section(
@@ -99,24 +121,7 @@ class ProductTitleWidget extends Widget_Base
             ]
         );
 
-        $this->add_control(
-            'title_color',
-            [
-                'label'     => esc_html__('Text Color', 'fluent-cart'),
-                'type'      => Controls_Manager::COLOR,
-                'selectors' => [
-                    '{{WRAPPER}} .fluentcart-product-title' => 'color: {{VALUE}};',
-                ],
-            ]
-        );
-
-        $this->add_group_control(
-            Group_Control_Typography::get_type(),
-            [
-                'name'     => 'title_typography',
-                'selector' => '{{WRAPPER}} .fluentcart-product-title',
-            ]
-        );
+        static::registerTitleStyleControls($this);
 
         $this->end_controls_section();
     }

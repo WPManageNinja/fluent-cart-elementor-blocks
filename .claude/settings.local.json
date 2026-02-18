@@ -26,7 +26,10 @@
       "mcp__plugin_playwright_playwright__browser_close",
       "Bash(pkill:*)",
       "Bash(ls:*)",
-      "Bash(php -l:*)"
+      "Bash(php -l:*)",
+      "mcp__plugin_playwright_playwright__browser_run_code",
+      "mcp__plugin_playwright_playwright__browser_install",
+      "mcp__plugin_playwright_playwright__browser_tabs"
     ]
   }
 }

@@ -24,6 +24,7 @@ use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ThemeBu
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ThemeBuilder\ProductExcerptWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ThemeBuilder\ProductBuySectionWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ThemeBuilder\ProductContentWidget;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ThemeBuilder\ProductInfoWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ThemeBuilder\RelatedProductsWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Documents\FluentCartProduct;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Documents\FluentCartProductPost;
@@ -88,6 +89,7 @@ class ElementorIntegration
         $widgets_manager->register(new ProductExcerptWidget());
         $widgets_manager->register(new ProductBuySectionWidget());
         $widgets_manager->register(new ProductContentWidget());
+        $widgets_manager->register(new ProductInfoWidget());
         $widgets_manager->register(new RelatedProductsWidget());
     }
 
