@@ -71,7 +71,9 @@ class DummyCheckoutRenderer
                     </div>
                     <div class="fce-checkout-summary-column fct_checkout_summary <?php echo $stickySummary ? 'is-sticky' : ''; ?>">
                         <?php $this->renderSummaryElements(); ?>
-                        <?php $this->renderOrderNotes(); ?>
+                        <?php if (!$this->hasFormElement('order_notes')): ?>
+                            <?php $this->renderOrderNotes(); ?>
+                        <?php endif; ?>
 
                         <?php
                             $summaryElements = $this->settings['summary_elements'] ?? [];
@@ -97,7 +99,9 @@ class DummyCheckoutRenderer
                     </div>
                     <div class="fct_checkout_summary">
                         <?php $this->renderSummaryElements(); ?>
-                        <?php $this->renderOrderNotes(); ?>
+                        <?php if (!$this->hasFormElement('order_notes')): ?>
+                            <?php $this->renderOrderNotes(); ?>
+                        <?php endif; ?>
                         <?php
                             $summaryElements = $this->settings['summary_elements'] ?? [];
                             foreach ($summaryElements as $element) {
@@ -591,6 +595,22 @@ class DummyCheckoutRenderer
             </ul>
         </div>
         <?php
+    }
+
+    /**
+     * Check if a given element type exists and is visible in the form_elements repeater.
+     */
+    protected function hasFormElement(string $type): bool
+    {
+        $formElements = $this->settings['form_elements'] ?? [];
+
+        foreach ($formElements as $element) {
+            if (($element['element_type'] ?? '') === $type && ($element['element_visibility'] ?? 'yes') === 'yes') {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

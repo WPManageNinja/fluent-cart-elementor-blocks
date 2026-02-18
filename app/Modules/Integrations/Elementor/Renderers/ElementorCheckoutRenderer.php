@@ -433,7 +433,10 @@ class ElementorCheckoutRenderer
     protected function renderSummaryExtras(array $summaryElements): void
     {
         // Render order notes before order bumps (matching core FluentCart behavior)
-        $this->checkoutRenderer->renderOrderNoteField();
+        // but only if not already rendered via form_elements repeater
+        if (!$this->hasFormElement('order_notes')) {
+            $this->checkoutRenderer->renderOrderNoteField();
+        }
 
         foreach ($summaryElements as $element) {
             $type = $element['element_type'] ?? '';
@@ -447,6 +450,22 @@ class ElementorCheckoutRenderer
                 $this->renderOrderBump();
             }
         }
+    }
+
+    /**
+     * Check if a given element type exists and is visible in the form_elements repeater.
+     */
+    protected function hasFormElement(string $type): bool
+    {
+        $formElements = $this->settings['form_elements'] ?? [];
+
+        foreach ($formElements as $element) {
+            if (($element['element_type'] ?? '') === $type && ($element['element_visibility'] ?? 'yes') === 'yes') {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
