@@ -71,6 +71,31 @@ class ProductGalleryWidget extends Widget_Base
                 ],
             ]
         );
+
+        $widget->add_control(
+            'scrollable_thumbs',
+            [
+                'label'        => esc_html__('Scrollable Thumbnails', 'fluent-cart'),
+                'type'         => Controls_Manager::SWITCHER,
+                'label_on'     => esc_html__('Yes', 'fluent-cart'),
+                'label_off'    => esc_html__('No', 'fluent-cart'),
+                'return_value' => 'yes',
+                'default'      => '',
+                'description'  => esc_html__('Enable scrolling when thumbnails exceed the main image dimensions.', 'fluent-cart'),
+            ]
+        );
+
+        $widget->add_control(
+            'max_thumbnails',
+            [
+                'label'       => esc_html__('Max Thumbnails', 'fluent-cart'),
+                'type'        => Controls_Manager::NUMBER,
+                'min'         => 1,
+                'step'        => 1,
+                'default'     => '',
+                'description' => esc_html__('Leave empty for no limit. Excess images accessible via "See More" button.', 'fluent-cart'),
+            ]
+        );
     }
 
     protected function register_controls()
@@ -106,8 +131,10 @@ class ProductGalleryWidget extends Widget_Base
 
         echo '<div class="fluentcart-product-gallery">';
         $renderer->renderGallery([
-            'thumb_position' => $settings['thumb_position'] ?: 'bottom',
-            'thumbnail_mode' => $settings['thumbnail_mode'] ?: 'all',
+            'thumb_position'    => $settings['thumb_position'] ?: 'bottom',
+            'thumbnail_mode'    => $settings['thumbnail_mode'] ?: 'all',
+            'scrollable_thumbs' => !empty($settings['scrollable_thumbs']) ? 'yes' : 'no',
+            'max_thumbnails'    => !empty($settings['max_thumbnails']) ? (int) $settings['max_thumbnails'] : null,
         ]);
         echo '</div>';
     }

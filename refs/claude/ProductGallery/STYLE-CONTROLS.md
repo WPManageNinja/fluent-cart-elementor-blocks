@@ -19,6 +19,8 @@ The ProductGalleryWidget (`app/Modules/Integrations/Elementor/Widgets/ThemeBuild
 | `content_section` | `product_id` | ProductSelectControl | Custom product (conditional on source=custom) |
 | `content_section` | `thumb_position` | Select | bottom / left / right / top (default: bottom) |
 | `content_section` | `thumbnail_mode` | Select | all / horizontal / vertical (default: all) |
+| `content_section` | `scrollable_thumbs` | Switcher | Enable/disable thumbnail scrolling (return_value: 'yes', default: '') |
+| `content_section` | `max_thumbnails` | Number | Max visible thumbnails; empty = no limit. Excess images behind "See More" button. (min: 1) |
 
 ---
 
@@ -47,4 +49,5 @@ ProductGalleryWidget::registerGalleryContentControls($this);
 
 ## Revision History
 
+- **2026-02-19**: Added `scrollable_thumbs` (Switcher) and `max_thumbnails` (Number) controls. Core handles rendering/CSS/JS; Elementor just passes values through.
 - **2026-02-18**: Initial documentation.
