@@ -78,7 +78,37 @@ When testing widgets in the browser, check your **auto memory** for `base_url`, 
    }
    ```
 4. **Select a widget** — Click on the widget in the preview iframe, or click its name in the Structure panel.
-5. **Take screenshots** — Save to `.playwright-mcp/<test-name>/` with descriptive filenames.
+5. **Clean old screenshots** — Before taking new screenshots, remove old files from the test directory:
+   ```bash
+   rm -f .playwright-mcp/<test-name>/*.png .playwright-mcp/<test-name>/*.jpg
+   ```
+6. **Take screenshots** — Save to `.playwright-mcp/<test-name>/` with number-prefixed filenames (e.g. `01-name.png`).
+7. **After testing** — Merge all screenshots into a single summary image (see below).
+
+### Merging Screenshots After Testing
+
+After capturing individual screenshots, combine them into a **3-column grid summary image** using the shared merge script at `~/.claude/tools/merge-screenshots.py`.
+
+**First-time setup**: If `~/.claude/tools/merge-screenshots.py` or `~/.claude/tools/.venv/` doesn't exist, create them:
+```bash
+python3 -m venv ~/.claude/tools/.venv
+~/.claude/tools/.venv/bin/pip install Pillow
+```
+Then create `~/.claude/tools/merge-screenshots.py` — a Pillow script that:
+- Takes a directory of screenshots and produces a 3-column grid summary
+- Only includes files starting with a digit (e.g. `01-name.png`), skips old summaries and non-numbered files
+- Extracts titles from filenames (strips number prefix, converts hyphens/underscores to spaces)
+- Accepts `--notes '{"stem":"Pass: text"}'` for status annotations below each image
+- Draws a green dot for `Pass:`, red dot for `Fail:`/`Issue:` prefixed notes
+- Supports `--cols N` (default 3), `--width N` (default 600), `--output path`
+
+**Usage**:
+```bash
+~/.claude/tools/.venv/bin/python3 ~/.claude/tools/merge-screenshots.py .playwright-mcp/<test-name>/ \
+  --notes '{"01-filename-stem":"Pass: description","02-another":"Fail: what went wrong"}'
+```
+
+Save the final summary as `.playwright-mcp/<test-name>/summary.png`. Keep individual screenshots too.
 
 ### Creating a test page
 
