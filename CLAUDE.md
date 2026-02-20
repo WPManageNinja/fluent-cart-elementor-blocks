@@ -11,7 +11,7 @@ This plugin has **no admin menu, settings page, or UI of its own**. It registers
 1. `fluentcart-elementor-blocks.php` → loads Composer autoloader → calls `boot/app.php`
 2. `boot/app.php` → listens for `fluentcart_loaded` action → creates `Application` instance
 3. `Application` → loads config, hooks, bindings, REST routes
-4. `app/Hooks/actions.php` → instantiates `ElementorIntegration` (and Divi integration if present) which registers all widgets, controls, categories, and Theme Builder support
+4. `app/Hooks/actions.php` → instantiates `ElementorIntegration` which registers all widgets, controls, categories, and Theme Builder support
 
 ### Elementor Integration (`ElementorIntegration::register()`)
 - Registers a **"FluentCart" widget category** in Elementor
@@ -19,11 +19,6 @@ This plugin has **no admin menu, settings page, or UI of its own**. It registers
 - Registers **8 Theme Builder widgets** (requires Elementor Pro): ProductTitle, ProductGallery, ProductPrice, ProductStock, ProductExcerpt, ProductBuySection, ProductInfo, RelatedProducts
 - Registers custom controls: ProductSelectControl, ProductVariationSelectControl
 - Integrates with Elementor Pro Theme Builder (custom document types, conditions for `fluent-products` post type)
-
-### Divi 5 Integration
-- Legacy module approach via `ET_Builder_Module` (not native D5 modules)
-- 6 modules: MiniCart, AddToCart, BuyNow, ProductCategoriesList, ProductCarousel, Checkout
-- Modules registered in `app/Modules/Integrations/Divi/Modules/Legacy/`
 
 ## Build & Dev Commands
 
@@ -77,9 +72,3 @@ Always check `refs/claude/` first — it contains implementation plans, style co
 | Mini Cart controls | `refs/claude/MiniCart/STYLE-CONTROLS.md` |
 | Theme Builder overview | `refs/claude/ThemeBuilder/STYLE-CONTROLS.md` |
 | Theme Builder integration plan | `refs/claude/theme-builder-integration-plan.md` |
-
-## Divi 5 Integration Notes
-
-- Legacy module approach (not native D5) — modules in `app/Modules/Integrations/Divi/Modules/Legacy/`
-- `et_builder_ready` does NOT fire on normal frontend pages in Divi 5 — must register slugs via `et_builder_3rd_party_module_slugs` filter for lazy loading
-- Check `ET_BUILDER_5_DIR` constant for D5 detection (not `ET_BUILDER_5_VERSION`)
