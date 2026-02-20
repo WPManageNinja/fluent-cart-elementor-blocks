@@ -43,7 +43,7 @@ INCLUDE_ITEMS=(
     "database"
     "language"
     "vendor"
-    "fluent-cart-elementor-blocks.php"
+    "fluentcart-elementor-blocks.php"
     "readme.txt"
     "composer.json"
     "index.php"

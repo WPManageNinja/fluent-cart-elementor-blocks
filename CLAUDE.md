@@ -45,6 +45,55 @@ This plugin has **no admin menu, settings page, or UI of its own**. It registers
 - `resources/vite/vite.js` toggles `DEVELOPMENT_MODE`/`PRODUCTION_MODE` in `app/Utils/Enqueuer/Vite.php` before each build/dev run
 - On build, manifest is moved from `assets/.vite/manifest.json` to `assets/manifest.json` AND converted to a PHP array in `config/vite_config.php`
 
+## Browser Testing (Playwright MCP)
+
+When testing widgets in the browser, check your **auto memory** for `base_url`, `admin_user`, and `admin_pass`. If not set, ask the user once and store them in memory.
+
+### Environment
+
+| Item | How to get |
+|---|---|
+| Base URL | From memory (`base_url`). Ask user if missing. |
+| Admin URL | `{base_url}wp-admin/` |
+| Admin credentials | From memory (`admin_user` / `admin_pass`). Ask user if missing. |
+| Test page (Elementor) | From memory (`elementor_test_page_id`). If missing, ask user: provide an existing post ID **or** let Claude create one (see below). Store the ID in memory. |
+| Elementor editor URL | `{base_url}wp-admin/post.php?post={elementor_test_page_id}&action=elementor` |
+| Screenshots dir | `.playwright-mcp/` (inside project root, use subdirs per test) |
+
+### Testing Workflow
+
+1. **Login** — Navigate to `{base_url}wp-admin/`. If redirected to login, fill credentials from memory and submit.
+2. **Open Elementor editor** — Navigate to the Elementor editor URL above. Wait for the editor to load (look for widget panel or "Edit" heading).
+3. **Add a widget** — Use Elementor JS API via `browser_evaluate`:
+   ```js
+   async (page) => {
+     const frame = page.locator('#elementor-preview-iframe').contentFrame();
+     await frame.evaluate(() => {
+       $e.run('document/elements/create', {
+         container: elementor.getPreviewContainer(),
+         model: { elType: 'widget', widgetType: 'WIDGET_NAME_HERE' },
+         options: { at: 0 }
+       });
+     });
+   }
+   ```
+4. **Select a widget** — Click on the widget in the preview iframe, or click its name in the Structure panel.
+5. **Take screenshots** — Save to `.playwright-mcp/<test-name>/` with descriptive filenames.
+
+### Creating a test page
+
+If `elementor_test_page_id` is not in memory, ask the user:
+- **Option A:** "Provide an existing page ID" — user gives you a post ID, store it in memory.
+- **Option B:** "Create one for me" — create via WP CLI and store the new ID in memory:
+
+```bash
+wp post create --post_title="Claude Elementor Page" --post_status=publish --post_type=page --porcelain
+# Then set Elementor meta with the returned ID:
+wp post meta update <ID> _elementor_edit_mode builder
+wp post meta update <ID> _elementor_data '[]'
+wp post meta update <ID> _wp_page_template 'elementor_canvas'
+```
+
 ## Before Starting Any Task
 
 Always check `refs/claude/` first — it contains implementation plans, style control references, and architectural notes for existing widgets.
