@@ -325,7 +325,7 @@ class ShopAppWidget extends Widget_Base
         $this->add_control(
             'enable_wildcard_filter',
             [
-                'label'        => esc_html__('Enable Search Filter', 'fluent-cart'),
+                'label'        => esc_html__('Wildcard Filter', 'fluent-cart'),
                 'type'         => Controls_Manager::SWITCHER,
                 'label_on'     => esc_html__('Yes', 'fluent-cart'),
                 'label_off'    => esc_html__('No', 'fluent-cart'),
@@ -349,6 +349,72 @@ class ShopAppWidget extends Widget_Base
                 'condition'    => [
                     'enable_filter'          => 'yes',
                     'enable_wildcard_filter' => 'yes',
+                ],
+            ]
+        );
+
+        // Per-taxonomy toggle + display name controls
+        $taxonomies = Taxonomy::getTaxonomies();
+        foreach ($taxonomies as $taxonomy) {
+            $label = Str::headline($taxonomy);
+            $key = sanitize_key(str_replace('-', '_', $taxonomy));
+
+            $this->add_control(
+                'enable_taxonomy_' . $key,
+                [
+                    'label'        => $label,
+                    'type'         => Controls_Manager::SWITCHER,
+                    'label_on'     => esc_html__('Yes', 'fluent-cart'),
+                    'label_off'    => esc_html__('No', 'fluent-cart'),
+                    'return_value' => 'yes',
+                    'default'      => '',
+                    'separator'    => 'before',
+                    'condition'    => [
+                        'enable_filter' => 'yes',
+                    ],
+                ]
+            );
+
+            $this->add_control(
+                'taxonomy_label_' . $key,
+                [
+                    'label'     => esc_html__('Display Name', 'fluent-cart'),
+                    'type'      => Controls_Manager::TEXT,
+                    'default'   => $label,
+                    'condition' => [
+                        'enable_filter'           => 'yes',
+                        'enable_taxonomy_' . $key => 'yes',
+                    ],
+                ]
+            );
+        }
+
+        // Price Range toggle + display name
+        $this->add_control(
+            'enable_price_range_filter',
+            [
+                'label'        => esc_html__('Price Range', 'fluent-cart'),
+                'type'         => Controls_Manager::SWITCHER,
+                'label_on'     => esc_html__('Yes', 'fluent-cart'),
+                'label_off'    => esc_html__('No', 'fluent-cart'),
+                'return_value' => 'yes',
+                'default'      => '',
+                'separator'    => 'before',
+                'condition'    => [
+                    'enable_filter' => 'yes',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'price_range_label',
+            [
+                'label'     => esc_html__('Display Name', 'fluent-cart'),
+                'type'      => Controls_Manager::TEXT,
+                'default'   => esc_html__('Price', 'fluent-cart'),
+                'condition' => [
+                    'enable_filter'             => 'yes',
+                    'enable_price_range_filter' => 'yes',
                 ],
             ]
         );
@@ -656,23 +722,47 @@ class ShopAppWidget extends Widget_Base
         $liveFilter = ($settings['live_filter'] ?? '') === 'yes';
 
         if ($enableFilter) {
-            $taxonomies = Taxonomy::getTaxonomies();
+            $allTaxonomies = Taxonomy::getTaxonomies();
+            $enablePriceRange = ($settings['enable_price_range_filter'] ?? '') === 'yes';
+
+            // Build taxonomy list from individual per-taxonomy toggles
+            $enabledTaxonomies = [];
+            foreach ($allTaxonomies as $taxonomy) {
+                $key = sanitize_key(str_replace('-', '_', $taxonomy));
+                if (($settings['enable_taxonomy_' . $key] ?? '') === 'yes') {
+                    $enabledTaxonomies[] = $taxonomy;
+                }
+            }
 
             // custom_filters drives the ShopAppRenderer filter UI
             $customFilters = [
                 'enabled'     => true,
                 'live_filter' => $liveFilter,
-                'taxonomies'  => array_values($taxonomies),
+                'taxonomies'  => $enabledTaxonomies,
+                'price_range' => $enablePriceRange,
             ];
 
             // filters drives the ShopAppHandler query-level filter config
-            foreach ($taxonomies as $taxonomy) {
+            foreach ($enabledTaxonomies as $taxonomy) {
+                $key = sanitize_key(str_replace('-', '_', $taxonomy));
+                $label = $settings['taxonomy_label_' . $key] ?? Str::headline($taxonomy);
+
                 $filters[$taxonomy] = [
                     'enabled'     => true,
                     'filter_type' => 'options',
                     'is_meta'     => true,
-                    'label'       => Str::headline($taxonomy),
+                    'label'       => $label,
                     'multiple'    => false,
+                ];
+            }
+
+            if ($enablePriceRange) {
+                $priceLabel = $settings['price_range_label'] ?? esc_html__('Price', 'fluent-cart');
+                $filters['price_range'] = [
+                    'enabled'     => true,
+                    'filter_type' => 'range',
+                    'is_meta'     => false,
+                    'label'       => $priceLabel,
                 ];
             }
         }
