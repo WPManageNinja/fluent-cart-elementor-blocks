@@ -8,7 +8,7 @@ Author:
 Author URI:
 Plugin URI:
 License: GPLv2 or later
-Text Domain: fluentcart-elementor-blocks
+Text Domain: fluent-cart-elementor-blocks
 Domain Path: /language
 */
 

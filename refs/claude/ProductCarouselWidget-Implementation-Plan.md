@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document outlines the plan to replicate the WordPress Block Editor `ProductCarouselBlockEditor` as an Elementor widget in the `fluentcart-elementor-blocks` plugin.
+This document outlines the plan to replicate the WordPress Block Editor `ProductCarouselBlockEditor` as an Elementor widget in the `fluent-cart-elementor-blocks` plugin.
 
 ## Source Files Reference (fluent-cart plugin)
 
@@ -261,7 +261,7 @@ Add new entry points for:
 ## File Structure (New Files)
 
 ```
-fluentcart-elementor-blocks/
+fluent-cart-elementor-blocks/
 ├── app/
 │   └── Modules/
 │       └── Integrations/
