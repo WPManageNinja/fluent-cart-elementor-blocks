@@ -356,7 +356,7 @@ class ShopAppWidget extends Widget_Base
         // Per-taxonomy toggle + display name controls
         $taxonomies = Taxonomy::getTaxonomies();
         foreach ($taxonomies as $taxonomy) {
-            $label = Str::headline($taxonomy);
+            $label = esc_html(Str::headline($taxonomy));
             $key = sanitize_key(str_replace('-', '_', $taxonomy));
 
             $this->add_control(
@@ -745,7 +745,7 @@ class ShopAppWidget extends Widget_Base
             // filters drives the ShopAppHandler query-level filter config
             foreach ($enabledTaxonomies as $taxonomy) {
                 $key = sanitize_key(str_replace('-', '_', $taxonomy));
-                $label = $settings['taxonomy_label_' . $key] ?? Str::headline($taxonomy);
+                $label = sanitize_text_field($settings['taxonomy_label_' . $key] ?? Str::headline($taxonomy));
 
                 $filters[$taxonomy] = [
                     'enabled'     => true,
@@ -757,7 +757,7 @@ class ShopAppWidget extends Widget_Base
             }
 
             if ($enablePriceRange) {
-                $priceLabel = $settings['price_range_label'] ?? esc_html__('Price', 'fluent-cart');
+                $priceLabel = sanitize_text_field($settings['price_range_label'] ?? __('Price', 'fluent-cart'));
                 $filters['price_range'] = [
                     'enabled'     => true,
                     'filter_type' => 'range',
