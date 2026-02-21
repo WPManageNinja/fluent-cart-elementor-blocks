@@ -4,6 +4,18 @@
 
 This is a **companion/add-on plugin** for [FluentCart](https://fluentcart.com). It adds Elementor page builder widgets so users can drag-and-drop FluentCart elements (shop grids, product cards, carousels, checkout, mini cart, etc.) into their pages.
 
+### FluentCart Core Plugin
+
+This plugin wraps FluentCart core's shortcodes, renderers, and asset loaders. Check your **auto memory** for `core_plugin_path`. If not set, look for `../fluent-cart/` (sibling directory). If that doesn't exist either, ask the user for the path and store it in memory.
+
+| Item | Path (relative to core root) |
+|---|---|
+| Shortcode handlers | `app/Hooks/Handlers/ShortCodes/` |
+| Renderers | `app/Services/Renderer/` |
+| Asset loader | `app/Modules/Templating/AssetLoader.php` |
+| Bricks elements (core) | `app/Modules/Templating/Bricks/Elements/` |
+| Post type | `fluent-products` (CPT), taxonomies: `product-categories`, `product-brands` |
+
 ### No Admin Menu
 This plugin has **no admin menu, settings page, or UI of its own**. It registers Elementor widgets — all configuration happens inside the Elementor editor. The plugin activates silently and waits for the `fluentcart_loaded` hook before bootstrapping (see `boot/app.php`), so **FluentCart core must be active** for anything to work.
 
@@ -144,6 +156,7 @@ When the situation matches a trigger below, automatically spawn the appropriate 
 | User asks to test a widget visually in browser | test-widget | `.claude/commands/test-widget.md` | Widget slug (e.g., `fluent_cart_product_card`) |
 | Before shipping widget changes, or user asks for review | review-widget | `.claude/commands/review-widget.md` | Widget name or file path |
 | User asks to build assets or create a ZIP | build | `.claude/commands/build.md` | Flags (e.g., `--zip`) or empty |
+| User asks to sync with core, check for missing widgets, or "what's new in core" | sync-core | `.claude/commands/sync-core.md` | — |
 
 **How to spawn:** Read the command file, substitute `$ARGUMENTS`, then pass the full content as a Task tool prompt with `subagent_type: "general-purpose"`.
 
