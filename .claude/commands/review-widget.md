@@ -53,7 +53,23 @@ Evaluate each item and mark as Pass/Fail/N-A:
 - [ ] **render() method** — Method is defined and outputs HTML
 - [ ] **FluentCart data check** — Validates FluentCart data is available before rendering
 - [ ] **Editor placeholder** — Uses `is_edit_mode()` for placeholder content when no data (if applicable)
-- [ ] **Proper escaping** — Output is properly escaped (`esc_html`, `esc_attr`, `wp_kses_post`, etc.)
+
+#### Security: Input Validation
+- [ ] **ID settings validated** — All ID settings (product_id, variant_id, etc.) use `absint()` before use
+- [ ] **Enum settings validated** — All select/option settings use `in_array($val, [...allowed], true)` with fallback to default
+- [ ] **Numeric settings bounded** — Numeric settings use `absint()` + `min()`/`max()` bounds (e.g., `max(1, min(50, absint(...)))`)
+- [ ] **Free-text settings sanitized** — User-typed text settings (custom labels, heading text) use `sanitize_text_field()` before output
+- [ ] **Switcher settings treated as enum** — `yes`/`no` switcher values checked with `in_array()`, not truthy/falsy
+- [ ] **Repeater items validated** — Each item's values in repeater arrays are validated individually
+- [ ] **No raw interpolation** — No raw setting values interpolated directly into shortcode strings, HTML attributes, or SQL queries
+
+#### Security: Output Escaping
+- [ ] **Contextual escaping** — Output escaping matches the context (not blindly applied everywhere)
+- [ ] **User text in HTML body** — User-provided text rendered with `esc_html()` (e.g., custom labels)
+- [ ] **User text in attributes** — User-provided text in HTML attributes uses `esc_attr()`
+- [ ] **URLs escaped** — Any URLs use `esc_url()`
+- [ ] **Renderer output not double-escaped** — FluentCart renderer output is NOT re-escaped (renderers handle their own escaping)
+- [ ] **Trusted WP content not broken** — Trusted `post_content`/`post_excerpt` not escaped with `esc_html()` (use `wpautop()` or `apply_filters('the_content', ...)` instead)
 
 #### Assets (if applicable)
 - [ ] **get_style_depends()** — CSS dependencies declared
