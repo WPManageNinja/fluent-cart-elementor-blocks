@@ -76,14 +76,50 @@ class {$ARGUMENTS}Widget extends Widget_Base
 - Asset registration with static `$registered` guard for once-only loading
 - Editor placeholder with `\Elementor\Plugin::$instance->editor->is_edit_mode()` check
 
-### 4. Register the Widget
+### 4. Create Frontend Assets (if needed)
+
+If the widget needs custom JS or CSS (interactivity, Swiper, AJAX, etc.):
+
+**a) Create the JS/CSS entry file:**
+- JS: `resources/elementor/{kebab-case-name}.js` (e.g., `resources/elementor/product-tabs.js`)
+- CSS (if standalone): `resources/elementor/{kebab-case-name}.css`
+- CSS imported from JS: just `import './your-styles.css'` inside the JS file — Vite will extract it automatically
+
+**b) Add the entry to `vite.config.mjs`:**
+Add the new file path to the `inputs` array:
+```js
+const inputs = [
+    'resources/elementor/product-variation-select-control.js',
+    'resources/elementor/product-carousel-elementor.js',
+    'resources/elementor/product-select-control.js',
+    'resources/elementor/{new-entry}.js',  // ← add here
+];
+```
+
+**c) Reference the asset in the widget class:**
+- Use `Vite::enqueueScript($handle, 'elementor/{filename}.js', [...], null, true)` in the widget's `render()` method or a static asset loader method
+- Use `get_script_depends()` / `get_style_depends()` if the asset should load when the widget is present on a page
+- Use the static `$registered` guard pattern to avoid double-loading:
+```php
+private static $registered = false;
+private function registerAssets() {
+    if (self::$registered) return;
+    self::$registered = true;
+    Vite::enqueueScript('fceb-{name}', 'elementor/{name}.js', [], null, true);
+}
+```
+
+**d) Verify build:**
+Run `npm run build` to confirm the new entry compiles without errors and appears in `assets/manifest.json`.
+
+### 5. Register the Widget
 
 Add the widget to `app/Modules/Integrations/Elementor/ElementorIntegration.php`:
 
 1. Add the `use` import at the top of the file
 2. Add `$widgets_manager->register(new {$ARGUMENTS}Widget());` in the `registerWidgets()` method
 
-### 5. Create Style Controls Documentation
+### 7. Create Style Controls Documentation
 
 Create `refs/claude/{$ARGUMENTS}/STYLE-CONTROLS.md` documenting:
 - All content controls (section, control ID, type, default)
@@ -91,7 +127,7 @@ Create `refs/claude/{$ARGUMENTS}/STYLE-CONTROLS.md` documenting:
 - Any static methods and their signatures
 - CSS selector map
 
-### 6. Evaluate Reference Guide
+### 8. Evaluate Reference Guide
 
 After creating the widget, run through the checklist from `refs/claude/WIDGET-REFERENCE-GUIDE.md`:
 - Does it introduce a new Elementor control type?
@@ -101,9 +137,10 @@ After creating the widget, run through the checklist from `refs/claude/WIDGET-RE
 
 If yes to any, update the reference guide accordingly.
 
-### 7. Summary
+### 9. Summary
 
 After completing all steps, output:
 - Files created/modified (with paths)
 - Widget slug for testing: `fluent_cart_{snake_case}`
+- Any new Vite entries added to `vite.config.mjs`
 - Suggested next step: `/test-widget fluent_cart_{snake_case}` to verify in browser
