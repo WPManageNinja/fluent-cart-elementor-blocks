@@ -134,6 +134,23 @@ Always check `refs/claude/` first — it contains implementation plans, style co
 2. Read the actual widget source files referenced in the guide before writing any code.
 3. After shipping a new widget, evaluate if it should replace one of the reference picks (checklist is in the guide).
 
+## Available Agents (Auto-Spawn)
+
+When the situation matches a trigger below, automatically spawn the appropriate agent using the **Task tool**. Read the corresponding `.claude/commands/*.md` file and use its contents as the Task prompt, replacing `$ARGUMENTS` with the relevant value.
+
+| Trigger | Agent | Command file | Arguments |
+|---|---|---|---|
+| User asks to create/scaffold a new widget | scaffold-widget | `.claude/commands/scaffold-widget.md` | Widget name (e.g., `ProductTabs`) |
+| User asks to test a widget visually in browser | test-widget | `.claude/commands/test-widget.md` | Widget slug (e.g., `fluent_cart_product_card`) |
+| Before shipping widget changes, or user asks for review | review-widget | `.claude/commands/review-widget.md` | Widget name or file path |
+| User asks to build assets or create a ZIP | build | `.claude/commands/build.md` | Flags (e.g., `--zip`) or empty |
+
+**How to spawn:** Read the command file, substitute `$ARGUMENTS`, then pass the full content as a Task tool prompt with `subagent_type: "general-purpose"`.
+
+**When to auto-spawn without being asked:**
+- **review-widget** — After completing a new widget or significant widget modifications, proactively run a review before telling the user you're done
+- **build** — After changes that affect compiled assets (JS files in `resources/elementor/`), proactively verify the build still works
+
 ## Key Reference Files
 
 | Topic | File |
