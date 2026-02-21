@@ -168,3 +168,5 @@ When the situation matches a trigger below, automatically spawn the appropriate 
 | Mini Cart controls | `refs/claude/MiniCart/STYLE-CONTROLS.md` |
 | Theme Builder overview | `refs/claude/ThemeBuilder/STYLE-CONTROLS.md` |
 | Theme Builder integration plan | `refs/claude/theme-builder-integration-plan.md` |
+| Elementor controls (advanced) | `refs/claude/elementor/controls-reference.md` |
+| Elementor hooks (full reference) | `refs/claude/elementor/hooks-reference.md` |

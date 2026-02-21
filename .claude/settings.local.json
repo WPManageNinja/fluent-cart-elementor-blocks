@@ -31,7 +31,8 @@
       "mcp__plugin_playwright_playwright__browser_install",
       "mcp__plugin_playwright_playwright__browser_tabs",
       "Bash(python3:*)",
-      "Bash(~/.claude/tools/.venv/bin/python3:*)"
+      "Bash(~/.claude/tools/.venv/bin/python3:*)",
+      "Bash(gh api:*)"
     ]
   }
 }
