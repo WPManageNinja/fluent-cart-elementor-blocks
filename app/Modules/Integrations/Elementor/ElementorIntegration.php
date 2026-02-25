@@ -52,7 +52,7 @@ class ElementorIntegration
             \add_action('elementor/documents/register', [$this, 'registerDocuments']);
             \add_action('elementor/theme/register_conditions', [$this, 'registerConditions']);
             \add_filter('elementor/theme/need_override_location', [$this, 'themeTemplateInclude'], 10, 2);
-            \add_filter('elementor_pro/utils/get_public_post_types', [$this, 'removeFluentProductsFromGenericConditions']);
+            // \add_filter('elementor_pro/utils/get_public_post_types', [$this, 'removeFluentProductsFromGenericConditions']);
 
             // Disable FluentCart core's auto single product rendering when a Theme Builder template is active
             \add_filter('fluent_cart/disable_auto_single_product_page', [$this, 'maybeDisableAutoSingleProduct']);
