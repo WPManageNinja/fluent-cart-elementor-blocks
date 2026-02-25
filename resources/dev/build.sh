@@ -22,7 +22,7 @@ done
 
 # Configuration
 SOURCE_DIR="$(pwd)"
-PLUGIN_SLUG="fluent-cart-elementor-block"
+PLUGIN_SLUG="fluent-cart-elementor-blocks"
 BUILDS_DIR="$(pwd)/builds"
 OUTPUT_FILE="$BUILDS_DIR/${PLUGIN_SLUG}.zip"
 
