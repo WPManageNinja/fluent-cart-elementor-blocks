@@ -1,5 +1,9 @@
-[⬇️ Download](https://release-assets.githubusercontent.com/github-production-release-asset/1144841300/a2aa6641-a97e-4f26-8fc2-ea72cc910b7c)
+[⬇️ Download the addon](https://github.com/WPManageNinja/fluent-cart-elementor-blocks/releases/download/1.0.0/fluent-cart-elementor-blocks.zip)
+
+
+
 === Elementor Blocks for FluentCart ===
+
 Contributors: wpmanageninja
 Tags: fluentcart, elementor, ecommerce, checkout, cart, shop
 Requires at least: 6.0
