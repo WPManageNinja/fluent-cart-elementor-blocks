@@ -10,10 +10,11 @@ You are scaffolding a new Elementor widget for the FluentCart Elementor Blocks p
 
 Before writing any code, read these files in order:
 
-1. `refs/claude/WIDGET-REFERENCE-GUIDE.md` — understand all patterns
-2. `app/Modules/Integrations/Elementor/Widgets/ProductCardWidget.php` — reference widget #1 (provider pattern)
-3. `app/Modules/Integrations/Elementor/Widgets/ProductCarouselWidget.php` — reference widget #2 (consumer pattern)
-4. `app/Modules/Integrations/Elementor/ElementorIntegration.php` — registration pattern
+1. `refs/claude/WIDGET-REFERENCE-GUIDE.md` — understand all Elementor widget patterns
+2. `{core_plugin_path}/refs/claude/gutenberg/patterns.md` — understand core block architecture, render methods, data flow, and CSS conventions. Use this to identify which core renderer/method the new widget should wrap and what data is available. (Core plugin path from CLAUDE.md or auto memory, default: `../fluent-cart/`)
+3. `app/Modules/Integrations/Elementor/Widgets/ProductCardWidget.php` — reference widget #1 (provider pattern)
+4. `app/Modules/Integrations/Elementor/Widgets/ProductCarouselWidget.php` — reference widget #2 (consumer pattern)
+5. `app/Modules/Integrations/Elementor/ElementorIntegration.php` — registration pattern
 
 ### 2. Clarify Requirements
 
