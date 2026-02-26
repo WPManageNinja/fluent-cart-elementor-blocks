@@ -14,6 +14,7 @@ The Theme Builder widgets (`app/Modules/Integrations/Elementor/Widgets/ThemeBuil
 - [`refs/claude/ProductGallery/STYLE-CONTROLS.md`](../ProductGallery/STYLE-CONTROLS.md)
 - [`refs/claude/ProductPrice/STYLE-CONTROLS.md`](../ProductPrice/STYLE-CONTROLS.md)
 - [`refs/claude/ProductStock/STYLE-CONTROLS.md`](../ProductStock/STYLE-CONTROLS.md)
+- [`refs/claude/ProductSku/STYLE-CONTROLS.md`](../ProductSku/STYLE-CONTROLS.md)
 - [`refs/claude/ProductExcerpt/STYLE-CONTROLS.md`](../ProductExcerpt/STYLE-CONTROLS.md)
 - [`refs/claude/ProductBuySection/STYLE-CONTROLS.md`](../ProductBuySection/STYLE-CONTROLS.md)
 - [`refs/claude/ProductContent/STYLE-CONTROLS.md`](../ProductContent/STYLE-CONTROLS.md)

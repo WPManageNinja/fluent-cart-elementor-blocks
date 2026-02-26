@@ -121,6 +121,7 @@ After implementing a new widget, evaluate whether it introduces patterns not cov
 | ProductGalleryWidget | `Widgets/ThemeBuilder/ProductGalleryWidget.php` |
 | ProductPriceWidget | `Widgets/ThemeBuilder/ProductPriceWidget.php` |
 | ProductStockWidget | `Widgets/ThemeBuilder/ProductStockWidget.php` |
+| ProductSkuWidget | `Widgets/ThemeBuilder/ProductSkuWidget.php` |
 | ProductExcerptWidget | `Widgets/ThemeBuilder/ProductExcerptWidget.php` |
 | ProductBuySectionWidget | `Widgets/ThemeBuilder/ProductBuySectionWidget.php` |
 | ProductContentWidget | `Widgets/ThemeBuilder/ProductContentWidget.php` |
