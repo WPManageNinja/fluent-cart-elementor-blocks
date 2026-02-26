@@ -9,12 +9,12 @@ return function($file) {
         /**
          * Plugin Updater
          */
-        $apiUrl = 'https://fluentcart.com/wp-admin/admin-ajax.php?action=fluent_cart_addon_update&time=' . time();
+        $apiUrl = 'https://fluentcart.com/wp-admin/admin-ajax.php?action=fluent_cart_elementor_blocks_update&time=' . time();
         new \FluentCartElementorBlocks\App\Services\PluginManager\Updater($apiUrl, $file, array(
             'version'   => FLUENTCART_ELEMENTOR_BLOCKS_VERSION,
-            'license'   => '',
+            'license'   => '12345',
             'item_name' => 'FluentCart Elementor Blocks',
-            'item_id'   => 'fluent-cart-elementor-blocks',
+            'item_id'   => '101',
             'author'    => 'wpmanageninja'
         ),
             array(
