@@ -13,7 +13,7 @@ This plugin wraps FluentCart core's shortcodes, renderers, and asset loaders. Ch
 | Shortcode handlers | `app/Hooks/Handlers/ShortCodes/` |
 | Renderers | `app/Services/Renderer/` |
 | Asset loader | `app/Modules/Templating/AssetLoader.php` |
-| Bricks elements (core) | `app/Modules/Templating/Bricks/Elements/` |
+| Gutenberg block reference | `refs/claude/gutenberg/block-comparison.md` |
 | Post type | `fluent-products` (CPT), taxonomies: `product-categories`, `product-brands` |
 
 ### No Admin Menu

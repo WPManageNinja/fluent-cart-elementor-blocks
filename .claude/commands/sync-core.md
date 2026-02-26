@@ -21,11 +21,14 @@ Read the core plugin's shortcode handlers and renderers:
 - List every renderer class
 - Note which shortcode handler uses which renderer
 
-**Bricks elements** — scan `{core_path}/app/Modules/Templating/Bricks/Elements/`:
-- List all Bricks elements (these represent features core considers important enough for builder integration)
-
 **AssetLoader methods** — read `{core_path}/app/Modules/Templating/AssetLoader.php`:
 - List all public static methods (these are the available asset bundles)
+
+**Gutenberg blocks** — read `{core_path}/refs/claude/gutenberg/block-comparison.md`:
+- This file contains a complete inventory of all FluentCart Gutenberg blocks (standalone + inner blocks)
+- Focus on the **Standalone / Top-Level Blocks** section — these represent features core considers important enough for a dedicated block
+- Cross-reference with shortcodes to get the most complete picture of core capabilities
+- Note any standalone blocks that don't have corresponding shortcodes (these may be Gutenberg-only features worth adding to Elementor)
 
 ### 2. Inventory This Plugin's Widgets
 
@@ -68,7 +71,7 @@ Create a comparison table. For each core shortcode/renderer, determine:
 | ReceiptHandler | ReceiptRenderer | — | **Check** |
 | CheckoutShippingMethodsShortCode | ShippingMethodsRender | — | **Check** |
 
-Also check for any NEW shortcodes/renderers/Bricks elements added to core since the last sync — files not in the table above.
+Also check for any NEW shortcodes/renderers/Gutenberg blocks added to core since the last sync — files not in the table above.
 
 ### 4. Present Findings to User
 
@@ -80,8 +83,8 @@ Output the gap report as a clean table with these columns:
 - Notes
 
 For items marked **Missing**, add a recommendation:
-- **Recommended** — Core has both shortcode + renderer + Bricks element → strong signal this should be an Elementor widget too
-- **Consider** — Core has shortcode + renderer but no Bricks element → might be useful
+- **Recommended** — Core has shortcode + renderer + a standalone Gutenberg block → strong signal this should be an Elementor widget too
+- **Consider** — Core has shortcode + renderer but no Gutenberg block → might be useful
 - **Skip** — Full-page flows (login, registration, profile, receipt) that don't make sense as drag-and-drop widgets
 
 ### 5. Ask User What to Scaffold
@@ -97,7 +100,8 @@ Do NOT scaffold the widgets in this agent — just produce the plan. The user ca
 ### 6. Check for Core Changes Since Last Sync
 
 Also look for:
-- New files in core's `ShortCodes/` or `Renderer/` or `Bricks/Elements/` that don't appear in the mapping above
+- New files in core's `ShortCodes/` or `Renderer/` that don't appear in the mapping above
+- New standalone Gutenberg blocks in `{core_path}/refs/claude/gutenberg/block-comparison.md` not in the mapping above
 - New public methods in `AssetLoader.php` not documented in `refs/claude/` files
 - New taxonomies or post types
 
