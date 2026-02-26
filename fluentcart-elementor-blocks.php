@@ -13,7 +13,7 @@ Domain Path: /language
 */
 
 if (!defined('FLUENTCART_ELEMENTOR_BLOCKS_VERSION')) {
-    define('FLUENTCART_ELEMENTOR_BLOCKS_VERSION', '1.0.0');
+    define('FLUENTCART_ELEMENTOR_BLOCKS_VERSION', '1.0.1');
     define('FLUENTCART_ELEMENTOR_BLOCKS_URL', plugin_dir_url(__FILE__));
 }
 
