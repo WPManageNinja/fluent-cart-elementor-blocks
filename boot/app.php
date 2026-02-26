@@ -9,7 +9,7 @@ return function($file) {
         /**
          * Plugin Updater
          */
-        $apiUrl = 'https://fluentcart.com/wp-admin/admin-ajax.php?action=fluent_cart_elementor_blocks_update&time=' . time();
+        $apiUrl = 'https://api.fluentcart.com/wp-admin/admin-ajax.php?action=fluent_cart_elementor_blocks_update&time=' . time();
         new \FluentCartElementorBlocks\App\Services\PluginManager\Updater($apiUrl, $file, array(
             'version'   => FLUENTCART_ELEMENTOR_BLOCKS_VERSION,
             'license'   => '12345',
