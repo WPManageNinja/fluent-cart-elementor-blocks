@@ -2,7 +2,7 @@
 
 ## Overview
 
-The ProductInfoWidget (`app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductInfoWidget.php`) is a **composite widget** that combines gallery, title, stock, excerpt, price, and buy section into a full single product layout. It consumes static methods from 5 other ThemeBuilder widgets — it has no static methods of its own.
+The ProductInfoWidget (`app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductInfoWidget.php`) is a **composite widget** that combines gallery, title, stock, SKU, excerpt, price, and buy section into a full single product layout. It consumes static methods from 6 other ThemeBuilder widgets — it has no static methods of its own.
 
 **Widget Slug:** `fluentcart_product_info`
 **Category:** `fluentcart-elements-single`, `fluent-cart`
@@ -20,6 +20,7 @@ The ProductInfoWidget (`app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/
 | `sections_section` | `show_gallery` | Switcher | Default yes |
 | `sections_section` | `show_title` | Switcher | Default yes |
 | `sections_section` | `show_stock` | Switcher | Default yes |
+| `sections_section` | `show_sku` | Switcher | Default yes |
 | `sections_section` | `show_excerpt` | Switcher | Default yes |
 | `sections_section` | `show_price` | Switcher | Default yes |
 | `sections_section` | `show_buy_section` | Switcher | Default yes |
@@ -66,7 +67,20 @@ All style sections are conditional on their respective `show_*` toggle.
 | `in_stock_color` | Color | `{{WRAPPER}} .fct-product-stock:not(.out-of-stock) .fct-stock-status` |
 | `out_of_stock_color` | Color | `{{WRAPPER}} .fct-product-stock.out-of-stock .fct-stock-status` |
 
-### 4. Excerpt
+### 4. SKU
+
+**Section ID:** `sku_style_section`
+**Condition:** `show_sku = yes`
+**Via:** `ProductSkuWidget::registerSkuStyleControls($this, '{{WRAPPER}} .fct-product-sku')`
+
+| Control ID | Type | CSS Selector |
+|---|---|---|
+| `sku_label_typography` | Typography | `{{WRAPPER}} .fct-product-sku .fct-product-sku__label` |
+| `sku_label_color` | Color | `{{WRAPPER}} .fct-product-sku .fct-product-sku__label` |
+| `sku_value_typography` | Typography | `{{WRAPPER}} .fct-product-sku .fct-product-sku__value` |
+| `sku_value_color` | Color | `{{WRAPPER}} .fct-product-sku .fct-product-sku__value` |
+
+### 5. Excerpt
 
 **Section ID:** `excerpt_style_section`
 **Condition:** `show_excerpt = yes`
@@ -77,7 +91,7 @@ All style sections are conditional on their respective `show_*` toggle.
 | `excerpt_color` | Color | `{{WRAPPER}} .fct-product-excerpt` |
 | `excerpt_typography` | Typography | `{{WRAPPER}} .fct-product-excerpt` |
 
-### 5. Buy Section
+### 6. Buy Section
 
 **Section ID:** `buy_section_style_section`
 **Condition:** `show_buy_section = yes`
@@ -107,6 +121,7 @@ All style sections are conditional on their respective `show_*` toggle.
 | Product summary | `.fct-product-summary` |
 | Product title | `.fct-product-title` |
 | Product stock | `.fct-product-stock` |
+| Product SKU | `.fct-product-sku` |
 | Product excerpt | `.fct-product-excerpt` |
 | Buy section | `.fct_buy_section` |
 
@@ -114,4 +129,5 @@ All style sections are conditional on their respective `show_*` toggle.
 
 ## Revision History
 
+- **2026-02-26**: Added SKU section (show_sku toggle + registerSkuStyleControls). Now consumes 6 widgets.
 - **2026-02-18**: Initial documentation.

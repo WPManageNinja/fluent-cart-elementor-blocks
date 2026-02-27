@@ -67,7 +67,7 @@ Default selector: `{{WRAPPER}} .fct-product-sku`
 
 ## Static Method Usage
 
-Can be consumed by **ProductInfoWidget** (not yet integrated):
+Called by **ProductInfoWidget** with same selector:
 ```php
 ProductSkuWidget::registerSkuStyleControls($this, '{{WRAPPER}} .fct-product-sku');
 ```

@@ -102,6 +102,18 @@ class ProductInfoWidget extends Widget_Base
         );
 
         $this->add_control(
+            'show_sku',
+            [
+                'label'        => esc_html__('SKU', 'fluent-cart'),
+                'type'         => Controls_Manager::SWITCHER,
+                'label_on'     => esc_html__('Show', 'fluent-cart'),
+                'label_off'    => esc_html__('Hide', 'fluent-cart'),
+                'return_value' => 'yes',
+                'default'      => 'yes',
+            ]
+        );
+
+        $this->add_control(
             'show_excerpt',
             [
                 'label'        => esc_html__('Excerpt', 'fluent-cart'),
@@ -203,6 +215,22 @@ class ProductInfoWidget extends Widget_Base
 
         $this->end_controls_section();
 
+        // SKU Style
+        $this->start_controls_section(
+            'sku_style_section',
+            [
+                'label'     => esc_html__('SKU', 'fluent-cart'),
+                'tab'       => Controls_Manager::TAB_STYLE,
+                'condition' => [
+                    'show_sku' => 'yes',
+                ],
+            ]
+        );
+
+        ProductSkuWidget::registerSkuStyleControls($this, '{{WRAPPER}} .fct-product-sku');
+
+        $this->end_controls_section();
+
         // Excerpt Style
         $this->start_controls_section(
             'excerpt_style_section',
@@ -254,6 +282,7 @@ class ProductInfoWidget extends Widget_Base
         $showGallery    = $settings['show_gallery'] === 'yes';
         $showTitle      = $settings['show_title'] === 'yes';
         $showStock      = $settings['show_stock'] === 'yes';
+        $showSku        = $settings['show_sku'] === 'yes';
         $showExcerpt    = $settings['show_excerpt'] === 'yes';
         $showPrice      = $settings['show_price'] === 'yes';
         $showBuySection = $settings['show_buy_section'] === 'yes';
@@ -277,6 +306,10 @@ class ProductInfoWidget extends Widget_Base
 
         if ($showStock) {
             $renderer->renderStockAvailability();
+        }
+
+        if ($showSku) {
+            $renderer->renderSku();
         }
 
         if ($showExcerpt) {
