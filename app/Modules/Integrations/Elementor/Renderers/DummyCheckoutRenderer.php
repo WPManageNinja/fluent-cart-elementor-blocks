@@ -163,6 +163,10 @@ class DummyCheckoutRenderer
                 $this->renderShippingMethods($customHeading);
                 break;
 
+            case 'eu_vat':
+                $this->renderEuVat($customHeading);
+                break;
+
             case 'payment_methods':
                 $this->renderPaymentMethods($customHeading);
                 break;
@@ -295,6 +299,44 @@ class DummyCheckoutRenderer
         ?>
         <div class="fct_checkout_shipping_methods <?php echo $this->requireShipping ? '' : 'is-hidden' ?>">
             <?php (new CheckoutRenderer($this->cart))->renderShippingOptions(); ?>
+        </div>
+        <?php
+    }
+
+    /**
+     * Render EU VAT preview block.
+     */
+    protected function renderEuVat(string $customHeading = ''): void
+    {
+        $heading = $customHeading ?: __('EU VAT', 'fluent-cart');
+        ?>
+        <div class="fct_checkout_form_section" role="region" aria-labelledby="eu-vat-heading">
+            <div class="fct_form_section_header">
+                <h4 id="eu-vat-heading" class="fct_form_section_header_label">
+                    <?php echo esc_html($heading); ?>
+                </h4>
+            </div>
+            <div class="fct_form_section_body">
+                <div class="fct_tax_field">
+                    <div class="fct_tax_input_wrapper" id="fct_billing_tax_id_wrapper">
+                        <label for="fct_billing_tax_id" class="sr-only">
+                            <?php esc_html_e('VAT Number', 'fluent-cart'); ?>
+                        </label>
+                        <input
+                            type="text"
+                            name="fct_billing_tax_id"
+                            autocomplete="tax-id"
+                            placeholder="<?php esc_attr_e('Enter Tax ID', 'fluent-cart'); ?>"
+                            id="fct_billing_tax_id"
+                            value=""
+                            disabled
+                        />
+                        <button type="button" disabled>
+                            <?php esc_html_e('Apply', 'fluent-cart'); ?>
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
         <?php
     }

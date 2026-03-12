@@ -236,6 +236,7 @@ class CheckoutWidget extends Widget_Base
                                 'create_account'   => esc_html__('Create Account', 'fluent-cart'),
                                 'address_fields'   => esc_html__('Address Fields', 'fluent-cart'),
                                 'shipping_methods' => esc_html__('Shipping Methods', 'fluent-cart'),
+                                'eu_vat'           => esc_html__('EU VAT', 'fluent-cart'),
                                 'payment_methods'  => esc_html__('Payment Methods', 'fluent-cart'),
                                 'agree_terms'      => esc_html__('Agree to Terms', 'fluent-cart'),
                                 'order_notes'      => esc_html__('Order Notes', 'fluent-cart'),
@@ -312,10 +313,11 @@ class CheckoutWidget extends Widget_Base
                                 ['element_type' => 'address_fields', 'element_visibility' => 'yes', 'address_type' => 'both', 'show_ship_to_different' => 'yes'],
                                 ['element_type' => 'agree_terms', 'element_visibility' => 'yes'],
                                 ['element_type' => 'shipping_methods', 'element_visibility' => 'yes'],
+                                ['element_type' => 'eu_vat', 'element_visibility' => 'yes'],
                                 ['element_type' => 'payment_methods', 'element_visibility' => 'yes'],
                                 ['element_type' => 'submit_button', 'element_visibility' => 'yes'],
                         ],
-                        'title_field' => '{{{ {"name_fields":"Name Fields","create_account":"Create Account","address_fields":"Address Fields","shipping_methods":"Shipping Methods","payment_methods":"Payment Methods","agree_terms":"Agree to Terms","order_notes":"Order Notes","submit_button":"Submit Button"}[element_type] || element_type }}}',
+                        'title_field' => '{{{ {"name_fields":"Name Fields","create_account":"Create Account","address_fields":"Address Fields","shipping_methods":"Shipping Methods","eu_vat":"EU VAT","payment_methods":"Payment Methods","agree_terms":"Agree to Terms","order_notes":"Order Notes","submit_button":"Submit Button"}[element_type] || element_type }}}',
                 ]
         );
 
@@ -1724,11 +1726,55 @@ class CheckoutWidget extends Widget_Base
     }
 
     /**
+     * Ensure older saved widgets get newly introduced required form sections.
+     */
+    private function normalizeCheckoutSettings(array $settings): array
+    {
+        $settings['form_elements'] = $this->normalizeFormElements($settings['form_elements'] ?? []);
+
+        return $settings;
+    }
+
+    /**
+     * Add EU VAT to older widget instances when the section does not exist at all.
+     */
+    private function normalizeFormElements($formElements): array
+    {
+        if (!is_array($formElements)) {
+            return [];
+        }
+
+        foreach ($formElements as $element) {
+            if (($element['element_type'] ?? '') === 'eu_vat') {
+                return $formElements;
+            }
+        }
+
+        $euVatElement = [
+            'element_type'       => 'eu_vat',
+            'element_visibility' => 'yes',
+        ];
+
+        $insertAt = count($formElements);
+
+        foreach ($formElements as $index => $element) {
+            if (($element['element_type'] ?? '') === 'payment_methods') {
+                $insertAt = $index;
+                break;
+            }
+        }
+
+        array_splice($formElements, $insertAt, 0, [$euVatElement]);
+
+        return $formElements;
+    }
+
+    /**
      * Render the widget output on the frontend
      */
     protected function render()
     {
-        $settings = $this->get_settings_for_display();
+        $settings = $this->normalizeCheckoutSettings($this->get_settings_for_display());
         $isEditor = \Elementor\Plugin::$instance->editor->is_edit_mode();
 
         // Load checkout styles (works even without cart for editor preview)
