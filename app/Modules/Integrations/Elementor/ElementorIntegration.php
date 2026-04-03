@@ -87,7 +87,7 @@ class ElementorIntegration
         $widgets_manager->register(new ProductSkuWidget());
         $widgets_manager->register(new ProductExcerptWidget());
         $widgets_manager->register(new ProductBuySectionWidget());
-        // $widgets_manager->register(new ProductContentWidget());
+        $widgets_manager->register(new ProductContentWidget());
         $widgets_manager->register(new ProductInfoWidget());
         $widgets_manager->register(new RelatedProductsWidget());
     }

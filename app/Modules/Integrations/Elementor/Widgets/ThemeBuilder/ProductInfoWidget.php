@@ -4,7 +4,10 @@ namespace FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\T
 
 use Elementor\Widget_Base;
 use Elementor\Controls_Manager;
+use Elementor\Group_Control_Typography;
+use FluentCart\Api\Resource\ShopResource;
 use FluentCart\App\Modules\Templating\AssetLoader;
+use FluentCart\App\Services\Renderer\ProductListRenderer;
 use FluentCart\App\Services\Renderer\ProductRenderer;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ThemeBuilder\Traits\ProductWidgetTrait;
 
@@ -149,6 +152,30 @@ class ProductInfoWidget extends Widget_Base
             ]
         );
 
+        $this->add_control(
+            'show_description',
+            [
+                'label'        => esc_html__('Description', 'fluent-cart'),
+                'type'         => Controls_Manager::SWITCHER,
+                'label_on'     => esc_html__('Show', 'fluent-cart'),
+                'label_off'    => esc_html__('Hide', 'fluent-cart'),
+                'return_value' => 'yes',
+                'default'      => 'yes',
+            ]
+        );
+
+        $this->add_control(
+            'show_related_products',
+            [
+                'label'        => esc_html__('Related Products', 'fluent-cart'),
+                'type'         => Controls_Manager::SWITCHER,
+                'label_on'     => esc_html__('Show', 'fluent-cart'),
+                'label_off'    => esc_html__('Hide', 'fluent-cart'),
+                'return_value' => 'yes',
+                'default'      => 'yes',
+            ]
+        );
+
         $this->end_controls_section();
 
         // Gallery Settings
@@ -262,6 +289,39 @@ class ProductInfoWidget extends Widget_Base
         ProductBuySectionWidget::registerBuySectionStyleControls($this, '{{WRAPPER}} .fct_buy_section');
 
         $this->end_controls_section();
+
+        // Description Style
+        $this->start_controls_section(
+            'description_style_section',
+            [
+                'label'     => esc_html__('Description', 'fluent-cart'),
+                'tab'       => Controls_Manager::TAB_STYLE,
+                'condition' => [
+                    'show_description' => 'yes',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'description_color',
+            [
+                'label'     => esc_html__('Text Color', 'fluent-cart'),
+                'type'      => Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .fct-product-description' => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_group_control(
+            Group_Control_Typography::get_type(),
+            [
+                'name'     => 'description_typography',
+                'selector' => '{{WRAPPER}} .fct-product-description',
+            ]
+        );
+
+        $this->end_controls_section();
     }
 
     protected function render()
@@ -285,7 +345,9 @@ class ProductInfoWidget extends Widget_Base
         $showSku        = $settings['show_sku'] === 'yes';
         $showExcerpt    = $settings['show_excerpt'] === 'yes';
         $showPrice      = $settings['show_price'] === 'yes';
-        $showBuySection = $settings['show_buy_section'] === 'yes';
+        $showBuySection    = $settings['show_buy_section'] === 'yes';
+        $showDescription      = $settings['show_description'] === 'yes';
+        $showRelatedProducts  = $settings['show_related_products'] === 'yes';
 
         echo '<div class="fluentcart-product-info">';
         echo '<div class="fct-single-product-page" data-fluent-cart-single-product-page>';
@@ -326,7 +388,24 @@ class ProductInfoWidget extends Widget_Base
 
         echo '</div>'; // .fct-product-summary
         echo '</div>'; // .fct-single-product-page-row
+
+        if ($showDescription) {
+            $renderer->renderDescription();
+        }
+
         echo '</div>'; // .fct-single-product-page
+
+        if ($showRelatedProducts) {
+            $products = ShopResource::getSimilarProducts($product->ID, false);
+            if (!empty($products)) {
+                (new ProductListRenderer(
+                    $products,
+                    __('Related Products', 'fluent-cart'),
+                    'fct-similar-product-list-container'
+                ))->render();
+            }
+        }
+
         echo '</div>'; // .fluentcart-product-info
     }
 }
