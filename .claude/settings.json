@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(unzip -l builds/fluent-cart-elementor-blocks.zip)"
+    ]
+  }
+}
