@@ -334,8 +334,15 @@ class ProductInfoWidget extends Widget_Base
             return;
         }
 
-        AssetLoader::loadSingleProductAssets();
-        AssetLoader::enqueueProductInfoFrontendStyles();
+        $isEditor = \Elementor\Plugin::$instance->editor->is_edit_mode();
+
+        if ($isEditor) {
+            // In editor, only load CSS — skip JS assets to prevent Elementor re-render interference
+            AssetLoader::enqueueProductInfoFrontendStyles();
+        } else {
+            AssetLoader::loadSingleProductAssets();
+            AssetLoader::enqueueProductInfoFrontendStyles();
+        }
 
         $renderer = new ProductRenderer($product);
 
@@ -390,7 +397,17 @@ class ProductInfoWidget extends Widget_Base
         echo '</div>'; // .fct-single-product-page-row
 
         if ($showDescription) {
-            $renderer->renderDescription();
+            if ($isEditor) {
+                // In editor, render without the_content filter to avoid Elementor re-entry
+                $post = get_post($product->ID);
+                if ($post && !empty($post->post_content)) {
+                    echo '<div class="fct-product-description">';
+                    echo wp_kses_post(wpautop($post->post_content));
+                    echo '</div>';
+                }
+            } else {
+                $renderer->renderDescription();
+            }
         }
 
         echo '</div>'; // .fct-single-product-page
