@@ -37,7 +37,7 @@ class ProductBuySectionWidget extends Widget_Base
 
     public function get_categories()
     {
-        return ['fluent-cart'];
+        return ['fluent-cart-product'];
     }
 
     public function get_keywords()

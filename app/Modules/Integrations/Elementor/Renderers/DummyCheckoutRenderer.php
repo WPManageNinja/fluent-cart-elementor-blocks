@@ -92,11 +92,6 @@ class DummyCheckoutRenderer
                 </div>
             <?php else: ?>
                 <div class="fce-checkout-single-column">
-                    <div class="fct_checkout_form">
-                        <div class="fct_checkout_form_items">
-                            <?php $this->renderFormElements(); ?>
-                        </div>
-                    </div>
                     <div class="fct_checkout_summary">
                         <?php $this->renderSummaryElements(); ?>
                         <?php if (!$this->hasFormElement('order_notes')): ?>
@@ -113,6 +108,14 @@ class DummyCheckoutRenderer
                             }
                         ?>
                     </div>
+                    <div class="fct_checkout_form">
+                        <div class="fct_checkout_form_items">
+                            <?php $this->renderFormElements(['exclude' => 'submit_button']); ?>
+                        </div>
+                    </div>
+                    <div class="fct_checkout_form_submit">
+                        <?php $this->renderFormElements(['only' => 'submit_button']); ?>
+                    </div>
                 </div>
             <?php endif; ?>
         </form>
@@ -121,16 +124,28 @@ class DummyCheckoutRenderer
 
     /**
      * Render form elements based on settings
+     *
+     * @param array $filter  Optional. 'exclude' => 'type' skips that type; 'only' => 'type' renders only that type.
      */
-    protected function renderFormElements(): void
+    protected function renderFormElements(array $filter = []): void
     {
         $formElements = $this->settings['form_elements'] ?? [];
+        $exclude = $filter['exclude'] ?? null;
+        $only    = $filter['only'] ?? null;
 
         foreach ($formElements as $element) {
-            $type = $element['element_type'] ?? '';
+            $type    = $element['element_type'] ?? '';
             $visible = ($element['element_visibility'] ?? 'yes') === 'yes';
 
             if (!$visible) {
+                continue;
+            }
+
+            if ($exclude && $type === $exclude) {
+                continue;
+            }
+
+            if ($only && $type !== $only) {
                 continue;
             }
 

@@ -84,6 +84,13 @@ class CheckoutWidget extends Widget_Base
                 'fce-checkout-select-css',
                 'public/components/select/style/style.scss'
         );
+
+        \wp_enqueue_style(
+            'fce-elementor-css',
+            FLUENTCART_ELEMENTOR_BLOCKS_URL . 'assets/css/elementor.css',
+            [],
+            FLUENTCART_ELEMENTOR_BLOCKS_VERSION
+        );
     }
 
     public function get_script_depends()
