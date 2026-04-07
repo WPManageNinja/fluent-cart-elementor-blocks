@@ -100,6 +100,7 @@ export default defineConfig({
             viteStaticCopy({
                 targets: [
                     {src: 'resources/images', dest: ''},
+                    {src: 'resources/css', dest: ''},
                 ]
             }),
             moveManifestPlugin

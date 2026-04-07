@@ -6,6 +6,7 @@
 #assets
 assets/*
 !assets/.gitkeep
+!assets/css/
 
 #Node Packages
 node_modules
