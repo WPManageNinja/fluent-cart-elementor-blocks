@@ -142,7 +142,7 @@
                                 var option = new Option(product.post_title, product.ID, true, true);
                                 $select.append(option);
                             });
-                            $select.trigger('change');
+                            $select.trigger('change.select2');
                         }
                     });
                 }
