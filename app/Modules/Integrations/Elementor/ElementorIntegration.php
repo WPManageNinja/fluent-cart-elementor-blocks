@@ -13,11 +13,14 @@ use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Renderers\Eleme
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\AddToCartWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\BuyNowWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\CheckoutWidget;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\CustomerDashboardButtonWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\MiniCartWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ProductCardWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ProductCarouselWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ProductCategoriesListWidget;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\SearchBarWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ShopAppWidget;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\StoreLogoWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ThemeBuilder\ProductTitleWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ThemeBuilder\ProductGalleryWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ThemeBuilder\ProductPriceWidget;
@@ -78,6 +81,9 @@ class ElementorIntegration
         $widgets_manager->register(new ProductCarouselWidget());
         $widgets_manager->register(new ProductCategoriesListWidget());
         $widgets_manager->register(new CheckoutWidget());
+        $widgets_manager->register(new CustomerDashboardButtonWidget());
+        $widgets_manager->register(new SearchBarWidget());
+        $widgets_manager->register(new StoreLogoWidget());
 
         // Theme Builder product widgets
         $widgets_manager->register(new ProductTitleWidget());
