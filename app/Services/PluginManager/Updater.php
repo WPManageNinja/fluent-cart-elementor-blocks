@@ -9,51 +9,38 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Updater
 {
-    private $api_url = '';
-    private $api_data = array();
+    private $store_url = '';
     private $name = '';
     private $slug = '';
     private $version = '';
-    private $license_status = '';
-    private $admin_page_url = '';
-    private $purchase_url = '';
+    private $addon_slug = '';
+    private $parent_product_id = '';
+    private $license_key = '';
+    private $activation_hash = '';
     private $plugin_title = '';
 
     private $response_transient_key;
 
     /**
-     * Class constructor.
-     *
-     * @uses plugin_basename()
-     * @uses hook()
-     *
-     * @param string $_api_url The URL pointing to the custom API endpoint.
+     * @param string $_store_url   The FluentCart store URL.
      * @param string $_plugin_file Path to the plugin file.
-     * @param array $_api_data Optional data to send with API calls.
-     * @param array $_plugin_update_data Optional data to generate link for activating or purchasing.
-     *                                      Needs admin_page_url, purchase_url, plugin_name, license_status to work
+     * @param array  $_config      Configuration: version, addon_slug, parent_product_id, license_key, activation_hash, plugin_title.
      */
-    function __construct($_api_url, $_plugin_file, $_api_data = null, $_plugin_update_data = [])
+    function __construct($_store_url, $_plugin_file, $_config = [])
     {
-        $this->api_url = trailingslashit($_api_url);
-        $this->api_data = $_api_data;
+        $this->store_url = rtrim($_store_url, '/');
         $this->name = plugin_basename($_plugin_file);
         $this->slug = basename($_plugin_file, '.php');
 
         $this->response_transient_key = md5(sanitize_key($this->name) . 'response_transient');
 
-        $this->version = $_api_data['version'];
+        $this->version = $_config['version'] ?? '1.0.0';
+        $this->addon_slug = $_config['addon_slug'] ?? '';
+        $this->parent_product_id = $_config['parent_product_id'] ?? '';
+        $this->license_key = $_config['license_key'] ?? '';
+        $this->activation_hash = $_config['activation_hash'] ?? '';
+        $this->plugin_title = $_config['plugin_title'] ?? '';
 
-
-        if (is_array($_plugin_update_data)
-            && isset($_plugin_update_data['license_status'], $_plugin_update_data['admin_page_url'], $_plugin_update_data['purchase_url'], $_plugin_update_data['plugin_title'])
-        ) {
-            $this->license_status = $_plugin_update_data ['license_status'];
-            $this->admin_page_url = $_plugin_update_data['admin_page_url'];
-            $this->purchase_url = $_plugin_update_data['purchase_url'];
-            $this->plugin_title = $_plugin_update_data['plugin_title'];
-        }
-        // Set up hooks.
         $this->init();
     }
 
@@ -76,11 +63,6 @@ class Updater
 
         add_action( 'after_plugin_row_' . $this->name, [ $this, 'show_update_notification' ], 10, 2 );
 
-    }
-
-    function remove_plugin_update_message()
-    {
-        remove_action('after_plugin_row_' . $this->name, 'wp_plugin_update_row', 10, 2);
     }
 
     function check_update($_transient_data)
@@ -111,7 +93,7 @@ class Updater
         $version_info = $this->get_transient($this->response_transient_key);
 
         if (false === $version_info) {
-            $version_info = $this->api_request('plugin_latest_version', array('slug' => $this->slug));
+            $version_info = $this->api_request();
             if (is_wp_error($version_info)) {
                 $version_info = new \stdClass();
                 $version_info->error = true;
@@ -200,15 +182,7 @@ class Updater
         $api_request_transient = get_site_transient( $cache_key );
 
         if ( empty( $api_request_transient ) ) {
-            $to_send = array(
-                'slug'   => $this->slug,
-                'is_ssl' => is_ssl(),
-                'fields' => array(
-                    'banners' => false,
-                    'reviews' => false
-                )
-            );
-            $api_request_transient = $this->api_request('plugin_information', $to_send);
+            $api_request_transient = $this->api_request();
 
             // Expires in 2 days
             set_site_transient( $cache_key, $api_request_transient, DAY_IN_SECONDS * 2 );
@@ -223,74 +197,55 @@ class Updater
 
 
     /**
-     * Disable SSL verification in order to prevent download update failures
-     *
-     * @param array $args
-     * @param string $url
-     *
-     * @return object $array
-     */
-    function http_request_args($args, $url)
-    {
-        // If it is an https request and we are performing a package download, disable ssl verification
-        if (strpos($url, 'https://') !== false && strpos($url, 'edd_action=package_download')) {
-            $args['sslverify'] = false;
-        }
-
-        return $args;
-    }
-
-    /**
-     * Calls the API and, if successful, returns the object delivered by the API.
-     *
-     * @uses get_bloginfo()
-     * @uses wp_remote_post()
-     * @uses is_wp_error()
-     *
-     * @param string $_action The requested action.
-     * @param array $_data Parameters for the API action.
+     * Call FluentCart license API with addon_slug support.
      *
      * @return false|object
      */
-    private function api_request($_action, $_data)
+    private function api_request()
     {
-
-        global $wp_version;
-
-        $data = array_merge($this->api_data, $_data);
-
-        if ($data['slug'] != $this->slug) {
-            return;
+        if ($this->store_url === home_url()) {
+            return false;
         }
 
-        if ($this->api_url == home_url()) {
-            return false; // Don't allow a plugin to ping itself
+        $siteUrl = is_multisite() ? network_site_url() : home_url();
+
+        $licenseKey = $this->license_key;
+        $activationHash = $this->activation_hash;
+
+        // Auto-detect license from FluentCart Pro stored settings
+        if (!$licenseKey && !$activationHash) {
+            $stored = $this->getParentLicenseInfo();
+            $licenseKey = $stored['license_key'];
+            $activationHash = $stored['activation_hash'];
         }
 
-        $siteUrl = home_url();
-        if (is_multisite()) {
-            $siteUrl = network_site_url();
+        $url = add_query_arg(['fluent-cart' => 'get_license_version'], $this->store_url);
+
+        $body = [
+            'item_id'         => $this->parent_product_id,
+            'addon_slug'      => $this->addon_slug,
+            'license_key'     => $licenseKey,
+            'activation_hash' => $activationHash,
+            'site_url'        => $siteUrl,
+            'current_version' => $this->version,
+        ];
+
+        $request = wp_remote_post($url, [
+            'timeout'   => 15,
+            'sslverify' => true,
+            'body'      => $body,
+        ]);
+
+        if (is_wp_error($request)) {
+            return $request;
         }
 
-        $api_params = array(
-            'edd_action' => 'get_version',
-            'license'    => !empty($data['license']) ? $data['license'] : '',
-            'item_id'    => isset($data['item_id']) ? $data['item_id'] : false,
-            'slug'       => $data['slug'],
-            'author'     => $data['author'],
-            'url'        => $siteUrl
-        );
-
-        $request = wp_remote_post($this->api_url,
-            array('timeout' => 15, 'sslverify' => false, 'body' => $api_params));
-
-        if (!is_wp_error($request)) {
-            $request = json_decode(wp_remote_retrieve_body($request));
-        }
+        $request = json_decode(wp_remote_retrieve_body($request));
 
         if ($request && isset($request->sections)) {
             $request->sections = maybe_unserialize($request->sections);
             $request->slug = $this->slug;
+            $request->plugin = $this->name;
         } else {
             $request = false;
         }
@@ -298,32 +253,22 @@ class Updater
         return $request;
     }
 
-    public function show_changelog()
+    /**
+     * Try to get parent product's license info from FluentCart Pro stored settings.
+     */
+    private function getParentLicenseInfo()
     {
-        if (empty($_REQUEST['edd_sl_action']) || 'view_plugin_changelog' != $_REQUEST['edd_sl_action']) {
-            return;
+        $settingsKey = '__fluent-cart-pro_sl_info';
+        $licenseInfo = get_option($settingsKey, []);
+
+        if (!empty($licenseInfo['license_key'])) {
+            return [
+                'license_key'     => $licenseInfo['license_key'] ?? '',
+                'activation_hash' => $licenseInfo['activation_hash'] ?? '',
+            ];
         }
 
-        if (empty($_REQUEST['plugin'])) {
-            return;
-        }
-
-        if (empty($_REQUEST['slug'])) {
-            return;
-        }
-
-        if (!current_user_can('update_plugins')) {
-            wp_die(__('You do not have permission to install plugin updates', 'edd'), __('Error', 'edd'),
-                array('response' => 403));
-        }
-
-        $response = $this->api_request('plugin_latest_version', array('slug' => $_REQUEST['slug']));
-
-        if ($response && isset($response->sections['changelog'])) {
-            echo '<div style="background:#fff;padding:10px;">' . $response->sections['changelog'] . '</div>';
-        }
-
-        exit;
+        return ['license_key' => '', 'activation_hash' => ''];
     }
 
     private function maybe_delete_transients()

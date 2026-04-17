@@ -7,22 +7,17 @@ return function($file) {
         new Application($app, $file);
 
         /**
-         * Plugin Updater
+         * Plugin Updater V2 — checks for updates from FluentCart store via addon_slug
          */
-        $apiUrl = 'https://api.fluentcart.com/wp-admin/admin-ajax.php?action=fluent_cart_elementor_blocks_update&time=' . time();
-        new \FluentCartElementorBlocks\App\Services\PluginManager\Updater($apiUrl, $file, array(
-            'version'   => FLUENTCART_ELEMENTOR_BLOCKS_VERSION,
-            'license'   => '12345',
-            'item_name' => 'FluentCart Elementor Blocks',
-            'item_id'   => '101',
-            'author'    => 'wpmanageninja'
-        ),
-            array(
-                'license_status' => 'valid',
-                'admin_page_url' => admin_url('admin.php?page=fluent-cart#/'),
-                'purchase_url'   => 'https://fluentcart.com',
-                'plugin_title'   => 'FluentCart Elementor Blocks'
-            )
+        new \FluentCartElementorBlocks\App\Services\PluginManager\Updater(
+            'https://cart.wp1.site',
+            $file,
+            [
+                'version'           => FLUENTCART_ELEMENTOR_BLOCKS_VERSION,
+                'addon_slug'        => 'fluent-cart-elementor-blocks',
+                'parent_product_id' => 155,
+                'plugin_title'      => 'FluentCart Elementor Blocks',
+            ]
         );
 
         add_filter('plugin_row_meta', function ($links, $pluginFile) use ($file) {
