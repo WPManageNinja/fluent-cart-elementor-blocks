@@ -20,6 +20,7 @@ class Updater
     private $plugin_title = '';
 
     private $response_transient_key;
+    private $license_notice_transient_key;
 
     /**
      * @param string $_store_url   The FluentCart store URL.
@@ -33,6 +34,7 @@ class Updater
         $this->slug = basename($_plugin_file, '.php');
 
         $this->response_transient_key = md5(sanitize_key($this->name) . 'response_transient');
+        $this->license_notice_transient_key = md5(sanitize_key($this->name) . 'license_notice_transient');
 
         $this->version = $_config['version'] ?? '1.0.0';
         $this->addon_slug = $_config['addon_slug'] ?? '';
@@ -62,6 +64,7 @@ class Updater
         remove_action( 'after_plugin_row_' . $this->name, 'wp_plugin_update_row' );
 
         add_action( 'after_plugin_row_' . $this->name, [ $this, 'show_update_notification' ], 10, 2 );
+        add_action('admin_notices', [$this, 'show_license_activation_notice']);
 
     }
 
@@ -102,6 +105,9 @@ class Updater
         }
 
         if (!empty($version_info->error) || !$version_info) {
+            // Ensure stale update payload is removed when API response is invalid.
+            unset($_transient_data->response[$this->name]);
+            unset($_transient_data->no_update[$this->name]);
             return $_transient_data;
         }
 
@@ -281,6 +287,15 @@ class Updater
 
         $request = json_decode(wp_remote_retrieve_body($request));
 
+        if ($request && isset($request->license_status) && $request->license_status !== 'valid') {
+            $this->set_transient($this->license_notice_transient_key, [
+                'status'  => sanitize_text_field($request->license_status),
+                'message' => sanitize_text_field($request->license_message ?? ''),
+            ]);
+        } else {
+            $this->delete_transient($this->license_notice_transient_key);
+        }
+
         if ($request && isset($request->sections)) {
             $sections = maybe_unserialize($request->sections);
 
@@ -311,6 +326,41 @@ class Updater
         }
 
         return $request;
+    }
+
+    public function show_license_activation_notice()
+    {
+        global $pagenow;
+
+        if (!in_array($pagenow, ['plugins.php', 'update-core.php'], true)) {
+            return;
+        }
+
+        if (!current_user_can('update_plugins')) {
+            return;
+        }
+
+        $notice = $this->get_transient($this->license_notice_transient_key);
+
+        if (!$notice || (($notice['status'] ?? '') === 'valid')) {
+            return;
+        }
+
+        $activateUrl = admin_url('admin.php?page=fluent-cart#/settings/licensing');
+        $pluginTitle = $this->plugin_title ?: $this->slug;
+
+        $message = sprintf(
+            /* translators: 1: addon plugin title */
+            __('%1$s updates require an active FluentCart Pro license. Please activate your FluentCart Pro license to receive updates.', 'fluent-cart-elementor-blocks'),
+            esc_html($pluginTitle)
+        );
+
+        printf(
+            '<div class="notice notice-warning"><p>%1$s <a href="%2$s">%3$s</a></p></div>',
+            wp_kses_post($message),
+            esc_url($activateUrl),
+            esc_html__('Activate License', 'fluent-cart-elementor-blocks')
+        );
     }
 
     /**
@@ -347,6 +397,14 @@ class Updater
                 remove_filter( 'pre_set_site_transient_update_plugins', [ $this, 'check_update' ] );
 
                 $update_cache = get_site_transient( 'update_plugins' );
+                if ($update_cache && is_object($update_cache)) {
+                    if (!empty($update_cache->response[$this->name])) {
+                        unset($update_cache->response[$this->name]);
+                    }
+                    if (!empty($update_cache->no_update[$this->name])) {
+                        unset($update_cache->no_update[$this->name]);
+                    }
+                }
 
                 $update_cache = $this->check_transient_data( $update_cache );
 
@@ -364,6 +422,7 @@ class Updater
     public function delete_transients()
     {
         $this->delete_transient($this->response_transient_key);
+        $this->delete_transient($this->license_notice_transient_key);
     }
 
     protected function delete_transient($cache_key)
