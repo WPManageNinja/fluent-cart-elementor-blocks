@@ -178,21 +178,56 @@ class Updater
             return $_data;
         }
 
-        $cache_key = $this->slug.'_api_request_' . substr( md5( serialize( $this->slug ) ), 0, 15 );
-        $api_request_transient = get_site_transient( $cache_key );
+        $cache_key = $this->slug . '_api_request_' . substr( md5( serialize( $this->slug ) ), 0, 15 );
+
+        // Always fetch fresh on the plugin-install page so the modal shows current data.
+        global $pagenow;
+        $api_request_transient = ( 'plugin-install.php' === $pagenow ) ? false : get_site_transient( $cache_key );
 
         if ( empty( $api_request_transient ) ) {
             $api_request_transient = $this->api_request();
 
-            // Expires in 2 days
-            set_site_transient( $cache_key, $api_request_transient, DAY_IN_SECONDS * 2 );
+            if ( $api_request_transient && ! is_wp_error( $api_request_transient ) ) {
+                set_site_transient( $cache_key, $api_request_transient, DAY_IN_SECONDS * 2 );
+            }
         }
 
-        if (false !== $api_request_transient) {
+        if ( $api_request_transient && ! is_wp_error( $api_request_transient ) ) {
             $_data = $api_request_transient;
+        } else {
+            $_data = $this->get_fallback_plugin_info();
         }
 
         return $_data;
+    }
+
+    /**
+     * Build a minimal plugin info object pointing to the plugin's store page
+     * when no remote API data is available (e.g. no license or API unreachable).
+     *
+     * @return \stdClass
+     */
+    private function get_fallback_plugin_info()
+    {
+        $plugin_page_url = $this->store_url ?: 'https://fluentcart.com';
+        $plugin_name     = $this->plugin_title ?: $this->slug;
+
+        $info           = new \stdClass();
+        $info->name     = $plugin_name;
+        $info->slug     = $this->slug;
+        $info->version  = $this->version;
+        $info->homepage = $plugin_page_url;
+        $info->author   = '<a href="' . esc_url( $plugin_page_url ) . '">' . esc_html( $plugin_name ) . '</a>';
+        $info->sections = [
+            'description' => sprintf(
+                '<p>%s</p><p><a href="%s" target="_blank" rel="noopener noreferrer" class="button button-primary">%s</a></p>',
+                esc_html__( 'Full version details are available on the plugin page.', 'fluent-cart-elementor-blocks' ),
+                esc_url( $plugin_page_url ),
+                esc_html__( 'View Plugin Page &rarr;', 'fluent-cart-elementor-blocks' )
+            ),
+        ];
+
+        return $info;
     }
 
 
@@ -243,7 +278,28 @@ class Updater
         $request = json_decode(wp_remote_retrieve_body($request));
 
         if ($request && isset($request->sections)) {
-            $request->sections = maybe_unserialize($request->sections);
+            $sections = maybe_unserialize($request->sections);
+
+            if (is_object($sections)) {
+                $sections = (array) $sections;
+            }
+
+            if (!is_array($sections)) {
+                $sections = [];
+            }
+
+            if (empty($sections['description'])) {
+                $sections['description'] = sprintf(
+                    '<p>%s</p>',
+                    esc_html__('Full version details are available on the plugin page.', 'fluent-cart-elementor-blocks')
+                );
+            }
+
+            if (empty($sections['changelog'])) {
+                $sections['changelog'] = $sections['description'];
+            }
+
+            $request->sections = $sections;
             $request->slug = $this->slug;
             $request->plugin = $this->name;
         } else {
