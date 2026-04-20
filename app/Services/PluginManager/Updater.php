@@ -106,8 +106,12 @@ class Updater
         }
 
         if (is_object($version_info) && isset($version_info->new_version)) {
-            if (version_compare($this->version, $version_info->new_version, '<')) {
+            $hasValidPackage = !empty($version_info->package) && wp_http_validate_url($version_info->package);
+
+            if (version_compare($this->version, $version_info->new_version, '<') && $hasValidPackage) {
                 $_transient_data->response[$this->name] = $version_info;
+            } else {
+                unset($_transient_data->response[$this->name]);
             }
             $_transient_data->last_checked = time();
             $_transient_data->checked[$this->name] = $this->version;
