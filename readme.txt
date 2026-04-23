@@ -88,6 +88,7 @@ Yes. Required CSS and JavaScript assets are enqueued automatically when widgets 
 = 1.0.1 (Apr 3, 2026) =
 - Added Product SKU widget for Elementor Theme Builder
 - Added Product Content widget for Elementor Theme Builder
+- Added Product Package Description widget for Elementor Theme Builder
 - Added EU VAT section support in Checkout widget
 - Enhanced Product Info widget with SKU display and description support
 - Added plugin auto-updater for seamless updates
