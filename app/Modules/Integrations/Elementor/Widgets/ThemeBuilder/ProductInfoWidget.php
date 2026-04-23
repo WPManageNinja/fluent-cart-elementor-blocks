@@ -141,6 +141,18 @@ class ProductInfoWidget extends Widget_Base
         );
 
         $this->add_control(
+            'show_package_description',
+            [
+                'label'        => esc_html__('Package Description', 'fluent-cart'),
+                'type'         => Controls_Manager::SWITCHER,
+                'label_on'     => esc_html__('Show', 'fluent-cart'),
+                'label_off'    => esc_html__('Hide', 'fluent-cart'),
+                'return_value' => 'yes',
+                'default'      => 'yes',
+            ]
+        );
+
+        $this->add_control(
             'show_buy_section',
             [
                 'label'        => esc_html__('Buy Section', 'fluent-cart'),
@@ -350,6 +362,7 @@ class ProductInfoWidget extends Widget_Base
         $showTitle      = $settings['show_title'] === 'yes';
         $showStock      = $settings['show_stock'] === 'yes';
         $showSku        = $settings['show_sku'] === 'yes';
+        $showPackageDescription = ($settings['show_package_description'] ?? 'yes') === 'yes';
         $showExcerpt    = $settings['show_excerpt'] === 'yes';
         $showPrice      = $settings['show_price'] === 'yes';
         $showBuySection    = $settings['show_buy_section'] === 'yes';
@@ -387,6 +400,10 @@ class ProductInfoWidget extends Widget_Base
 
         if ($showPrice) {
             $renderer->renderPrices();
+        }
+
+        if ($showPackageDescription) {
+            $renderer->renderPackageDescription();
         }
 
         if ($showBuySection) {
