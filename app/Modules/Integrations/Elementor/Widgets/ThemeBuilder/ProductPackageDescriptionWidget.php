@@ -122,18 +122,6 @@ class ProductPackageDescriptionWidget extends Widget_Base
         );
 
         $this->add_control(
-            'show_type',
-            [
-                'label'        => esc_html__('Show Package Type', 'fluent-cart'),
-                'type'         => Controls_Manager::SWITCHER,
-                'label_on'     => esc_html__('Yes', 'fluent-cart'),
-                'label_off'    => esc_html__('No', 'fluent-cart'),
-                'return_value' => 'yes',
-                'default'      => 'yes',
-            ]
-        );
-
-        $this->add_control(
             'show_dimensions',
             [
                 'label'        => esc_html__('Show Dimensions', 'fluent-cart'),
@@ -198,7 +186,6 @@ class ProductPackageDescriptionWidget extends Widget_Base
         AssetLoader::loadSingleProductAssets();
 
         $showName          = ($settings['show_name'] ?? 'yes') === 'yes';
-        $showType          = ($settings['show_type'] ?? 'yes') === 'yes';
         $showDimensions    = ($settings['show_dimensions'] ?? 'yes') === 'yes';
         $showProductWeight = ($settings['show_product_weight'] ?? 'yes') === 'yes';
         $showTotalWeight   = ($settings['show_total_weight'] ?? 'yes') === 'yes';
@@ -206,7 +193,7 @@ class ProductPackageDescriptionWidget extends Widget_Base
         $renderer = new ProductRenderer($product);
 
         echo '<div class="fluentcart-product-package-description">';
-        $renderer->renderPackageDescription('', $showName, $showType, $showDimensions, $showProductWeight, $showTotalWeight);
+        $renderer->renderPackageDescription('', $showName, $showDimensions, $showProductWeight, $showTotalWeight);
         echo '</div>';
     }
 }
