@@ -100,3 +100,4 @@ Yes. Required CSS and JavaScript assets are enqueued automatically when widgets 
 - Added Product Search Bar widget
 - Added Store Logo widget
 - Added Customer Dashboard Button widget
+- Fixes variation, thumbnail, and tab clicks not working when the Product Info widget is rendered inside an Elementor popup

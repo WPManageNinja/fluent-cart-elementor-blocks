@@ -1,4 +1,10 @@
 <?php return [
+    'resources/elementor/popup-integration.js' => [
+        'file' => 'popup-integration.js',
+        'name' => 'popup-integration',
+        'src' => 'resources/elementor/popup-integration.js',
+        'isEntry' => true
+    ],
     'resources/elementor/product-carousel-elementor.js' => [
         'file' => 'product-carousel-elementor.js',
         'name' => 'product-carousel-elementor',
