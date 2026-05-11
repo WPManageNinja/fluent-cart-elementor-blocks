@@ -11,6 +11,7 @@ const inputs = [
     'resources/elementor/product-variation-select-control.js',
     'resources/elementor/product-carousel-elementor.js',
     'resources/elementor/product-select-control.js',
+    'resources/elementor/popup-integration.js',
 ];
 
 let viteConfig;

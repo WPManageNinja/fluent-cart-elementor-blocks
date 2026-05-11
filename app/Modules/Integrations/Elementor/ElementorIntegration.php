@@ -49,6 +49,7 @@ class ElementorIntegration
         \add_action('elementor/widgets/register', [$this, 'registerWidgets']);
         \add_action('elementor/controls/register', [$this, 'registerControls']);
         \add_action('elementor/editor/after_enqueue_scripts', [$this, 'enqueueEditorScripts']);
+        \add_action('elementor/frontend/after_enqueue_scripts', [$this, 'enqueueFrontendScripts']);
 
         \add_filter('fluent_cart/products_views/preload_collection_elementor', [$this, 'preloadProductCollectionsAjax'], 10, 2);
 
@@ -167,6 +168,25 @@ class ElementorIntegration
             'restUrl' => \trailingslashit($restInfo['url']),
             'nonce' => $restInfo['nonce']
         ]);
+    }
+
+    /**
+     * Frontend scripts loaded on every page where Elementor is active.
+     *
+     * Bridges Elementor's popup/show event to FluentCart core's re-init API.
+     * Required because Elementor re-renders popup HTML via innerHTML after
+     * popup/show fires, wiping any JS listeners SingleProduct.js bound at
+     * that moment.
+     */
+    public function enqueueFrontendScripts()
+    {
+        Enqueue::script(
+            'fluentcart-elementor-popup-integration',
+            'elementor/popup-integration.js',
+            ['jquery'],
+            FLUENTCART_VERSION,
+            true
+        );
     }
 
     /**
