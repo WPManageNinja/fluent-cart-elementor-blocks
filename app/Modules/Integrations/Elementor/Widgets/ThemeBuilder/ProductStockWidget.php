@@ -117,8 +117,14 @@ class ProductStockWidget extends Widget_Base
 
         $renderer = new ProductRenderer($product);
 
-        echo '<div class="fluentcart-product-stock">';
+        ob_start();
         $renderer->renderStockAvailability();
-        echo '</div>';
+        $content = ob_get_clean();
+
+        if ($content === '') {
+            return;
+        }
+
+        echo '<div class="fluentcart-product-stock">' . $content . '</div>';
     }
 }

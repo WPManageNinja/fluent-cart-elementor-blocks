@@ -459,8 +459,14 @@ class ProductCategoriesListWidget extends Widget_Base
 
         $renderer = new ProductCategoriesListRenderer();
 
-        echo '<div class="fluent-cart-elementor-categories-list' . esc_attr($editorClass) . '">';
+        ob_start();
         $renderer->render($atts);
-        echo '</div>';
+        $content = ob_get_clean();
+
+        if ($content === '') {
+            return;
+        }
+
+        echo '<div class="fluent-cart-elementor-categories-list' . esc_attr($editorClass) . '">' . $content . '</div>'; 
     }
 }
