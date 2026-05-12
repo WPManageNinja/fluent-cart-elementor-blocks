@@ -22,5 +22,11 @@
         'name' => 'product-variation-select-control',
         'src' => 'resources/elementor/product-variation-select-control.js',
         'isEntry' => true
+    ],
+    'resources/elementor/single-product-sync.js' => [
+        'file' => 'single-product-sync.js',
+        'name' => 'single-product-sync',
+        'src' => 'resources/elementor/single-product-sync.js',
+        'isEntry' => true
     ]
 ];

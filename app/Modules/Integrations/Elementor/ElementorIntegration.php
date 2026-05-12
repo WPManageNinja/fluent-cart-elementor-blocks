@@ -50,6 +50,7 @@ class ElementorIntegration
         \add_action('elementor/controls/register', [$this, 'registerControls']);
         \add_action('elementor/editor/after_enqueue_scripts', [$this, 'enqueueEditorScripts']);
         \add_action('elementor/frontend/after_enqueue_scripts', [$this, 'enqueueFrontendScripts']);
+        \add_action('elementor/widget/before_render_content', [$this, 'maybeEnqueueSingleProductSync']);
 
         \add_filter('fluent_cart/products_views/preload_collection_elementor', [$this, 'preloadProductCollectionsAjax'], 10, 2);
 
@@ -184,6 +185,44 @@ class ElementorIntegration
             'fluentcart-elementor-popup-integration',
             'elementor/popup-integration.js',
             ['jquery'],
+            FLUENTCART_VERSION,
+            true
+        );
+    }
+
+    /**
+     * Enqueue the single-product sync bridge only when a FluentCart product
+     * widget is actually rendering on the page.
+     */
+    public function maybeEnqueueSingleProductSync($widget)
+    {
+        static $enqueued = false;
+        if ($enqueued) {
+            return;
+        }
+
+        $syncWidgets = [
+            'fluentcart_product_info',
+            'fluentcart_product_buy_section',
+            'fluentcart_product_gallery',
+            'fluentcart_product_sku',
+            'fluentcart_product_stock',
+            'fluentcart_product_package_description',
+            'fluentcart_product_price',
+        ];
+
+        $isRelevant = in_array($widget->get_name(), $syncWidgets, true);
+        $shouldEnqueue = \apply_filters('fluent_cart/elementor/enqueue_single_product_sync', $isRelevant, $widget);
+
+        if (!$shouldEnqueue) {
+            return;
+        }
+
+        $enqueued = true;
+        Enqueue::script(
+            'fluentcart-elementor-single-product-sync',
+            'elementor/single-product-sync.js',
+            [],
             FLUENTCART_VERSION,
             true
         );
