@@ -2,11 +2,12 @@
  * Sync standalone FluentCart product widgets with the active variation.
  *
  * Listens to core's `fluentCartSingleProductVariationChanged` event and
- * re-applies SKU, Stock, Package Description, variant price, and gallery
- * image updates to widgets dropped as separate Elementor blocks in a Theme
- * Builder Single Product template — i.e. outside core's per-pricing-section
- * scope. Skips elements already managed by core or belonging to other
- * products (related-products lists, product cards).
+ * re-applies SKU, Stock, Package Description, variant price, Add to Cart /
+ * Buy Now button state, and gallery image updates to widgets dropped as
+ * separate Elementor blocks in a Theme Builder Single Product template —
+ * i.e. outside core's per-pricing-section scope. Skips elements already
+ * managed by core or belonging to other products (related-products lists,
+ * product cards).
  */
 (function () {
     'use strict';
@@ -31,6 +32,10 @@
         });
     }
 
+    function isSafeClassName(value) {
+        return typeof value === 'string' && /^[a-zA-Z0-9_-]+$/.test(value);
+    }
+
     function syncSku(sku) {
         document.querySelectorAll('[data-fluent-cart-product-sku]').forEach(function (el) {
             if (!shouldUpdate(el)) return;
@@ -42,13 +47,14 @@
 
     function syncStock(status) {
         var trans = (window.fluentcart_single_product_vars || {}).trans || {};
+        var isValid = isSafeClassName(status);
 
         document.querySelectorAll('[data-fluent-cart-product-stock]').forEach(function (el) {
             if (!shouldUpdate(el)) return;
 
             var wrapper = el.closest('.fct-product-stock');
 
-            if (!status) {
+            if (!isValid) {
                 if (wrapper) wrapper.style.display = 'none';
                 return;
             }
@@ -121,6 +127,70 @@
         });
     }
 
+    function syncAddToCart(variationId, status, paymentType, variantName) {
+        var vars = window.fluentcart_single_product_vars || {};
+        var outOfStock = (vars.out_of_stock_status || 'out-of-stock').toString();
+        var isOutOfStock = status === outOfStock;
+        var isSubscription = paymentType === 'subscription';
+
+        document.querySelectorAll('[data-fluent-cart-add-to-cart-button]').forEach(function (btn) {
+            if (!shouldUpdate(btn)) return;
+
+            btn.setAttribute('data-cart-id', variationId);
+            var textEl = btn.querySelector('.text');
+
+            if (isOutOfStock) {
+                btn.setAttribute('disabled', 'disabled');
+                btn.classList.add('out-of-stock');
+                btn.classList.remove('is-hidden');
+                if (textEl && vars.out_of_stock_button_text) {
+                    textEl.textContent = vars.out_of_stock_button_text;
+                }
+            } else {
+                btn.removeAttribute('disabled');
+                btn.classList.remove('out-of-stock');
+                if (textEl && vars.cart_button_text) {
+                    textEl.textContent = vars.cart_button_text;
+                }
+                if (isSubscription) {
+                    btn.classList.add('is-hidden');
+                } else {
+                    btn.classList.remove('is-hidden');
+                }
+            }
+
+            if (variantName) {
+                var baseText = textEl ? textEl.textContent.trim() : btn.textContent.trim();
+                btn.setAttribute('aria-label', baseText + ' - ' + variantName);
+            }
+        });
+    }
+
+    function syncBuyNow(variationId, status, variantName) {
+        var vars = window.fluentcart_single_product_vars || {};
+        var outOfStock = (vars.out_of_stock_status || 'out-of-stock').toString();
+        var isOutOfStock = status === outOfStock;
+
+        document.querySelectorAll('[data-fluent-cart-direct-checkout-button]').forEach(function (btn) {
+            if (!shouldUpdate(btn)) return;
+
+            if (isOutOfStock) {
+                btn.removeAttribute('href');
+                btn.classList.add('is-hidden');
+            } else {
+                var quantity = btn.dataset.quantity || '1';
+                var baseUrl = btn.getAttribute('data-url') || '';
+                btn.setAttribute('href', baseUrl + variationId + '&quantity=' + quantity);
+                btn.setAttribute('data-cart-id', variationId);
+                btn.classList.remove('is-hidden');
+            }
+
+            if (variantName) {
+                btn.setAttribute('aria-label', btn.textContent.trim() + ' - ' + variantName);
+            }
+        });
+    }
+
     window.addEventListener('fluentCartSingleProductVariationChanged', function (e) {
         var variationId = e.detail && e.detail.variationId;
         if (!variationId) return;
@@ -129,10 +199,16 @@
         var button = document.querySelector(selector);
         if (!button) return;
 
+        var status = button.dataset.itemStock;
+        var paymentType = button.dataset.paymentType;
+        var variantName = button.getAttribute('aria-label') || '';
+
         syncSku(button.dataset.sku || '');
-        syncStock(button.dataset.itemStock);
+        syncStock(status);
         syncPackage(button.dataset.packageInfo || '');
         syncPrice(variationId);
+        syncAddToCart(variationId, status, paymentType, variantName);
+        syncBuyNow(variationId, status, variantName);
     });
 
     document.addEventListener('click', function (e) {
