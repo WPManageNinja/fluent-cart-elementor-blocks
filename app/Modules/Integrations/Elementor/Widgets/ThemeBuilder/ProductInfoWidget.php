@@ -5,6 +5,7 @@ namespace FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\T
 use Elementor\Widget_Base;
 use Elementor\Controls_Manager;
 use Elementor\Group_Control_Typography;
+use Elementor\Repeater;
 use FluentCart\Api\Resource\ShopResource;
 use FluentCart\App\Modules\Templating\AssetLoader;
 use FluentCart\App\Services\Renderer\ProductListRenderer;
@@ -80,10 +81,30 @@ class ProductInfoWidget extends Widget_Base
             ]
         );
 
-        $this->add_control(
-            'show_title',
+        $summaryRepeater = new Repeater();
+
+        $summaryRepeater->add_control(
+            'section_type',
             [
-                'label'        => esc_html__('Title', 'fluent-cart'),
+                'label'   => esc_html__('Section', 'fluent-cart'),
+                'type'    => Controls_Manager::SELECT,
+                'default' => 'title',
+                'options' => [
+                    'title'               => esc_html__('Title', 'fluent-cart'),
+                    'stock'               => esc_html__('Stock', 'fluent-cart'),
+                    'sku'                 => esc_html__('SKU', 'fluent-cart'),
+                    'excerpt'             => esc_html__('Excerpt', 'fluent-cart'),
+                    'price'               => esc_html__('Price', 'fluent-cart'),
+                    'package_description' => esc_html__('Package Description', 'fluent-cart'),
+                    'buy_section'         => esc_html__('Buy Section', 'fluent-cart'),
+                ],
+            ]
+        );
+
+        $summaryRepeater->add_control(
+            'show',
+            [
+                'label'        => esc_html__('Visibility', 'fluent-cart'),
                 'type'         => Controls_Manager::SWITCHER,
                 'label_on'     => esc_html__('Show', 'fluent-cart'),
                 'label_off'    => esc_html__('Hide', 'fluent-cart'),
@@ -93,74 +114,22 @@ class ProductInfoWidget extends Widget_Base
         );
 
         $this->add_control(
-            'show_stock',
+            'summary_sections',
             [
-                'label'        => esc_html__('Stock', 'fluent-cart'),
-                'type'         => Controls_Manager::SWITCHER,
-                'label_on'     => esc_html__('Show', 'fluent-cart'),
-                'label_off'    => esc_html__('Hide', 'fluent-cart'),
-                'return_value' => 'yes',
-                'default'      => 'yes',
-            ]
-        );
-
-        $this->add_control(
-            'show_sku',
-            [
-                'label'        => esc_html__('SKU', 'fluent-cart'),
-                'type'         => Controls_Manager::SWITCHER,
-                'label_on'     => esc_html__('Show', 'fluent-cart'),
-                'label_off'    => esc_html__('Hide', 'fluent-cart'),
-                'return_value' => 'yes',
-                'default'      => 'yes',
-            ]
-        );
-
-        $this->add_control(
-            'show_excerpt',
-            [
-                'label'        => esc_html__('Excerpt', 'fluent-cart'),
-                'type'         => Controls_Manager::SWITCHER,
-                'label_on'     => esc_html__('Show', 'fluent-cart'),
-                'label_off'    => esc_html__('Hide', 'fluent-cart'),
-                'return_value' => 'yes',
-                'default'      => 'yes',
-            ]
-        );
-
-        $this->add_control(
-            'show_price',
-            [
-                'label'        => esc_html__('Price', 'fluent-cart'),
-                'type'         => Controls_Manager::SWITCHER,
-                'label_on'     => esc_html__('Show', 'fluent-cart'),
-                'label_off'    => esc_html__('Hide', 'fluent-cart'),
-                'return_value' => 'yes',
-                'default'      => 'yes',
-            ]
-        );
-
-        $this->add_control(
-            'show_package_description',
-            [
-                'label'        => esc_html__('Package Description', 'fluent-cart'),
-                'type'         => Controls_Manager::SWITCHER,
-                'label_on'     => esc_html__('Show', 'fluent-cart'),
-                'label_off'    => esc_html__('Hide', 'fluent-cart'),
-                'return_value' => 'yes',
-                'default'      => 'yes',
-            ]
-        );
-
-        $this->add_control(
-            'show_buy_section',
-            [
-                'label'        => esc_html__('Buy Section', 'fluent-cart'),
-                'type'         => Controls_Manager::SWITCHER,
-                'label_on'     => esc_html__('Show', 'fluent-cart'),
-                'label_off'    => esc_html__('Hide', 'fluent-cart'),
-                'return_value' => 'yes',
-                'default'      => 'yes',
+                'label'       => esc_html__('Summary Sections', 'fluent-cart'),
+                'type'        => Controls_Manager::REPEATER,
+                'fields'      => $summaryRepeater->get_controls(),
+                'default'     => [
+                    ['section_type' => 'title', 'show' => 'yes'],
+                    ['section_type' => 'stock', 'show' => 'yes'],
+                    ['section_type' => 'sku', 'show' => 'yes'],
+                    ['section_type' => 'excerpt', 'show' => 'yes'],
+                    ['section_type' => 'price', 'show' => 'yes'],
+                    ['section_type' => 'package_description', 'show' => 'yes'],
+                    ['section_type' => 'buy_section', 'show' => 'yes'],
+                ],
+                'title_field' => '<# var labels = { title: "' . esc_js(__('Title', 'fluent-cart')) . '", stock: "' . esc_js(__('Stock', 'fluent-cart')) . '", sku: "' . esc_js(__('SKU', 'fluent-cart')) . '", excerpt: "' . esc_js(__('Excerpt', 'fluent-cart')) . '", price: "' . esc_js(__('Price', 'fluent-cart')) . '", package_description: "' . esc_js(__('Package Description', 'fluent-cart')) . '", buy_section: "' . esc_js(__('Buy Section', 'fluent-cart')) . '" }; print( labels[ section_type ] || section_type ); #>',
+                'prevent_empty' => false,
             ]
         );
 
@@ -210,11 +179,8 @@ class ProductInfoWidget extends Widget_Base
         $this->start_controls_section(
             'title_style_section',
             [
-                'label'     => esc_html__('Title', 'fluent-cart'),
-                'tab'       => Controls_Manager::TAB_STYLE,
-                'condition' => [
-                    'show_title' => 'yes',
-                ],
+                'label' => esc_html__('Title', 'fluent-cart'),
+                'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
 
@@ -226,11 +192,8 @@ class ProductInfoWidget extends Widget_Base
         $this->start_controls_section(
             'price_style_section',
             [
-                'label'     => esc_html__('Price', 'fluent-cart'),
-                'tab'       => Controls_Manager::TAB_STYLE,
-                'condition' => [
-                    'show_price' => 'yes',
-                ],
+                'label' => esc_html__('Price', 'fluent-cart'),
+                'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
 
@@ -242,11 +205,8 @@ class ProductInfoWidget extends Widget_Base
         $this->start_controls_section(
             'stock_style_section',
             [
-                'label'     => esc_html__('Stock', 'fluent-cart'),
-                'tab'       => Controls_Manager::TAB_STYLE,
-                'condition' => [
-                    'show_stock' => 'yes',
-                ],
+                'label' => esc_html__('Stock', 'fluent-cart'),
+                'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
 
@@ -258,11 +218,8 @@ class ProductInfoWidget extends Widget_Base
         $this->start_controls_section(
             'sku_style_section',
             [
-                'label'     => esc_html__('SKU', 'fluent-cart'),
-                'tab'       => Controls_Manager::TAB_STYLE,
-                'condition' => [
-                    'show_sku' => 'yes',
-                ],
+                'label' => esc_html__('SKU', 'fluent-cart'),
+                'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
 
@@ -274,11 +231,8 @@ class ProductInfoWidget extends Widget_Base
         $this->start_controls_section(
             'excerpt_style_section',
             [
-                'label'     => esc_html__('Excerpt', 'fluent-cart'),
-                'tab'       => Controls_Manager::TAB_STYLE,
-                'condition' => [
-                    'show_excerpt' => 'yes',
-                ],
+                'label' => esc_html__('Excerpt', 'fluent-cart'),
+                'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
 
@@ -290,11 +244,8 @@ class ProductInfoWidget extends Widget_Base
         $this->start_controls_section(
             'buy_section_style_section',
             [
-                'label'     => esc_html__('Buy Section', 'fluent-cart'),
-                'tab'       => Controls_Manager::TAB_STYLE,
-                'condition' => [
-                    'show_buy_section' => 'yes',
-                ],
+                'label' => esc_html__('Buy Section', 'fluent-cart'),
+                'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
 
@@ -358,16 +309,9 @@ class ProductInfoWidget extends Widget_Base
 
         $renderer = new ProductRenderer($product);
 
-        $showGallery    = $settings['show_gallery'] === 'yes';
-        $showTitle      = $settings['show_title'] === 'yes';
-        $showStock      = $settings['show_stock'] === 'yes';
-        $showSku        = $settings['show_sku'] === 'yes';
-        $showPackageDescription = ($settings['show_package_description'] ?? 'yes') === 'yes';
-        $showExcerpt    = $settings['show_excerpt'] === 'yes';
-        $showPrice      = $settings['show_price'] === 'yes';
-        $showBuySection    = $settings['show_buy_section'] === 'yes';
-        $showDescription      = $settings['show_description'] === 'yes';
-        $showRelatedProducts  = $settings['show_related_products'] === 'yes';
+        $showGallery         = $settings['show_gallery'] === 'yes';
+        $showDescription     = $settings['show_description'] === 'yes';
+        $showRelatedProducts = $settings['show_related_products'] === 'yes';
 
         echo '<div class="fluentcart-product-info">';
         echo '<div class="fct-single-product-page" data-fluent-cart-single-product-page>';
@@ -382,32 +326,34 @@ class ProductInfoWidget extends Widget_Base
 
         echo '<div class="fct-product-summary">';
 
-        if ($showTitle) {
-            $renderer->renderTitle();
-        }
+        foreach ($this->getOrderedSummarySections($settings) as $section) {
+            if (!$section['show']) {
+                continue;
+            }
 
-        if ($showStock) {
-            $renderer->renderStockAvailability();
-        }
-
-        if ($showSku) {
-            $renderer->renderSku();
-        }
-
-        if ($showExcerpt) {
-            $renderer->renderExcerpt();
-        }
-
-        if ($showPrice) {
-            $renderer->renderPrices();
-        }
-
-        if ($showPackageDescription) {
-            $renderer->renderPackageDescription();
-        }
-
-        if ($showBuySection) {
-            $renderer->renderBuySection();
+            switch ($section['type']) {
+                case 'title':
+                    $renderer->renderTitle();
+                    break;
+                case 'stock':
+                    $renderer->renderStockAvailability();
+                    break;
+                case 'sku':
+                    $renderer->renderSku();
+                    break;
+                case 'excerpt':
+                    $renderer->renderExcerpt();
+                    break;
+                case 'price':
+                    $renderer->renderPrices();
+                    break;
+                case 'package_description':
+                    $renderer->renderPackageDescription();
+                    break;
+                case 'buy_section':
+                    $renderer->renderBuySection();
+                    break;
+            }
         }
 
         echo '</div>'; // .fct-product-summary
@@ -441,5 +387,65 @@ class ProductInfoWidget extends Widget_Base
         }
 
         echo '</div>'; // .fluentcart-product-info
+    }
+
+    private function getOrderedSummarySections($settings)
+    {
+        $defaultOrder = [
+            'title',
+            'stock',
+            'sku',
+            'excerpt',
+            'price',
+            'package_description',
+            'buy_section',
+        ];
+
+        $rawSettings = $this->get_data('settings');
+        $userSavedRepeater = is_array($rawSettings)
+            && !empty($rawSettings['summary_sections'])
+            && is_array($rawSettings['summary_sections']);
+
+        if ($userSavedRepeater) {
+            $ordered = [];
+            $seen = [];
+            foreach ($settings['summary_sections'] as $row) {
+                $type = isset($row['section_type']) ? $row['section_type'] : '';
+                if (!$type || isset($seen[$type]) || !in_array($type, $defaultOrder, true)) {
+                    continue;
+                }
+                $seen[$type] = true;
+                $ordered[] = [
+                    'type' => $type,
+                    'show' => (isset($row['show']) ? $row['show'] : 'yes') === 'yes',
+                ];
+            }
+            return $ordered;
+        }
+
+        $hasLegacyKey = is_array($rawSettings) && (
+            isset($rawSettings['show_title'])
+            || isset($rawSettings['show_stock'])
+            || isset($rawSettings['show_sku'])
+            || isset($rawSettings['show_excerpt'])
+            || isset($rawSettings['show_price'])
+            || isset($rawSettings['show_package_description'])
+            || isset($rawSettings['show_buy_section'])
+        );
+
+        $ordered = [];
+        foreach ($defaultOrder as $type) {
+            if ($hasLegacyKey) {
+                $legacyKey = 'show_' . $type;
+                $show = (isset($rawSettings[$legacyKey]) ? $rawSettings[$legacyKey] : 'yes') === 'yes';
+            } else {
+                $show = true;
+            }
+            $ordered[] = [
+                'type' => $type,
+                'show' => $show,
+            ];
+        }
+        return $ordered;
     }
 }
