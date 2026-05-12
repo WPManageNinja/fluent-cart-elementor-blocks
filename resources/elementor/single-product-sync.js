@@ -41,21 +41,27 @@
     }
 
     function syncStock(status) {
-        if (!status) return;
         var trans = (window.fluentcart_single_product_vars || {}).trans || {};
 
         document.querySelectorAll('[data-fluent-cart-product-stock]').forEach(function (el) {
             if (!shouldUpdate(el)) return;
+
+            var wrapper = el.closest('.fct-product-stock');
+
+            if (!status) {
+                if (wrapper) wrapper.style.display = 'none';
+                return;
+            }
 
             var label = titleCase(status.replace(/-/g, ' '));
             el.textContent = trans[label] || label;
             el.className = el.className.replace(/fct_status_badge_[\w-]+/g, '');
             el.classList.add('fct_status_badge_' + status);
 
-            var wrapper = el.closest('.fct-product-stock');
             if (wrapper) {
                 wrapper.classList.remove('in-stock', 'out-of-stock');
                 wrapper.classList.add(status);
+                wrapper.style.display = '';
             }
         });
     }
