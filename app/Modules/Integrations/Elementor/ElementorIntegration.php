@@ -187,6 +187,14 @@ class ElementorIntegration
             FLUENTCART_VERSION,
             true
         );
+
+        Enqueue::script(
+            'fluentcart-elementor-single-product-sync',
+            'elementor/single-product-sync.js',
+            [],
+            FLUENTCART_VERSION,
+            true
+        );
     }
 
     /**
