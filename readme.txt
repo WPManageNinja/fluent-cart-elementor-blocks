@@ -85,19 +85,18 @@ Yes. Required CSS and JavaScript assets are enqueued automatically when widgets 
 
 == Changelog ==
 
-= 1.0.1 (Apr 3, 2026) =
-- Added Product SKU widget for Elementor Theme Builder
-- Added Product Content widget for Elementor Theme Builder
-- Added Product Package Description widget for Elementor Theme Builder
-- Added EU VAT section support in Checkout widget
-- Enhanced Product Info widget with SKU display and description support
-- Added plugin auto-updater for seamless updates
-- Added backward compatibility for existing Checkout widgets when new form sections are introduced
-- Improved Checkout editor preview with dummy renderer
+= 1.0.1 (May 13, 2026) =
+- Adds Product SKU widget for Elementor Theme Builder
+- Adds Product Content widget for Elementor Theme Builder
+- Adds Product Package Description widget for Elementor Theme Builder
 - Fixes Product Excerpt widget not rendering in Theme Builder
-- Added Product Description widget for single product templates
-- Added Related Products widget for Theme Builder
-- Added Product Search Bar widget
-- Added Store Logo widget
-- Added Customer Dashboard Button widget
+- Adds Related Products widget for Theme Builder
+- Adds Product Description widget for single product templates
+- Adds Product Search Bar widget
+- Adds Store Logo widget
+- Adds Customer Dashboard Button widget
+- Enhanced Product Info widget with SKU display and description support
+- Adds Drag-and-drop reordering for Product Info widget summary sections
+- Adds EU VAT section support in Checkout widget
+- Improved Checkout editor preview with dummy renderer
 - Fixes variation, thumbnail, and tab clicks not working when the Product Info widget is rendered inside an Elementor popup
