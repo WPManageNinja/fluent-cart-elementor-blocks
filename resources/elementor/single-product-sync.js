@@ -48,7 +48,7 @@
             if (!shouldUpdate(el)) return;
 
             var label = titleCase(status.replace(/-/g, ' '));
-            el.innerHTML = trans[label] || label;
+            el.textContent = trans[label] || label;
             el.className = el.className.replace(/fct_status_badge_[\w-]+/g, '');
             el.classList.add('fct_status_badge_' + status);
 
