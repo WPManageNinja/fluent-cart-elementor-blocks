@@ -118,8 +118,12 @@ class ProductContentWidget extends Widget_Base
             return;
         }
 
-        echo '<div class="fluentcart-product-content">';
-        echo apply_filters('the_content', $post->post_content); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-        echo '</div>';
+        $content = apply_filters('the_content', $post->post_content);
+
+        if (trim((string) $content) === '') {
+            return;
+        }
+
+        echo '<div class="fluentcart-product-content">' . $content . '</div>';
     }
 }

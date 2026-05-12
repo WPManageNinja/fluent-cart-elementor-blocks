@@ -69,8 +69,12 @@ class RelatedProductsWidget extends Widget_Base
 
         $shortcodeAtts = 'id="' . (int) $product->ID . '"';
 
-        echo '<div class="fluentcart-related-products">';
-        echo do_shortcode('[fluent_cart_related_products ' . $shortcodeAtts . ']');
-        echo '</div>';
+        $content = do_shortcode('[fluent_cart_related_products ' . $shortcodeAtts . ']');
+
+        if (trim((string) $content) === '') {
+            return;
+        }
+
+        echo '<div class="fluentcart-related-products">' . $content . '</div>';
     }
 }

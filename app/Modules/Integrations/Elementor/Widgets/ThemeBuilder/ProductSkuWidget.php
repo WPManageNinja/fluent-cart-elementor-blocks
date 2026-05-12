@@ -158,8 +158,14 @@ class ProductSkuWidget extends Widget_Base
 
         $renderer = new ProductRenderer($product);
 
-        echo '<div class="fluentcart-product-sku">';
+        ob_start();
         $renderer->renderSku('', $showLabel === 'yes', $label);
-        echo '</div>';
+        $content = ob_get_clean();
+
+        if ($content === '') {
+            return;
+        }
+
+        echo '<div class="fluentcart-product-sku">' . $content . '</div>';
     }
 }

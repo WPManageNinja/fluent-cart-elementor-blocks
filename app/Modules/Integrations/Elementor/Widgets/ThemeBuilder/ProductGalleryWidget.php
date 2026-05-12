@@ -129,13 +129,19 @@ class ProductGalleryWidget extends Widget_Base
 
         $renderer = new ProductRenderer($product);
 
-        echo '<div class="fluentcart-product-gallery">';
+        ob_start();
         $renderer->renderGallery([
             'thumb_position'    => $settings['thumb_position'] ?: 'bottom',
             'thumbnail_mode'    => $settings['thumbnail_mode'] ?: 'all',
             'scrollable_thumbs' => !empty($settings['scrollable_thumbs']) ? 'yes' : 'no',
             'max_thumbnails'    => !empty($settings['max_thumbnails']) ? (int) $settings['max_thumbnails'] : null,
         ]);
-        echo '</div>';
+        $content = ob_get_clean();
+
+        if ($content === '') {
+            return;
+        }
+
+        echo '<div class="fluentcart-product-gallery">' . $content . '</div>';
     }
 }

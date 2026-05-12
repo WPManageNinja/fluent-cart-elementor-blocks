@@ -192,8 +192,14 @@ class ProductPackageDescriptionWidget extends Widget_Base
 
         $renderer = new ProductRenderer($product);
 
-        echo '<div class="fluentcart-product-package-description">';
+        ob_start();
         $renderer->renderPackageDescription('', $showName, $showDimensions, $showProductWeight, $showTotalWeight);
-        echo '</div>';
+        $content = ob_get_clean();
+
+        if ($content === '') {
+            return;
+        }
+
+        echo '<div class="fluentcart-product-package-description">' . $content . '</div>';
     }
 }

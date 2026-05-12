@@ -215,8 +215,14 @@ class ProductBuySectionWidget extends Widget_Base
 
         $renderer = new ProductRenderer($product);
 
-        echo '<div class="fluentcart-product-buy-section">';
+        ob_start();
         $renderer->renderBuySection();
-        echo '</div>';
+        $content = ob_get_clean();
+
+        if ($content === '') {
+            return;
+        }
+
+        echo '<div class="fluentcart-product-buy-section">' . $content . '</div>';
     }
 }
