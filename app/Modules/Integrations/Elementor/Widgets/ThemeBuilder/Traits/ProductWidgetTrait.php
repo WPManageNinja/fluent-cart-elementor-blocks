@@ -85,4 +85,26 @@ trait ProductWidgetTrait
             echo '</div>';
         }
     }
+
+    public function show_in_panel()
+    {
+        if (in_array('fluent-cart', $this->get_categories(), true)) {
+            return true;
+        }
+
+        if (!class_exists('\Elementor\Plugin')) {
+            return false;
+        }
+
+        $document = \Elementor\Plugin::$instance->documents->get_current();
+        if (!$document) {
+            return false;
+        }
+
+        return in_array(
+            $document::get_type(),
+            ['fluentcart-product', 'fluentcart-product-post'],
+            true
+        );
+    }
 }
