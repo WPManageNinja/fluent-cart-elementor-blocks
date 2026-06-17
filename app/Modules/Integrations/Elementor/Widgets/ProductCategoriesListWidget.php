@@ -16,7 +16,7 @@ class ProductCategoriesListWidget extends Widget_Base
 
     public function get_title()
     {
-        return esc_html__('Product Categories List', 'fluent-cart');
+        return esc_html__('Product Categories List (FluentCart)', 'fluent-cart');
     }
 
     public function get_icon()

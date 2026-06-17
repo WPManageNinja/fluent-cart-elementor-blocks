@@ -22,7 +22,7 @@ class CheckoutWidget extends Widget_Base
 
     public function get_title()
     {
-        return esc_html__('Checkout', 'fluent-cart');
+        return esc_html__('Checkout (FluentCart)', 'fluent-cart');
     }
 
     public function get_icon()

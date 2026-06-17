@@ -25,7 +25,7 @@ class MiniCartWidget extends Widget_Base
 
     public function get_title()
     {
-        return esc_html__('Mini Cart', 'fluent-cart');
+        return esc_html__('Mini Cart (FluentCart)', 'fluent-cart');
     }
 
     public function get_icon()
