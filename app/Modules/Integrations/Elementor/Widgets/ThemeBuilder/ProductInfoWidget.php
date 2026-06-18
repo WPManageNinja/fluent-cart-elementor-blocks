@@ -32,12 +32,12 @@ class ProductInfoWidget extends Widget_Base
 
     public function get_icon()
     {
-        return 'eicon-single-product';
+        return 'eicon-single-product fluent-cart-widget-icon';
     }
 
     public function get_categories()
     {
-        return ['fluent-cart'];
+        return ['fluent-cart-product'];
     }
 
     public function get_keywords()

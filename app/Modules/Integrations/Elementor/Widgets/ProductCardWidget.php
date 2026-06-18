@@ -23,12 +23,12 @@ class ProductCardWidget extends Widget_Base
 
     public function get_title()
     {
-        return esc_html__('Product Card (FluentCart)', 'fluent-cart');
+        return esc_html__('Product Card', 'fluent-cart');
     }
 
     public function get_icon()
     {
-        return 'eicon-image-box';
+        return 'eicon-image-box fluent-cart-widget-icon';
     }
 
     public function get_categories()

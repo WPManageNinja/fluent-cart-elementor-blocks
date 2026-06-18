@@ -22,12 +22,12 @@ class SearchBarWidget extends Widget_Base
 
     public function get_title()
     {
-        return esc_html__('Product Search Bar (FluentCart)', 'fluent-cart');
+        return esc_html__('Product Search Bar', 'fluent-cart');
     }
 
     public function get_icon()
     {
-        return 'eicon-search';
+        return 'eicon-search fluent-cart-widget-icon';
     }
 
     public function get_categories()

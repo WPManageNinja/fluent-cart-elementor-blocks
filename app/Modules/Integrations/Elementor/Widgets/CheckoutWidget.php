@@ -22,12 +22,12 @@ class CheckoutWidget extends Widget_Base
 
     public function get_title()
     {
-        return esc_html__('Checkout (FluentCart)', 'fluent-cart');
+        return esc_html__('Checkout', 'fluent-cart');
     }
 
     public function get_icon()
     {
-        return 'eicon-checkout';
+        return 'eicon-checkout fluent-cart-widget-icon';
     }
 
     public function get_categories()

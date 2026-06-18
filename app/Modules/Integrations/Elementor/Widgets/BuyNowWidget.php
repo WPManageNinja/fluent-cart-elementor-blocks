@@ -23,12 +23,12 @@ class BuyNowWidget extends Widget_Base
 
     public function get_title()
     {
-        return esc_html__('Buy Now Button (FluentCart)', 'fluent-cart');
+        return esc_html__('Buy Now Button', 'fluent-cart');
     }
 
     public function get_icon()
     {
-        return 'eicon-cart-medium';
+        return 'eicon-e-button fluent-cart-widget-icon';
     }
 
     public function get_categories()

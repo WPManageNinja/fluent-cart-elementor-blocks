@@ -21,12 +21,12 @@ class StoreLogoWidget extends Widget_Base
 
     public function get_title()
     {
-        return esc_html__('Store Logo (FluentCart)', 'fluent-cart');
+        return esc_html__('Store Logo', 'fluent-cart');
     }
 
     public function get_icon()
     {
-        return 'eicon-site-logo';
+        return 'eicon-site-logo fluent-cart-widget-icon';
     }
 
     public function get_categories()

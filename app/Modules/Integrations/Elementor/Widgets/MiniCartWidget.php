@@ -25,12 +25,12 @@ class MiniCartWidget extends Widget_Base
 
     public function get_title()
     {
-        return esc_html__('Mini Cart (FluentCart)', 'fluent-cart');
+        return esc_html__('Mini Cart', 'fluent-cart');
     }
 
     public function get_icon()
     {
-        return 'eicon-cart-light';
+        return 'eicon-cart-light fluent-cart-widget-icon';
     }
 
     public function get_categories()

@@ -29,7 +29,7 @@ class ProductPackageDescriptionWidget extends Widget_Base
 
     public function get_icon()
     {
-        return 'eicon-info-box';
+        return 'eicon-info-box fluent-cart-widget-icon';
     }
 
     public function get_categories()

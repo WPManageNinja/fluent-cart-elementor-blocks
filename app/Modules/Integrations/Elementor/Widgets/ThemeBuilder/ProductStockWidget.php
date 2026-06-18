@@ -29,7 +29,7 @@ class ProductStockWidget extends Widget_Base
 
     public function get_icon()
     {
-        return 'eicon-product-stock';
+        return 'eicon-product-stock fluent-cart-widget-icon';
     }
 
     public function get_categories()
