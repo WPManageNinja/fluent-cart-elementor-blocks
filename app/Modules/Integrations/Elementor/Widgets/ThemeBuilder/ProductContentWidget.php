@@ -27,7 +27,7 @@ class ProductContentWidget extends Widget_Base
 
     public function get_icon()
     {
-        return 'eicon-product-description';
+        return 'eicon-product-description fluent-cart-widget-icon';
     }
 
     public function get_categories()

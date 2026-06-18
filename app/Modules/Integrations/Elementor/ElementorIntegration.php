@@ -147,6 +147,23 @@ class ElementorIntegration
 
     public function enqueueEditorScripts()
     {
+        $svgIcon = '<svg width="300" height="300" viewBox="0 0 300 300" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="300" height="300" rx="30" fill="#00009F"/><path d="M136.561 205.944H47.1367L61.1704 173.491C65.2906 163.963 74.6784 157.795 85.0589 157.795H191.584L184.338 174.551C176.098 193.607 157.322 205.944 136.561 205.944Z" fill="white"/><path d="M210.643 142.439H84.8574L92.1035 125.683C100.344 106.627 119.12 94.2905 139.881 94.2905H248.565L234.531 126.743C230.411 136.271 221.023 142.439 210.643 142.439Z" fill="white"/></svg>';
+        $svgBase64 = base64_encode($svgIcon);
+
+        wp_register_style('fluent-cart-elementor-editor-badge', false, [], FLUENTCART_VERSION);
+        wp_enqueue_style('fluent-cart-elementor-editor-badge');
+        wp_add_inline_style('fluent-cart-elementor-editor-badge', '
+            .elementor-element .icon .fluent-cart-widget-icon::after {
+                content: "";
+                position: absolute;
+                top: 4px;
+                right: 4px;
+                width: 16px;
+                height: 16px;
+                background: url("data:image/svg+xml;base64,' . $svgBase64 . '") center / contain no-repeat;
+            }
+        ');
+
         $restInfo = Helper::getRestInfo();
 
         Enqueue::script(

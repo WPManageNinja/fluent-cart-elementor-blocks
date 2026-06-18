@@ -32,7 +32,7 @@ class ProductBuySectionWidget extends Widget_Base
 
     public function get_icon()
     {
-        return 'eicon-product-add-to-cart';
+        return 'eicon-product-meta fluent-cart-widget-icon';
     }
 
     public function get_categories()

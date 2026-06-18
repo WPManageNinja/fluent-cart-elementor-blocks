@@ -29,7 +29,7 @@ class ProductSkuWidget extends Widget_Base
 
     public function get_icon()
     {
-        return 'eicon-product-meta';
+        return 'eicon-tags fluent-cart-widget-icon';
     }
 
     public function get_categories()

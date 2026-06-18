@@ -20,12 +20,12 @@ class CustomerDashboardButtonWidget extends Widget_Base
 
     public function get_title()
     {
-        return esc_html__('Customer Dashboard Button (FluentCart)', 'fluent-cart');
+        return esc_html__('Customer Dashboard Button', 'fluent-cart');
     }
 
     public function get_icon()
     {
-        return 'eicon-person';
+        return 'eicon-person fluent-cart-widget-icon';
     }
 
     public function get_categories()

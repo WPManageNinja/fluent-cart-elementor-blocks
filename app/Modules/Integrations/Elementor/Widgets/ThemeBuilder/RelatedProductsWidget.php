@@ -27,7 +27,7 @@ class RelatedProductsWidget extends Widget_Base
 
     public function get_icon()
     {
-        return 'eicon-products-related';
+        return 'eicon-container-grid fluent-cart-widget-icon';
     }
 
     public function get_categories()

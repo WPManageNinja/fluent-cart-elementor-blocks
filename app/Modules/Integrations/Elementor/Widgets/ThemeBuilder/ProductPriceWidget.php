@@ -29,7 +29,7 @@ class ProductPriceWidget extends Widget_Base
 
     public function get_icon()
     {
-        return 'eicon-product-price';
+        return 'eicon-product-price fluent-cart-widget-icon';
     }
 
     public function get_categories()

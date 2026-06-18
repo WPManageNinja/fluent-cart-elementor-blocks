@@ -23,12 +23,12 @@ class AddToCartWidget extends Widget_Base
 
     public function get_title()
     {
-        return esc_html__('Add to Cart (FluentCart)', 'fluent-cart');
+        return esc_html__('Add to Cart', 'fluent-cart');
     }
 
     public function get_icon()
     {
-        return 'eicon-cart';
+        return 'eicon-product-add-to-cart fluent-cart-widget-icon';
     }
 
     public function get_categories()
