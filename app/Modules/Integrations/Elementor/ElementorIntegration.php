@@ -51,6 +51,7 @@ class ElementorIntegration
         \add_action('elementor/editor/after_enqueue_scripts', [$this, 'enqueueEditorScripts']);
         \add_action('elementor/frontend/after_enqueue_scripts', [$this, 'enqueueFrontendScripts']);
         \add_action('elementor/widget/before_render_content', [$this, 'maybeEnqueueSingleProductSync']);
+        \add_action('elementor/widget/before_render_content', [$this, 'maybeEnqueueAdvancedVariation']);
 
         \add_filter('fluent_cart/products_views/preload_collection_elementor', [$this, 'preloadProductCollectionsAjax'], 10, 2);
 
@@ -205,6 +206,28 @@ class ElementorIntegration
             FLUENTCART_VERSION,
             true
         );
+    }
+
+    public function maybeEnqueueAdvancedVariation($widget)
+    {
+        static $enqueued = false;
+        if ($enqueued) {
+            return;
+        }
+
+        $targetWidgets = [
+            'fluent_cart_shop_app',
+            'fluent_cart_product_card',
+            'fluent_cart_product_carousel',
+            'fluentcart_product_info',
+        ];
+
+        if (!in_array($widget->get_name(), $targetWidgets, true)) {
+            return;
+        }
+
+        $enqueued = true;
+        do_action('fluent_cart/advanced_variation/enqueue_assets');
     }
 
     /**
