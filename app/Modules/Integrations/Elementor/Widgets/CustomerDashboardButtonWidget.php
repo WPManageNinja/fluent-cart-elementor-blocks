@@ -10,6 +10,8 @@ use Elementor\Group_Control_Box_Shadow;
 use Elementor\Group_Control_Background;
 use FluentCart\App\Modules\Templating\AssetLoader;
 use FluentCart\App\Services\Renderer\CustomerDashboardButtonRenderer;
+use FluentCart\App\App;
+use FluentCart\App\Vite;
 
 class CustomerDashboardButtonWidget extends Widget_Base
 {
@@ -36,6 +38,19 @@ class CustomerDashboardButtonWidget extends Widget_Base
     public function get_keywords()
     {
         return ['customer', 'dashboard', 'account', 'login', 'button', 'fluent', 'cart'];
+    }
+
+    public function get_style_depends()
+    {
+        $app = App::getInstance();
+        $slug = $app->config->get('app.slug');
+
+        Vite::enqueueStyle(
+            $slug . '-customer-dashboard-button',
+            'public/customer-dashboard-button/customer-dashboard-button.scss'
+        );
+
+        return [$slug . '-customer-dashboard-button'];
     }
 
     protected function register_controls()
