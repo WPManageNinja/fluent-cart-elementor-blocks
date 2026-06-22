@@ -59,6 +59,89 @@ class MiniCartWidget extends Widget_Base
 
     protected function register_controls()
     {
+        // Content Section
+        $this->start_controls_section(
+            'content_section',
+            [
+                'label' => esc_html__('Cart Icon', 'fluent-cart'),
+                'tab'   => Controls_Manager::TAB_CONTENT,
+            ]
+        );
+
+        $this->add_control(
+            'cart_icon_type',
+            [
+                'label'   => esc_html__('Cart Icon', 'fluent-cart'),
+                'type'    => Controls_Manager::SELECT,
+                'default' => 'cart',
+                'options' => [
+                    'cart'    => esc_html__('Shopping Cart', 'fluent-cart'),
+                    'bag'     => esc_html__('Shopping Bag', 'fluent-cart'),
+                    'bag-alt' => esc_html__('Shopping Bag (Alt)', 'fluent-cart'),
+                    'custom'  => esc_html__('Custom URL', 'fluent-cart'),
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'cart_icon_url',
+            [
+                'label'       => esc_html__('Custom Icon URL', 'fluent-cart'),
+                'type'        => Controls_Manager::TEXT,
+                'placeholder' => 'https://example.com/icon.svg',
+                'condition'   => [
+                    'cart_icon_type' => 'custom',
+                ],
+                'description' => esc_html__('Enter a URL to override with a custom icon.', 'fluent-cart'),
+            ]
+        );
+
+        $this->add_control(
+            'show_total_price',
+            [
+                'label'        => esc_html__('Display Total Price', 'fluent-cart'),
+                'type'         => Controls_Manager::SWITCHER,
+                'label_on'     => esc_html__('Yes', 'fluent-cart'),
+                'label_off'    => esc_html__('No', 'fluent-cart'),
+                'return_value' => 'yes',
+                'default'      => 'yes',
+                'separator'    => 'before',
+                'description'  => esc_html__('Toggle to display the total price of the cart.', 'fluent-cart'),
+            ]
+        );
+
+        $this->add_control(
+            'show_item_count',
+            [
+                'label'   => esc_html__('Show Cart Item Count', 'fluent-cart'),
+                'type'    => Controls_Manager::SELECT,
+                'default' => 'has_items',
+                'options' => [
+                    'always'    => esc_html__('Always (even if empty)', 'fluent-cart'),
+                    'has_items' => esc_html__('Only if cart has items', 'fluent-cart'),
+                    'never'     => esc_html__('Never', 'fluent-cart'),
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'count_mode',
+            [
+                'label'     => esc_html__('Badge Count Shows', 'fluent-cart'),
+                'type'      => Controls_Manager::SELECT,
+                'default'   => 'distinct_products',
+                'options'   => [
+                    'distinct_products' => esc_html__('Count distinct products', 'fluent-cart'),
+                    'total_quantity'    => esc_html__('Count total item quantity', 'fluent-cart'),
+                ],
+                'condition' => [
+                    'show_item_count!' => 'never',
+                ],
+            ]
+        );
+
+        $this->end_controls_section();
+
         // Style Section
         $this->start_controls_section(
             'style_section',
@@ -243,21 +326,40 @@ class MiniCartWidget extends Widget_Base
         $itemCount = 0;
         $cartData = [];
 
+        $settings = $this->get_settings_for_display();
+        $countMode = Arr::get($settings, 'count_mode', 'distinct_products');
+
         if ($cart) {
-            $cartData= $cart->cart_data ?? [];
-            $itemCount = count($cartData);
+            $cartData = $cart->cart_data ?? [];
+            if ($countMode === 'total_quantity') {
+                foreach ($cartData as $item) {
+                    $itemCount += (int) ($item['quantity'] ?? 1);
+                }
+            } else {
+                $itemCount = count($cartData);
+            }
         }
 
         $miniCartRenderer = new MiniCartRenderer($cartData, [
-            'item_count' => $itemCount
+            'item_count' => $itemCount,
+            'count_mode' => $countMode,
         ]);
-        
+
+        $cartIconType = Arr::get($settings, 'cart_icon_type', 'cart');
+        if ($cartIconType === 'custom') {
+            $cartIcon = Arr::get($settings, 'cart_icon_url', 'cart') ?: 'cart';
+        } else {
+            $cartIcon = $cartIconType ?: 'cart';
+        }
+
         $attributes = [
-                'is_shortcode' => true,
-                'button_class' => 'fluent_cart_mini_cart_trigger',
+            'is_shortcode'     => true,
+            'button_class'     => 'fluent_cart_mini_cart_trigger',
+            'cart_icon'        => $cartIcon,
+            'show_total_price' => Arr::get($settings, 'show_total_price', 'yes') === 'yes',
+            'show_item_count'  => Arr::get($settings, 'show_item_count', 'has_items'),
+            'count_mode'       => $countMode,
         ];
-        $settings = $this->get_settings_for_display();
-        //ds($settings);
 
         ?>
         <div class="fluent-cart-elementor-mini-cart">
