@@ -50,6 +50,7 @@ class ElementorIntegration
         \add_action('elementor/controls/register', [$this, 'registerControls']);
         \add_action('elementor/editor/after_enqueue_scripts', [$this, 'enqueueEditorScripts']);
         \add_action('elementor/frontend/after_enqueue_scripts', [$this, 'enqueueFrontendScripts']);
+        \add_action('elementor/preview/enqueue_styles', [$this, 'enqueuePreviewStyles']);
         \add_action('elementor/widget/before_render_content', [$this, 'maybeEnqueueSingleProductSync']);
         \add_action('elementor/widget/before_render_content', [$this, 'maybeEnqueueAdvancedVariation']);
 
@@ -206,6 +207,11 @@ class ElementorIntegration
             FLUENTCART_VERSION,
             true
         );
+    }
+
+    public function enqueuePreviewStyles()
+    {
+        do_action('fluent_cart/advanced_variation/enqueue_assets');
     }
 
     public function maybeEnqueueAdvancedVariation($widget)
