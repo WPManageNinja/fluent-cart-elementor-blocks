@@ -32,7 +32,7 @@ class RelatedProductsWidget extends Widget_Base
 
     public function get_categories()
     {
-        return ['fluent-cart-product'];
+        return ['fluent-cart'];
     }
 
     public function get_keywords()
