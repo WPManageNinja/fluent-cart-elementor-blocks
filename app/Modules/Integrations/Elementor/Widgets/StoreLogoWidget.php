@@ -105,12 +105,12 @@ class StoreLogoWidget extends Widget_Base
         $this->start_controls_section(
             'logo_style_section',
             [
-                'label' => esc_html__('Logo Image', 'fluent-cart'),
+                'label' => esc_html__('Logo Settings', 'fluent-cart'),
                 'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
 
-        static::registerLogoStyleControls($this, '{{WRAPPER}} .fct-store-logo-img');
+        static::registerLogoStyleControls($this);
 
         $this->end_controls_section();
 
@@ -146,25 +146,20 @@ class StoreLogoWidget extends Widget_Base
     /**
      * Logo image: max-width (responsive), max-height (responsive).
      */
-    public static function registerLogoStyleControls($widget, $selector)
+    public static function registerLogoStyleControls($widget)
     {
         $widget->add_responsive_control(
             'logo_max_width',
             [
                 'label'      => esc_html__('Max Width', 'fluent-cart'),
                 'type'       => Controls_Manager::SLIDER,
-                'size_units' => ['px', '%', 'vw'],
+                'size_units' => ['px'],
                 'range'      => [
                     'px' => ['min' => 20, 'max' => 500],
-                    '%'  => ['min' => 1, 'max' => 100],
-                    'vw' => ['min' => 1, 'max' => 100],
                 ],
                 'default'    => [
                     'unit' => 'px',
                     'size' => 150,
-                ],
-                'selectors'  => [
-                    $selector => 'max-width: {{SIZE}}{{UNIT}};',
                 ],
             ]
         );
@@ -174,14 +169,13 @@ class StoreLogoWidget extends Widget_Base
             [
                 'label'      => esc_html__('Max Height', 'fluent-cart'),
                 'type'       => Controls_Manager::SLIDER,
-                'size_units' => ['px', 'em', 'vh'],
+                'size_units' => ['px'],
                 'range'      => [
                     'px' => ['min' => 10, 'max' => 300],
-                    'em' => ['min' => 1, 'max' => 20],
-                    'vh' => ['min' => 1, 'max' => 50],
                 ],
-                'selectors'  => [
-                    $selector => 'max-height: {{SIZE}}{{UNIT}};',
+                'default'    => [
+                    'unit' => 'px',
+                    'size' => 70,
                 ],
             ]
         );
@@ -267,6 +261,16 @@ class StoreLogoWidget extends Widget_Base
             'is_link'      => $isLink,
             'link_target'  => $linkTarget,
         ];
+
+        $maxWidth  = (int) ($settings['logo_max_width']['size'] ?? 0);
+        $maxHeight = (int) ($settings['logo_max_height']['size'] ?? 0);
+
+        if ($maxWidth > 0) {
+            $atts['max_width'] = $maxWidth;
+        }
+        if ($maxHeight > 0) {
+            $atts['max_height'] = $maxHeight;
+        }
 
         $renderer = new StoreLogoRenderer();
         $renderer->render($atts);
