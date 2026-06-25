@@ -43,6 +43,12 @@
                     return;
                 }
 
+                // Destroy any Select2 instance Elementor auto-inited on .elementor-select2
+                // before we reinitialise with our own AJAX options.
+                if ($select.data('select2')) {
+                    $select.select2('destroy');
+                }
+
                 var isMultiple = this.model.get('multiple') !== false;
 
                 var options = {
