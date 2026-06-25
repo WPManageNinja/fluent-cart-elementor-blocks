@@ -141,35 +141,6 @@ class ShopAppWidget extends Widget_Base
                 'options' => [
                     'starts_from' => esc_html__('Starts From', 'fluent-cart'),
                     'range'       => esc_html__('Range', 'fluent-cart'),
-                    'lowest'      => esc_html__('Lowest', 'fluent-cart'),
-                ],
-            ]
-        );
-
-        $this->add_control(
-            'order_by',
-            [
-                'label'   => esc_html__('Order By', 'fluent-cart'),
-                'type'    => Controls_Manager::SELECT,
-                'default' => 'ID',
-                'options' => [
-                    'ID'    => esc_html__('ID', 'fluent-cart'),
-                    'name'  => esc_html__('Name', 'fluent-cart'),
-                    'price' => esc_html__('Price', 'fluent-cart'),
-                    'date'  => esc_html__('Date', 'fluent-cart'),
-                ],
-            ]
-        );
-
-        $this->add_control(
-            'order_type',
-            [
-                'label'   => esc_html__('Order', 'fluent-cart'),
-                'type'    => Controls_Manager::SELECT,
-                'default' => 'DESC',
-                'options' => [
-                    'DESC' => esc_html__('Descending', 'fluent-cart'),
-                    'ASC'  => esc_html__('Ascending', 'fluent-cart'),
                 ],
             ]
         );
@@ -773,7 +744,6 @@ class ShopAppWidget extends Widget_Base
             'view_mode'                        => $settings['view_mode'] ?? 'grid',
             'paginator'                        => $settings['paginator'] ?? 'scroll',
             'price_format'                     => $settings['price_format'] ?? 'starts_from',
-            'order_type'                       => $settings['order_type'] ?? 'DESC',
             'product_box_grid_size'            => $settings['product_box_grid_size'] ?? 4,
             'product_grid_size'                => $settings['product_box_grid_size'] ?? 4,
             'use_default_style'                => ($settings['use_default_style'] ?? '') === 'yes' ? 1 : 0,

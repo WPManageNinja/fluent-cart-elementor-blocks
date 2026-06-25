@@ -219,7 +219,12 @@ class ElementorShopAppRenderer extends ShopAppRenderer
 
     private function renderCardWithLayout(Product $product, $cursorAttr = '', $isFirst = false)
     {
-        $cardRender = new ProductCardRender($product, ['cursor' => $cursorAttr]);
+        $cardRender = new ProductCardRender($product, 
+            [
+                'cursor' => $cursorAttr, 
+                'price_format' => $this->priceFormat
+            ]
+        );
 
         $cursorData = '';
         if ($cursorAttr) {

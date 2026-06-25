@@ -91,7 +91,6 @@ class ElementorShopAppHandler extends ShopAppHandler
             'paginate_using'           => $paginatorMethod,
             'pagination_type'          => $paginatorMethod,
             'allow_out_of_stock'       => $allowOutOfStock,
-            'order_type'               => $this->shortcodeAttributes['order_type'],
             'live_filter'              => $this->shortcodeAttributes['live_filter'],
             'enable_filters'           => $enableFilters,
             'custom_filters'           => $customFilters,
