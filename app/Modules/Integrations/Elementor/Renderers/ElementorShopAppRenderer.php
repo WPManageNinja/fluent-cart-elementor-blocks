@@ -5,7 +5,6 @@ namespace FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Renderers
 use FluentCart\App\Models\Product;
 use FluentCart\App\Modules\Templating\AssetLoader;
 use FluentCart\App\Services\Renderer\ProductCardRender;
-use FluentCart\App\Services\Renderer\ProductRenderer;
 use FluentCart\App\Services\Renderer\RenderHelper;
 use FluentCart\App\Services\Renderer\ShopAppRenderer;
 use FluentCart\Framework\Pagination\CursorPaginator;
@@ -34,6 +33,18 @@ class ElementorShopAppRenderer extends ShopAppRenderer
         }
 
         parent::__construct($products, $config);
+
+        // Apply user-set filter labels from the Elementor widget controls.
+        // ShopAppRenderer builds $this->filters with hardcoded labels from taxonomy slugs;
+        // the widget stores the user's custom label in $config['filters'][$key]['label'].
+        $configFilters = Arr::get($config, 'filters', []);
+        foreach ($this->filters as $key => &$filter) {
+            $userLabel = Arr::get($configFilters, $key . '.label');
+            if ($userLabel) {
+                $filter['label'] = $userLabel;
+            }
+        }
+        unset($filter);
     }
 
     public function render()
@@ -100,6 +111,10 @@ class ElementorShopAppRenderer extends ShopAppRenderer
                     $this->renderLayoutSection($type, $filterRenderer);
                 }
                 ?>
+                
+                <div class="fluent-cart-product-loader loader-hidden" data-fluent-cart-product-loader>
+                    <div class="fluent-cart-product-spinner"></div>
+                </div>
             </div>
             <?php
             }
@@ -177,8 +192,6 @@ class ElementorShopAppRenderer extends ShopAppRenderer
             <?php
             if ($this->products->count() !== 0) {
                 $this->renderProduct();
-            } else {
-                ProductRenderer::renderNoProductFound();
             }
             ?>
         </div>
