@@ -137,6 +137,19 @@ class SearchBarWidget extends Widget_Base
             ]
         );
 
+        $this->add_control(
+            'show_thumbnail',
+            [
+                'label'        => esc_html__('Show Thumbnail', 'fluent-cart'),
+                'type'         => Controls_Manager::SWITCHER,
+                'label_on'     => esc_html__('Yes', 'fluent-cart'),
+                'label_off'    => esc_html__('No', 'fluent-cart'),
+                'return_value' => 'yes',
+                'default'      => 'yes',
+                'description'  => esc_html__('Display product thumbnails in search results.', 'fluent-cart'),
+            ]
+        );
+
         $this->end_controls_section();
     }
 
@@ -543,6 +556,7 @@ class SearchBarWidget extends Widget_Base
             'category_mode'      => $showCategoryFilter === 'yes',
             'termData'           => $termData,
             'link_with_shop_app' => $linkWithShopApp === 'yes',
+            'show_thumbnail'     => ($settings['show_thumbnail'] ?? 'yes') === 'yes',
         ];
 
         (new SearchBarRenderer($config))->render();
