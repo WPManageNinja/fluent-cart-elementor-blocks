@@ -242,8 +242,8 @@ class CheckoutWidget extends Widget_Base
                                 'name_fields'      => esc_html__('Name Fields', 'fluent-cart'),
                                 'create_account'   => esc_html__('Create Account', 'fluent-cart'),
                                 'address_fields'   => esc_html__('Address Fields', 'fluent-cart'),
-                                'shipping_methods' => esc_html__('Shipping Methods', 'fluent-cart'),
-                                'eu_vat'           => esc_html__('EU VAT', 'fluent-cart'),
+                                'shipping_methods'  => esc_html__('Shipping Methods', 'fluent-cart'),
+                                'business_details' => esc_html__('Business Details', 'fluent-cart'),
                                 'payment_methods'  => esc_html__('Payment Methods', 'fluent-cart'),
                                 'agree_terms'      => esc_html__('Agree to Terms', 'fluent-cart'),
                                 'order_notes'      => esc_html__('Order Notes', 'fluent-cart'),
@@ -320,11 +320,11 @@ class CheckoutWidget extends Widget_Base
                                 ['element_type' => 'address_fields', 'element_visibility' => 'yes', 'address_type' => 'both', 'show_ship_to_different' => 'yes'],
                                 ['element_type' => 'agree_terms', 'element_visibility' => 'yes'],
                                 ['element_type' => 'shipping_methods', 'element_visibility' => 'yes'],
-                                ['element_type' => 'eu_vat', 'element_visibility' => 'yes'],
+                                ['element_type' => 'business_details', 'element_visibility' => 'yes'],
                                 ['element_type' => 'payment_methods', 'element_visibility' => 'yes'],
                                 ['element_type' => 'submit_button', 'element_visibility' => 'yes'],
                         ],
-                        'title_field' => '{{{ {"name_fields":"Name Fields","create_account":"Create Account","address_fields":"Address Fields","shipping_methods":"Shipping Methods","eu_vat":"EU VAT","payment_methods":"Payment Methods","agree_terms":"Agree to Terms","order_notes":"Order Notes","submit_button":"Submit Button"}[element_type] || element_type }}}',
+                        'title_field' => '{{{ {"name_fields":"Name Fields","create_account":"Create Account","address_fields":"Address Fields","shipping_methods":"Shipping Methods","business_details":"Business Details","payment_methods":"Payment Methods","agree_terms":"Agree to Terms","order_notes":"Order Notes","submit_button":"Submit Button"}[element_type] || element_type }}}',
                 ]
         );
 
@@ -1742,36 +1742,37 @@ class CheckoutWidget extends Widget_Base
         return $settings;
     }
 
-    /**
-     * Add EU VAT to older widget instances when the section does not exist at all.
-     */
     private function normalizeFormElements($formElements): array
     {
         if (!is_array($formElements)) {
             return [];
         }
 
-        foreach ($formElements as $element) {
+        $hasBusinessDetails = false;
+
+        foreach ($formElements as &$element) {
             if (($element['element_type'] ?? '') === 'eu_vat') {
-                return $formElements;
+                $element['element_type'] = 'business_details';
+            }
+            if (($element['element_type'] ?? '') === 'business_details') {
+                $hasBusinessDetails = true;
             }
         }
+        unset($element);
 
-        $euVatElement = [
-            'element_type'       => 'eu_vat',
-            'element_visibility' => 'yes',
-        ];
-
-        $insertAt = count($formElements);
-
-        foreach ($formElements as $index => $element) {
-            if (($element['element_type'] ?? '') === 'payment_methods') {
-                $insertAt = $index;
-                break;
+        if (!$hasBusinessDetails) {
+            $insertAt = count($formElements);
+            foreach ($formElements as $index => $element) {
+                if (($element['element_type'] ?? '') === 'payment_methods') {
+                    $insertAt = $index;
+                    break;
+                }
             }
+            array_splice($formElements, $insertAt, 0, [[
+                'element_type'       => 'business_details',
+                'element_visibility' => 'yes',
+            ]]);
         }
-
-        array_splice($formElements, $insertAt, 0, [$euVatElement]);
 
         return $formElements;
     }
