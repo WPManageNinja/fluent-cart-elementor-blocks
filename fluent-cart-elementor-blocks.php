@@ -3,7 +3,7 @@
 /*
 Plugin Name: FluentCart Elementor Blocks
 Description: FluentCart Elementor Blocks WordPress plugin to extend Elementor with FluentCart specific widgets and features.
-Version: 1.0.1
+Version: 1.0.2
 Author:
 Author URI:
 Plugin URI:
@@ -13,7 +13,7 @@ Domain Path: /language
 */
 
 if (!defined('FLUENTCART_ELEMENTOR_BLOCKS_VERSION')) {
-    define('FLUENTCART_ELEMENTOR_BLOCKS_VERSION', '1.0.1');
+    define('FLUENTCART_ELEMENTOR_BLOCKS_VERSION', '1.0.2');
     define('FLUENTCART_ELEMENTOR_BLOCKS_URL', plugin_dir_url(__FILE__));
 }
 
