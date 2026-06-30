@@ -2,7 +2,7 @@
 Contributors: wpmanageninja
 Tags: fluentcart, elementor, ecommerce, checkout, cart, shop
 Requires at least: 6.0
-Tested up to: 6.9
+Tested up to: 7.0
 Requires PHP: 7.4
 Stable tag: 1.0.2
 License: GPLv2 or later
@@ -86,24 +86,24 @@ Yes. Required CSS and JavaScript assets are enqueued automatically when widgets 
 == Changelog ==
 
 = 1.0.2 (June 30, 2026) =
-- Adds show_thumbnail control to Search Bar widget
-- Adds content controls to Mini Cart widget
-- Adds lazy-loading of advanced variation assets on widget render and in editor preview
-- Cleans widget labels, updates icons, and adds brand badge across all widgets
-- Appends (FluentCart) to general widget titles for clarity in the Elementor panel
-- Replaces EU VAT field with Business Details section in Checkout widget to match FluentCart core
-- Fixes Show Icon toggle not working in Customer Dashboard Button widget
-- Fixes missing CSS enqueue for Customer Dashboard Button widget
-- Fixes price_format not applied correctly in ShopApp widget
-- Removes non-functional order controls from ShopApp widget
-- Adds product loader to ShopApp widget and fixes filter label customization
-- Fixes ProductSelectControl spawning duplicate Select2 dropdowns on reinitialization
-- Fixes StoreLogo widget not passing max_width and max_height to the renderer
-- Fixes standalone product widgets (Price, Stock, SKU, Excerpt) not syncing with the active variation
-- Fixes stale stock badge remaining visible when a variation has no stock data
-- Fixes stock label written via innerHTML — now uses textContent to prevent XSS from translation strings
-- Fixes empty wrapper blocks rendered by product widgets when the underlying field has no content
-- Removes package type from Product Package Description widget controls and render output
+- Adds `show_thumbnail` control to the Search Bar widget.
+- Adds Content controls to the Mini Cart widget.
+- Adds Product loader to the ShopApp widget and improves filter label customization.
+- Adds Lazy loading for Advanced Variation assets in widget rendering and editor preview.
+- Fixes The Show Icon toggle in the Customer Dashboard Button widget.
+- Fixes Missing CSS loading for the Customer Dashboard Button widget.
+- Fixes `price_format` formatting in the ShopApp widget.
+- Fixes Duplicate Select2 instances in ProductSelectControl.
+- Fixes The Store Logo widget not passing dimensions to the renderer.
+- Fixes Product widgets (Price, Stock, SKU, and Excerpt) not syncing with the selected variation.
+- Fixes Stale stock badges for variations without stock data.
+- Fixes Potential XSS in stock labels by using `textContent`.
+- Fixes Empty wrapper blocks when product fields have no content.
+- Removes Package type controls and output from the Product Package Description widget.
+- Removes Non-functional order controls from the ShopApp widget.
+- Cleans Widget labels, updates widget icons, and adds a FluentCart brand badge across all widgets.
+- Appends "(FluentCart)" to widget titles for better clarity in the Elementor panel.
+- Replaces The EU VAT field with a Business Details section in the Checkout widget.
 
 = 1.0.1 (May 13, 2026) =
 - Adds Product SKU widget for Elementor Theme Builder
