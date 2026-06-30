@@ -195,6 +195,12 @@
         var variationId = e.detail && e.detail.variationId;
         if (!variationId) return;
 
+        // Always sync variation-content visibility — this is the only operation
+        // that needs just the variationId. Advanced variation products never render
+        // [data-fluent-cart-product-variant] buttons, so syncPrice must run before
+        // the button lookup to avoid skipping it entirely.
+        syncPrice(variationId);
+
         var selector = '[data-fluent-cart-product-variant][data-cart-id="' + CSS.escape(String(variationId)) + '"]';
         var button = document.querySelector(selector);
         if (!button) return;
@@ -206,7 +212,6 @@
         syncSku(button.dataset.sku || '');
         syncStock(status);
         syncPackage(button.dataset.packageInfo || '');
-        syncPrice(variationId);
         syncAddToCart(variationId, status, paymentType, variantName);
         syncBuyNow(variationId, status, variantName);
     });
