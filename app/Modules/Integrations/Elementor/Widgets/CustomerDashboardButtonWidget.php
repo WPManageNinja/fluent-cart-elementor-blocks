@@ -12,6 +12,7 @@ use FluentCart\App\Modules\Templating\AssetLoader;
 use FluentCart\App\Services\Renderer\CustomerDashboardButtonRenderer;
 use FluentCart\App\App;
 use FluentCart\App\Vite;
+use FluentCart\Framework\Support\Arr;
 
 class CustomerDashboardButtonWidget extends Widget_Base
 {
@@ -356,9 +357,7 @@ class CustomerDashboardButtonWidget extends Widget_Base
             ? $settings['link_target']
             : '_self';
 
-        $showIcon = in_array($settings['show_icon'] ?? '', ['yes', 'no'], true)
-            ? $settings['show_icon'] === 'yes'
-            : true;
+        $showIcon = Arr::get($settings, 'show_icon', '') === 'yes';
 
         $buttonText = sanitize_text_field($settings['button_text'] ?? '');
         if (empty($buttonText)) {
