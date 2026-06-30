@@ -4,7 +4,7 @@ Tags: fluentcart, elementor, ecommerce, checkout, cart, shop
 Requires at least: 6.0
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Elementor Blocks for FluentCart lets you build checkout flows, cart interactions, and product layouts visually in Elementor while using FluentCart’s native commerce logic and assets.
@@ -84,6 +84,26 @@ Are FluentCart assets loaded automatically?
 Yes. Required CSS and JavaScript assets are enqueued automatically when widgets are rendered.
 
 == Changelog ==
+
+= 1.0.2 (June 30, 2026) =
+- Adds show_thumbnail control to Search Bar widget
+- Adds content controls to Mini Cart widget
+- Adds lazy-loading of advanced variation assets on widget render and in editor preview
+- Cleans widget labels, updates icons, and adds brand badge across all widgets
+- Appends (FluentCart) to general widget titles for clarity in the Elementor panel
+- Replaces EU VAT field with Business Details section in Checkout widget to match FluentCart core
+- Fixes Show Icon toggle not working in Customer Dashboard Button widget
+- Fixes missing CSS enqueue for Customer Dashboard Button widget
+- Fixes price_format not applied correctly in ShopApp widget
+- Removes non-functional order controls from ShopApp widget
+- Adds product loader to ShopApp widget and fixes filter label customization
+- Fixes ProductSelectControl spawning duplicate Select2 dropdowns on reinitialization
+- Fixes StoreLogo widget not passing max_width and max_height to the renderer
+- Fixes standalone product widgets (Price, Stock, SKU, Excerpt) not syncing with the active variation
+- Fixes stale stock badge remaining visible when a variation has no stock data
+- Fixes stock label written via innerHTML — now uses textContent to prevent XSS from translation strings
+- Fixes empty wrapper blocks rendered by product widgets when the underlying field has no content
+- Removes package type from Product Package Description widget controls and render output
 
 = 1.0.1 (May 13, 2026) =
 - Adds Product SKU widget for Elementor Theme Builder
