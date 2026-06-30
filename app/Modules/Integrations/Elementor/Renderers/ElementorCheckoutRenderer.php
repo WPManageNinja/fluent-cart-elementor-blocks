@@ -226,8 +226,8 @@ class ElementorCheckoutRenderer
                 $this->renderShippingMethods();
                 break;
 
-            case 'eu_vat':
-                $this->renderEuVat();
+            case 'business_details':
+                $this->checkoutRenderer->renderB2BToggle();
                 break;
 
             case 'payment_methods':
@@ -300,31 +300,13 @@ class ElementorCheckoutRenderer
      */
     protected function renderPaymentMethods(): void
     {
-        if (!$this->hasFormElement('eu_vat')) {
-            do_action('fluent_cart/before_payment_methods', ['cart' => $this->cart]);
-        }
+        do_action('fluent_cart/before_payment_methods', ['cart' => $this->cart]);
         ?>
         <div class="fct_checkout_payment_methods" data-fluent-cart-checkout-payment-methods>
             <?php $this->checkoutRenderer->renderPaymentMethods(); ?>
         </div>
         <?php
         do_action('fluent_cart/after_payment_methods', ['cart' => $this->cart]);
-    }
-
-    /**
-     * Render EU VAT block output from FluentCart core.
-     */
-    protected function renderEuVat(): void
-    {
-        ob_start();
-        do_action('fluent_cart/before_payment_methods', ['cart' => $this->cart]);
-        $output = trim(ob_get_clean());
-
-        if ($output === '') {
-            return;
-        }
-
-        echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
     }
 
     /**
