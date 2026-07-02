@@ -56,16 +56,32 @@ class ElementorIntegration
 
         \add_filter('fluent_cart/products_views/preload_collection_elementor', [$this, 'preloadProductCollectionsAjax'], 10, 2);
 
-        // Theme Builder integration (requires Elementor Pro)
-        if (class_exists('\ElementorPro\Modules\ThemeBuilder\Module')) {
-            \add_action('elementor/documents/register', [$this, 'registerDocuments']);
-            \add_action('elementor/theme/register_conditions', [$this, 'registerConditions']);
-            \add_filter('elementor/theme/need_override_location', [$this, 'themeTemplateInclude'], 10, 2);
-            // \add_filter('elementor_pro/utils/get_public_post_types', [$this, 'removeFluentProductsFromGenericConditions']);
+        // Theme Builder integration (requires Elementor Pro or ProElements).
+        // Deferred to after_setup_theme: this method runs on fluentcart_loaded
+        // (inside plugins_loaded), and ProElements — which shares the ElementorPro
+        // namespace but sorts after fluent-cart* in the plugin load order — has not
+        // registered its autoloader yet at that point. after_setup_theme runs after
+        // every plugin has loaded, and before any of the hooks below fire
+        // (elementor/documents/register earliest at init 0, register_conditions on wp_loaded).
+        \add_action('after_setup_theme', [$this, 'registerThemeBuilderIntegration']);
+    }
 
-            // Disable FluentCart core's auto single product rendering when a Theme Builder template is active
-            \add_filter('fluent_cart/disable_auto_single_product_page', [$this, 'maybeDisableAutoSingleProduct']);
+    /**
+     * Wire the Elementor Pro Theme Builder integration.
+     */
+    public function registerThemeBuilderIntegration()
+    {
+        if (!class_exists('\ElementorPro\Modules\ThemeBuilder\Module')) {
+            return;
         }
+
+        \add_action('elementor/documents/register', [$this, 'registerDocuments']);
+        \add_action('elementor/theme/register_conditions', [$this, 'registerConditions']);
+        \add_filter('elementor/theme/need_override_location', [$this, 'themeTemplateInclude'], 10, 2);
+        // \add_filter('elementor_pro/utils/get_public_post_types', [$this, 'removeFluentProductsFromGenericConditions']);
+
+        // Disable FluentCart core's auto single product rendering when a Theme Builder template is active
+        \add_filter('fluent_cart/disable_auto_single_product_page', [$this, 'maybeDisableAutoSingleProduct']);
     }
 
     public function registerCategories($elements_manager)
