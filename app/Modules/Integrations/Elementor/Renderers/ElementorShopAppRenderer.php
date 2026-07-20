@@ -34,6 +34,14 @@ class ElementorShopAppRenderer extends ShopAppRenderer
         }
 
         parent::__construct($products, $config);
+
+        $configFilters = Arr::get($config, 'filters', []);
+        foreach ($this->filters as $key => &$filter) {
+            if (Arr::has($configFilters, $key . '.show_empty')) {
+                $filter['show_empty'] = Arr::get($configFilters, $key . '.show_empty');
+            }
+        }
+        unset($filter);
     }
 
     public function render()
