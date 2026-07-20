@@ -387,6 +387,25 @@ class ShopAppWidget extends Widget_Base
                     ],
                 ]
             );
+
+            $taxonomyName = esc_html(str_replace('product-', '', $taxonomy));
+            $this->add_control(
+                'show_empty_taxonomy_' . $key,
+                [
+                    'label'        => esc_html__('Show empty', 'fluent-cart'),
+                    'type'         => Controls_Manager::SWITCHER,
+                    'label_on'     => esc_html__('Yes', 'fluent-cart'),
+                    'label_off'    => esc_html__('No', 'fluent-cart'),
+                    'return_value' => 'yes',
+                    'default'      => '',
+                    /* translators: %1$s: taxonomy name (e.g. "categories", "brands") */
+                    'description'  => sprintf(esc_html__('Display %1$s even if they have no products.', 'fluent-cart'), $taxonomyName),
+                    'condition'    => [
+                        'enable_filter'           => 'yes',
+                        'enable_taxonomy_' . $key => 'yes',
+                    ],
+                ]
+            );
         }
 
         // Price Range toggle + display name
@@ -746,6 +765,7 @@ class ShopAppWidget extends Widget_Base
             foreach ($enabledTaxonomies as $taxonomy) {
                 $key = sanitize_key(str_replace('-', '_', $taxonomy));
                 $label = sanitize_text_field($settings['taxonomy_label_' . $key] ?? Str::headline($taxonomy));
+                $showEmpty = ($settings['show_empty_taxonomy_' . $key] ?? '') === 'yes';
 
                 $filters[$taxonomy] = [
                     'enabled'     => true,
@@ -753,6 +773,7 @@ class ShopAppWidget extends Widget_Base
                     'is_meta'     => true,
                     'label'       => $label,
                     'multiple'    => false,
+                    'show_empty'  => $showEmpty,
                 ];
             }
 
