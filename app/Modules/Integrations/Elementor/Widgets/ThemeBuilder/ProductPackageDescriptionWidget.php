@@ -6,7 +6,7 @@ use Elementor\Widget_Base;
 use Elementor\Controls_Manager;
 use Elementor\Group_Control_Typography;
 use FluentCart\App\Modules\Templating\AssetLoader;
-use FluentCart\App\Services\Renderer\ProductRenderer;
+use FluentCart\App\Services\Renderer\PackageDescriptionRenderer;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ThemeBuilder\Traits\ProductWidgetTrait;
 
 if (!defined('ABSPATH')) {
@@ -190,7 +190,7 @@ class ProductPackageDescriptionWidget extends Widget_Base
         $showProductWeight = ($settings['show_product_weight'] ?? 'yes') === 'yes';
         $showTotalWeight   = ($settings['show_total_weight'] ?? 'yes') === 'yes';
 
-        $renderer = new ProductRenderer($product);
+        $renderer = new PackageDescriptionRenderer($product);
 
         ob_start();
         $renderer->renderPackageDescription('', $showName, $showDimensions, $showProductWeight, $showTotalWeight);

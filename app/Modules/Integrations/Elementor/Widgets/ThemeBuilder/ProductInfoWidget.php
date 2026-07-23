@@ -8,6 +8,7 @@ use Elementor\Group_Control_Typography;
 use Elementor\Repeater;
 use FluentCart\Api\Resource\ShopResource;
 use FluentCart\App\Modules\Templating\AssetLoader;
+use FluentCart\App\Services\Renderer\PackageDescriptionRenderer;
 use FluentCart\App\Services\Renderer\ProductListRenderer;
 use FluentCart\App\Services\Renderer\ProductRenderer;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ThemeBuilder\Traits\ProductWidgetTrait;
@@ -348,7 +349,7 @@ class ProductInfoWidget extends Widget_Base
                     $renderer->renderPrices();
                     break;
                 case 'package_description':
-                    $renderer->renderPackageDescription();
+                    (new PackageDescriptionRenderer($product))->renderPackageDescription();
                     break;
                 case 'buy_section':
                     $renderer->renderBuySection();
