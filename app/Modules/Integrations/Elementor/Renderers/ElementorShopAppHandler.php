@@ -106,6 +106,8 @@ class ElementorShopAppHandler extends ShopAppHandler
         $config['view_mode'] = $this->shortcodeAttributes['view_mode'];
         $config['product_box_grid_size'] = $this->shortcodeAttributes['product_box_grid_size'];
         $config['price_format'] = $this->shortcodeAttributes['price_format'];
+        $config['enable_wildcard_filter'] = $this->shortcodeAttributes['enable_wildcard_filter'];
+        $config['enable_wildcard_for_post_content'] = $this->shortcodeAttributes['enable_wildcard_for_post_content'];
         return $config;
     }
 }
