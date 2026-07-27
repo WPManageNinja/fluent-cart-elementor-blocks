@@ -64,6 +64,7 @@ class ShopAppWidget extends Widget_Base
         $this->registerShopLayoutControls();
         $this->registerCardLayoutControls();
         $this->registerFilterControls();
+        $this->registerDefaultFilterControls();
         $this->registerStyleControls();
     }
 
@@ -393,6 +394,90 @@ class ShopAppWidget extends Widget_Base
         $this->end_controls_section();
     }
 
+    private function registerDefaultFilterControls()
+    {
+        $this->start_controls_section(
+            'default_filter_section',
+            [
+                'label' => esc_html__('Default Filter', 'fluent-cart'),
+                'tab'   => Controls_Manager::TAB_CONTENT,
+            ]
+        );
+
+        $this->add_control(
+            'default_filter_enabled',
+            [
+                'label'        => esc_html__('Enable Default Filter', 'fluent-cart'),
+                'type'         => Controls_Manager::SWITCHER,
+                'label_on'     => esc_html__('Yes', 'fluent-cart'),
+                'label_off'    => esc_html__('No', 'fluent-cart'),
+                'return_value' => 'yes',
+                'default'      => '',
+                'description'  => esc_html__('Presets applied to the product query by default, independent of the visitor-facing filter above.', 'fluent-cart'),
+            ]
+        );
+
+        $this->add_control(
+            'default_filter_allow_out_of_stock',
+            [
+                'label'        => esc_html__('Allow Out Of Stock', 'fluent-cart'),
+                'type'         => Controls_Manager::SWITCHER,
+                'label_on'     => esc_html__('Yes', 'fluent-cart'),
+                'label_off'    => esc_html__('No', 'fluent-cart'),
+                'return_value' => 'yes',
+                'default'      => '',
+                'condition'    => [
+                    'default_filter_enabled' => 'yes',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'default_filter_wildcard',
+            [
+                'label'     => esc_html__('Search', 'fluent-cart'),
+                'type'      => Controls_Manager::TEXT,
+                'default'   => '',
+                'condition' => [
+                    'default_filter_enabled' => 'yes',
+                ],
+            ]
+        );
+
+        $taxonomies = Taxonomy::getTaxonomies();
+        foreach ($taxonomies as $taxonomy) {
+            $label = esc_html(Str::headline($taxonomy));
+            $key = sanitize_key(str_replace('-', '_', $taxonomy));
+
+            $options = [];
+            $flattenTerms = function ($terms) use (&$flattenTerms, &$options) {
+                foreach ($terms as $term) {
+                    $options[$term['value']] = $term['label'];
+                    if (!empty($term['children'])) {
+                        $flattenTerms($term['children']);
+                    }
+                }
+            };
+            $flattenTerms(Taxonomy::getFormattedTerms($taxonomy));
+
+            $this->add_control(
+                'default_filter_taxonomy_' . $key,
+                [
+                    'label'     => $label,
+                    'type'      => Controls_Manager::SELECT2,
+                    'multiple'  => true,
+                    'options'   => $options,
+                    'default'   => [],
+                    'condition' => [
+                        'default_filter_enabled' => 'yes',
+                    ],
+                ]
+            );
+        }
+
+        $this->end_controls_section();
+    }
+
     private function registerStyleControls()
     {
         $this->start_controls_section(
@@ -691,9 +776,9 @@ class ShopAppWidget extends Widget_Base
         $customFilters = [];
         $filters = [];
         $liveFilter = ($settings['live_filter'] ?? '') === 'yes';
+        $allTaxonomies = Taxonomy::getTaxonomies();
 
         if ($enableFilter) {
-            $allTaxonomies = Taxonomy::getTaxonomies();
             $enablePriceRange = ($settings['enable_price_range_filter'] ?? '') === 'yes';
 
             // Build taxonomy list from individual per-taxonomy toggles
@@ -738,6 +823,23 @@ class ShopAppWidget extends Widget_Base
             }
         }
 
+        // Build default_filters (server-baked query presets, independent of the visitor filter UI)
+        $defaultFilterEnabled = ($settings['default_filter_enabled'] ?? '') === 'yes';
+        $defaultFilters = ['enabled' => $defaultFilterEnabled];
+
+        if ($defaultFilterEnabled) {
+            $defaultFilters['allow_out_of_stock'] = ($settings['default_filter_allow_out_of_stock'] ?? '') === 'yes';
+            $defaultFilters['wildcard'] = sanitize_text_field($settings['default_filter_wildcard'] ?? '');
+
+            foreach ($allTaxonomies as $taxonomy) {
+                $key = sanitize_key(str_replace('-', '_', $taxonomy));
+                $selectedTerms = $settings['default_filter_taxonomy_' . $key] ?? [];
+                if (!empty($selectedTerms)) {
+                    $defaultFilters[$taxonomy] = array_map('strval', (array) $selectedTerms);
+                }
+            }
+        }
+
         // Build shortcode attributes from widget settings
         $shortcodeAtts = [
             'per_page'                         => $settings['per_page'] ?? 10,
@@ -753,6 +855,7 @@ class ShopAppWidget extends Widget_Base
             'enable_wildcard_for_post_content' => ($settings['enable_wildcard_for_post_content'] ?? '') === 'yes' ? 1 : 0,
             'filters'                          => $filters,
             'custom_filters'                   => $customFilters,
+            'default_filters'                  => $defaultFilters,
         ];
 
         // Extract card layout elements from the repeater
