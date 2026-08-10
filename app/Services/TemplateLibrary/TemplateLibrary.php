@@ -30,6 +30,12 @@ class TemplateLibrary
     /** Seconds after which a lock left by a crashed pass is reclaimed. */
     const LOCK_TTL = 300;
 
+    /** Transient throttling retries after a failed / incomplete pass. */
+    const RETRY_COOLDOWN_KEY = 'fluent_cart_elementor_templates_seeding_retry';
+
+    /** Seconds to wait before retrying after a failed / incomplete pass. */
+    const RETRY_COOLDOWN = 900;
+
     /** The exact lock value this request wrote, used to release only our own. */
     private $lockValue = '';
 
@@ -84,6 +90,17 @@ class TemplateLibrary
             return;
         }
 
+        // Back off after a failed / incomplete pass so a persistent problem (a
+        // damaged bundled file, a permanent Elementor write error) does not
+        // reprocess the whole manifest — filesystem reads + per-template DB
+        // lookups + writes — on every admin page load. Retries resume after the
+        // cooldown; a clean pass clears it. The cooldown stores the version it
+        // was armed for, so a NEW template-set version bypasses it immediately
+        // rather than waiting out a backoff from the previous version.
+        if (get_transient(self::RETRY_COOLDOWN_KEY) === $version) {
+            return;
+        }
+
         // Atomic mutex: only one request seeds at a time. Without it, two admin
         // loads that both pass the gate could each find no existing row and
         // insert the same template, leaving duplicate library entries.
@@ -98,31 +115,57 @@ class TemplateLibrary
                 return;
             }
 
-            $templates = TemplateManifest::all();
-
-            if (empty($templates)) {
-                // Nothing to seed — record the version so we don't re-scan.
-                update_option(self::VERSION_OPTION, $version, false);
-                return;
-            }
+            // loadAll() reports whether the on-disk set was read in full, so a
+            // missing/unreadable/malformed manifest or a damaged bundled file is
+            // NOT mistaken for a valid empty set. A validly-empty manifest is
+            // `complete` and legitimately advances the gate below.
+            $result    = TemplateManifest::loadAll();
+            $templates = $result['templates'];
+            $complete  = $result['complete'];
 
             $failed = false;
             foreach ($templates as $template) {
+                // Revalidate lock ownership before each seed. If our lock was
+                // reclaimed after LOCK_TTL by another request (a hung pass),
+                // stop immediately: otherwise two passes could both run the
+                // check-then-create path and duplicate a library item (ownership
+                // is post-meta, not a DB uniqueness constraint).
+                if (!$this->ownsLock()) {
+                    $failed = true;
+                    break;
+                }
+
                 if (TemplateSeeder::seed($template) === 'failed') {
                     $failed = true;
                 }
             }
 
-            // Advance the gate only on a clean pass; a failure retries on the
-            // next admin load. The per-item version meta makes that retry
-            // idempotent (already-seeded items are skipped), so it can never
-            // duplicate entries.
-            if (!$failed) {
+            // Advance the gate only when the on-disk set loaded in full, every
+            // template seeded (or was a valid skip), AND we still hold the lock.
+            // Anything else leaves the gate behind and backs off via the cooldown
+            // — so retries recover eventually without hammering every admin load.
+            // The per-item version meta keeps that retry idempotent.
+            if ($complete && !$failed && $this->ownsLock()) {
                 update_option(self::VERSION_OPTION, $version, false);
+                delete_transient(self::RETRY_COOLDOWN_KEY);
+            } else {
+                set_transient(self::RETRY_COOLDOWN_KEY, $version, self::RETRY_COOLDOWN);
             }
         } finally {
             $this->releaseLock();
         }
+    }
+
+    /**
+     * Whether this request still holds the seeding lock (its stored value is
+     * unchanged). Returns false once another request reclaimed a stale lock from
+     * us, so a slow / hung pass stops writing instead of racing the new owner.
+     *
+     * @return bool
+     */
+    private function ownsLock()
+    {
+        return $this->lockValue !== '' && get_option(self::LOCK_OPTION) === $this->lockValue;
     }
 
     /**

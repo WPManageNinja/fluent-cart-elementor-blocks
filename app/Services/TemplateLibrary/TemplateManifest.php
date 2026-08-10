@@ -68,25 +68,59 @@ class TemplateManifest
             return self::$templates;
         }
 
+        $result          = self::loadAll();
+        self::$templates = $result['templates'];
+
+        return self::$templates;
+    }
+
+    /**
+     * Load the bundled set AND report whether the on-disk load was complete.
+     *
+     * `complete` is false when the root manifest is missing, unreadable, or
+     * malformed, or when any slug it lists fails to load (a missing/unreadable/
+     * invalid bundled file). It stays true for a validly-empty manifest and for
+     * deliberately-empty template payloads (those load fine). The orchestrator
+     * uses this to tell a real read/deploy failure apart from a valid empty set,
+     * so it never records a transient failure as a finished seed.
+     *
+     * Third-party templates added via the filter never affect `complete` — they
+     * are not bundled files, so an invalid one is simply dropped.
+     *
+     * @return array{templates: array<int, array>, complete: bool}
+     */
+    public static function loadAll()
+    {
         $manifestFile = self::dir() . '/manifest.json';
+        $complete     = true;
+        $templates    = [];
 
-        $templates = [];
+        $raw = file_exists($manifestFile) ? file_get_contents($manifestFile) : false;
 
-        if (file_exists($manifestFile)) {
-            $entries = json_decode((string) file_get_contents($manifestFile), true);
-
-            if (is_array($entries)) {
-                foreach ($entries as $entry) {
-                    if (!is_string($entry) || $entry === '') {
-                        continue;
-                    }
-
-                    $template = self::load($entry);
-                    if ($template) {
-                        $templates[] = $template;
-                    }
-                }
+        if ($raw === false) {
+            $complete = false; // root manifest missing or unreadable
+            $entries  = [];
+        } else {
+            $entries = json_decode($raw, true);
+            if (!is_array($entries)) {
+                $complete = false; // malformed root manifest
+                $entries  = [];
             }
+        }
+
+        foreach ($entries as $entry) {
+            if (!is_string($entry) || $entry === '') {
+                $complete = false; // bad index entry
+                continue;
+            }
+
+            $template = self::load($entry);
+            if ($template === null) {
+                $complete = false; // a listed bundled entry failed to load/validate
+                continue;
+            }
+
+            $templates[] = $template;
         }
 
         /**
@@ -116,9 +150,7 @@ class TemplateManifest
             }
         }
 
-        self::$templates = $normalized;
-
-        return self::$templates;
+        return ['templates' => $normalized, 'complete' => $complete];
     }
 
     /**
