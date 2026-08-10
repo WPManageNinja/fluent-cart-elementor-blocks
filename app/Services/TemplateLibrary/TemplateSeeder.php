@@ -129,7 +129,14 @@ class TemplateSeeder
 
         $postId = (int) $result;
 
-        self::stampOwnership($postId, $template);
+        // If the ownership markers don't persist, the item is unmanageable —
+        // findOwnItem() can't see it, so the next pass would create a duplicate.
+        // Remove the half-created post and fail so the gate does not advance.
+        if (!self::stampOwnership($postId, $template)) {
+            wp_delete_post($postId, true);
+            return false;
+        }
+
         self::applyCategory($postId, $template['category']);
 
         return $postId;
@@ -181,10 +188,15 @@ class TemplateSeeder
         }
 
         // Stamp the version LAST — its presence is what marks the item fully
-        // updated, so a failure at any earlier step leaves the old version in
-        // place and the next admin load retries (idempotently). Category is
-        // cosmetic (admin filter only), so it runs after and never fails it.
-        self::stampOwnership($postId, $template);
+        // updated. If the markers don't persist, fail so the gate stays behind
+        // and the next admin load retries (idempotently) rather than recording
+        // the item as updated with a stale/missing version.
+        if (!self::stampOwnership($postId, $template)) {
+            return false;
+        }
+
+        // Category is cosmetic (admin filter only), so it runs after the version
+        // stamp and never fails the update.
         self::applyCategory($postId, $template['category']);
 
         return true;
@@ -192,16 +204,27 @@ class TemplateSeeder
 
     /**
      * Write the private ownership markers (slug + version) that identify this as
-     * an item this addon manages.
+     * an item this addon manages, and confirm they persisted.
+     *
+     * Returns whether BOTH markers now hold the intended values. We verify with
+     * get_post_meta() rather than trusting update_post_meta()'s return, because
+     * that returns false both on a genuine write failure AND when the stored
+     * value is already identical — so its return alone can't tell success from
+     * failure. The caller treats a false here as a failed seed, so the version
+     * gate never advances over an item whose markers did not stick (which would
+     * leave it unmanageable — findOwnItem() could never see it again).
      *
      * @param int   $postId
      * @param array $template
-     * @return void
+     * @return bool
      */
     private static function stampOwnership($postId, array $template)
     {
         update_post_meta($postId, self::META_SLUG, $template['slug']);
         update_post_meta($postId, self::META_VERSION, $template['version']);
+
+        return (string) get_post_meta($postId, self::META_SLUG, true) === (string) $template['slug']
+            && (string) get_post_meta($postId, self::META_VERSION, true) === (string) $template['version'];
     }
 
     /**

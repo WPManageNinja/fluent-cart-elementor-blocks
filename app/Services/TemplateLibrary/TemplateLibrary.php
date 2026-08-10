@@ -125,12 +125,15 @@ class TemplateLibrary
 
             $failed = false;
             foreach ($templates as $template) {
-                // Revalidate lock ownership before each seed. If our lock was
-                // reclaimed after LOCK_TTL by another request (a hung pass),
-                // stop immediately: otherwise two passes could both run the
-                // check-then-create path and duplicate a library item (ownership
-                // is post-meta, not a DB uniqueness constraint).
-                if (!$this->ownsLock()) {
+                // Renew the lock before each seed. This refreshes its timestamp
+                // via an ownership-scoped CAS, so while we keep making progress
+                // (each seed is far shorter than LOCK_TTL) the lock never looks
+                // stale and cannot be reclaimed by another request — closing the
+                // window where two passes both run the check-then-create path and
+                // duplicate a library item (ownership is post-meta, not a DB
+                // uniqueness constraint). If renewal fails we already lost the
+                // lock to a reclaim, so stop writing immediately.
+                if (!$this->renewLock()) {
                     $failed = true;
                     break;
                 }
@@ -166,6 +169,56 @@ class TemplateLibrary
     private function ownsLock()
     {
         return $this->lockValue !== '' && get_option(self::LOCK_OPTION) === $this->lockValue;
+    }
+
+    /**
+     * Refresh the lock's timestamp via an ownership-scoped compare-and-swap,
+     * keeping our token. Returns true if we still own it (and its TTL is now
+     * reset), false if another request already reclaimed it. Called before each
+     * seed so an actively-progressing pass never lets its lock go stale.
+     *
+     * @return bool
+     */
+    private function renewLock()
+    {
+        global $wpdb;
+
+        if ($this->lockValue === '') {
+            return false;
+        }
+
+        $parts = explode('|', $this->lockValue, 2);
+        $token = isset($parts[1]) ? $parts[1] : '';
+        $next  = time() . '|' . $token;
+
+        // Only refresh the row still holding our exact value; a reclaim will
+        // have changed it, so this matches zero rows.
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- ownership-scoped lock renewal CAS; cache cleared on the next line
+        $renewed = $wpdb->query(
+            $wpdb->prepare(
+                "UPDATE {$wpdb->options} SET option_value = %s WHERE option_name = %s AND option_value = %s",
+                $next,
+                self::LOCK_OPTION,
+                $this->lockValue
+            )
+        );
+        wp_cache_delete(self::LOCK_OPTION, 'options');
+
+        if (1 === $renewed) {
+            $this->lockValue = $next;
+            return true;
+        }
+
+        // Zero rows changed is ambiguous: either this renew ran within the same
+        // second as the last one (so $next already equals the stored value — a
+        // no-op, still ours) or another request reclaimed the lock. Disambiguate
+        // by reading the current value: if it is still ours we keep the lock.
+        if (get_option(self::LOCK_OPTION) === $this->lockValue) {
+            $this->lockValue = $next;
+            return true;
+        }
+
+        return false;
     }
 
     /**
