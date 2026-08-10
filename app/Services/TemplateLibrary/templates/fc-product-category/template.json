@@ -17,7 +17,10 @@
                     "widgetType": "heading",
                     "settings": {
                         "title": "Product Category",
-                        "header_size": "h1"
+                        "header_size": "h1",
+                        "__dynamic__": {
+                            "title": "[elementor-tag id=\"7a1b2c3\" name=\"archive-title\" settings=\"%7B%22include_context%22%3A%22no%22%7D\"]"
+                        }
                     },
                     "elements": []
                 },
@@ -26,7 +29,10 @@
                     "elType": "widget",
                     "widgetType": "text-editor",
                     "settings": {
-                        "editor": "<p>Browse our collection in this category. Replace this with the category description, or use the Archive Description dynamic tag inside a Theme Builder archive template.</p>"
+                        "editor": "<p>Products in this category.</p>",
+                        "__dynamic__": {
+                            "editor": "[elementor-tag id=\"8d4e5f6\" name=\"archive-description\" settings=\"%7B%7D\"]"
+                        }
                     },
                     "elements": []
                 }
