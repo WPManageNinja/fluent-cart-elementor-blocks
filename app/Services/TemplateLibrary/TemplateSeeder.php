@@ -158,6 +158,8 @@ class TemplateSeeder
 
         self::applyCategory($postId, $template['category']);
 
+        self::persistPageSettings($postId, $template);
+
         return $postId;
     }
 
@@ -218,7 +220,40 @@ class TemplateSeeder
         // stamp and never fails the update.
         self::applyCategory($postId, $template['category']);
 
+        self::persistPageSettings($postId, $template);
+
         return true;
+    }
+
+    /**
+     * Re-apply the manifest's page settings onto the seeded item.
+     *
+     * Elementor's save_item() / document->save() only persist page settings that
+     * are registered controls on the library 'page' document — the page-layout
+     * `template` key (e.g. Full Width / Canvas) is silently dropped. We merge the
+     * manifest's page_settings back over whatever the document kept so the layout
+     * travels with the template and Elementor applies it when the template is
+     * inserted (get_data( with_page_settings ) reads this meta).
+     *
+     * @param int   $postId
+     * @param array $template
+     * @return void
+     */
+    private static function persistPageSettings($postId, array $template)
+    {
+        $settings = isset($template['page_settings']) ? $template['page_settings'] : [];
+
+        // Manifests encode "no settings" as an empty JSON array — nothing to do.
+        if (!is_array($settings) || empty($settings)) {
+            return;
+        }
+
+        $existing = get_post_meta($postId, '_elementor_page_settings', true);
+        if (!is_array($existing)) {
+            $existing = [];
+        }
+
+        update_post_meta($postId, '_elementor_page_settings', array_merge($existing, $settings));
     }
 
     /**
