@@ -15,6 +15,7 @@ use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\BuyNowW
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\CartWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\CheckoutWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\CustomerDashboardButtonWidget;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\CustomerDashboardWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\MiniCartWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ProductCardWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ProductCarouselWidget;
@@ -107,6 +108,7 @@ class ElementorIntegration
         $widgets_manager->register(new CheckoutWidget());
         $widgets_manager->register(new ReceiptWidget());
         $widgets_manager->register(new CustomerDashboardButtonWidget());
+        $widgets_manager->register(new CustomerDashboardWidget());
         $widgets_manager->register(new SearchBarWidget());
         $widgets_manager->register(new StoreLogoWidget());
 
