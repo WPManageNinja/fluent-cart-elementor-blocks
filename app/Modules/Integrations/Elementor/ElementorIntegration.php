@@ -19,6 +19,7 @@ use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\MiniCar
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ProductCardWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ProductCarouselWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ProductCategoriesListWidget;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ReceiptWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\SearchBarWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ShopAppWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\StoreLogoWidget;
@@ -104,6 +105,7 @@ class ElementorIntegration
         $widgets_manager->register(new ProductCarouselWidget());
         $widgets_manager->register(new ProductCategoriesListWidget());
         $widgets_manager->register(new CheckoutWidget());
+        $widgets_manager->register(new ReceiptWidget());
         $widgets_manager->register(new CustomerDashboardButtonWidget());
         $widgets_manager->register(new SearchBarWidget());
         $widgets_manager->register(new StoreLogoWidget());
