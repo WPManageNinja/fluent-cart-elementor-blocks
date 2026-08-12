@@ -148,6 +148,16 @@ class TemplateSeeder
 
         $postId = (int) $result;
 
+        // Page settings (e.g. the Full Width page layout) are part of the
+        // authored template — an item without them is an incomplete seed. Runs
+        // BEFORE the ownership stamp so a failed write fails the seed and the
+        // version gate stays behind; remove the half-created post like the
+        // ownership-marker failure below, so the next pass retries cleanly.
+        if (!self::persistPageSettings($postId, $template)) {
+            wp_delete_post($postId, true);
+            return false;
+        }
+
         // If the ownership markers don't persist, the item is unmanageable —
         // findOwnItem() can't see it, so the next pass would create a duplicate.
         // Remove the half-created post and fail so the gate does not advance.
@@ -157,8 +167,6 @@ class TemplateSeeder
         }
 
         self::applyCategory($postId, $template['category']);
-
-        self::persistPageSettings($postId, $template);
 
         return $postId;
     }
@@ -208,6 +216,13 @@ class TemplateSeeder
             return false;
         }
 
+        // Page settings are part of the authored template — persist and verify
+        // them BEFORE the version stamp, so a failed write leaves the item
+        // unstamped and the next pass repairs it instead of skipping it.
+        if (!self::persistPageSettings($postId, $template)) {
+            return false;
+        }
+
         // Stamp the version LAST — its presence is what marks the item fully
         // updated. If the markers don't persist, fail so the gate stays behind
         // and the next admin load retries (idempotently) rather than recording
@@ -219,8 +234,6 @@ class TemplateSeeder
         // Category is cosmetic (admin filter only), so it runs after the version
         // stamp and never fails the update.
         self::applyCategory($postId, $template['category']);
-
-        self::persistPageSettings($postId, $template);
 
         return true;
     }
@@ -235,17 +248,25 @@ class TemplateSeeder
      * travels with the template and Elementor applies it when the template is
      * inserted (get_data( with_page_settings ) reads this meta).
      *
+     * Returns whether every manifest setting now holds its intended value. We
+     * verify by reading the meta back rather than trusting update_post_meta()'s
+     * return, because that returns false both on a genuine write failure AND
+     * when the stored value is already identical (same reasoning as
+     * stampOwnership()). Callers treat false as a failed seed so the version
+     * gate never advances over an item missing its page layout.
+     *
      * @param int   $postId
      * @param array $template
-     * @return void
+     * @return bool
      */
     private static function persistPageSettings($postId, array $template)
     {
         $settings = isset($template['page_settings']) ? $template['page_settings'] : [];
 
-        // Manifests encode "no settings" as an empty JSON array — nothing to do.
+        // Manifests encode "no settings" as an empty JSON array — nothing to
+        // persist, so there is nothing that can fail.
         if (!is_array($settings) || empty($settings)) {
-            return;
+            return true;
         }
 
         $existing = get_post_meta($postId, '_elementor_page_settings', true);
@@ -254,6 +275,19 @@ class TemplateSeeder
         }
 
         update_post_meta($postId, '_elementor_page_settings', array_merge($existing, $settings));
+
+        $stored = get_post_meta($postId, '_elementor_page_settings', true);
+        if (!is_array($stored)) {
+            return false;
+        }
+
+        foreach ($settings as $key => $value) {
+            if (!array_key_exists($key, $stored) || $stored[$key] != $value) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
