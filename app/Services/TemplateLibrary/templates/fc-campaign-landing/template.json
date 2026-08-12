@@ -127,6 +127,12 @@
                     "widgetType": "button",
                     "settings": {
                         "text": "Save 20% below — pick your option",
+                        "link": {
+                            "url": "#fc-campaign-product",
+                            "is_external": "",
+                            "nofollow": "",
+                            "custom_attributes": ""
+                        },
                         "align": "center",
                         "selected_icon": {
                             "value": "fas fa-arrow-down",
@@ -197,6 +203,7 @@
             "id": "a1b0021",
             "elType": "container",
             "settings": {
+                "_element_id": "fc-campaign-product",
                 "content_width": "boxed",
                 "padding": {
                     "unit": "px",
