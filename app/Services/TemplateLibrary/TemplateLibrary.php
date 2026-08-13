@@ -19,7 +19,7 @@ class TemplateLibrary
      * time the effective version (see effectiveVersion()) differs from the
      * stored option, then goes idle.
      */
-    const TEMPLATES_VERSION = '1.3.0';
+    const TEMPLATES_VERSION = '1.5.1';
 
     /** Option storing the last-seeded template-set version. */
     const VERSION_OPTION = 'fluent_cart_elementor_templates_version';
