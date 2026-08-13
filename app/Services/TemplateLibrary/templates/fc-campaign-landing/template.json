@@ -1435,7 +1435,7 @@
                                 "_id": "m100002",
                                 "text": "Money-back guarantee",
                                 "selected_icon": {
-                                    "value": "fas fa-rotate-left",
+                                    "value": "fas fa-undo",
                                     "library": "fa-solid"
                                 },
                                 "__fa4_migrated": {
