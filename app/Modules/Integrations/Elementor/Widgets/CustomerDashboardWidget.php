@@ -80,6 +80,26 @@ class CustomerDashboardWidget extends Widget_Base
         // Same delegation as the [fluent_cart_customer_profile] shortcode / the
         // Divi Customer Dashboard module — core renders the account area or the
         // logged-out login prompt.
-        echo do_shortcode('[fluent_cart_customer_profile]'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+        $html = do_shortcode('[fluent_cart_customer_profile]');
+
+        if (!\Elementor\Plugin::$instance->editor->is_edit_mode()) {
+            echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+
+            return;
+        }
+
+        // Editor canvas: the dashboard is core's Vue SPA — it mounts at page
+        // load (Start.js queries its container at script evaluation), so the
+        // AJAX-injected canvas markup can never boot it and only the skeleton
+        // shell renders. Present that shell as an intentional wireframe:
+        // freeze the pulse animation and badge it, instead of an endless load.
+        printf(
+            '<div class="fce-customer-dashboard-preview" style="position:relative;">'
+            . '<style>.fce-customer-dashboard-preview .el-skeleton.is-animated .el-skeleton__item{animation:none !important;}</style>'
+            . '<div style="position:absolute;top:10px;left:50%%;transform:translateX(-50%%);z-index:10;background:#1f2124;color:#fff;font-size:11px;font-weight:600;letter-spacing:.3px;padding:6px 14px;border-radius:999px;white-space:nowrap;">%s</div>'
+            . '%s</div>',
+            esc_html__('Layout preview — the interactive dashboard loads on the frontend', 'fluent-cart'),
+            $html // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- core-rendered markup
+        );
     }
 }
