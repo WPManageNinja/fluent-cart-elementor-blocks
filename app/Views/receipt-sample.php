@@ -1,24 +1,19 @@
 <?php
 /**
  * Sample thank-you page for the Order Receipt widget's Elementor editor
- * canvas — the same front-end markup and classes ThankYouRender emits
- * (styled by the thank_you stylesheet the canvas loads), filled with dummy
- * data, so the builder previews the true receipt format instead of the
- * "no receipt found" fallback (no order exists in the editor context).
+ * canvas — shown only when no real order can be previewed (empty store,
+ * invalid custom order ID).
  *
- * Inline styles mirror the real slip markup (shared email-style templates),
- * so the preview matches what a customer sees after checkout. Ported from
- * the Divi addon's receipt-sample view.
+ * Mirrors ThankYouRender's markup class-for-class (header, order-items
+ * header/list/total, meta lines, bill-to/ship-to, footer buttons) so the
+ * widget's section toggles, text overrides and Style-tab selectors all
+ * behave on the fallback exactly as they do on a real receipt, and core's
+ * thank-you stylesheet styles it natively. Filled with dummy data.
  */
 
 if (!defined('ABSPATH')) {
     exit;
 }
-
-// Repeated cell styles, deduped for readability — view-local presentation
-// constants, not caller-provided data.
-$item_row_style  = 'font-size:13px;line-height:1.4;color:#333;padding:8px 10px;border:none;';
-$total_row_style = 'padding:4px 10px;border:none;text-align:right;';
 ?>
 <div class="fct-thank-you-page">
     <div class="fct-thank-you-page-inner">
@@ -30,44 +25,72 @@ $total_row_style = 'padding:4px 10px;border:none;text-align:right;';
             <div class="fct-thank-you-page-body">
                 <div class="fct-thank-you-page-body-inner">
                     <div class="fct-thank-you-page-body-content">
-                        <div class="fct-thank-you-page-body-content-inner" style="font-size:13px;line-height:1.4;color:#333;padding:20px;">
+                        <div class="fct-thank-you-page-body-content-inner">
                             <div class="no-print">
-                                <div class="no-print-title" style="font-size:20px;font-weight:700;color:rgb(17,24,39);margin:0 0 4px;"><?php esc_html_e('Hello Jane Smith!', 'fluent-cart'); ?></div>
-                                <p style="margin:0 0 14px;"><?php esc_html_e('Your order', 'fluent-cart'); ?> <strong style="color: #007bff;"><a href="#">#INV-001</a></strong><?php esc_html_e(' has been placed successfully.', 'fluent-cart'); ?></p>
+                                <div class="no-print-title"><?php esc_html_e('Hello Jane Smith!', 'fluent-cart'); ?></div>
+                                <p><?php esc_html_e('Your order', 'fluent-cart'); ?> <strong style="color: #007bff;"><a href="#">#INV-001</a></strong><?php esc_html_e(' has been placed successfully.', 'fluent-cart'); ?></p>
                             </div>
-                            <table style="width:100%;border-collapse:collapse;margin-bottom:10px;border:none;">
-                                <tr style="background:#f9fafb;">
-                                    <th style="<?php echo esc_attr($item_row_style); ?>text-align:left;"><?php esc_html_e('ITEM', 'fluent-cart'); ?></th>
-                                    <th style="<?php echo esc_attr($item_row_style); ?>text-align:right;"><?php esc_html_e('TOTAL', 'fluent-cart'); ?></th>
-                                </tr>
-                                <tr>
-                                    <td style="<?php echo esc_attr($item_row_style); ?>"><?php esc_html_e('Stylish white and blue sneakers × 2', 'fluent-cart'); ?></td>
-                                    <td style="<?php echo esc_attr($item_row_style); ?>text-align:right;font-weight:700;">$24.00</td>
-                                </tr>
-                                <tr>
-                                    <td style="<?php echo esc_attr($item_row_style); ?>"><?php esc_html_e('Elegant running shoe × 1', 'fluent-cart'); ?></td>
-                                    <td style="<?php echo esc_attr($item_row_style); ?>text-align:right;font-weight:700;">$15.00</td>
-                                </tr>
-                            </table>
-                            <table style="width:100%;border-collapse:collapse;border:none;margin-bottom:14px;">
-                                <tr><td style="<?php echo esc_attr($total_row_style); ?>"><?php esc_html_e('Subtotal', 'fluent-cart'); ?></td><td style="<?php echo esc_attr($total_row_style); ?>width:90px;">$39.00</td></tr>
-                                <tr><td style="<?php echo esc_attr($total_row_style); ?>"><?php esc_html_e('Shipping', 'fluent-cart'); ?></td><td style="<?php echo esc_attr($total_row_style); ?>">$10.00</td></tr>
-                                <tr><td style="<?php echo esc_attr($total_row_style); ?>font-weight:700;"><?php esc_html_e('Total', 'fluent-cart'); ?></td><td style="<?php echo esc_attr($total_row_style); ?>font-weight:700;">$49.00</td></tr>
-                                <tr><td style="<?php echo esc_attr($total_row_style); ?>"><?php esc_html_e('Payment Method', 'fluent-cart'); ?></td><td style="<?php echo esc_attr($total_row_style); ?>"><?php esc_html_e('Cash', 'fluent-cart'); ?></td></tr>
-                            </table>
-                            <table style="width:100%;border-collapse:collapse;border:none;">
-                                <tr>
-                                    <td style="<?php echo esc_attr($item_row_style); ?>vertical-align:top;">
-                                        <strong><?php esc_html_e('Bill To', 'fluent-cart'); ?></strong><br>
-                                        Jane Smith, 123 Main Street,<br>Springfield, 1207<br>
-                                        <a style="color: #007bff;" href="#">jane.smith@example.com</a>
-                                    </td>
-                                    <td style="<?php echo esc_attr($item_row_style); ?>vertical-align:top;">
-                                        <strong><?php esc_html_e('Ship To', 'fluent-cart'); ?></strong><br>
-                                        Jane Smith, 123 Main Street,<br>Springfield, 1207
-                                    </td>
-                                </tr>
-                            </table>
+
+                            <div class="fct-thank-you-page-order-items">
+                                <div class="fct-thank-you-page-order-items-header">
+                                    <div class="fct-thank-you-page-order-items-header-row"><?php esc_html_e('Item', 'fluent-cart'); ?></div>
+                                    <div class="fct-thank-you-page-order-items-header-row"><?php esc_html_e('Total', 'fluent-cart'); ?></div>
+                                </div>
+                                <div class="fct-thank-you-page-order-items-body">
+                                    <div class="fct-thank-you-page-order-items-list">
+                                        <div class="fct-thank-you-page-order-items-list-title">
+                                            <p class="fct-thank-you-page-order-items-list-quantity">
+                                                <?php esc_html_e('Stylish white and blue sneakers', 'fluent-cart'); ?>
+                                                <span>x 2</span>
+                                            </p>
+                                        </div>
+                                        <div class="fct-thank-you-page-order-items-list-price">
+                                            <div class="fct-thank-you-page-order-items-list-price-inner">$24.00</div>
+                                        </div>
+                                    </div>
+                                    <div class="fct-thank-you-page-order-items-list">
+                                        <div class="fct-thank-you-page-order-items-list-title">
+                                            <p class="fct-thank-you-page-order-items-list-quantity">
+                                                <?php esc_html_e('Elegant running shoe', 'fluent-cart'); ?>
+                                            </p>
+                                        </div>
+                                        <div class="fct-thank-you-page-order-items-list-price">
+                                            <div class="fct-thank-you-page-order-items-list-price-inner">$15.00</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="fct-thank-you-page-order-items-total">
+                                        <div class="fct-meta-line fct-thank-you-page-order-items-total-subtotal">
+                                            <div class="fct-meta-line-label fct-thank-you-page-order-items-total-label"><?php esc_html_e('Subtotal', 'fluent-cart'); ?></div>
+                                            <div class="fct-meta-line-value fct-thank-you-page-order-items-total-value">$39.00</div>
+                                        </div>
+                                        <div class="fct-meta-line fct-thank-you-page-order-items-total-shipping">
+                                            <div class="fct-meta-line-label fct-thank-you-page-order-items-total-label"><?php esc_html_e('Shipping', 'fluent-cart'); ?></div>
+                                            <div class="fct-meta-line-value fct-thank-you-page-order-items-total-value">$10.00</div>
+                                        </div>
+                                        <div class="fct-meta-line fct-thank-you-page-order-items-total-total">
+                                            <div class="fct-meta-line-label fct-thank-you-page-order-items-total-label"><?php esc_html_e('Total', 'fluent-cart'); ?></div>
+                                            <div class="fct-meta-line-value fct-thank-you-page-order-items-total-value">$49.00</div>
+                                        </div>
+                                        <div class="fct-meta-line fct-thank-you-page-order-items-total-payment-method">
+                                            <div class="fct-meta-line-label fct-thank-you-page-order-items-total-label"><?php esc_html_e('Payment Method', 'fluent-cart'); ?></div>
+                                            <div class="fct-meta-line-value fct-thank-you-page-order-items-total-value"><?php esc_html_e('Cash', 'fluent-cart'); ?></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="fct-thank-you-page-order-items-addresses">
+                                <div class="fct-thank-you-page-order-items-addresses-bill-to">
+                                    <h5><?php esc_html_e('Bill To', 'fluent-cart'); ?></h5>
+                                    <div class="fct-thank-you-page-order-items-addresses-bill-to-address">Jane Smith, 123 Main Street, Springfield, 1207</div>
+                                    <div class="fct-thank-you-page-order-items-addresses-bill-to-email"><a style="color: #007bff;" href="#">jane.smith@example.com</a></div>
+                                </div>
+                                <div class="fct-thank-you-page-order-items-addresses-ship-to">
+                                    <h5 class="fct-thank-you-page-order-items-addresses-ship-to-title"><?php esc_html_e('Ship To', 'fluent-cart'); ?></h5>
+                                    <div class="fct-thank-you-page-order-items-addresses-ship-to-address">Jane Smith, 123 Main Street, Springfield, 1207</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
