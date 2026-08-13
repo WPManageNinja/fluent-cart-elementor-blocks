@@ -2,6 +2,69 @@
     "version": "0.4",
     "title": "FluentCart — Product Category",
     "type": "page",
-    "content": [],
+    "content": [
+        {
+            "id": "a2c5e18",
+            "elType": "container",
+            "settings": {
+                "content_width": "boxed",
+                "padding": { "unit": "px", "top": "40", "right": "0", "bottom": "8", "left": "0", "isLinked": false }
+            },
+            "elements": [
+                {
+                    "id": "b3d6f29",
+                    "elType": "widget",
+                    "widgetType": "heading",
+                    "settings": {
+                        "title": "Product Category",
+                        "header_size": "h1",
+                        "__dynamic__": {
+                            "title": "[elementor-tag id=\"7a1b2c3\" name=\"archive-title\" settings=\"%7B%22include_context%22%3A%22no%22%7D\"]"
+                        }
+                    },
+                    "elements": []
+                },
+                {
+                    "id": "a7b1c92",
+                    "elType": "widget",
+                    "widgetType": "text-editor",
+                    "settings": {
+                        "editor": "<p>Products in this category.</p>",
+                        "__dynamic__": {
+                            "editor": "[elementor-tag id=\"8d4e5f6\" name=\"archive-description\" settings=\"%7B%7D\"]"
+                        }
+                    },
+                    "elements": []
+                }
+            ],
+            "isInner": false
+        },
+        {
+            "id": "c4e7a3a",
+            "elType": "container",
+            "settings": {
+                "content_width": "boxed",
+                "padding": { "unit": "px", "top": "8", "right": "0", "bottom": "40", "left": "0", "isLinked": false }
+            },
+            "elements": [
+                {
+                    "id": "d5f8b4b",
+                    "elType": "widget",
+                    "widgetType": "fluent_cart_shop_app",
+                    "settings": {
+                        "enable_filter": "yes",
+                        "live_filter": "yes",
+                        "enable_wildcard_filter": "yes",
+                        "enable_taxonomy_product_categories": "no",
+                        "enable_taxonomy_product_brands": "no",
+                        "enable_price_range_filter": "yes",
+                        "price_range_label": "Price"
+                    },
+                    "elements": []
+                }
+            ],
+            "isInner": false
+        }
+    ],
     "page_settings": []
 }
