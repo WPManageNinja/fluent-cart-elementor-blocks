@@ -15,6 +15,7 @@ use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\BuyNowW
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\CartWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\CheckoutWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\CustomerDashboardButtonWidget;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\CustomerDashboardWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\MiniCartWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ProductCardWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ProductCarouselWidget;
@@ -51,6 +52,17 @@ class ElementorIntegration
         \add_action('elementor/widgets/register', [$this, 'registerWidgets']);
         \add_action('elementor/controls/register', [$this, 'registerControls']);
         \add_action('elementor/editor/after_enqueue_scripts', [$this, 'enqueueEditorScripts']);
+
+        // Short Codes dropdown in the panel WYSIWYG toolbar (Order Receipt's
+        // Message control). Elementor clones the base 'elementorwpeditor'
+        // config into every panel WYSIWYG, so registering on that base editor
+        // is the supported way in; the TinyMCE plugin hides the button unless
+        // the edited widget is the Order Receipt.
+        // Priority 11 is load-bearing: Elementor's get_wp_editor_config() runs
+        // remove_all_filters('mce_buttons', 10) / ('mce_external_plugins', 10)
+        // before printing the base editor — priority-10 callbacks never fire.
+        \add_filter('mce_external_plugins', [$this, 'registerShortCodeTinyMcePlugin'], 11, 2);
+        \add_filter('mce_buttons', [$this, 'registerShortCodeTinyMceButton'], 11, 2);
         \add_action('elementor/frontend/after_enqueue_scripts', [$this, 'enqueueFrontendScripts']);
         \add_action('elementor/preview/enqueue_styles', [$this, 'enqueuePreviewStyles']);
         \add_action('elementor/widget/before_render_content', [$this, 'maybeEnqueueSingleProductSync']);
@@ -90,7 +102,7 @@ class ElementorIntegration
     {
         $elements_manager->add_category('fluent-cart', [
             'title' => esc_html__('FluentCart', 'fluent-cart'),
-            'icon'  => 'fa fa-shopping-cart',
+            'icon' => 'fa fa-shopping-cart',
         ]);
     }
 
@@ -107,6 +119,7 @@ class ElementorIntegration
         $widgets_manager->register(new CheckoutWidget());
         $widgets_manager->register(new ReceiptWidget());
         $widgets_manager->register(new CustomerDashboardButtonWidget());
+        $widgets_manager->register(new CustomerDashboardWidget());
         $widgets_manager->register(new SearchBarWidget());
         $widgets_manager->register(new StoreLogoWidget());
 
@@ -153,12 +166,11 @@ class ElementorIntegration
                 $isFirst = false;
             }
             ?>
-            <article data-fluent-cart-shop-app-single-product data-fct-product-card=""
-                     class="fct-product-card"
-                    <?php echo $providerAttr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-                     aria-label="<?php echo esc_attr(sprintf(
-                             __('%s product card', 'fluent-cart'), $product->post_title));
-                     ?>">
+            <article data-fluent-cart-shop-app-single-product data-fct-product-card="" class="fct-product-card" <?php echo $providerAttr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> aria-label="<?php echo esc_attr(sprintf(
+                    __('%s product card', 'fluent-cart'),
+                    $product->post_title
+                ));
+                ?>">
                 <?php ElementorShopAppRenderer::renderCardElements($cardRender, $cardElements); ?>
             </article>
             <?php
@@ -208,6 +220,112 @@ class ElementorIntegration
             'restUrl' => \trailingslashit($restInfo['url']),
             'nonce' => $restInfo['nonce']
         ]);
+
+        // Data for the Short Codes toolbar dropdown (Order Receipt Message).
+        \wp_localize_script('fluent-cart-elementor-editor', 'fceReceiptShortCodes', [
+            'buttonLabel' => \__('Short Codes', 'fluent-cart'),
+            'groups' => $this->receiptShortCodeGroups(),
+        ]);
+
+        // The {{:}} button face styling lives in the TinyMCE plugin itself
+        // (inline on the element in onPostRender) — stylesheet rules proved
+        // unreliable against the skin's per-state colors.
+    }
+
+    /**
+     * TinyMCE external plugin for the Short Codes dropdown. Registered only on
+     * Elementor's base panel editor — never on regular wp-admin editors.
+     *
+     * @param array  $plugins
+     * @param string $editorId
+     * @return array
+     */
+    public function registerShortCodeTinyMcePlugin($plugins, $editorId = '')
+    {
+        if ($editorId !== 'elementorwpeditor') {
+            return $plugins;
+        }
+
+        $plugins = (array) $plugins;
+
+        // TinyMCE loads this URL as-is (no wp_enqueue versioning), so carry
+        // the plugin version explicitly — otherwise browsers keep the cached
+        // copy across releases.
+        $plugins['fce_shortcodes'] = \add_query_arg(
+            'ver',
+            FLUENTCART_ELEMENTOR_BLOCKS_VERSION,
+            FLUENTCART_ELEMENTOR_BLOCKS_URL . 'assets/js/receipt-shortcode-picker.js'
+        );
+
+        return $plugins;
+    }
+
+    /**
+     * Add the Short Codes button to the base panel editor's toolbar.
+     *
+     * @param array  $buttons
+     * @param string $editorId
+     * @return array
+     */
+    public function registerShortCodeTinyMceButton($buttons, $editorId = '')
+    {
+        if ($editorId !== 'elementorwpeditor') {
+            return $buttons;
+        }
+
+        // Right after the Paragraph (format) dropdown — appended last, the
+        // narrow panel toolbar wraps the button onto its own row.
+        $buttons = (array) $buttons;
+        $position = \array_search('formatselect', $buttons, true);
+
+        if ($position === false) {
+            \array_unshift($buttons, 'fce_shortcodes');
+        } else {
+            \array_splice($buttons, $position + 1, 0, ['fce_shortcodes']);
+        }
+
+        return $buttons;
+    }
+
+    /**
+     * Short-code groups for the dropdown, from core's canonical registry (the
+     * same list the email composer offers, respecting the
+     * fluent_cart/editor_shortcodes filter).
+     *
+     * @return array<int, array{title: string, codes: array<int, array{code: string, label: string}>}>
+     */
+    private function receiptShortCodeGroups()
+    {
+        if (!\class_exists('\FluentCart\App\Helpers\EditorShortCodeHelper')) {
+            return [];
+        }
+
+        try {
+            $registry = \FluentCart\App\Helpers\EditorShortCodeHelper::getEmailNotificationShortcodes();
+        } catch (\Throwable $e) {
+            return [];
+        }
+
+        $groups = [];
+
+        foreach ((array) $registry as $group) {
+            $codes = isset($group['shortcodes']) && \is_array($group['shortcodes']) ? $group['shortcodes'] : [];
+            if (!$codes) {
+                continue;
+            }
+
+            $items = [];
+            foreach ($codes as $code => $label) {
+                $items[] = ['code' => (string) $code, 'label' => (string) $label];
+            }
+
+            $groups[] = [
+                'title' => isset($group['title']) ? (string) $group['title'] : '',
+                'codes' => $items,
+            ];
+        }
+
+        return $groups;
     }
 
     /**

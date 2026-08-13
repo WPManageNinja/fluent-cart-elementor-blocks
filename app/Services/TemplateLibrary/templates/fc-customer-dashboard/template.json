@@ -2,6 +2,25 @@
     "version": "0.4",
     "title": "FluentCart — Customer Dashboard",
     "type": "page",
-    "content": [],
+    "content": [
+        {
+            "id": "c4a7e2d",
+            "elType": "container",
+            "settings": {
+                "content_width": "boxed",
+                "padding": { "unit": "px", "top": "40", "right": "0", "bottom": "40", "left": "0", "isLinked": false }
+            },
+            "elements": [
+                {
+                    "id": "d5b8f3e",
+                    "elType": "widget",
+                    "widgetType": "fluent_cart_customer_dashboard",
+                    "settings": {},
+                    "elements": []
+                }
+            ],
+            "isInner": false
+        }
+    ],
     "page_settings": []
 }
