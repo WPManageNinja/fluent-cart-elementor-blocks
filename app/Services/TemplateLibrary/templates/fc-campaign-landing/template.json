@@ -31,7 +31,21 @@
                     "elType": "widget",
                     "widgetType": "text-editor",
                     "settings": {
-                        "editor": "<p style=\"text-align:center;color:#ffffff;font-weight:800;font-size:14.5px;letter-spacing:.6px;margin:0\">&#128293; SUMMER SALE &mdash; 20% OFF EVERYTHING &nbsp;&nbsp;&middot;&nbsp;&nbsp; ENDS JULY 31 &nbsp;&nbsp;&middot;&nbsp;&nbsp; NO CODE NEEDED</p>"
+                        "editor": "<p>&#128293; SUMMER SALE &mdash; 20% OFF EVERYTHING &nbsp;&nbsp;&middot;&nbsp;&nbsp; ENDS JULY 31 &nbsp;&nbsp;&middot;&nbsp;&nbsp; NO CODE NEEDED</p>",
+                        "align": "center",
+                        "text_color": "#ffffff",
+                        "typography_typography": "custom",
+                        "typography_font_size": {
+                            "unit": "px",
+                            "size": 14.5,
+                            "sizes": []
+                        },
+                        "typography_font_weight": "800",
+                        "typography_letter_spacing": {
+                            "unit": "px",
+                            "size": 0.6,
+                            "sizes": []
+                        }
                     },
                     "elements": []
                 }
@@ -58,15 +72,51 @@
                 "background_gradient_angle": {
                     "unit": "deg",
                     "size": 150
-                }
+                },
+                "flex_direction": "column",
+                "flex_align_items": "center"
             },
             "elements": [
                 {
                     "id": "a1b0012",
                     "elType": "widget",
-                    "widgetType": "text-editor",
+                    "widgetType": "heading",
                     "settings": {
-                        "editor": "<p style=\"text-align:center;margin:0\"><span style=\"display:inline-block;background:rgba(255,255,255,.12);color:#ffd9bd;padding:8px 18px;border-radius:999px;font-size:12px;font-weight:800;letter-spacing:1.8px;text-transform:uppercase\">Limited-time campaign</span></p>"
+                        "title": "Limited-time campaign",
+                        "header_size": "div",
+                        "title_color": "#ffd9bd",
+                        "typography_typography": "custom",
+                        "typography_font_size": {
+                            "unit": "px",
+                            "size": 12,
+                            "sizes": []
+                        },
+                        "typography_font_weight": "800",
+                        "typography_letter_spacing": {
+                            "unit": "px",
+                            "size": 1.8,
+                            "sizes": []
+                        },
+                        "typography_text_transform": "uppercase",
+                        "_element_width": "auto",
+                        "_background_background": "classic",
+                        "_background_color": "rgba(255,255,255,0.12)",
+                        "_padding": {
+                            "unit": "px",
+                            "top": "8",
+                            "right": "18",
+                            "bottom": "8",
+                            "left": "18",
+                            "isLinked": false
+                        },
+                        "_border_radius": {
+                            "unit": "px",
+                            "top": "999",
+                            "right": "999",
+                            "bottom": "999",
+                            "left": "999",
+                            "isLinked": true
+                        }
                     },
                     "elements": []
                 },
@@ -117,7 +167,26 @@
                     "elType": "widget",
                     "widgetType": "text-editor",
                     "settings": {
-                        "editor": "<p style=\"color:#d9e4fa;font-size:18px;line-height:1.7;text-align:center;margin:0 auto;max-width:600px\">One or two benefit-led sentences that say exactly what changes for the customer after buying &mdash; replace with your campaign promise.</p>"
+                        "editor": "<p>One or two benefit-led sentences that say exactly what changes for the customer after buying &mdash; replace with your campaign promise.</p>",
+                        "align": "center",
+                        "text_color": "#d9e4fa",
+                        "typography_typography": "custom",
+                        "typography_font_size": {
+                            "unit": "px",
+                            "size": 18,
+                            "sizes": []
+                        },
+                        "typography_line_height": {
+                            "unit": "em",
+                            "size": 1.7,
+                            "sizes": []
+                        },
+                        "_element_width": "initial",
+                        "_element_custom_width": {
+                            "unit": "px",
+                            "size": 600,
+                            "sizes": []
+                        }
                     },
                     "elements": []
                 },
@@ -531,7 +600,23 @@
                     "elType": "widget",
                     "widgetType": "text-editor",
                     "settings": {
-                        "editor": "<p style=\"color:#4e5d78;text-align:center;font-size:15.5px;margin:0 0 16px\">Three concrete things that change for the customer &mdash; not how the product works.</p>"
+                        "editor": "<p>Three concrete things that change for the customer &mdash; not how the product works.</p>",
+                        "align": "center",
+                        "text_color": "#4e5d78",
+                        "typography_typography": "custom",
+                        "typography_font_size": {
+                            "unit": "px",
+                            "size": 15.5,
+                            "sizes": []
+                        },
+                        "_margin": {
+                            "unit": "px",
+                            "top": "0",
+                            "right": "0",
+                            "bottom": "16",
+                            "left": "0",
+                            "isLinked": false
+                        }
                     },
                     "elements": []
                 },
@@ -691,7 +776,19 @@
                                     "elType": "widget",
                                     "widgetType": "text-editor",
                                     "settings": {
-                                        "editor": "<p style=\"color:#4e5d78;font-size:14.5px;line-height:1.7;margin:0\">One sentence on what the customer gets out of it — not how it works.</p>"
+                                        "editor": "<p>One sentence on what the customer gets out of it — not how it works.</p>",
+                                        "text_color": "#4e5d78",
+                                        "typography_typography": "custom",
+                                        "typography_font_size": {
+                                            "unit": "px",
+                                            "size": 14.5,
+                                            "sizes": []
+                                        },
+                                        "typography_line_height": {
+                                            "unit": "em",
+                                            "size": 1.7,
+                                            "sizes": []
+                                        }
                                     },
                                     "elements": []
                                 }
@@ -838,7 +935,19 @@
                                     "elType": "widget",
                                     "widgetType": "text-editor",
                                     "settings": {
-                                        "editor": "<p style=\"color:#4e5d78;font-size:14.5px;line-height:1.7;margin:0\">Outcome-focused, concrete, verifiable — no superlatives.</p>"
+                                        "editor": "<p>Outcome-focused, concrete, verifiable — no superlatives.</p>",
+                                        "text_color": "#4e5d78",
+                                        "typography_typography": "custom",
+                                        "typography_font_size": {
+                                            "unit": "px",
+                                            "size": 14.5,
+                                            "sizes": []
+                                        },
+                                        "typography_line_height": {
+                                            "unit": "em",
+                                            "size": 1.7,
+                                            "sizes": []
+                                        }
                                     },
                                     "elements": []
                                 }
@@ -985,7 +1094,19 @@
                                     "elType": "widget",
                                     "widgetType": "text-editor",
                                     "settings": {
-                                        "editor": "<p style=\"color:#4e5d78;font-size:14.5px;line-height:1.7;margin:0\">End on the guarantee or the support promise.</p>"
+                                        "editor": "<p>End on the guarantee or the support promise.</p>",
+                                        "text_color": "#4e5d78",
+                                        "typography_typography": "custom",
+                                        "typography_font_size": {
+                                            "unit": "px",
+                                            "size": 14.5,
+                                            "sizes": []
+                                        },
+                                        "typography_line_height": {
+                                            "unit": "em",
+                                            "size": 1.7,
+                                            "sizes": []
+                                        }
                                     },
                                     "elements": []
                                 }
@@ -1056,7 +1177,23 @@
                     "elType": "widget",
                     "widgetType": "text-editor",
                     "settings": {
-                        "editor": "<p style=\"color:#4e5d78;text-align:center;font-size:15.5px;margin:0 0 16px\">The four things every buyer checks before checkout.</p>"
+                        "editor": "<p>The four things every buyer checks before checkout.</p>",
+                        "align": "center",
+                        "text_color": "#4e5d78",
+                        "typography_typography": "custom",
+                        "typography_font_size": {
+                            "unit": "px",
+                            "size": 15.5,
+                            "sizes": []
+                        },
+                        "_margin": {
+                            "unit": "px",
+                            "top": "0",
+                            "right": "0",
+                            "bottom": "16",
+                            "left": "0",
+                            "isLinked": false
+                        }
                     },
                     "elements": []
                 },
@@ -1131,9 +1268,43 @@
                 {
                     "id": "a1b0052",
                     "elType": "widget",
-                    "widgetType": "text-editor",
+                    "widgetType": "heading",
                     "settings": {
-                        "editor": "<p style=\"text-align:center;margin:0\"><span style=\"display:inline-block;background:rgba(255,255,255,.16);color:#ffffff;padding:8px 18px;border-radius:999px;font-size:12px;font-weight:800;letter-spacing:1.8px;text-transform:uppercase\">Summer Sale ends July 31</span></p>"
+                        "title": "Summer Sale ends July 31",
+                        "header_size": "div",
+                        "title_color": "#ffffff",
+                        "typography_typography": "custom",
+                        "typography_font_size": {
+                            "unit": "px",
+                            "size": 12,
+                            "sizes": []
+                        },
+                        "typography_font_weight": "800",
+                        "typography_letter_spacing": {
+                            "unit": "px",
+                            "size": 1.8,
+                            "sizes": []
+                        },
+                        "typography_text_transform": "uppercase",
+                        "_element_width": "auto",
+                        "_background_background": "classic",
+                        "_background_color": "rgba(255,255,255,0.16)",
+                        "_padding": {
+                            "unit": "px",
+                            "top": "8",
+                            "right": "18",
+                            "bottom": "8",
+                            "left": "18",
+                            "isLinked": false
+                        },
+                        "_border_radius": {
+                            "unit": "px",
+                            "top": "999",
+                            "right": "999",
+                            "bottom": "999",
+                            "left": "999",
+                            "isLinked": true
+                        }
                     },
                     "elements": []
                 },
@@ -1180,7 +1351,26 @@
                     "elType": "widget",
                     "widgetType": "text-editor",
                     "settings": {
-                        "editor": "<p style=\"color:#d9e4fa;text-align:center;font-size:17px;line-height:1.7;margin:0 auto;max-width:560px\">Restate the core promise, the price, and the money-back guarantee in one line.</p>"
+                        "editor": "<p>Restate the core promise, the price, and the money-back guarantee in one line.</p>",
+                        "align": "center",
+                        "text_color": "#d9e4fa",
+                        "typography_typography": "custom",
+                        "typography_font_size": {
+                            "unit": "px",
+                            "size": 17,
+                            "sizes": []
+                        },
+                        "typography_line_height": {
+                            "unit": "em",
+                            "size": 1.7,
+                            "sizes": []
+                        },
+                        "_element_width": "initial",
+                        "_element_custom_width": {
+                            "unit": "px",
+                            "size": 560,
+                            "sizes": []
+                        }
                     },
                     "elements": []
                 },
