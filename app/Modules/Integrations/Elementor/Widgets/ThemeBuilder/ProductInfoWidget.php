@@ -240,16 +240,60 @@ class ProductInfoWidget extends Widget_Base
 
         $this->end_controls_section();
 
-        // Buy Section Style
+        // Package Description Style — same shared controls the standalone
+        // Package Description widget uses.
         $this->start_controls_section(
-            'buy_section_style_section',
+            'package_description_style_section',
             [
-                'label' => esc_html__('Buy Section', 'fluent-cart'),
+                'label' => esc_html__('Package Description', 'fluent-cart'),
                 'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
 
-        ProductBuySectionWidget::registerBuySectionStyleControls($this, '{{WRAPPER}} .fct_buy_section');
+        ProductPackageDescriptionWidget::registerPackageDescriptionStyleControls($this, '{{WRAPPER}} .fct-package-description');
+
+        $this->end_controls_section();
+
+        // Buy Now Button Style — own section instead of a combined Buy
+        // Section, so each button styles independently.
+        $this->start_controls_section(
+            'buy_now_button_style_section',
+            [
+                'label' => esc_html__('Buy Now Button', 'fluent-cart'),
+                'tab'   => Controls_Manager::TAB_STYLE,
+            ]
+        );
+
+        ProductBuySectionWidget::registerSingleButtonColorControls(
+            $this,
+            'buy_now',
+            '',
+            [
+                '{{WRAPPER}} .fct_buy_section .fluent-cart-direct-checkout-button',
+                '{{WRAPPER}} .fct_buy_section .fct-buy-now-btn',
+            ]
+        );
+
+        $this->end_controls_section();
+
+        // Add To Cart Button Style
+        $this->start_controls_section(
+            'add_to_cart_button_style_section',
+            [
+                'label' => esc_html__('Add To Cart Button', 'fluent-cart'),
+                'tab'   => Controls_Manager::TAB_STYLE,
+            ]
+        );
+
+        ProductBuySectionWidget::registerSingleButtonColorControls(
+            $this,
+            'add_to_cart',
+            '',
+            [
+                '{{WRAPPER}} .fct_buy_section .fluent-cart-add-to-cart-button',
+                '{{WRAPPER}} .fct_buy_section .fct-add-to-cart-btn',
+            ]
+        );
 
         $this->end_controls_section();
 

@@ -103,6 +103,7 @@ export default defineConfig({
                 targets: [
                     {src: 'resources/images', dest: ''},
                     {src: 'resources/css', dest: ''},
+                    {src: 'resources/js', dest: ''},
                 ]
             }),
             moveManifestPlugin
