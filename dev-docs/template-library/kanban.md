@@ -34,19 +34,7 @@ Stacked PR train, merges bottom-up. Base of the stack: `master`.
 
 ## Parked (recorded, non-blocking)
 
-- **Single-product mobile seam**: oversized gap between product info and
-  related products on phones. Two template-level fixes were tried and
-  reverted (verified the CSS applied; the space is core's). Needs one
-  DevTools element identification; likely a fluent-cart core scss fix.
 - **Customer Dashboard canvas preview upgrade**: current = frozen-skeleton
   wireframe + badge. Options assessed: editor-only iframe of the real page
   (best fidelity/effort, no core change), port of Divi's 622-line static VB
   mock, or a core PR exposing `window.fluentCartBootCustomerProfile(container)`.
-- **Core tickets worth filing**:
-  - `ThankYouRender::renderSample()` so builder addons stop hand-copying the
-    receipt sample (Divi + Elementor each carry one today).
-  - A re-callable customer-profile boot function (see above).
-  - Bill To heading in `ThankYouRender` is a bare `<h5>` while Ship To's is
-    classed — give it a class.
-- **Divi parity**: FluentCart short codes in the Divi Receipt module
-  (feasible, ~1 day; select-append attribute instead of a TinyMCE button).
