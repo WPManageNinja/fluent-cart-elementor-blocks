@@ -2,6 +2,45 @@
     "version": "0.4",
     "title": "FluentCart — Single Product",
     "type": "page",
-    "content": [],
+    "content": [
+        {
+            "id": "c1a4e07",
+            "elType": "container",
+            "settings": {
+                "content_width": "boxed",
+                "padding": { "unit": "px", "top": "40", "right": "0", "bottom": "20", "left": "0", "isLinked": false }
+            },
+            "elements": [
+                {
+                    "id": "d2b5f18",
+                    "elType": "widget",
+                    "widgetType": "fluentcart_product_info",
+                    "settings": {
+                        "show_related_products": "no"
+                    },
+                    "elements": []
+                }
+            ],
+            "isInner": false
+        },
+        {
+            "id": "e3c6a29",
+            "elType": "container",
+            "settings": {
+                "content_width": "boxed",
+                "padding": { "unit": "px", "top": "20", "right": "0", "bottom": "40", "left": "0", "isLinked": false }
+            },
+            "elements": [
+                {
+                    "id": "f4d7b3a",
+                    "elType": "widget",
+                    "widgetType": "fluentcart_related_products",
+                    "settings": {},
+                    "elements": []
+                }
+            ],
+            "isInner": false
+        }
+    ],
     "page_settings": []
 }
