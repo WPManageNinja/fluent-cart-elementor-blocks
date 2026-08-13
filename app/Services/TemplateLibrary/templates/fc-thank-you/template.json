@@ -2,6 +2,35 @@
     "version": "0.4",
     "title": "FluentCart — Thank You",
     "type": "page",
-    "content": [],
+    "content": [
+        {
+            "id": "f4b7d2e",
+            "elType": "container",
+            "settings": {
+                "content_width": "boxed",
+                "padding": { "unit": "px", "top": "40", "right": "0", "bottom": "40", "left": "0", "isLinked": false }
+            },
+            "elements": [
+                {
+                    "id": "b6d9f4a",
+                    "elType": "widget",
+                    "widgetType": "heading",
+                    "settings": {
+                        "title": "Receipt",
+                        "header_size": "h1"
+                    },
+                    "elements": []
+                },
+                {
+                    "id": "a5c8e3f",
+                    "elType": "widget",
+                    "widgetType": "fluent_cart_receipt",
+                    "settings": {},
+                    "elements": []
+                }
+            ],
+            "isInner": false
+        }
+    ],
     "page_settings": []
 }

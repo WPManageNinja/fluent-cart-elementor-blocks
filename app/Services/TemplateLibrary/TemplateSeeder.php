@@ -40,6 +40,10 @@ class TemplateSeeder
     const META_SLUG = '_fluent_cart_elementor_template_slug';
     const META_VERSION = '_fluent_cart_elementor_template_version';
 
+    /** Private markers identifying a preview attachment this addon imported. */
+    const META_PREVIEW_SLUG = '_fluent_cart_elementor_template_preview_slug';
+    const META_PREVIEW_HASH = '_fluent_cart_elementor_template_preview_hash';
+
     /**
      * Create or update one template in the library.
      *
@@ -66,13 +70,28 @@ class TemplateSeeder
 
             // Version-aware: only replace when the bundled copy is strictly newer.
             if ($installed !== '' && version_compare($template['version'], $installed, '<=')) {
+                // Still ensure the preview — it may have been added or changed in
+                // a later plugin version than the layout itself, or the image
+                // file may have changed without a template_version bump.
+                self::ensureThumbnail($existing, $template);
                 return 'skipped';
             }
 
-            return self::update($existing, $template) ? 'updated' : 'failed';
+            if (!self::update($existing, $template)) {
+                return 'failed';
+            }
+
+            self::ensureThumbnail($existing, $template);
+            return 'updated';
         }
 
-        return self::create($template) ? 'created' : 'failed';
+        $postId = self::create($template);
+        if (!$postId) {
+            return 'failed';
+        }
+
+        self::ensureThumbnail($postId, $template);
+        return 'created';
     }
 
     /**
@@ -129,7 +148,24 @@ class TemplateSeeder
 
         $postId = (int) $result;
 
-        self::stampOwnership($postId, $template);
+        // Page settings (e.g. the Full Width page layout) are part of the
+        // authored template — an item without them is an incomplete seed. Runs
+        // BEFORE the ownership stamp so a failed write fails the seed and the
+        // version gate stays behind; remove the half-created post like the
+        // ownership-marker failure below, so the next pass retries cleanly.
+        if (!self::persistPageSettings($postId, $template)) {
+            wp_delete_post($postId, true);
+            return false;
+        }
+
+        // If the ownership markers don't persist, the item is unmanageable —
+        // findOwnItem() can't see it, so the next pass would create a duplicate.
+        // Remove the half-created post and fail so the gate does not advance.
+        if (!self::stampOwnership($postId, $template)) {
+            wp_delete_post($postId, true);
+            return false;
+        }
+
         self::applyCategory($postId, $template['category']);
 
         return $postId;
@@ -180,28 +216,103 @@ class TemplateSeeder
             return false;
         }
 
+        // Page settings are part of the authored template — persist and verify
+        // them BEFORE the version stamp, so a failed write leaves the item
+        // unstamped and the next pass repairs it instead of skipping it.
+        if (!self::persistPageSettings($postId, $template)) {
+            return false;
+        }
+
         // Stamp the version LAST — its presence is what marks the item fully
-        // updated, so a failure at any earlier step leaves the old version in
-        // place and the next admin load retries (idempotently). Category is
-        // cosmetic (admin filter only), so it runs after and never fails it.
-        self::stampOwnership($postId, $template);
+        // updated. If the markers don't persist, fail so the gate stays behind
+        // and the next admin load retries (idempotently) rather than recording
+        // the item as updated with a stale/missing version.
+        if (!self::stampOwnership($postId, $template)) {
+            return false;
+        }
+
+        // Category is cosmetic (admin filter only), so it runs after the version
+        // stamp and never fails the update.
         self::applyCategory($postId, $template['category']);
 
         return true;
     }
 
     /**
-     * Write the private ownership markers (slug + version) that identify this as
-     * an item this addon manages.
+     * Re-apply the manifest's page settings onto the seeded item.
+     *
+     * Elementor's save_item() / document->save() only persist page settings that
+     * are registered controls on the library 'page' document — the page-layout
+     * `template` key (e.g. Full Width / Canvas) is silently dropped. We merge the
+     * manifest's page_settings back over whatever the document kept so the layout
+     * travels with the template and Elementor applies it when the template is
+     * inserted (get_data( with_page_settings ) reads this meta).
+     *
+     * Returns whether every manifest setting now holds its intended value. We
+     * verify by reading the meta back rather than trusting update_post_meta()'s
+     * return, because that returns false both on a genuine write failure AND
+     * when the stored value is already identical (same reasoning as
+     * stampOwnership()). Callers treat false as a failed seed so the version
+     * gate never advances over an item missing its page layout.
      *
      * @param int   $postId
      * @param array $template
-     * @return void
+     * @return bool
+     */
+    private static function persistPageSettings($postId, array $template)
+    {
+        $settings = isset($template['page_settings']) ? $template['page_settings'] : [];
+
+        // Manifests encode "no settings" as an empty JSON array — nothing to
+        // persist, so there is nothing that can fail.
+        if (!is_array($settings) || empty($settings)) {
+            return true;
+        }
+
+        $existing = get_post_meta($postId, '_elementor_page_settings', true);
+        if (!is_array($existing)) {
+            $existing = [];
+        }
+
+        update_post_meta($postId, '_elementor_page_settings', array_merge($existing, $settings));
+
+        $stored = get_post_meta($postId, '_elementor_page_settings', true);
+        if (!is_array($stored)) {
+            return false;
+        }
+
+        foreach ($settings as $key => $value) {
+            if (!array_key_exists($key, $stored) || $stored[$key] != $value) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Write the private ownership markers (slug + version) that identify this as
+     * an item this addon manages, and confirm they persisted.
+     *
+     * Returns whether BOTH markers now hold the intended values. We verify with
+     * get_post_meta() rather than trusting update_post_meta()'s return, because
+     * that returns false both on a genuine write failure AND when the stored
+     * value is already identical — so its return alone can't tell success from
+     * failure. The caller treats a false here as a failed seed, so the version
+     * gate never advances over an item whose markers did not stick (which would
+     * leave it unmanageable — findOwnItem() could never see it again).
+     *
+     * @param int   $postId
+     * @param array $template
+     * @return bool
      */
     private static function stampOwnership($postId, array $template)
     {
         update_post_meta($postId, self::META_SLUG, $template['slug']);
         update_post_meta($postId, self::META_VERSION, $template['version']);
+
+        return (string) get_post_meta($postId, self::META_SLUG, true) === (string) $template['slug']
+            && (string) get_post_meta($postId, self::META_VERSION, true) === (string) $template['version'];
     }
 
     /**
@@ -221,6 +332,145 @@ class TemplateSeeder
         }
 
         wp_set_object_terms($postId, $category, self::CATEGORY_TAXONOMY, false);
+    }
+
+    /**
+     * Attach the template's bundled preview image as the library item's featured
+     * image — Elementor's library serves each item's `thumbnail` straight from
+     * get_the_post_thumbnail_url() (Source_Local::get_item()), so the featured
+     * image is what puts a real preview on the card in the Insert-Template modal.
+     *
+     * Deliberately BEST-EFFORT, unlike the seeded content: a missing preview just
+     * leaves Elementor's default placeholder (cosmetic), and failing the seed
+     * over it would block content updates behind an image problem. Runs on every
+     * seeded outcome — including the version-'skipped' path — so a preview added
+     * or changed in a later plugin version self-heals without a template_version
+     * bump.
+     *
+     * Idempotent: the imported attachment is marked with the template slug + the
+     * image file's hash; while both match, re-runs only cheap-check the current
+     * thumbnail and import nothing.
+     *
+     * @param int   $postId
+     * @param array $template
+     * @return void
+     */
+    private static function ensureThumbnail($postId, array $template)
+    {
+        if ($template['preview'] === '') {
+            return;
+        }
+
+        // Previews are co-located inside the template's own directory (under
+        // app/, which ships in the release ZIP; resources/ does not).
+        $file = TemplateManifest::templateDir($template['slug']) . '/' . $template['preview'];
+        if (!file_exists($file)) {
+            return;
+        }
+
+        $hash = (string) md5_file($file);
+        if ($hash === '') {
+            return;
+        }
+
+        // Already carrying the current image? Nothing to do.
+        $currentId = (int) get_post_thumbnail_id($postId);
+        if (
+            $currentId
+            && get_post_meta($currentId, self::META_PREVIEW_SLUG, true) === $template['slug']
+            && get_post_meta($currentId, self::META_PREVIEW_HASH, true) === $hash
+        ) {
+            return;
+        }
+
+        // Reuse a previously imported copy of this exact image before importing a
+        // new one (e.g. thumbnail lost, or several items sharing a preview).
+        $existing = get_posts([
+            'post_type'        => 'attachment',
+            'post_status'      => 'inherit',
+            'numberposts'      => 1,
+            'fields'           => 'ids',
+            'no_found_rows'    => true,
+            'suppress_filters' => true,
+            'meta_query'       => [
+                ['key' => self::META_PREVIEW_SLUG, 'value' => $template['slug']],
+                ['key' => self::META_PREVIEW_HASH, 'value' => $hash],
+            ],
+        ]);
+
+        $attachmentId = !empty($existing)
+            ? (int) $existing[0]
+            : self::importPreview($file, $template['slug'], $hash);
+
+        if (!$attachmentId || $attachmentId === $currentId) {
+            return;
+        }
+
+        set_post_thumbnail($postId, $attachmentId);
+
+        // Self-heal replaced the image: delete the previous attachment so a
+        // changed preview.webp doesn't leak an orphan on every edit. Guarded by
+        // our marker — only an attachment WE imported for this slug is removed,
+        // never a user-set featured image.
+        if (
+            $currentId
+            && get_post_meta($currentId, self::META_PREVIEW_SLUG, true) === $template['slug']
+        ) {
+            wp_delete_attachment($currentId, true);
+        }
+    }
+
+    /**
+     * Import the bundled preview file into the media library and mark it with
+     * this addon's ownership meta.
+     *
+     * @param string $file Absolute path to the bundled image.
+     * @param string $slug Template slug the image belongs to.
+     * @param string $hash md5 of the image file.
+     * @return int 0 on failure.
+     */
+    private static function importPreview($file, $slug, $hash)
+    {
+        $contents = file_get_contents($file);
+        if (false === $contents) {
+            return 0;
+        }
+
+        $upload = wp_upload_bits(basename($file), null, $contents);
+        if (!empty($upload['error'])) {
+            return 0;
+        }
+
+        $type = wp_check_filetype($upload['file']);
+
+        $attachmentId = wp_insert_attachment([
+            'post_title'     => sanitize_file_name(basename($file)),
+            // Bundled previews ship as WebP; the fallback only applies when
+            // wp_check_filetype() cannot resolve the extension.
+            'post_mime_type' => $type['type'] ? $type['type'] : 'image/webp',
+            'post_status'    => 'inherit',
+            'meta_input'     => [
+                self::META_PREVIEW_SLUG => $slug,
+                self::META_PREVIEW_HASH => $hash,
+            ],
+        ], $upload['file'], 0, true);
+
+        if (is_wp_error($attachmentId) || !$attachmentId) {
+            return 0;
+        }
+
+        $attachmentId = (int) $attachmentId;
+
+        // Sub-sizes / metadata so scaled thumbnail sizes resolve.
+        if (!function_exists('wp_generate_attachment_metadata')) {
+            require_once ABSPATH . 'wp-admin/includes/image.php';
+        }
+        wp_update_attachment_metadata(
+            $attachmentId,
+            wp_generate_attachment_metadata($attachmentId, $upload['file'])
+        );
+
+        return $attachmentId;
     }
 
     /**
