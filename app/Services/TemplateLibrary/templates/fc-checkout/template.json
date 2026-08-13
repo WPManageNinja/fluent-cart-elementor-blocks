@@ -1,0 +1,36 @@
+{
+    "version": "0.4",
+    "title": "FluentCart — Checkout",
+    "type": "page",
+    "content": [
+        {
+            "id": "d3a6c1b",
+            "elType": "container",
+            "settings": {
+                "content_width": "boxed",
+                "padding": { "unit": "px", "top": "40", "right": "0", "bottom": "40", "left": "0", "isLinked": false }
+            },
+            "elements": [
+                {
+                    "id": "a2e5b0c",
+                    "elType": "widget",
+                    "widgetType": "heading",
+                    "settings": {
+                        "title": "Checkout",
+                        "header_size": "h1"
+                    },
+                    "elements": []
+                },
+                {
+                    "id": "e4b7d2c",
+                    "elType": "widget",
+                    "widgetType": "fluent_cart_checkout",
+                    "settings": {},
+                    "elements": []
+                }
+            ],
+            "isInner": false
+        }
+    ],
+    "page_settings": []
+}

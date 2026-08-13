@@ -1,0 +1,36 @@
+{
+    "version": "0.4",
+    "title": "FluentCart — Cart",
+    "type": "page",
+    "content": [
+        {
+            "id": "b1e4a09",
+            "elType": "container",
+            "settings": {
+                "content_width": "boxed",
+                "padding": { "unit": "px", "top": "40", "right": "0", "bottom": "40", "left": "0", "isLinked": false }
+            },
+            "elements": [
+                {
+                    "id": "a1d3e08",
+                    "elType": "widget",
+                    "widgetType": "heading",
+                    "settings": {
+                        "title": "Cart",
+                        "header_size": "h1"
+                    },
+                    "elements": []
+                },
+                {
+                    "id": "c2f5b1a",
+                    "elType": "widget",
+                    "widgetType": "fluent_cart_cart",
+                    "settings": {},
+                    "elements": []
+                }
+            ],
+            "isInner": false
+        }
+    ],
+    "page_settings": []
+}
