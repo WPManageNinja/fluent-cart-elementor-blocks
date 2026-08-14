@@ -29,7 +29,7 @@ class CartWidget extends Widget_Base
 
     public function get_icon()
     {
-        return 'eicon-cart-medium fluent-cart-widget-icon';
+        return 'eicon-basket-medium fluent-cart-widget-icon';
     }
 
     public function get_categories()
