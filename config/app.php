@@ -6,7 +6,7 @@
   'name' => 'FluentCart Elementor Blocks',
   'slug' => 'fluentcartelementorblocks',
   'domain_path' => '/language',
-  'text_domain' => 'fluentcartelementorblocks',
+  'text_domain' => 'fluent-cart',
   'hook_prefix' => 'fluentcartelementorblocks',
   'rest_version' => 'v2',
   'env' => 'dev',
