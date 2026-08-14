@@ -75,6 +75,30 @@ trait ProductWidgetTrait
     }
 
     /**
+     * Editor-only fallback product for previews, mirroring how Elementor Pro's
+     * WooCommerce single-product widgets resolve a product for the canvas: they
+     * render a REAL product (the Theme Builder preview product / current post),
+     * never fabricated sample data. When this widget is dropped somewhere with no
+     * product in context (e.g. a normal page), we fall back to the latest
+     * published product so the editor shows an accurate, fully dynamic layout —
+     * real currency, units, gallery and related products — and every Style
+     * control has a live target. Null when the store has no products; the caller
+     * then shows the "select a product" notice. Read-only; never mutates data.
+     *
+     * @return \FluentCart\App\Models\Product|null
+     */
+    protected function getPreviewProduct()
+    {
+        $latest = Product::query()
+            ->where('post_type', 'fluent-products')
+            ->where('post_status', 'publish')
+            ->orderBy('ID', 'DESC')
+            ->first();
+
+        return $latest ? ProductDataSetup::getProductModel($latest->ID) : null;
+    }
+
+    /**
      * Render placeholder message in the editor when no product is available.
      */
     protected function renderPlaceholder($message)

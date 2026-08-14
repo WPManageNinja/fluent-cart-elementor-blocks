@@ -466,8 +466,20 @@ class RelatedProductsWidget extends Widget_Base
         $product = $this->getProduct($settings);
 
         if (!$product) {
-            $this->renderPlaceholder(__('Please select a product or use this widget inside a product template.', 'fluent-cart'));
-            return;
+            // No product selected and none in context. In the editor, preview
+            // with a real product (the latest published one) and render its
+            // actual related products — the same "real data, never fabricated"
+            // approach Elementor Pro's WooCommerce single-product widgets use. On
+            // the front end we stay silent; if the store has no products at all,
+            // the notice is shown instead.
+            if (\Elementor\Plugin::$instance->editor->is_edit_mode()) {
+                $product = $this->getPreviewProduct();
+            }
+
+            if (!$product) {
+                $this->renderPlaceholder(__('Please select a product or use this widget inside a product template.', 'fluent-cart'));
+                return;
+            }
         }
 
         AssetLoader::loadSingleProductAssets();
