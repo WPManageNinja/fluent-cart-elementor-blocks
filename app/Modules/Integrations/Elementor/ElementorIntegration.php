@@ -403,7 +403,19 @@ class ElementorIntegration
         ];
 
         $isRelevant = in_array($widget->get_name(), $syncWidgets, true);
-        $shouldEnqueue = \apply_filters('fluent_cart/elementor/enqueue_single_product_sync', $isRelevant, $widget);
+
+        // Standardized on the fluent_cart_elementor/ prefix — the same one the
+        // template library filters use. The hook shipped under the old
+        // fluent_cart/elementor/ name in 1.0.2, so keep that firing (deprecated)
+        // until a major version bump so existing consumers are not silently
+        // dropped.
+        $shouldEnqueue = \apply_filters('fluent_cart_elementor/enqueue_single_product_sync', $isRelevant, $widget);
+        $shouldEnqueue = \apply_filters_deprecated(
+            'fluent_cart/elementor/enqueue_single_product_sync',
+            [$shouldEnqueue, $widget],
+            '1.0.3',
+            'fluent_cart_elementor/enqueue_single_product_sync'
+        );
 
         if (!$shouldEnqueue) {
             return;
