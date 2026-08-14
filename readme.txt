@@ -85,6 +85,16 @@ Yes. Required CSS and JavaScript assets are enqueued automatically when widgets 
 
 == Changelog ==
 
+= 1.0.3 (August 14, 2026) =
+- Adds Template Library: 8 professionally designed store page templates (Shop, Single Product, Product Category, Cart, Checkout, Thank You, Customer Dashboard, Campaign Landing) seeded automatically into Elementor's Insert Template → My Templates modal with preview thumbnails.
+- Adds Version-gated template seeding that self-heals on every admin load, never duplicates items, updates plugin-seeded layouts in place on release upgrades, and never touches user-created templates.
+- Adds Cart widget: renders the full FluentCart cart (item rows, quantities, totals, empty state) with a Style tab for Item Row and Checkout Button.
+- Adds Order Receipt widget: real-order editor preview (latest order or a chosen Order ID, read-only), section show/hide toggles, custom confirmation title and message, custom action button texts, and a scoped Style tab (Confirmation, Headings, Paragraph, Links, Item Table, View Order Button).
+- Adds FluentCart short codes ({{order.customer.full_name}}, {{order.invoice_no}}, …) in the Order Receipt custom texts, with a {{:}} picker in the Message editor toolbar fed from core's short code registry.
+- Adds Customer Dashboard widget: renders the customer account area; the editor canvas presents core's loading skeleton as a labeled layout wireframe.
+- Adds Related Products widget Style tab: Heading, Grid (columns via core's CSS variable + gap), Card, Product Title, Price, and Button (covers Add To Cart, Buy Now and View Options variants).
+- Adds Product Info widget style coverage: Package Description section, Stock badge controls (per-state backgrounds, padding, radius), and independent Buy Now / Add To Cart button sections.
+
 = 1.0.2 (June 30, 2026) =
 - Adds `show_thumbnail` control to the Search Bar widget.
 - Adds Content controls to the Mini Cart widget.
