@@ -290,12 +290,17 @@
                     "widgetType": "fluentcart_product_info",
                     "settings": {
                         "source": "custom",
-                        "show_title": "no",
-                        "show_excerpt": "no",
-                        "show_sku": "no",
-                        "show_package_description": "no",
                         "show_description": "no",
-                        "show_related_products": "no"
+                        "show_related_products": "no",
+                        "summary_sections": [
+                            {"section_type": "title", "show": "", "_id": "pistt01"},
+                            {"section_type": "stock", "show": "yes", "_id": "pistk02"},
+                            {"section_type": "sku", "show": "", "_id": "pisku03"},
+                            {"section_type": "excerpt", "show": "", "_id": "piexc04"},
+                            {"section_type": "price", "show": "yes", "_id": "pipri05"},
+                            {"section_type": "package_description", "show": "", "_id": "pipkg06"},
+                            {"section_type": "buy_section", "show": "yes", "_id": "pibuy07"}
+                        ]
                     },
                     "elements": []
                 },
