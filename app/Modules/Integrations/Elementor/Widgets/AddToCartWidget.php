@@ -143,6 +143,10 @@ class AddToCartWidget extends Widget_Base
                 'label'      => esc_html__('Border Radius', 'fluent-cart'),
                 'type'       => Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', '%', 'em'],
+                // No default: inherit WordPress core's button radius
+                // (:where(.wp-block-button__link){border-radius:9999px}) so the
+                // button matches the Gutenberg Add to Cart block out of the box.
+                // Setting a default here would override that pill. User-overridable.
                 'selectors'  => [
                     '{{WRAPPER}} .wp-block-button__link' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
                 ],
@@ -239,31 +243,20 @@ class AddToCartWidget extends Widget_Base
         $settings = $this->get_settings_for_display();
         $variantId = $settings['variant_id'];
 
-        if (empty($variantId)) {
-            if (\Elementor\Plugin::$instance->editor->is_edit_mode()) {
-                echo '<div class="fluent-cart-placeholder" style="text-align:center; padding: 20px; background: #f0f0f1; border: 1px dashed #ccc;">';
-                echo '<p>' . esc_html__('Please enter a Product Variant ID.', 'fluent-cart') . '</p>';
-                echo '</div>';
-            }
-            return;
-        }
-
-        $variation = ProductVariation::query()->find($variantId);
-
-
-        if (!$variation) {
-            if (\Elementor\Plugin::$instance->editor->is_edit_mode()) {
-                echo '<div class="fluent-cart-placeholder" style="text-align:center; padding: 20px; background: #f0f0f1; border: 1px dashed #ccc;">';
-                echo '<p>' . esc_html__('Invalid Variant ID. Product not found.', 'fluent-cart') . '</p>';
-                echo '</div>';
-            }
-            return;
-        }
-
-
-        $product = Product::query()->find($variation->post_id);
+        // No variant selected (or it no longer exists / its product is gone).
+        // Like core's Gutenberg Add to Cart block — which always renders the
+        // button and treats the variant as optional config — show the button
+        // anyway in the editor so the design is visible and every Style control
+        // has a target. The front end renders nothing: a button with no variant
+        // can't add anything to the cart.
+        $variation = !empty($variantId) ? ProductVariation::query()->find($variantId) : null;
+        $product = $variation ? Product::query()->find($variation->post_id) : null;
 
         if (!$product) {
+            if (\Elementor\Plugin::$instance->editor->is_edit_mode()) {
+                AssetLoader::loadAddToCartCss();
+                $this->renderFallbackButton($settings['text']);
+            }
             return;
         }
 
@@ -289,5 +282,24 @@ class AddToCartWidget extends Widget_Base
             ?>
         </div>
         <?php
+    }
+
+    /**
+     * Editor-only fallback button, shown when no valid variant is selected yet.
+     * Mirrors core's Gutenberg Add to Cart block, where the button always renders
+     * and the variant is optional config. Uses the same wp-block-button__link
+     * element the real button outputs so the Style controls apply. Non-functional
+     * until a variant is chosen.
+     *
+     * @param string $text
+     * @return void
+     */
+    private function renderFallbackButton($text)
+    {
+        $text = ($text !== null && $text !== '') ? $text : __('Add To Cart', 'fluent-cart');
+
+        echo '<div class="fluent-cart-elementor-add-to-cart">';
+        echo '<button type="button" class="wp-block-button__link wp-element-button"><span class="text">' . esc_html($text) . '</span></button>';
+        echo '</div>';
     }
 }
