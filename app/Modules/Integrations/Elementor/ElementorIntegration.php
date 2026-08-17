@@ -357,6 +357,16 @@ class ElementorIntegration
     public function enqueuePreviewStyles()
     {
         do_action('fluent_cart/advanced_variation/enqueue_assets');
+
+        // Product Carousel loading-skeleton styles for the editor preview (shown
+        // when no products are selected yet). Editor-preview only — never enqueued
+        // on the front end.
+        wp_enqueue_style(
+            'fluent-cart-elementor-carousel-skeleton',
+            FLUENTCART_ELEMENTOR_BLOCKS_URL . 'assets/css/carousel-skeleton.css',
+            [],
+            FLUENTCART_ELEMENTOR_BLOCKS_VERSION
+        );
     }
 
     public function maybeEnqueueAdvancedVariation($widget)

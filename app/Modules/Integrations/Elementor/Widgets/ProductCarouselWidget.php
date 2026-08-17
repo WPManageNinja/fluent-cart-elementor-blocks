@@ -537,8 +537,11 @@ class ProductCarouselWidget extends Widget_Base
         $isEditor = \Elementor\Plugin::$instance->editor->is_edit_mode();
 
         if (empty($productIds) || !is_array($productIds)) {
+            // No products selected. In the editor, show the loading skeleton (like
+            // core's Gutenberg Product Carousel block) so the layout is visible the
+            // moment the widget is dropped in. The front end renders nothing.
             if ($isEditor) {
-                $this->renderPlaceholder();
+                $this->renderSkeleton($settings);
             }
             return;
         }
@@ -589,6 +592,46 @@ class ProductCarouselWidget extends Widget_Base
             'dots'            => ($settings['show_pagination'] ?? '') === 'yes' ? 'yes' : 'no',
             'paginationType'  => $settings['pagination_type'] ?? 'dots',
         ];
+    }
+
+    /**
+     * Editor-only loading skeleton shown when no products are selected, mirroring
+     * core's Gutenberg Product Carousel block (spinner + "Loading products…" +
+     * shimmer cards). Card count follows the Slides To Show setting. Styles come
+     * from the preview-only carousel-skeleton.css (enqueued via
+     * elementor/preview/enqueue_styles); the CSS variables set inline drive the
+     * per-slide width and the staggered fade-in, exactly as the block does.
+     *
+     * @param array $settings
+     * @return void
+     */
+    private function renderSkeleton(array $settings)
+    {
+        $slidesToShow = intval($settings['slides_to_show'] ?? 3);
+        if ($slidesToShow < 1) {
+            $slidesToShow = 3;
+        }
+
+        echo '<div class="fluent-cart-carousel-skeleton">';
+        echo '<div class="fluent-cart-empty">';
+        echo '<div class="fct-loading-header"><div class="fct-loading-spinner"></div><span>' . esc_html__('Loading products...', 'fluent-cart') . '</span></div>';
+        echo '<div class="dummy-grid" style="--fct-slides-per-view: ' . (int) $slidesToShow . ';">';
+
+        for ($i = 0; $i < $slidesToShow; $i++) {
+            echo '<div class="dummy-card" style="--card-index: ' . (int) $i . ';">'
+                . '<div class="dummy-image skeleton"></div>'
+                . '<div class="dummy-content">'
+                . '<div class="dummy-title skeleton"></div>'
+                . '<div class="dummy-excerpt skeleton"></div>'
+                . '<div class="dummy-price skeleton"></div>'
+                . '</div>'
+                . '<div class="dummy-btn-wrap"><div class="dummy-btn"></div></div>'
+                . '</div>';
+        }
+
+        echo '</div>'; // .dummy-grid
+        echo '</div>'; // .fluent-cart-empty
+        echo '</div>'; // .fluent-cart-carousel-skeleton
     }
 
     private function renderPlaceholder(string $message = '')
