@@ -466,20 +466,14 @@ class RelatedProductsWidget extends Widget_Base
         $product = $this->getProduct($settings);
 
         if (!$product) {
-            // No product selected and none in context. In the editor, preview
-            // with a real product (the latest published one) and render its
-            // actual related products — the same "real data, never fabricated"
-            // approach Elementor Pro's WooCommerce single-product widgets use. On
-            // the front end we stay silent; if the store has no products at all,
-            // the notice is shown instead.
-            if (\Elementor\Plugin::$instance->editor->is_edit_mode()) {
-                $product = $this->getPreviewProduct();
-            }
-
-            if (!$product) {
-                $this->renderPlaceholder(__('Please select a product or use this widget inside a product template.', 'fluent-cart'));
-                return;
-            }
+            // Related products need a specific product to relate to, so — unlike
+            // Product Info — we do NOT guess the latest product here: "related to
+            // what?" would be meaningless. Match core's Gutenberg Related Products
+            // block, which prompts the user to select a product (Source → Custom in
+            // the widget settings) instead of previewing an arbitrary one.
+            // renderPlaceholder is editor-only; the front end renders nothing.
+            $this->renderPlaceholder(__('Related products requires a product to be selected in order to display associated items.', 'fluent-cart'));
+            return;
         }
 
         AssetLoader::loadSingleProductAssets();
