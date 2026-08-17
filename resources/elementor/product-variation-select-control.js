@@ -99,7 +99,11 @@
                         },
                         cache: true
                     },
-                    minimumInputLength: 1
+                    // 0 (not 1) so opening the control immediately shows the
+                    // variant list (searchProductVariantOptions returns the first
+                    // 20 when the search term is empty), like the Gutenberg picker
+                    // — instead of "enter 1 or more characters". Typing still filters.
+                    minimumInputLength: 0
                 };
 
                 // Initialize Select2
