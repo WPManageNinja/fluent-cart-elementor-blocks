@@ -336,12 +336,24 @@ class ProductInfoWidget extends Widget_Base
         $settings = $this->get_settings_for_display();
         $product = $this->getProduct($settings);
 
-        if (!$product) {
-            $this->renderPlaceholder(__('Please select a product or use this widget inside a product template.', 'fluent-cart'));
-            return;
-        }
-
         $isEditor = \Elementor\Plugin::$instance->editor->is_edit_mode();
+
+        if (!$product) {
+            // No product selected and none in context. In the editor, preview
+            // with a real product (the latest published one) and render through
+            // the normal path — the same "real data, never fabricated" approach
+            // Elementor Pro's WooCommerce single-product widgets use. On the
+            // front end we stay silent; if the store has no products at all, the
+            // notice is shown instead.
+            if ($isEditor) {
+                $product = $this->getPreviewProduct();
+            }
+
+            if (!$product) {
+                $this->renderPlaceholder(__('Please select a product or use this widget inside a product template.', 'fluent-cart'));
+                return;
+            }
+        }
 
         if ($isEditor) {
             // In editor, only load CSS — skip JS assets to prevent Elementor re-render interference

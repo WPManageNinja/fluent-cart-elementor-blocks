@@ -466,7 +466,13 @@ class RelatedProductsWidget extends Widget_Base
         $product = $this->getProduct($settings);
 
         if (!$product) {
-            $this->renderPlaceholder(__('Please select a product or use this widget inside a product template.', 'fluent-cart'));
+            // Related products need a specific product to relate to, so — unlike
+            // Product Info — we do NOT guess the latest product here: "related to
+            // what?" would be meaningless. Match core's Gutenberg Related Products
+            // block, which prompts the user to select a product (Source → Custom in
+            // the widget settings) instead of previewing an arbitrary one.
+            // renderPlaceholder is editor-only; the front end renders nothing.
+            $this->renderPlaceholder(__('Related products requires a product to be selected in order to display associated items.', 'fluent-cart'));
             return;
         }
 
