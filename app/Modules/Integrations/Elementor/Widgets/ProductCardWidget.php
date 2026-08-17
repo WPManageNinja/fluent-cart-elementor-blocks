@@ -9,6 +9,7 @@ use Elementor\Group_Control_Border;
 use Elementor\Group_Control_Box_Shadow;
 use Elementor\Group_Control_Background;
 use Elementor\Repeater;
+use FluentCart\App\Helpers\Helper;
 use FluentCart\App\Models\Product;
 use FluentCart\App\Modules\Templating\AssetLoader;
 use FluentCart\App\Services\Renderer\ProductCardRender;
@@ -93,6 +94,30 @@ class ProductCardWidget extends Widget_Base
                     'starts_from' => esc_html__('Starts From', 'fluent-cart'),
                     'range'       => esc_html__('Range', 'fluent-cart'),
                     'lowest'      => esc_html__('Lowest', 'fluent-cart'),
+                ],
+            ]
+        );
+
+        // Card sizing — the Elementor equivalent of the Gutenberg block's "Card
+        // Sizing" (Full Width / Custom Width). One responsive slider does both:
+        // a % value fills the container (full width), a px value sets a fixed
+        // width. No default on purpose: a control default is applied retroactively
+        // to every existing instance that never set a width, which would silently
+        // resize already-placed cards. Leaving it empty keeps existing cards
+        // exactly as they are; setting a width is opt-in.
+        $this->add_responsive_control(
+            'card_width',
+            [
+                'label'      => esc_html__('Card Width', 'fluent-cart'),
+                'type'       => Controls_Manager::SLIDER,
+                'size_units' => ['px', '%', 'em'],
+                'range'      => [
+                    'px' => ['min' => 150, 'max' => 1000, 'step' => 10],
+                    '%'  => ['min' => 10, 'max' => 100],
+                    'em' => ['min' => 5, 'max' => 60],
+                ],
+                'selectors'  => [
+                    '{{WRAPPER}} .fct-product-card' => 'width: {{SIZE}}{{UNIT}}; max-width: 100%;',
                 ],
             ]
         );
@@ -649,8 +674,15 @@ class ProductCardWidget extends Widget_Base
         $isEditor  = \Elementor\Plugin::$instance->editor->is_edit_mode();
 
         if (empty($productId)) {
+            // No product selected. In the editor, render a representative default
+            // card (placeholder image, "Select a Product", zero price, buy button)
+            // like core's Gutenberg Product Card block — so the card is visible
+            // and every Style control has a target the moment the widget is
+            // dropped in. The front end renders nothing (a card with no product
+            // has nothing to show).
             if ($isEditor) {
-                $this->renderPlaceholder();
+                AssetLoader::loadProductArchiveAssets();
+                $this->renderDefaultCard($settings);
             }
             return;
         }
@@ -716,6 +748,62 @@ class ProductCardWidget extends Widget_Base
             ?>
         </article>
         <?php
+    }
+
+    /**
+     * Editor-only default card shown when no product is selected, mirroring core's
+     * Gutenberg Product Card block (placeholder image, "Select a Product", zero
+     * price, buy button). Uses the same fct-product-card-* markup the real card
+     * (ProductCardRender) outputs, so every Style control applies and it looks
+     * like a real card. Honours the card_elements order/visibility. Zero price is
+     * store-currency formatted. Placeholder image is core's own placeholder.svg.
+     *
+     * @param array $settings
+     * @return void
+     */
+    private function renderDefaultCard($settings)
+    {
+        $cardElements = $settings['card_elements'] ?? [
+            ['element_type' => 'image'],
+            ['element_type' => 'title'],
+            ['element_type' => 'price'],
+            ['element_type' => 'button'],
+        ];
+
+        $img       = esc_url(\FluentCart\App\Vite::getAssetUrl('images/placeholder.svg'));
+        $zeroPrice = Helper::toDecimal(0);
+
+        echo '<article class="fct-product-card" data-fct-product-card>';
+
+        foreach ($cardElements as $element) {
+            $type = $element['element_type'] ?? '';
+
+            switch ($type) {
+                case 'image':
+                    echo '<a class="fct-product-card-image-wrap" style="display: block;"><img class="fct-product-card-image" src="' . $img . '" alt="" width="300" height="300" loading="lazy" /></a>';
+                    break;
+
+                case 'title':
+                    echo '<h3 class="fct-product-card-title">' . esc_html__('Select a Product', 'fluent-cart') . '</h3>';
+                    break;
+
+                case 'excerpt':
+                    echo '<div class="fct-product-card-excerpt"><p>' . esc_html__('A short sample excerpt for the product.', 'fluent-cart') . '</p></div>';
+                    break;
+
+                case 'price':
+                    // toDecimal() output is HTML-safe (currency symbol may be an
+                    // entity), so it is printed as-is, matching core's price markup.
+                    echo '<div class="fct-product-card-prices" role="region"><span class="fct-item-price"><span>' . $zeroPrice . '</span></span></div>';
+                    break;
+
+                case 'button':
+                    echo '<button type="button" class="fct-product-view-button fct-single-product-card-view-button"><span class="fct-button-text">' . esc_html__('Add To Cart', 'fluent-cart') . '</span></button>';
+                    break;
+            }
+        }
+
+        echo '</article>';
     }
 
     private function renderPlaceholder(string $message = '')
