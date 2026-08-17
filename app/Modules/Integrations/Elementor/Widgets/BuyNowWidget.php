@@ -152,6 +152,10 @@ class BuyNowWidget extends Widget_Base
                 'label'      => esc_html__('Border Radius', 'fluent-cart'),
                 'type'       => Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', '%', 'em'],
+                // No default: inherit WordPress core's button radius
+                // (:where(.wp-block-button__link){border-radius:9999px}) so the
+                // button matches the Gutenberg Buy Now block out of the box.
+                // Setting a default here would override that pill. User-overridable.
                 'selectors'  => [
                     '{{WRAPPER}} .wp-block-button__link' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
                 ],
@@ -248,29 +252,20 @@ class BuyNowWidget extends Widget_Base
         $settings = $this->get_settings_for_display();
         $variantId = $settings['variant_id'];
 
-        if (empty($variantId)) {
-            if (\Elementor\Plugin::$instance->editor->is_edit_mode()) {
-                echo '<div class="fluent-cart-placeholder" style="text-align:center; padding: 20px; background: #f0f0f1; border: 1px dashed #ccc;">';
-                echo '<p>' . esc_html__('Please enter a Product Variant ID.', 'fluent-cart') . '</p>';
-                echo '</div>';
-            }
-            return;
-        }
-
-        $variation = ProductVariation::query()->find($variantId);
-
-        if (!$variation) {
-            if (\Elementor\Plugin::$instance->editor->is_edit_mode()) {
-                echo '<div class="fluent-cart-placeholder" style="text-align:center; padding: 20px; background: #f0f0f1; border: 1px dashed #ccc;">';
-                echo '<p>' . esc_html__('Invalid Variant ID. Product not found.', 'fluent-cart') . '</p>';
-                echo '</div>';
-            }
-            return;
-        }
-
-        $product = Product::query()->find($variation->post_id);
+        // No variant selected (or it no longer exists / its product is gone).
+        // Like core's Gutenberg Buy Now block — which always renders the button
+        // and treats the variant as optional config — show the button anyway in
+        // the editor so the design is visible and every Style control has a
+        // target. The front end renders nothing: a Buy Now button with no variant
+        // has nothing to check out.
+        $variation = !empty($variantId) ? ProductVariation::query()->find($variantId) : null;
+        $product = $variation ? Product::query()->find($variation->post_id) : null;
 
         if (!$product) {
+            if (\Elementor\Plugin::$instance->editor->is_edit_mode()) {
+                AssetLoader::loadAddToCartCss();
+                $this->renderFallbackButton($settings['text']);
+            }
             return;
         }
 
@@ -291,5 +286,24 @@ class BuyNowWidget extends Widget_Base
             ?>
         </div>
         <?php
+    }
+
+    /**
+     * Editor-only fallback button, shown when no valid variant is selected yet.
+     * Mirrors core's Gutenberg Buy Now block, where the button always renders and
+     * the variant is optional config. Uses the same wp-block-button__link anchor
+     * the real button outputs so the Style controls apply. Non-functional until a
+     * variant is chosen.
+     *
+     * @param string $text
+     * @return void
+     */
+    private function renderFallbackButton($text)
+    {
+        $text = ($text !== null && $text !== '') ? $text : __('Buy Now', 'fluent-cart');
+
+        echo '<div class="fluent-cart-elementor-buy-now">';
+        echo '<a class="wp-block-button__link wp-element-button" role="button">' . esc_html($text) . '</a>';
+        echo '</div>';
     }
 }
