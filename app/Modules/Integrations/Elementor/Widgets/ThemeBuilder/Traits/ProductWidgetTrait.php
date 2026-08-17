@@ -61,17 +61,13 @@ trait ProductWidgetTrait
             return null;
         }
 
-        // Default: auto-detect from context
-        if (isset($GLOBALS['fct_product']) && $GLOBALS['fct_product'] instanceof Product) {
-            return $GLOBALS['fct_product'];
-        }
-
-        $postId = get_the_ID();
-        if ($postId && get_post_type($postId) === 'fluent-products') {
-            return ProductDataSetup::getProductModel($postId);
-        }
-
-        return null;
+        // Default: the current product in context — resolved through core's
+        // canonical fluent_cart_get_current_product() (boot/globals.php), the
+        // exact same resolver every Gutenberg product block uses on its
+        // query_type=default path ($GLOBALS['fct_product'] → current post →
+        // null). Calling it keeps Elementor and Gutenberg from ever drifting
+        // apart on "what is the current product".
+        return fluent_cart_get_current_product();
     }
 
     /**
