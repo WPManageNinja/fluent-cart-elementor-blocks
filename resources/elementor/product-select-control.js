@@ -96,7 +96,12 @@
                         },
                         cache: true
                     },
-                    minimumInputLength: 1,
+                    // 0 (not 1) so opening the control immediately shows the
+                    // product list (the AJAX runs with an empty search term and
+                    // the products endpoint returns the latest published ones),
+                    // like the Gutenberg picker — instead of "enter 1 or more
+                    // characters". Typing still filters.
+                    minimumInputLength: 0,
                     templateResult: function(product) {
                         if (product.loading) {
                             return product.text;
