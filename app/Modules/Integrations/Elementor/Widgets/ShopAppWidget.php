@@ -906,8 +906,21 @@ class ShopAppWidget extends Widget_Base
             'sold_out_badge_text'     => Arr::get($settings, 'sold_out_badge_text', ''),
         ];
 
-        // Build a transient cache key based on the relevant settings
-        $cacheKey = 'fce_shop_app_' . md5(wp_json_encode($shortcodeAtts) . wp_json_encode($cardElements) . wp_json_encode($shopLayout) . wp_json_encode($badgeSettings));
+        // Build a transient cache key based on the relevant settings. The
+        // archive term must be part of the key: on product taxonomy archives
+        // the handler scopes the query to the current term (applyArchiveScope),
+        // so the same widget renders different products per category/brand —
+        // without the term, one archive's HTML would be served on all of them.
+        // Taxonomy-qualified: term IDs are not schema-guaranteed unique across
+        // taxonomies (legacy shared terms), so a category and a brand could
+        // share an ID — the taxonomy keeps their caches apart.
+        $fluentCartTaxonomies = get_object_taxonomies('fluent-products');
+        $archiveTerm = '';
+        if ($fluentCartTaxonomies && is_tax($fluentCartTaxonomies)) {
+            $queriedTerm = get_queried_object();
+            $archiveTerm = $queriedTerm instanceof \WP_Term ? $queriedTerm->taxonomy . ':' . $queriedTerm->term_id : '';
+        }
+        $cacheKey = 'fce_shop_app_' . md5(wp_json_encode($shortcodeAtts) . wp_json_encode($cardElements) . wp_json_encode($shopLayout) . wp_json_encode($badgeSettings) . '|term:' . $archiveTerm);
 
         if (!$isEditor) {
             $cached = get_transient($cacheKey);
