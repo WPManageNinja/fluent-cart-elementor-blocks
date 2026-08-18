@@ -39,6 +39,7 @@ use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ThemeBu
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Documents\FluentCartProduct;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Documents\FluentCartProductPost;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Conditions\FluentCartCondition;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Conditions\FluentCartArchiveCondition;
 use FluentCartElementorBlocks\App\Utils\Enqueuer\Enqueue;
 
 class ElementorIntegration
@@ -70,6 +71,14 @@ class ElementorIntegration
         \add_action('elementor/widget/before_render_content', [$this, 'maybeEnqueueAdvancedVariation']);
 
         \add_filter('fluent_cart/products_views/preload_collection_elementor', [$this, 'preloadProductCollectionsAjax'], 10, 2);
+
+        // FluentCart core provides a fallback template for product taxonomy
+        // archives (category/brand pages) and asks builder integrations first
+        // via this filter before loading it. Defer whenever an Elementor Pro
+        // Theme Builder archive template claims the current request, so the
+        // designer's layout wins and core's fallback covers everything else.
+        // Same contract the Divi addon implements.
+        \add_filter('fluent_cart/template/disable_taxonomy_fallback', [$this, 'deferToThemeBuilderArchive']);
 
         // Theme Builder integration (requires Elementor Pro or ProElements).
         // Deferred to after_setup_theme: this method runs on fluentcart_loaded
@@ -142,6 +151,40 @@ class ElementorIntegration
     {
         $controls_manager->register(new ProductVariationSelectControl());
         $controls_manager->register(new ProductSelectControl());
+    }
+
+    /**
+     * Let Elementor Pro's Theme Builder handle the archive when it has an
+     * applicable archive document for the current request (Pro's conditions
+     * manager resolves each document's display conditions against the request,
+     * so an unrelated archive template never triggers this). Uses the same
+     * FluentCart fallback opt-out contract as the Divi integration.
+     *
+     * @param bool $disable
+     * @return bool
+     */
+    public function deferToThemeBuilderArchive($disable)
+    {
+        if ($disable || !class_exists('\ElementorPro\Modules\ThemeBuilder\Module')) {
+            return $disable;
+        }
+
+        // Only act on FluentCart's own taxonomy archives — any other request
+        // is none of this adapter's business, whatever core asks about.
+        $taxonomies = get_object_taxonomies('fluent-products');
+        if (empty($taxonomies) || !is_tax($taxonomies)) {
+            return $disable;
+        }
+
+        $documents = \ElementorPro\Modules\ThemeBuilder\Module::instance()
+            ->get_conditions_manager()
+            ->get_documents_for_location('archive');
+
+        if (!empty($documents)) {
+            return true;
+        }
+
+        return $disable;
     }
 
     public function preloadProductCollectionsAjax($view, $args)
@@ -472,6 +515,14 @@ class ElementorIntegration
         $condition = new FluentCartCondition();
 
         $conditions_manager->get_condition('general')->register_sub_condition($condition);
+
+        // FluentCart taxonomy archives under the Archive group — Pro's own
+        // "Products Archive" condition is WooCommerce-only and never matches
+        // FluentCart's product-categories / product-brands URLs.
+        $archiveGroup = $conditions_manager->get_condition('archive');
+        if ($archiveGroup) {
+            $archiveGroup->register_sub_condition(new FluentCartArchiveCondition());
+        }
     }
 
     /**

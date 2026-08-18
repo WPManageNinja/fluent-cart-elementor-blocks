@@ -906,8 +906,14 @@ class ShopAppWidget extends Widget_Base
             'sold_out_badge_text'     => Arr::get($settings, 'sold_out_badge_text', ''),
         ];
 
-        // Build a transient cache key based on the relevant settings
-        $cacheKey = 'fce_shop_app_' . md5(wp_json_encode($shortcodeAtts) . wp_json_encode($cardElements) . wp_json_encode($shopLayout) . wp_json_encode($badgeSettings));
+        // Build a transient cache key based on the relevant settings. The
+        // archive term must be part of the key: on product taxonomy archives
+        // the handler scopes the query to the current term (applyArchiveScope),
+        // so the same widget renders different products per category/brand —
+        // without the term, one archive's HTML would be served on all of them.
+        $fluentCartTaxonomies = get_object_taxonomies('fluent-products');
+        $archiveTermId = $fluentCartTaxonomies && is_tax($fluentCartTaxonomies) ? get_queried_object_id() : 0;
+        $cacheKey = 'fce_shop_app_' . md5(wp_json_encode($shortcodeAtts) . wp_json_encode($cardElements) . wp_json_encode($shopLayout) . wp_json_encode($badgeSettings) . '|term:' . $archiveTermId);
 
         if (!$isEditor) {
             $cached = get_transient($cacheKey);
