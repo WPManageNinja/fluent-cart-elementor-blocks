@@ -9,6 +9,7 @@ use FluentCart\App\Models\Product;
 use FluentCart\App\Modules\Templating\AssetLoader;
 use FluentCart\App\Services\Renderer\ProductCardRender;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Controls\ProductSelectControl;
+use FluentCartElementorBlocks\App\Services\Badges\BadgeRenderer;
 use FluentCartElementorBlocks\App\Utils\Enqueuer\Enqueue;
 
 class ProductCarouselWidget extends Widget_Base
@@ -116,7 +117,9 @@ class ProductCarouselWidget extends Widget_Base
         $this->registerProductSelectionControls();
         $this->registerCarouselSettingsControls();
         $this->registerCardLayoutControls();
+        BadgeControls::registerBadgeContentControls($this, false);
         $this->registerStyleControls();
+        BadgeControls::registerBadgeStyleControls($this, false);
     }
 
     private function registerStyleControls()
@@ -575,8 +578,20 @@ class ProductCarouselWidget extends Widget_Base
 
         $priceFormat = $settings['price_format'] ?? 'starts_from';
 
+        // Sale + Sold Out badge overlays via core's before/after_image_block
+        // hooks (fire inside renderProductImage). The closures buffer each
+        // slide's image and re-wrap it so the badge overlays the IMAGE, not the
+        // whole card. Scoped: removed right after the carousel render.
+        $badgeHooks = BadgeRenderer::cardBadgeClosures($settings, false);
+        if ($badgeHooks) {
+            add_action('fluent_cart/product/group/before_image_block', $badgeHooks['before'], 10, 1);
+            add_action('fluent_cart/product/group/after_image_block', $badgeHooks['after'], 10, 1);
+        }
+
         // Render carousel
         $this->renderCarousel($products, $carouselSettings, $cardElements, $priceFormat);
+
+        BadgeRenderer::removeCardBadgeHooks($badgeHooks);
     }
 
     private function buildCarouselSettings(array $settings): array

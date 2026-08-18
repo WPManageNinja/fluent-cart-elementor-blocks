@@ -30,6 +30,19 @@ class ElementorShopAppRenderer extends ShopAppRenderer
                 $this->cardElements,
                 48 * HOUR_IN_SECONDS
             );
+
+            // Cache badge settings on the SAME lifecycle as the card layout (only
+            // this uncached render path runs, never a cache hit), so AJAX
+            // pagination can re-apply the Sale/Sold Out overlays. Only when a
+            // badge is actually enabled.
+            $badgeSettings = Arr::get($config, 'badge_settings', []);
+            $badgesActive  = Arr::get($badgeSettings, 'show_sale_badge') === 'yes'
+                || Arr::get($badgeSettings, 'show_sold_out_badge') === 'yes';
+            if ($badgesActive) {
+                set_transient('fc_el_badges_' . $this->clientId, $badgeSettings, 48 * HOUR_IN_SECONDS);
+            } else {
+                delete_transient('fc_el_badges_' . $this->clientId);
+            }
         }
 
         parent::__construct($products, $config);

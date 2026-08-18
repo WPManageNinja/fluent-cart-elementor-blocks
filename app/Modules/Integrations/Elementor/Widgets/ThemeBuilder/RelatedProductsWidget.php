@@ -8,7 +8,9 @@ use Elementor\Group_Control_Typography;
 use Elementor\Group_Control_Border;
 use Elementor\Group_Control_Box_Shadow;
 use FluentCart\App\Modules\Templating\AssetLoader;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\BadgeControls;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ThemeBuilder\Traits\ProductWidgetTrait;
+use FluentCartElementorBlocks\App\Services\Badges\BadgeRenderer;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -57,12 +59,15 @@ class RelatedProductsWidget extends Widget_Base
 
         $this->end_controls_section();
 
+        BadgeControls::registerBadgeContentControls($this, false);
+
         $this->registerHeadingStyleControls();
         $this->registerGridStyleControls();
         $this->registerCardStyleControls();
         $this->registerTitleStyleControls();
         $this->registerPriceStyleControls();
         $this->registerButtonStyleControls();
+        BadgeControls::registerBadgeStyleControls($this, false);
     }
 
     /* ------------------------------------------------------------------ */
@@ -480,7 +485,20 @@ class RelatedProductsWidget extends Widget_Base
 
         $shortcodeAtts = 'id="' . (int) $product->ID . '"';
 
+        // Sale badge overlay via core's before/after_image_block hooks (fire
+        // inside each related card's renderProductImage). The closures buffer
+        // the image and re-wrap it so the badge overlays the IMAGE, not the
+        // whole card. Scoped: removed right after the shortcode render. Sale
+        // only ($includeSoldOut false) — Sold Out is Products/Carousel-only.
+        $badgeHooks = BadgeRenderer::cardBadgeClosures($settings, false);
+        if ($badgeHooks) {
+            add_action('fluent_cart/product/group/before_image_block', $badgeHooks['before'], 10, 1);
+            add_action('fluent_cart/product/group/after_image_block', $badgeHooks['after'], 10, 1);
+        }
+
         $content = do_shortcode('[fluent_cart_related_products ' . $shortcodeAtts . ']');
+
+        BadgeRenderer::removeCardBadgeHooks($badgeHooks);
 
         if (trim((string) $content) === '') {
             return;

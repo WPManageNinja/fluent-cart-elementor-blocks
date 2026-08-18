@@ -14,6 +14,7 @@ use FluentCart\App\Models\Product;
 use FluentCart\App\Modules\Templating\AssetLoader;
 use FluentCart\App\Services\Renderer\ProductCardRender;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Controls\ProductSelectControl;
+use FluentCartElementorBlocks\App\Services\Badges\BadgeRenderer;
 
 class ProductCardWidget extends Widget_Base
 {
@@ -58,7 +59,9 @@ class ProductCardWidget extends Widget_Base
     {
         $this->registerContentControls();
         $this->registerCardLayoutControls();
+        BadgeControls::registerBadgeContentControls($this, false);
         $this->registerStyleControls();
+        BadgeControls::registerBadgeStyleControls($this, false);
     }
 
     private function registerContentControls()
@@ -711,6 +714,17 @@ class ProductCardWidget extends Widget_Base
             'price_format' => $priceFormat,
         ]);
 
+        // Sale badge overlay via core's before/after_image_block hooks (fire
+        // inside renderProductImage). The closures buffer the image and re-wrap
+        // it so the badge overlays the IMAGE, not the whole card. Scoped:
+        // removed right after the loop. Sale only ($includeSoldOut false) — Sold
+        // Out is Products/Carousel-only.
+        $badgeHooks = BadgeRenderer::cardBadgeClosures($settings, false);
+        if ($badgeHooks) {
+            add_action('fluent_cart/product/group/before_image_block', $badgeHooks['before'], 10, 1);
+            add_action('fluent_cart/product/group/after_image_block', $badgeHooks['after'], 10, 1);
+        }
+
         ?>
         <article class="fct-product-card" data-fct-product-card>
             <?php
@@ -748,6 +762,8 @@ class ProductCardWidget extends Widget_Base
             ?>
         </article>
         <?php
+
+        BadgeRenderer::removeCardBadgeHooks($badgeHooks);
     }
 
     /**
