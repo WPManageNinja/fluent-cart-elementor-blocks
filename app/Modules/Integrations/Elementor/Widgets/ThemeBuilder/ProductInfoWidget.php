@@ -10,7 +10,10 @@ use FluentCart\Api\Resource\ShopResource;
 use FluentCart\App\Modules\Templating\AssetLoader;
 use FluentCart\App\Services\Renderer\ProductListRenderer;
 use FluentCart\App\Services\Renderer\ProductRenderer;
+use FluentCart\Framework\Support\Arr;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\BadgeControls;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ThemeBuilder\Traits\ProductWidgetTrait;
+use FluentCartElementorBlocks\App\Services\Badges\BadgeRenderer;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -158,6 +161,8 @@ class ProductInfoWidget extends Widget_Base
         );
 
         $this->end_controls_section();
+
+        $this->registerSaleBadgeContentControls();
 
         // Gallery Settings
         $this->start_controls_section(
@@ -329,6 +334,154 @@ class ProductInfoWidget extends Widget_Base
         );
 
         $this->end_controls_section();
+
+        // Style-tab Sale Badge section over {{WRAPPER}} .fct-sale-badge —
+        // reused from the card widgets (corner-agnostic: background, text color,
+        // typography, padding, radius). $includeSoldOut false: Product Info is
+        // Sale only.
+        BadgeControls::registerBadgeStyleControls($this, false);
+    }
+
+    /**
+     * Sale Badge content controls, laid out to MATCH the Gutenberg Sale Badge
+     * inspector (BlockEditor/SaleBadge/Components/InspectorSettings.jsx): a
+     * "Badge" panel then a "Position & Style" panel, same labels/help
+     * text/option order. Elementor adds the enable switcher first (Gutenberg
+     * enables by inserting the block). The live sale-status pill is skipped
+     * (an Elementor panel can't render per-product live status).
+     *
+     * Product Info differs from the card widgets in ONE way: the badge is an
+     * INLINE summary row at a configurable SLOT in the details column
+     * (below-title / below-excerpt / above-price / below-price / below-package),
+     * NOT an image overlay — so "Position" carries slot values, not the corner
+     * positions BadgeControls exposes. No Sold Out badge here (matches Divi +
+     * Gutenberg: Sold Out is Products/Carousel-only). Default OFF so an existing
+     * widget instance is unchanged.
+     *
+     * @return void
+     */
+    private function registerSaleBadgeContentControls()
+    {
+        // ── Badge ──────────────────────────────────────────
+        $this->start_controls_section(
+            'sale_badge_settings_section',
+            [
+                'label' => esc_html__('Badge', 'fluent-cart'),
+                'tab'   => Controls_Manager::TAB_CONTENT,
+            ]
+        );
+
+        $this->add_control(
+            'show_sale_badge',
+            [
+                'label'        => esc_html__('Sale Badge', 'fluent-cart'),
+                'type'         => Controls_Manager::SWITCHER,
+                'label_on'     => esc_html__('Show', 'fluent-cart'),
+                'label_off'    => esc_html__('Hide', 'fluent-cart'),
+                'return_value' => 'yes',
+                'default'      => '',
+            ]
+        );
+
+        $this->add_control(
+            'sale_badge_text',
+            [
+                'label'       => esc_html__('Badge Text', 'fluent-cart'),
+                'type'        => Controls_Manager::TEXT,
+                'default'     => esc_html__('Sale!', 'fluent-cart'),
+                'description' => esc_html__('Text shown when not using percentage mode.', 'fluent-cart'),
+                'condition'   => ['show_sale_badge' => 'yes'],
+            ]
+        );
+
+        $this->add_control(
+            'show_percentage',
+            [
+                'label'        => esc_html__('Show Discount Percentage', 'fluent-cart'),
+                'type'         => Controls_Manager::SWITCHER,
+                'label_on'     => esc_html__('Yes', 'fluent-cart'),
+                'label_off'    => esc_html__('No', 'fluent-cart'),
+                'return_value' => 'yes',
+                'default'      => '',
+                'condition'    => ['show_sale_badge' => 'yes'],
+            ]
+        );
+
+        $this->add_control(
+            'sale_percentage_text',
+            [
+                'label'       => esc_html__('Percentage Format', 'fluent-cart'),
+                'type'        => Controls_Manager::TEXT,
+                'default'     => '-{percent}%',
+                'description' => esc_html__('Use {percent} as placeholder. E.g., "-{percent}% OFF"', 'fluent-cart'),
+                'condition'   => [
+                    'show_sale_badge' => 'yes',
+                    'show_percentage' => 'yes',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'sale_price_source',
+            [
+                'label'       => esc_html__('Price Source', 'fluent-cart'),
+                'type'        => Controls_Manager::SELECT,
+                'default'     => 'default_variant',
+                'options'     => [
+                    'default_variant' => esc_html__('Default Variant', 'fluent-cart'),
+                    'best_discount'   => esc_html__('Best Discount (All Variants)', 'fluent-cart'),
+                ],
+                'description' => esc_html__('Where to check the sale price from.', 'fluent-cart'),
+                'condition'   => ['show_sale_badge' => 'yes'],
+            ]
+        );
+
+        // ── Position & Style (same panel, heading divider) ──────────
+        $this->add_control(
+            'sale_badge_ps_heading',
+            [
+                'label'     => esc_html__('Position & Style', 'fluent-cart'),
+                'type'      => Controls_Manager::HEADING,
+                'separator' => 'before',
+                'condition' => ['show_sale_badge' => 'yes'],
+            ]
+        );
+
+        $this->add_control(
+            'sale_badge_style',
+            [
+                'label'     => esc_html__('Badge Style', 'fluent-cart'),
+                'type'      => Controls_Manager::SELECT,
+                'default'   => 'badge',
+                'options'   => [
+                    'badge'  => esc_html__('Badge', 'fluent-cart'),
+                    'ribbon' => esc_html__('Ribbon', 'fluent-cart'),
+                    'tag'    => esc_html__('Tag', 'fluent-cart'),
+                ],
+                'condition' => ['show_sale_badge' => 'yes'],
+            ]
+        );
+
+        // Product Info uses SLOT values (inline placement in the details
+        // column), not the corner positions the card widgets use.
+        $this->add_control(
+            'sale_badge_position',
+            [
+                'label'     => esc_html__('Position', 'fluent-cart'),
+                'type'      => Controls_Manager::SELECT,
+                'default'   => 'below-title',
+                'options'   => [
+                    'below-title'   => esc_html__('Below Title', 'fluent-cart'),
+                    'below-excerpt' => esc_html__('Below Excerpt', 'fluent-cart'),
+                    'above-price'   => esc_html__('Above Price', 'fluent-cart'),
+                    'below-price'   => esc_html__('Below Price', 'fluent-cart'),
+                    'below-package' => esc_html__('Below Package Description', 'fluent-cart'),
+                ],
+                'condition' => ['show_sale_badge' => 'yes'],
+            ]
+        );
+
+        $this->end_controls_section();
     }
 
     protected function render()
@@ -383,31 +536,55 @@ class ProductInfoWidget extends Widget_Base
         echo '<div class="fct-product-summary">';
 
         foreach ($this->getOrderedSummarySections($settings) as $section) {
-            if (!$section['show']) {
-                continue;
+            $type = $section['type'];
+
+            // Inline Sale badge slots — emitted at their anchor section
+            // REGARDLESS of that section's own show toggle (mirrors Divi's
+            // badgeAt placement, which renders the row even when the anchor
+            // element is hidden). 'above-price' fires before the price markup;
+            // the 'below-*' slots fire after their section markup.
+            if ($type === 'price') {
+                $this->renderSaleBadgeSlot($product, $settings, 'above-price');
             }
 
-            switch ($section['type']) {
+            if ($section['show']) {
+                switch ($type) {
+                    case 'title':
+                        $renderer->renderTitle();
+                        break;
+                    case 'stock':
+                        $renderer->renderStockAvailability();
+                        break;
+                    case 'sku':
+                        $renderer->renderSku();
+                        break;
+                    case 'excerpt':
+                        $renderer->renderExcerpt();
+                        break;
+                    case 'price':
+                        $renderer->renderPrices();
+                        break;
+                    case 'package_description':
+                        $renderer->renderPackageDescription();
+                        break;
+                    case 'buy_section':
+                        $renderer->renderBuySection();
+                        break;
+                }
+            }
+
+            switch ($type) {
                 case 'title':
-                    $renderer->renderTitle();
-                    break;
-                case 'stock':
-                    $renderer->renderStockAvailability();
-                    break;
-                case 'sku':
-                    $renderer->renderSku();
+                    $this->renderSaleBadgeSlot($product, $settings, 'below-title');
                     break;
                 case 'excerpt':
-                    $renderer->renderExcerpt();
+                    $this->renderSaleBadgeSlot($product, $settings, 'below-excerpt');
                     break;
                 case 'price':
-                    $renderer->renderPrices();
+                    $this->renderSaleBadgeSlot($product, $settings, 'below-price');
                     break;
                 case 'package_description':
-                    $renderer->renderPackageDescription();
-                    break;
-                case 'buy_section':
-                    $renderer->renderBuySection();
+                    $this->renderSaleBadgeSlot($product, $settings, 'below-package');
                     break;
             }
         }
@@ -443,6 +620,48 @@ class ProductInfoWidget extends Widget_Base
         }
 
         echo '</div>'; // .fluentcart-product-info
+    }
+
+    /**
+     * Render the inline Sale badge for a given slot — the Elementor mirror of
+     * Divi's ProductInfoModule::badgeAt(). Emits nothing unless the Sale badge
+     * is enabled AND its configured position matches $slot. Calls
+     * BadgeRenderer::sale() with badgePosition '' so the badge is INLINE (no
+     * absolute corner class) and flows as a normal summary row, wrapped like
+     * Divi's fct-divi-pi-badge-row. The badge HTML is already escaped inside
+     * BadgeRenderer::sale().
+     *
+     * @param \FluentCart\App\Models\Product $product
+     * @param array  $settings
+     * @param string $slot below-title|below-excerpt|above-price|below-price|below-package
+     * @return void
+     */
+    private function renderSaleBadgeSlot($product, array $settings, $slot)
+    {
+        if (Arr::get($settings, 'show_sale_badge', '') !== 'yes') {
+            return;
+        }
+
+        if (Arr::get($settings, 'sale_badge_position', 'below-title') !== $slot) {
+            return;
+        }
+
+        $html = BadgeRenderer::sale($product, [
+            'badgeText'      => Arr::get($settings, 'sale_badge_text', __('Sale!', 'fluent-cart')),
+            'showPercentage' => Arr::get($settings, 'show_percentage', '') === 'yes',
+            'percentageText' => Arr::get($settings, 'sale_percentage_text', '-{percent}%'),
+            'priceSource'    => Arr::get($settings, 'sale_price_source', 'default_variant'),
+            'badgeStyle'     => Arr::get($settings, 'sale_badge_style', 'badge'),
+            'badgePosition'  => '', // inline (no absolute corner class) — flows as a normal row
+        ]);
+
+        if ($html === '') {
+            return;
+        }
+
+        echo '<div class="fct-elementor-pi-badge-row" style="margin:8px 0;display:flex;gap:8px;flex-wrap:wrap">'
+            . $html // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in BadgeRenderer::sale()
+            . '</div>';
     }
 
     private function getOrderedSummarySections($settings)

@@ -10,6 +10,7 @@ use FluentCart\Framework\Support\Arr;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Controls\ProductSelectControl;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Controls\ProductVariationSelectControl;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Renderers\ElementorShopAppRenderer;
+use FluentCartElementorBlocks\App\Services\Badges\BadgeRenderer;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\AddToCartWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\BuyNowWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\CartWidget;
@@ -153,6 +154,17 @@ class ElementorIntegration
             return $view;
         }
 
+        // Re-apply the widget's Sale/Sold Out overlays on paginated pages. Page 1
+        // wraps the render inline; here we read the settings cached under the same
+        // client id and register the same image-block closures around the loop, so
+        // the cards keep both the configured layout AND their badges.
+        $badgeSettings = get_transient('fc_el_badges_' . $clientId);
+        $badgeHooks = is_array($badgeSettings) ? BadgeRenderer::cardBadgeClosures($badgeSettings, true) : null;
+        if ($badgeHooks) {
+            \add_action('fluent_cart/product/group/before_image_block', $badgeHooks['before'], 10, 1);
+            \add_action('fluent_cart/product/group/after_image_block', $badgeHooks['after'], 10, 1);
+        }
+
         ob_start();
         $isFirst = true;
 
@@ -175,6 +187,8 @@ class ElementorIntegration
             </article>
             <?php
         }
+
+        BadgeRenderer::removeCardBadgeHooks($badgeHooks);
 
         return ob_get_clean();
     }

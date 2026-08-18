@@ -8,8 +8,10 @@ use Elementor\Group_Control_Typography;
 use Elementor\Repeater;
 use FluentCart\Api\Taxonomy;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Renderers\ElementorShopAppHandler;
+use FluentCartElementorBlocks\App\Services\Badges\BadgeRenderer;
 use FluentCart\App\Modules\Templating\AssetLoader;
 use FluentCart\Framework\Support\Str;
+use FluentCart\Framework\Support\Arr;
 
 class ShopAppWidget extends Widget_Base
 {
@@ -65,7 +67,11 @@ class ShopAppWidget extends Widget_Base
         $this->registerCardLayoutControls();
         $this->registerFilterControls();
         $this->registerDefaultFilterControls();
+        // Sold Out panel is gated on the shop's allow_out_of_stock filter — an
+        // out-of-stock card only appears in the grid when that is on.
+        BadgeControls::registerBadgeContentControls($this, true, ['default_filter_allow_out_of_stock' => 'yes']);
         $this->registerStyleControls();
+        BadgeControls::registerBadgeStyleControls($this, true, ['default_filter_allow_out_of_stock' => 'yes']);
     }
 
     private function registerContentControls()
@@ -875,8 +881,33 @@ class ShopAppWidget extends Widget_Base
             ['element_type' => 'paginator'],
         ];
 
+        // Sale + Sold Out badge settings that drive the overlay closures. Kept
+        // in the cache key so toggling a badge (or changing its text/style/
+        // position) invalidates the cached HTML — otherwise the transient below
+        // would serve pre-badge markup.
+        // Sold Out only makes sense when out-of-stock products actually appear in
+        // the grid. FluentCart filters them out unless allow_out_of_stock is on
+        // (ProductQuery: "when false, show only in-stock products"), so gate the
+        // badge on the same flag — otherwise it advertises a state no visible
+        // card can ever be in.
+        $allowOutOfStock = Arr::get($settings, 'default_filter_allow_out_of_stock', '') === 'yes';
+
+        $badgeSettings = [
+            'show_sale_badge'         => Arr::get($settings, 'show_sale_badge', ''),
+            'sale_badge_style'        => Arr::get($settings, 'sale_badge_style', ''),
+            'sale_badge_position'     => Arr::get($settings, 'sale_badge_position', ''),
+            'sale_badge_text'         => Arr::get($settings, 'sale_badge_text', ''),
+            'show_percentage'         => Arr::get($settings, 'show_percentage', ''),
+            'sale_percentage_text'    => Arr::get($settings, 'sale_percentage_text', ''),
+            'sale_price_source'       => Arr::get($settings, 'sale_price_source', ''),
+            'show_sold_out_badge'     => $allowOutOfStock ? Arr::get($settings, 'show_sold_out_badge', '') : '',
+            'sold_out_badge_style'    => Arr::get($settings, 'sold_out_badge_style', ''),
+            'sold_out_badge_position' => Arr::get($settings, 'sold_out_badge_position', ''),
+            'sold_out_badge_text'     => Arr::get($settings, 'sold_out_badge_text', ''),
+        ];
+
         // Build a transient cache key based on the relevant settings
-        $cacheKey = 'fce_shop_app_' . md5(wp_json_encode($shortcodeAtts) . wp_json_encode($cardElements) . wp_json_encode($shopLayout));
+        $cacheKey = 'fce_shop_app_' . md5(wp_json_encode($shortcodeAtts) . wp_json_encode($cardElements) . wp_json_encode($shopLayout) . wp_json_encode($badgeSettings));
 
         if (!$isEditor) {
             $cached = get_transient($cacheKey);
@@ -887,10 +918,27 @@ class ShopAppWidget extends Widget_Base
             }
         }
 
+        // Sale + Sold Out badge overlays via core's before/after_image_block
+        // hooks (fire inside each card's renderProductImage). The closures
+        // buffer each card image and re-wrap it so the badge overlays the
+        // IMAGE, not the whole card. Scoped: removed right after the render.
+        // Page 2+ (AJAX) re-renders through the addon's own pagination provider
+        // (ElementorIntegration::preloadProductCollectionsAjax), which re-applies
+        // these same closures from the badge settings the handler caches
+        // alongside the card layout — keeping the configured card elements.
+        $badgeHooks = BadgeRenderer::cardBadgeClosures($badgeSettings, true);
+        if ($badgeHooks) {
+            add_action('fluent_cart/product/group/before_image_block', $badgeHooks['before'], 10, 1);
+            add_action('fluent_cart/product/group/after_image_block', $badgeHooks['after'], 10, 1);
+        }
+
         $handler = new ElementorShopAppHandler();
         $handler->setCardElements($cardElements);
         $handler->setShopLayout($shopLayout);
+        $handler->setBadgeSettings($badgeSettings);
         $output  = $handler->handelShortcodeCall($shortcodeAtts);
+
+        BadgeRenderer::removeCardBadgeHooks($badgeHooks);
 
         $html = '<div class="fluent-cart-elementor-shop-app">' . $output . '</div>';
 

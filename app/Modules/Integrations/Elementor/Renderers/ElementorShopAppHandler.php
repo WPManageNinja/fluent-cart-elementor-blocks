@@ -15,6 +15,8 @@ class ElementorShopAppHandler extends ShopAppHandler
 
     protected $clientId = '';
 
+    protected $badgeSettings = [];
+
     public function setCardElements(array $cardElements)
     {
         $this->cardElements = $cardElements;
@@ -24,6 +26,11 @@ class ElementorShopAppHandler extends ShopAppHandler
     public function setShopLayout(array $shopLayout)
     {
         $this->shopLayout = $shopLayout;
+    }
+
+    public function setBadgeSettings(array $badgeSettings)
+    {
+        $this->badgeSettings = $badgeSettings;
     }
 
     public function renderView()
@@ -148,6 +155,7 @@ class ElementorShopAppHandler extends ShopAppHandler
         $config['card_elements'] = $this->cardElements;
         $config['client_id'] = $this->clientId;
         $config['shop_layout'] = $this->shopLayout;
+        $config['badge_settings'] = $this->badgeSettings;
         $config['view_mode'] = $this->shortcodeAttributes['view_mode'];
         $config['product_box_grid_size'] = $this->shortcodeAttributes['product_box_grid_size'];
         $config['price_format'] = $this->shortcodeAttributes['price_format'];
