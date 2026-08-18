@@ -85,7 +85,7 @@ Yes. Required CSS and JavaScript assets are enqueued automatically when widgets 
 
 == Changelog ==
 
-= 1.0.3 (August 14, 2026) =
+= 1.0.3 (August 18, 2026) =
 - Adds Template Library: 8 professionally designed store page templates (Shop, Single Product, Product Category, Cart, Checkout, Thank You, Customer Dashboard, Campaign Landing) seeded automatically into Elementor's Insert Template → My Templates modal with preview thumbnails.
 - Adds Version-gated template seeding that self-heals on every admin load, never duplicates items, updates plugin-seeded layouts in place on release upgrades, and never touches user-created templates.
 - Adds Cart widget: renders the full FluentCart cart (item rows, quantities, totals, empty state) with a Style tab for Item Row and Checkout Button.
@@ -94,6 +94,8 @@ Yes. Required CSS and JavaScript assets are enqueued automatically when widgets 
 - Adds Customer Dashboard widget: renders the customer account area; the editor canvas presents core's loading skeleton as a labeled layout wireframe.
 - Adds Related Products widget Style tab: Heading, Grid (columns via core's CSS variable + gap), Card, Product Title, Price, and Button (covers Add To Cart, Buy Now and View Options variants).
 - Adds Product Info widget style coverage: Package Description section, Stock badge controls (per-state backgrounds, padding, radius), and independent Buy Now / Add To Cart button sections.
+- Adds Sale and Sold Out badge overlays to the product widgets: Sale badge on Product Card, Product Carousel, Products, Related Products, and Product Info (inline, position selectable); Sold Out badge on the Products widget when Allow Out Of Stock is enabled. Includes badge text, discount percentage format, style (Badge/Ribbon/Tag), corner position, and a Style tab for colors, typography, padding, and radius. All badges are off by default; badges persist across AJAX pagination.
+- Changes The Products widget now automatically scopes to the current term on product category/brand archive pages — it lists only that category's or brand's products (previously the whole store) and hides that taxonomy's sidebar filter.
 
 = 1.0.2 (June 30, 2026) =
 - Adds `show_thumbnail` control to the Search Bar widget.
