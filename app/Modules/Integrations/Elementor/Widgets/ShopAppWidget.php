@@ -911,9 +911,16 @@ class ShopAppWidget extends Widget_Base
         // the handler scopes the query to the current term (applyArchiveScope),
         // so the same widget renders different products per category/brand —
         // without the term, one archive's HTML would be served on all of them.
+        // Taxonomy-qualified: term IDs are not schema-guaranteed unique across
+        // taxonomies (legacy shared terms), so a category and a brand could
+        // share an ID — the taxonomy keeps their caches apart.
         $fluentCartTaxonomies = get_object_taxonomies('fluent-products');
-        $archiveTermId = $fluentCartTaxonomies && is_tax($fluentCartTaxonomies) ? get_queried_object_id() : 0;
-        $cacheKey = 'fce_shop_app_' . md5(wp_json_encode($shortcodeAtts) . wp_json_encode($cardElements) . wp_json_encode($shopLayout) . wp_json_encode($badgeSettings) . '|term:' . $archiveTermId);
+        $archiveTerm = '';
+        if ($fluentCartTaxonomies && is_tax($fluentCartTaxonomies)) {
+            $queriedTerm = get_queried_object();
+            $archiveTerm = $queriedTerm instanceof \WP_Term ? $queriedTerm->taxonomy . ':' . $queriedTerm->term_id : '';
+        }
+        $cacheKey = 'fce_shop_app_' . md5(wp_json_encode($shortcodeAtts) . wp_json_encode($cardElements) . wp_json_encode($shopLayout) . wp_json_encode($badgeSettings) . '|term:' . $archiveTerm);
 
         if (!$isEditor) {
             $cached = get_transient($cacheKey);
