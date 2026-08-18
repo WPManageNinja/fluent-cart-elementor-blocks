@@ -94,7 +94,8 @@ Yes. Required CSS and JavaScript assets are enqueued automatically when widgets 
 - Adds Customer Dashboard widget: renders the customer account area; the editor canvas presents core's loading skeleton as a labeled layout wireframe.
 - Adds Related Products widget Style tab: Heading, Grid (columns via core's CSS variable + gap), Card, Product Title, Price, and Button (covers Add To Cart, Buy Now and View Options variants).
 - Adds Product Info widget style coverage: Package Description section, Stock badge controls (per-state backgrounds, padding, radius), and independent Buy Now / Add To Cart button sections.
-- Adds Sale and Sold Out badge overlays to the product widgets: Sale badge on Product Card, Product Carousel, Products, Related Products, and Product Info (inline, position selectable); Sold Out badge on the Products widget when Allow Out Of Stock is enabled. Includes badge text, discount percentage format, style (Badge/Ribbon/Tag), corner position, and a Style tab for colors, typography, padding, and radius. All badges are off by default; badges persist across AJAX pagination.
+- Adds Sale badge overlays to the product widgets: Sale badge on Product Card, Products, Product Carousel, Related Products, and Product Info.
+- Adds Sold Out badge on the Products widget when Allow Out Of Stock is enabled.
 - Changes The Products widget now automatically scopes to the current term on product category/brand archive pages — it lists only that category's or brand's products (previously the whole store) and hides that taxonomy's sidebar filter.
 
 = 1.0.2 (June 30, 2026) =
