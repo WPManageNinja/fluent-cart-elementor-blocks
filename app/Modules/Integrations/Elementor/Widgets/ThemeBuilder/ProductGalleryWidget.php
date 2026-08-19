@@ -41,6 +41,14 @@ class ProductGalleryWidget extends Widget_Base
         return ['product', 'gallery', 'images', 'photos', 'fluent'];
     }
 
+    /**
+     * Thumbnail mode passed to ProductRenderer::renderGallery(). Fixed at 'all'
+     * to match the Gutenberg (ProductGalleryBlockEditor) and Bricks
+     * (Elements\ProductGallery) integrations — no builder exposes this as a
+     * user-facing control.
+     */
+    const GALLERY_THUMBNAIL_MODE = 'all';
+
     public static function registerGalleryContentControls($widget)
     {
         $widget->add_control(
@@ -58,19 +66,11 @@ class ProductGalleryWidget extends Widget_Base
             ]
         );
 
-        $widget->add_control(
-            'thumbnail_mode',
-            [
-                'label'   => esc_html__('Thumbnail Mode', 'fluent-cart'),
-                'type'    => Controls_Manager::SELECT,
-                'default' => 'all',
-                'options' => [
-                    'all'        => esc_html__('All', 'fluent-cart'),
-                    'horizontal' => esc_html__('Horizontal', 'fluent-cart'),
-                    'vertical'   => esc_html__('Vertical', 'fluent-cart'),
-                ],
-            ]
-        );
+        // No `thumbnail_mode` control. The renderer's only consumer of it is
+        // ImageGallery.js, which branches on 'all' vs not-'all' to decide whether
+        // thumbnails filter down to the selected variant — it has no notion of
+        // 'horizontal'/'vertical'. The Gutenberg and Bricks integrations both pin
+        // it to 'all'; Elementor now does the same via GALLERY_THUMBNAIL_MODE.
 
         $widget->add_control(
             'scrollable_thumbs',
@@ -132,7 +132,7 @@ class ProductGalleryWidget extends Widget_Base
         ob_start();
         $renderer->renderGallery([
             'thumb_position'    => $settings['thumb_position'] ?: 'bottom',
-            'thumbnail_mode'    => $settings['thumbnail_mode'] ?: 'all',
+            'thumbnail_mode'    => self::GALLERY_THUMBNAIL_MODE,
             'scrollable_thumbs' => !empty($settings['scrollable_thumbs']) ? 'yes' : 'no',
             'max_thumbnails'    => !empty($settings['max_thumbnails']) ? (int) $settings['max_thumbnails'] : null,
         ]);

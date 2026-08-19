@@ -527,9 +527,14 @@ class ProductInfoWidget extends Widget_Base
         echo '<div class="fct-single-product-page-row">';
 
         if ($showGallery) {
+            // Mirror ProductGalleryWidget::render() exactly — the same control
+            // set is registered here via registerGalleryContentControls(), so
+            // every key it registers has to be forwarded to the renderer.
             $renderer->renderGallery([
-                'thumb_position' => $settings['thumb_position'] ?: 'bottom',
-                'thumbnail_mode' => $settings['thumbnail_mode'] ?: 'all',
+                'thumb_position'    => $settings['thumb_position'] ?: 'bottom',
+                'thumbnail_mode'    => ProductGalleryWidget::GALLERY_THUMBNAIL_MODE,
+                'scrollable_thumbs' => !empty($settings['scrollable_thumbs']) ? 'yes' : 'no',
+                'max_thumbnails'    => !empty($settings['max_thumbnails']) ? (int) $settings['max_thumbnails'] : null,
             ]);
         }
 
