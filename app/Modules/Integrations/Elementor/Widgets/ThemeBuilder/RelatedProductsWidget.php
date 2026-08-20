@@ -27,7 +27,7 @@ class RelatedProductsWidget extends Widget_Base
 
     public function get_title()
     {
-        return esc_html__('Related Products', 'fluent-cart');
+        return esc_html__('Related Products', 'fluent-cart-elementor-blocks');
     }
 
     public function get_icon()
@@ -50,7 +50,7 @@ class RelatedProductsWidget extends Widget_Base
         $this->start_controls_section(
             'content_section',
             [
-                'label' => esc_html__('Content', 'fluent-cart'),
+                'label' => esc_html__('Content', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_CONTENT,
             ]
         );
@@ -81,7 +81,7 @@ class RelatedProductsWidget extends Widget_Base
         $this->start_controls_section(
             'style_heading',
             [
-                'label' => esc_html__('Heading', 'fluent-cart'),
+                'label' => esc_html__('Heading', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
@@ -89,7 +89,7 @@ class RelatedProductsWidget extends Widget_Base
         $this->add_control(
             'heading_color',
             [
-                'label'     => esc_html__('Color', 'fluent-cart'),
+                'label'     => esc_html__('Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .fct-product-list-heading' => 'color: {{VALUE}} !important;',
@@ -108,7 +108,7 @@ class RelatedProductsWidget extends Widget_Base
         $this->add_responsive_control(
             'heading_spacing',
             [
-                'label'      => esc_html__('Spacing', 'fluent-cart'),
+                'label'      => esc_html__('Spacing', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::SLIDER,
                 'size_units' => ['px'],
                 'range'      => [
@@ -128,7 +128,7 @@ class RelatedProductsWidget extends Widget_Base
         $this->start_controls_section(
             'style_grid',
             [
-                'label' => esc_html__('Grid', 'fluent-cart'),
+                'label' => esc_html__('Grid', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
@@ -138,7 +138,7 @@ class RelatedProductsWidget extends Widget_Base
         $this->add_responsive_control(
             'grid_columns',
             [
-                'label'      => esc_html__('Columns', 'fluent-cart'),
+                'label'      => esc_html__('Columns', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::SLIDER,
                 'range'      => [
                     'px' => ['min' => 1, 'max' => 6, 'step' => 1],
@@ -152,7 +152,7 @@ class RelatedProductsWidget extends Widget_Base
         $this->add_responsive_control(
             'grid_gap',
             [
-                'label'      => esc_html__('Gap', 'fluent-cart'),
+                'label'      => esc_html__('Gap', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::SLIDER,
                 'size_units' => ['px'],
                 'range'      => [
@@ -172,7 +172,7 @@ class RelatedProductsWidget extends Widget_Base
         $this->start_controls_section(
             'style_card',
             [
-                'label' => esc_html__('Card', 'fluent-cart'),
+                'label' => esc_html__('Card', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
@@ -182,7 +182,7 @@ class RelatedProductsWidget extends Widget_Base
         $this->add_control(
             'card_background',
             [
-                'label'     => esc_html__('Background Color', 'fluent-cart'),
+                'label'     => esc_html__('Background Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     $card => 'background-color: {{VALUE}} !important;',
@@ -201,7 +201,7 @@ class RelatedProductsWidget extends Widget_Base
         $this->add_responsive_control(
             'card_border_radius',
             [
-                'label'      => esc_html__('Border Radius', 'fluent-cart'),
+                'label'      => esc_html__('Border Radius', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', '%'],
                 'selectors'  => [
@@ -221,7 +221,7 @@ class RelatedProductsWidget extends Widget_Base
         $this->add_responsive_control(
             'card_padding',
             [
-                'label'      => esc_html__('Padding', 'fluent-cart'),
+                'label'      => esc_html__('Padding', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', 'em'],
                 'selectors'  => [
@@ -238,7 +238,7 @@ class RelatedProductsWidget extends Widget_Base
         $this->start_controls_section(
             'style_title',
             [
-                'label' => esc_html__('Product Title', 'fluent-cart'),
+                'label' => esc_html__('Product Title', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
@@ -248,7 +248,7 @@ class RelatedProductsWidget extends Widget_Base
         $this->add_control(
             'title_color',
             [
-                'label'     => esc_html__('Color', 'fluent-cart'),
+                'label'     => esc_html__('Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     $title => 'color: {{VALUE}} !important;',
@@ -259,7 +259,7 @@ class RelatedProductsWidget extends Widget_Base
         $this->add_control(
             'title_hover_color',
             [
-                'label'     => esc_html__('Hover Color', 'fluent-cart'),
+                'label'     => esc_html__('Hover Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .fct-product-card-title:hover, {{WRAPPER}} .fct-product-card-title a:hover' => 'color: {{VALUE}} !important;',
@@ -283,7 +283,7 @@ class RelatedProductsWidget extends Widget_Base
         $this->start_controls_section(
             'style_price',
             [
-                'label' => esc_html__('Price', 'fluent-cart'),
+                'label' => esc_html__('Price', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
@@ -291,7 +291,7 @@ class RelatedProductsWidget extends Widget_Base
         $this->add_control(
             'price_color',
             [
-                'label'     => esc_html__('Color', 'fluent-cart'),
+                'label'     => esc_html__('Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .fct-item-price' => 'color: {{VALUE}} !important;',
@@ -310,7 +310,7 @@ class RelatedProductsWidget extends Widget_Base
         $this->add_control(
             'compare_price_color',
             [
-                'label'     => esc_html__('Compare Price Color', 'fluent-cart'),
+                'label'     => esc_html__('Compare Price Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'separator' => 'before',
                 'selectors' => [
@@ -327,7 +327,7 @@ class RelatedProductsWidget extends Widget_Base
         $this->start_controls_section(
             'style_button',
             [
-                'label' => esc_html__('Button', 'fluent-cart'),
+                'label' => esc_html__('Button', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
@@ -368,14 +368,14 @@ class RelatedProductsWidget extends Widget_Base
         $this->start_controls_tab(
             'button_tab_normal',
             [
-                'label' => esc_html__('Normal', 'fluent-cart'),
+                'label' => esc_html__('Normal', 'fluent-cart-elementor-blocks'),
             ]
         );
 
         $this->add_control(
             'button_text_color',
             [
-                'label'     => esc_html__('Text Color', 'fluent-cart'),
+                'label'     => esc_html__('Text Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     $buttonText => 'color: {{VALUE}} !important;',
@@ -386,7 +386,7 @@ class RelatedProductsWidget extends Widget_Base
         $this->add_control(
             'button_background',
             [
-                'label'     => esc_html__('Background Color', 'fluent-cart'),
+                'label'     => esc_html__('Background Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     $button => 'background-color: {{VALUE}} !important;',
@@ -399,14 +399,14 @@ class RelatedProductsWidget extends Widget_Base
         $this->start_controls_tab(
             'button_tab_hover',
             [
-                'label' => esc_html__('Hover', 'fluent-cart'),
+                'label' => esc_html__('Hover', 'fluent-cart-elementor-blocks'),
             ]
         );
 
         $this->add_control(
             'button_hover_text_color',
             [
-                'label'     => esc_html__('Text Color', 'fluent-cart'),
+                'label'     => esc_html__('Text Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     $buttonHoverText => 'color: {{VALUE}} !important;',
@@ -417,7 +417,7 @@ class RelatedProductsWidget extends Widget_Base
         $this->add_control(
             'button_hover_background',
             [
-                'label'     => esc_html__('Background Color', 'fluent-cart'),
+                'label'     => esc_html__('Background Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     $buttonHover => 'background-color: {{VALUE}} !important;',
@@ -441,7 +441,7 @@ class RelatedProductsWidget extends Widget_Base
         $this->add_responsive_control(
             'button_border_radius',
             [
-                'label'      => esc_html__('Border Radius', 'fluent-cart'),
+                'label'      => esc_html__('Border Radius', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', '%'],
                 'selectors'  => [
@@ -453,7 +453,7 @@ class RelatedProductsWidget extends Widget_Base
         $this->add_responsive_control(
             'button_padding',
             [
-                'label'      => esc_html__('Padding', 'fluent-cart'),
+                'label'      => esc_html__('Padding', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', 'em'],
                 'selectors'  => [
@@ -477,7 +477,7 @@ class RelatedProductsWidget extends Widget_Base
             // block, which prompts the user to select a product (Source → Custom in
             // the widget settings) instead of previewing an arbitrary one.
             // renderPlaceholder is editor-only; the front end renders nothing.
-            $this->renderPlaceholder(__('Related products requires a product to be selected in order to display associated items.', 'fluent-cart'));
+            $this->renderPlaceholder(__('Related products requires a product to be selected in order to display associated items.', 'fluent-cart-elementor-blocks'));
             return;
         }
 

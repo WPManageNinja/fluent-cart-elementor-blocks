@@ -24,7 +24,7 @@ class ProductPackageDescriptionWidget extends Widget_Base
 
     public function get_title()
     {
-        return esc_html__('Product Package Description', 'fluent-cart');
+        return esc_html__('Product Package Description', 'fluent-cart-elementor-blocks');
     }
 
     public function get_icon()
@@ -48,7 +48,7 @@ class ProductPackageDescriptionWidget extends Widget_Base
             Group_Control_Typography::get_type(),
             [
                 'name'     => 'package_label_typography',
-                'label'    => esc_html__('Label Typography', 'fluent-cart'),
+                'label'    => esc_html__('Label Typography', 'fluent-cart-elementor-blocks'),
                 'selector' => $selector . ' .fct-package-description__table th',
             ]
         );
@@ -56,7 +56,7 @@ class ProductPackageDescriptionWidget extends Widget_Base
         $widget->add_control(
             'package_label_color',
             [
-                'label'     => esc_html__('Label Color', 'fluent-cart'),
+                'label'     => esc_html__('Label Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     $selector . ' .fct-package-description__table th' => 'color: {{VALUE}};',
@@ -68,7 +68,7 @@ class ProductPackageDescriptionWidget extends Widget_Base
             Group_Control_Typography::get_type(),
             [
                 'name'     => 'package_value_typography',
-                'label'    => esc_html__('Value Typography', 'fluent-cart'),
+                'label'    => esc_html__('Value Typography', 'fluent-cart-elementor-blocks'),
                 'selector' => $selector . ' .fct-package-description__table td',
             ]
         );
@@ -76,7 +76,7 @@ class ProductPackageDescriptionWidget extends Widget_Base
         $widget->add_control(
             'package_value_color',
             [
-                'label'     => esc_html__('Value Color', 'fluent-cart'),
+                'label'     => esc_html__('Value Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     $selector . ' .fct-package-description__table td' => 'color: {{VALUE}};',
@@ -87,7 +87,7 @@ class ProductPackageDescriptionWidget extends Widget_Base
         $widget->add_control(
             'package_border_color',
             [
-                'label'     => esc_html__('Row Border Color', 'fluent-cart'),
+                'label'     => esc_html__('Row Border Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     $selector . ' .fct-package-description__table th, ' . $selector . ' .fct-package-description__table td' => 'border-bottom-color: {{VALUE}};',
@@ -101,7 +101,7 @@ class ProductPackageDescriptionWidget extends Widget_Base
         $this->start_controls_section(
             'content_section',
             [
-                'label' => esc_html__('Content', 'fluent-cart'),
+                'label' => esc_html__('Content', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_CONTENT,
             ]
         );
@@ -111,10 +111,10 @@ class ProductPackageDescriptionWidget extends Widget_Base
         $this->add_control(
             'show_name',
             [
-                'label'        => esc_html__('Show Package Name', 'fluent-cart'),
+                'label'        => esc_html__('Show Package Name', 'fluent-cart-elementor-blocks'),
                 'type'         => Controls_Manager::SWITCHER,
-                'label_on'     => esc_html__('Yes', 'fluent-cart'),
-                'label_off'    => esc_html__('No', 'fluent-cart'),
+                'label_on'     => esc_html__('Yes', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('No', 'fluent-cart-elementor-blocks'),
                 'return_value' => 'yes',
                 'default'      => 'yes',
                 'separator'    => 'before',
@@ -124,10 +124,10 @@ class ProductPackageDescriptionWidget extends Widget_Base
         $this->add_control(
             'show_dimensions',
             [
-                'label'        => esc_html__('Show Dimensions', 'fluent-cart'),
+                'label'        => esc_html__('Show Dimensions', 'fluent-cart-elementor-blocks'),
                 'type'         => Controls_Manager::SWITCHER,
-                'label_on'     => esc_html__('Yes', 'fluent-cart'),
-                'label_off'    => esc_html__('No', 'fluent-cart'),
+                'label_on'     => esc_html__('Yes', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('No', 'fluent-cart-elementor-blocks'),
                 'return_value' => 'yes',
                 'default'      => 'yes',
             ]
@@ -136,10 +136,10 @@ class ProductPackageDescriptionWidget extends Widget_Base
         $this->add_control(
             'show_product_weight',
             [
-                'label'        => esc_html__('Show Product Weight', 'fluent-cart'),
+                'label'        => esc_html__('Show Product Weight', 'fluent-cart-elementor-blocks'),
                 'type'         => Controls_Manager::SWITCHER,
-                'label_on'     => esc_html__('Yes', 'fluent-cart'),
-                'label_off'    => esc_html__('No', 'fluent-cart'),
+                'label_on'     => esc_html__('Yes', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('No', 'fluent-cart-elementor-blocks'),
                 'return_value' => 'yes',
                 'default'      => 'yes',
             ]
@@ -148,10 +148,10 @@ class ProductPackageDescriptionWidget extends Widget_Base
         $this->add_control(
             'show_total_weight',
             [
-                'label'        => esc_html__('Show Shipping Weight', 'fluent-cart'),
+                'label'        => esc_html__('Show Shipping Weight', 'fluent-cart-elementor-blocks'),
                 'type'         => Controls_Manager::SWITCHER,
-                'label_on'     => esc_html__('Yes', 'fluent-cart'),
-                'label_off'    => esc_html__('No', 'fluent-cart'),
+                'label_on'     => esc_html__('Yes', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('No', 'fluent-cart-elementor-blocks'),
                 'return_value' => 'yes',
                 'default'      => 'yes',
             ]
@@ -163,7 +163,7 @@ class ProductPackageDescriptionWidget extends Widget_Base
         $this->start_controls_section(
             'package_style_section',
             [
-                'label' => esc_html__('Style', 'fluent-cart'),
+                'label' => esc_html__('Style', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
@@ -179,7 +179,7 @@ class ProductPackageDescriptionWidget extends Widget_Base
         $product = $this->getProduct($settings);
 
         if (!$product) {
-            $this->renderPlaceholder(__('Please select a product or use this widget inside a product template.', 'fluent-cart'));
+            $this->renderPlaceholder(__('Please select a product or use this widget inside a product template.', 'fluent-cart-elementor-blocks'));
             return;
         }
 

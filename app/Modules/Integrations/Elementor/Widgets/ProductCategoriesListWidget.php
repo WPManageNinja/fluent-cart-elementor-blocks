@@ -16,7 +16,7 @@ class ProductCategoriesListWidget extends Widget_Base
 
     public function get_title()
     {
-        return esc_html__('Product Categories List', 'fluent-cart');
+        return esc_html__('Product Categories List', 'fluent-cart-elementor-blocks');
     }
 
     public function get_icon()
@@ -94,7 +94,7 @@ class ProductCategoriesListWidget extends Widget_Base
         $this->start_controls_section(
             'settings_section',
             [
-                'label' => esc_html__('Settings', 'fluent-cart'),
+                'label' => esc_html__('Settings', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_CONTENT,
             ]
         );
@@ -102,12 +102,12 @@ class ProductCategoriesListWidget extends Widget_Base
         $this->add_control(
             'display_style',
             [
-                'label'   => esc_html__('Display Style', 'fluent-cart'),
+                'label'   => esc_html__('Display Style', 'fluent-cart-elementor-blocks'),
                 'type'    => Controls_Manager::SELECT,
                 'default' => 'list',
                 'options' => [
-                    'list'     => esc_html__('List', 'fluent-cart'),
-                    'dropdown' => esc_html__('Dropdown', 'fluent-cart'),
+                    'list'     => esc_html__('List', 'fluent-cart-elementor-blocks'),
+                    'dropdown' => esc_html__('Dropdown', 'fluent-cart-elementor-blocks'),
                 ],
             ]
         );
@@ -115,39 +115,39 @@ class ProductCategoriesListWidget extends Widget_Base
         $this->add_control(
             'show_product_count',
             [
-                'label'        => esc_html__('Show Product Count', 'fluent-cart'),
+                'label'        => esc_html__('Show Product Count', 'fluent-cart-elementor-blocks'),
                 'type'         => Controls_Manager::SWITCHER,
-                'label_on'     => esc_html__('Yes', 'fluent-cart'),
-                'label_off'    => esc_html__('No', 'fluent-cart'),
+                'label_on'     => esc_html__('Yes', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('No', 'fluent-cart-elementor-blocks'),
                 'return_value' => 'yes',
                 'default'      => 'yes',
-                'description'  => esc_html__('Display the number of products in each category.', 'fluent-cart'),
+                'description'  => esc_html__('Display the number of products in each category.', 'fluent-cart-elementor-blocks'),
             ]
         );
 
         $this->add_control(
             'show_hierarchy',
             [
-                'label'        => esc_html__('Show Hierarchy', 'fluent-cart'),
+                'label'        => esc_html__('Show Hierarchy', 'fluent-cart-elementor-blocks'),
                 'type'         => Controls_Manager::SWITCHER,
-                'label_on'     => esc_html__('Yes', 'fluent-cart'),
-                'label_off'    => esc_html__('No', 'fluent-cart'),
+                'label_on'     => esc_html__('Yes', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('No', 'fluent-cart-elementor-blocks'),
                 'return_value' => 'yes',
                 'default'      => 'yes',
-                'description'  => esc_html__('Display child categories nested under their parents.', 'fluent-cart'),
+                'description'  => esc_html__('Display child categories nested under their parents.', 'fluent-cart-elementor-blocks'),
             ]
         );
 
         $this->add_control(
             'show_empty',
             [
-                'label'        => esc_html__('Show Empty Categories', 'fluent-cart'),
+                'label'        => esc_html__('Show Empty Categories', 'fluent-cart-elementor-blocks'),
                 'type'         => Controls_Manager::SWITCHER,
-                'label_on'     => esc_html__('Yes', 'fluent-cart'),
-                'label_off'    => esc_html__('No', 'fluent-cart'),
+                'label_on'     => esc_html__('Yes', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('No', 'fluent-cart-elementor-blocks'),
                 'return_value' => 'yes',
                 'default'      => '',
-                'description'  => esc_html__('Display categories even if they have no products.', 'fluent-cart'),
+                'description'  => esc_html__('Display categories even if they have no products.', 'fluent-cart-elementor-blocks'),
             ]
         );
 
@@ -159,7 +159,7 @@ class ProductCategoriesListWidget extends Widget_Base
         $this->start_controls_section(
             'list_style_section',
             [
-                'label'     => esc_html__('List Items', 'fluent-cart'),
+                'label'     => esc_html__('List Items', 'fluent-cart-elementor-blocks'),
                 'tab'       => Controls_Manager::TAB_STYLE,
                 'condition' => [
                     'display_style' => 'list',
@@ -178,7 +178,7 @@ class ProductCategoriesListWidget extends Widget_Base
         $this->add_control(
             'list_text_color',
             [
-                'label'     => esc_html__('Text Color', 'fluent-cart'),
+                'label'     => esc_html__('Text Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .fct-category-link' => 'color: {{VALUE}};',
@@ -189,7 +189,7 @@ class ProductCategoriesListWidget extends Widget_Base
         $this->add_control(
             'list_hover_color',
             [
-                'label'     => esc_html__('Hover Color', 'fluent-cart'),
+                'label'     => esc_html__('Hover Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .fct-category-link:hover' => 'color: {{VALUE}};',
@@ -200,7 +200,7 @@ class ProductCategoriesListWidget extends Widget_Base
         $this->add_responsive_control(
             'list_item_spacing',
             [
-                'label'      => esc_html__('Item Spacing', 'fluent-cart'),
+                'label'      => esc_html__('Item Spacing', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::SLIDER,
                 'size_units' => ['px', 'em'],
                 'range'      => [
@@ -216,7 +216,7 @@ class ProductCategoriesListWidget extends Widget_Base
         $this->add_responsive_control(
             'list_child_indent',
             [
-                'label'      => esc_html__('Child Indent', 'fluent-cart'),
+                'label'      => esc_html__('Child Indent', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::SLIDER,
                 'size_units' => ['px', 'em'],
                 'range'      => [
@@ -237,7 +237,7 @@ class ProductCategoriesListWidget extends Widget_Base
         $this->start_controls_section(
             'count_style_section',
             [
-                'label'     => esc_html__('Product Count', 'fluent-cart'),
+                'label'     => esc_html__('Product Count', 'fluent-cart-elementor-blocks'),
                 'tab'       => Controls_Manager::TAB_STYLE,
                 'condition' => [
                     'show_product_count' => 'yes',
@@ -256,7 +256,7 @@ class ProductCategoriesListWidget extends Widget_Base
         $this->add_control(
             'count_color',
             [
-                'label'     => esc_html__('Color', 'fluent-cart'),
+                'label'     => esc_html__('Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .fct-category-count' => 'color: {{VALUE}};',
@@ -272,7 +272,7 @@ class ProductCategoriesListWidget extends Widget_Base
         $this->start_controls_section(
             'dropdown_style_section',
             [
-                'label'     => esc_html__('Dropdown', 'fluent-cart'),
+                'label'     => esc_html__('Dropdown', 'fluent-cart-elementor-blocks'),
                 'tab'       => Controls_Manager::TAB_STYLE,
                 'condition' => [
                     'display_style' => 'dropdown',
@@ -283,7 +283,7 @@ class ProductCategoriesListWidget extends Widget_Base
         $this->add_control(
             'dropdown_select_heading',
             [
-                'label' => esc_html__('Select Field', 'fluent-cart'),
+                'label' => esc_html__('Select Field', 'fluent-cart-elementor-blocks'),
                 'type'  => Controls_Manager::HEADING,
             ]
         );
@@ -299,7 +299,7 @@ class ProductCategoriesListWidget extends Widget_Base
         $this->add_control(
             'dropdown_text_color',
             [
-                'label'     => esc_html__('Text Color', 'fluent-cart'),
+                'label'     => esc_html__('Text Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .fct-categories-dropdown' => 'color: {{VALUE}};',
@@ -310,7 +310,7 @@ class ProductCategoriesListWidget extends Widget_Base
         $this->add_control(
             'dropdown_background',
             [
-                'label'     => esc_html__('Background', 'fluent-cart'),
+                'label'     => esc_html__('Background', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .fct-categories-dropdown' => 'background-color: {{VALUE}};',
@@ -329,7 +329,7 @@ class ProductCategoriesListWidget extends Widget_Base
         $this->add_control(
             'dropdown_border_radius',
             [
-                'label'      => esc_html__('Border Radius', 'fluent-cart'),
+                'label'      => esc_html__('Border Radius', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', '%', 'em'],
                 'selectors'  => [
@@ -341,7 +341,7 @@ class ProductCategoriesListWidget extends Widget_Base
         $this->add_responsive_control(
             'dropdown_padding',
             [
-                'label'      => esc_html__('Padding', 'fluent-cart'),
+                'label'      => esc_html__('Padding', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', 'em', '%'],
                 'selectors'  => [
@@ -353,7 +353,7 @@ class ProductCategoriesListWidget extends Widget_Base
         $this->add_control(
             'dropdown_button_heading',
             [
-                'label'     => esc_html__('Go Button', 'fluent-cart'),
+                'label'     => esc_html__('Go Button', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::HEADING,
                 'separator' => 'before',
             ]
@@ -364,14 +364,14 @@ class ProductCategoriesListWidget extends Widget_Base
         $this->start_controls_tab(
             'tab_dropdown_button_normal',
             [
-                'label' => esc_html__('Normal', 'fluent-cart'),
+                'label' => esc_html__('Normal', 'fluent-cart-elementor-blocks'),
             ]
         );
 
         $this->add_control(
             'dropdown_button_color',
             [
-                'label'     => esc_html__('Icon Color', 'fluent-cart'),
+                'label'     => esc_html__('Icon Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .fct-categories-go-btn'     => 'color: {{VALUE}};',
@@ -383,7 +383,7 @@ class ProductCategoriesListWidget extends Widget_Base
         $this->add_control(
             'dropdown_button_background',
             [
-                'label'     => esc_html__('Background', 'fluent-cart'),
+                'label'     => esc_html__('Background', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .fct-categories-go-btn' => 'background-color: {{VALUE}};',
@@ -396,14 +396,14 @@ class ProductCategoriesListWidget extends Widget_Base
         $this->start_controls_tab(
             'tab_dropdown_button_hover',
             [
-                'label' => esc_html__('Hover', 'fluent-cart'),
+                'label' => esc_html__('Hover', 'fluent-cart-elementor-blocks'),
             ]
         );
 
         $this->add_control(
             'dropdown_button_hover_color',
             [
-                'label'     => esc_html__('Icon Color', 'fluent-cart'),
+                'label'     => esc_html__('Icon Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .fct-categories-go-btn:hover'     => 'color: {{VALUE}};',
@@ -415,7 +415,7 @@ class ProductCategoriesListWidget extends Widget_Base
         $this->add_control(
             'dropdown_button_hover_background',
             [
-                'label'     => esc_html__('Background', 'fluent-cart'),
+                'label'     => esc_html__('Background', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .fct-categories-go-btn:hover' => 'background-color: {{VALUE}};',

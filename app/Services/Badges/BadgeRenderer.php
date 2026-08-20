@@ -41,7 +41,7 @@ class BadgeRenderer
             return '';
         }
 
-        $text = (string) Arr::get($opts, 'badgeText', __('Sale!', 'fluent-cart'));
+        $text = (string) Arr::get($opts, 'badgeText', __('Sale!', 'fluent-cart-elementor-blocks'));
 
         if (Arr::get($opts, 'showPercentage') && $state['discount_percent'] > 0) {
             $format = (string) Arr::get($opts, 'percentageText', '-{percent}%');
@@ -62,7 +62,7 @@ class BadgeRenderer
             return '';
         }
 
-        $text = (string) Arr::get($opts, 'badgeText', __('Sold Out', 'fluent-cart'));
+        $text = (string) Arr::get($opts, 'badgeText', __('Sold Out', 'fluent-cart-elementor-blocks'));
 
         return self::span('fct-sold-out-badge', $opts, $text);
     }
@@ -176,7 +176,7 @@ class BadgeRenderer
         $soldOutPosition = $get('sold_out_badge_position', $salePosition);
 
         $saleOpts = $showSale ? [
-            'badgeText'      => $get('sale_badge_text', __('Sale!', 'fluent-cart')),
+            'badgeText'      => $get('sale_badge_text', __('Sale!', 'fluent-cart-elementor-blocks')),
             'showPercentage' => $get('show_percentage', '') === 'yes',
             'percentageText' => $get('sale_percentage_text', '-{percent}%'),
             'priceSource'    => $get('sale_price_source', 'default_variant'),
@@ -185,7 +185,7 @@ class BadgeRenderer
         ] : null;
 
         $soldOutOpts = $showSoldOut ? [
-            'badgeText'     => $get('sold_out_badge_text', __('Sold Out', 'fluent-cart')),
+            'badgeText'     => $get('sold_out_badge_text', __('Sold Out', 'fluent-cart-elementor-blocks')),
             'badgeStyle'    => $get('sold_out_badge_style', 'badge'),
             'badgePosition' => $soldOutPosition,
         ] : null;

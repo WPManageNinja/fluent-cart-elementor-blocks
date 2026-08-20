@@ -27,7 +27,7 @@ class ProductBuySectionWidget extends Widget_Base
 
     public function get_title()
     {
-        return esc_html__('Product Buy Section', 'fluent-cart');
+        return esc_html__('Product Buy Section', 'fluent-cart-elementor-blocks');
     }
 
     public function get_icon()
@@ -86,13 +86,13 @@ class ProductBuySectionWidget extends Widget_Base
 
         $widget->start_controls_tab(
             'button_normal_tab',
-            ['label' => esc_html__('Normal', 'fluent-cart')]
+            ['label' => esc_html__('Normal', 'fluent-cart-elementor-blocks')]
         );
 
         $widget->add_control(
             'button_text_color',
             [
-                'label'     => esc_html__('Text Color', 'fluent-cart'),
+                'label'     => esc_html__('Text Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => $buildBtnSelectors('color: {{VALUE}};'),
             ]
@@ -119,13 +119,13 @@ class ProductBuySectionWidget extends Widget_Base
 
         $widget->start_controls_tab(
             'button_hover_tab',
-            ['label' => esc_html__('Hover', 'fluent-cart')]
+            ['label' => esc_html__('Hover', 'fluent-cart-elementor-blocks')]
         );
 
         $widget->add_control(
             'button_hover_text_color',
             [
-                'label'     => esc_html__('Text Color', 'fluent-cart'),
+                'label'     => esc_html__('Text Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => $buildBtnHoverSelectors('color: {{VALUE}};'),
             ]
@@ -154,7 +154,7 @@ class ProductBuySectionWidget extends Widget_Base
         $widget->add_control(
             'button_border_radius',
             [
-                'label'      => esc_html__('Border Radius', 'fluent-cart'),
+                'label'      => esc_html__('Border Radius', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', '%', 'em'],
                 'separator'  => 'before',
@@ -165,7 +165,7 @@ class ProductBuySectionWidget extends Widget_Base
         $widget->add_responsive_control(
             'button_padding',
             [
-                'label'      => esc_html__('Padding', 'fluent-cart'),
+                'label'      => esc_html__('Padding', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', 'em', '%'],
                 'selectors'  => $buildBtnSelectors('padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};'),
@@ -179,7 +179,7 @@ class ProductBuySectionWidget extends Widget_Base
         static::registerSingleButtonColorControls(
             $widget,
             'buy_now',
-            esc_html__('Buy Now Button', 'fluent-cart'),
+            esc_html__('Buy Now Button', 'fluent-cart-elementor-blocks'),
             [
                 $selector . ' .fluent-cart-direct-checkout-button',
                 $selector . ' .fct-buy-now-btn',
@@ -189,7 +189,7 @@ class ProductBuySectionWidget extends Widget_Base
         static::registerSingleButtonColorControls(
             $widget,
             'add_to_cart',
-            esc_html__('Add To Cart Button', 'fluent-cart'),
+            esc_html__('Add To Cart Button', 'fluent-cart-elementor-blocks'),
             [
                 $selector . ' .fluent-cart-add-to-cart-button',
                 $selector . ' .fct-add-to-cart-btn',
@@ -231,13 +231,13 @@ class ProductBuySectionWidget extends Widget_Base
 
         $widget->start_controls_tab(
             $key . '_tab_normal',
-            ['label' => esc_html__('Normal', 'fluent-cart')]
+            ['label' => esc_html__('Normal', 'fluent-cart-elementor-blocks')]
         );
 
         $widget->add_control(
             $key . '_text_color',
             [
-                'label'     => esc_html__('Text Color', 'fluent-cart'),
+                'label'     => esc_html__('Text Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     $normal => 'color: {{VALUE}} !important;',
@@ -248,7 +248,7 @@ class ProductBuySectionWidget extends Widget_Base
         $widget->add_control(
             $key . '_background',
             [
-                'label'     => esc_html__('Background Color', 'fluent-cart'),
+                'label'     => esc_html__('Background Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     $normal => 'background-color: {{VALUE}} !important;',
@@ -260,13 +260,13 @@ class ProductBuySectionWidget extends Widget_Base
 
         $widget->start_controls_tab(
             $key . '_tab_hover',
-            ['label' => esc_html__('Hover', 'fluent-cart')]
+            ['label' => esc_html__('Hover', 'fluent-cart-elementor-blocks')]
         );
 
         $widget->add_control(
             $key . '_hover_text_color',
             [
-                'label'     => esc_html__('Text Color', 'fluent-cart'),
+                'label'     => esc_html__('Text Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     $hover => 'color: {{VALUE}} !important;',
@@ -277,7 +277,7 @@ class ProductBuySectionWidget extends Widget_Base
         $widget->add_control(
             $key . '_hover_background',
             [
-                'label'     => esc_html__('Background Color', 'fluent-cart'),
+                'label'     => esc_html__('Background Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     $hover => 'background-color: {{VALUE}} !important;',
@@ -295,7 +295,7 @@ class ProductBuySectionWidget extends Widget_Base
         $this->start_controls_section(
             'content_section',
             [
-                'label' => esc_html__('Content', 'fluent-cart'),
+                'label' => esc_html__('Content', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_CONTENT,
             ]
         );
@@ -308,7 +308,7 @@ class ProductBuySectionWidget extends Widget_Base
         $this->start_controls_section(
             'button_style_section',
             [
-                'label' => esc_html__('Buttons', 'fluent-cart'),
+                'label' => esc_html__('Buttons', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
@@ -324,7 +324,7 @@ class ProductBuySectionWidget extends Widget_Base
         $product = $this->getProduct($settings);
 
         if (!$product) {
-            $this->renderPlaceholder(__('Please select a product or use this widget inside a product template.', 'fluent-cart'));
+            $this->renderPlaceholder(__('Please select a product or use this widget inside a product template.', 'fluent-cart-elementor-blocks'));
             return;
         }
 

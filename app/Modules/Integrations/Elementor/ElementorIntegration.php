@@ -111,7 +111,7 @@ class ElementorIntegration
     public function registerCategories($elements_manager)
     {
         $elements_manager->add_category('fluent-cart', [
-            'title' => esc_html__('FluentCart', 'fluent-cart'),
+            'title' => esc_html__('FluentCart', 'fluent-cart-elementor-blocks'),
             'icon' => 'fa fa-shopping-cart',
         ]);
     }
@@ -222,7 +222,8 @@ class ElementorIntegration
             }
             ?>
             <article data-fluent-cart-shop-app-single-product data-fct-product-card="" class="fct-product-card" <?php echo $providerAttr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> aria-label="<?php echo esc_attr(sprintf(
-                    __('%s product card', 'fluent-cart'),
+                    /* translators: %s: product name. */
+                    __('%s product card', 'fluent-cart-elementor-blocks'),
                     $product->post_title
                 ));
                 ?>">
@@ -282,12 +283,22 @@ class ElementorIntegration
 
         \wp_localize_script('fluent-cart-elementor-editor', 'fluentCartElementor', [
             'restUrl' => \trailingslashit($restInfo['url']),
-            'nonce' => $restInfo['nonce']
+            'nonce' => $restInfo['nonce'],
+            // Strings for the Select2-based product/variation controls. Elementor
+            // renders panel UI from the PHP control definitions, so these are the
+            // only editor strings JavaScript builds itself — translate them here
+            // and hand them over, the same way core feeds its JS through
+            // wp_localize_script rather than wp_set_script_translations.
+            'i18n'    => [
+                'searchProducts'  => \__('Search for products...', 'fluent-cart-elementor-blocks'),
+                'searchVariation' => \__('Search for a variation...', 'fluent-cart-elementor-blocks'),
+                'unknownProduct'  => \__('Unknown Product', 'fluent-cart-elementor-blocks'),
+            ],
         ]);
 
         // Data for the Short Codes toolbar dropdown (Order Receipt Message).
         \wp_localize_script('fluent-cart-elementor-editor', 'fceReceiptShortCodes', [
-            'buttonLabel' => \__('Short Codes', 'fluent-cart'),
+            'buttonLabel' => \__('Short Codes', 'fluent-cart-elementor-blocks'),
             'groups' => $this->receiptShortCodeGroups(),
         ]);
 

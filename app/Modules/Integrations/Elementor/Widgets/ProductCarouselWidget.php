@@ -21,7 +21,7 @@ class ProductCarouselWidget extends Widget_Base
 
     public function get_title()
     {
-        return esc_html__('Product Carousel', 'fluent-cart');
+        return esc_html__('Product Carousel', 'fluent-cart-elementor-blocks');
     }
 
     public function get_icon()
@@ -127,7 +127,7 @@ class ProductCarouselWidget extends Widget_Base
         $this->start_controls_section(
             'card_style_section',
             [
-                'label' => esc_html__('Product Card', 'fluent-cart'),
+                'label' => esc_html__('Product Card', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
@@ -137,7 +137,7 @@ class ProductCarouselWidget extends Widget_Base
         $this->start_controls_section(
             'image_style_section',
             [
-                'label' => esc_html__('Product Image', 'fluent-cart'),
+                'label' => esc_html__('Product Image', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
@@ -147,7 +147,7 @@ class ProductCarouselWidget extends Widget_Base
         $this->start_controls_section(
             'title_style_section',
             [
-                'label' => esc_html__('Product Title', 'fluent-cart'),
+                'label' => esc_html__('Product Title', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
@@ -157,7 +157,7 @@ class ProductCarouselWidget extends Widget_Base
         $this->start_controls_section(
             'excerpt_style_section',
             [
-                'label' => esc_html__('Product Excerpt', 'fluent-cart'),
+                'label' => esc_html__('Product Excerpt', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
@@ -167,7 +167,7 @@ class ProductCarouselWidget extends Widget_Base
         $this->start_controls_section(
             'price_style_section',
             [
-                'label' => esc_html__('Product Price', 'fluent-cart'),
+                'label' => esc_html__('Product Price', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
@@ -180,7 +180,7 @@ class ProductCarouselWidget extends Widget_Base
         $this->start_controls_section(
             'button_style_section',
             [
-                'label' => esc_html__('Product Button', 'fluent-cart'),
+                'label' => esc_html__('Product Button', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
@@ -196,7 +196,7 @@ class ProductCarouselWidget extends Widget_Base
         $this->start_controls_section(
             'product_selection_section',
             [
-                'label' => esc_html__('Products', 'fluent-cart'),
+                'label' => esc_html__('Products', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_CONTENT,
             ]
         );
@@ -204,13 +204,13 @@ class ProductCarouselWidget extends Widget_Base
         $this->add_control(
             'product_ids',
             [
-                'label'       => esc_html__('Select Products', 'fluent-cart'),
+                'label'       => esc_html__('Select Products', 'fluent-cart-elementor-blocks'),
                 'type'        => (new ProductSelectControl())->get_type(),
                 'multiple'    => true,
                 'label_block' => true,
-                'description' => esc_html__('Search and select the products to display in the carousel.', 'fluent-cart'),
+                'description' => esc_html__('Search and select the products to display in the carousel.', 'fluent-cart-elementor-blocks'),
                 'default'     => [],
-                'placeholder' => esc_html__('Search for products...', 'fluent-cart'),
+                'placeholder' => esc_html__('Search for products...', 'fluent-cart-elementor-blocks'),
             ]
         );
 
@@ -222,7 +222,7 @@ class ProductCarouselWidget extends Widget_Base
         $this->start_controls_section(
             'carousel_settings_section',
             [
-                'label' => esc_html__('Carousel Settings', 'fluent-cart'),
+                'label' => esc_html__('Carousel Settings', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_CONTENT,
             ]
         );
@@ -230,7 +230,7 @@ class ProductCarouselWidget extends Widget_Base
         $this->add_responsive_control(
             'slides_to_show',
             [
-                'label'   => esc_html__('Slides Per View', 'fluent-cart'),
+                'label'   => esc_html__('Slides Per View', 'fluent-cart-elementor-blocks'),
                 'type'    => Controls_Manager::NUMBER,
                 'default' => 3,
                 'tablet_default' => 2,
@@ -244,7 +244,7 @@ class ProductCarouselWidget extends Widget_Base
         $this->add_control(
             'space_between',
             [
-                'label'   => esc_html__('Space Between (px)', 'fluent-cart'),
+                'label'   => esc_html__('Space Between (px)', 'fluent-cart-elementor-blocks'),
                 'type'    => Controls_Manager::NUMBER,
                 'default' => 16,
                 'min'     => 0,
@@ -255,10 +255,10 @@ class ProductCarouselWidget extends Widget_Base
         $this->add_control(
             'autoplay',
             [
-                'label'        => esc_html__('Autoplay', 'fluent-cart'),
+                'label'        => esc_html__('Autoplay', 'fluent-cart-elementor-blocks'),
                 'type'         => Controls_Manager::SWITCHER,
-                'label_on'     => esc_html__('Yes', 'fluent-cart'),
-                'label_off'    => esc_html__('No', 'fluent-cart'),
+                'label_on'     => esc_html__('Yes', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('No', 'fluent-cart-elementor-blocks'),
                 'return_value' => 'yes',
                 'default'      => 'yes',
             ]
@@ -267,7 +267,7 @@ class ProductCarouselWidget extends Widget_Base
         $this->add_control(
             'autoplay_speed',
             [
-                'label'     => esc_html__('Autoplay Speed (ms)', 'fluent-cart'),
+                'label'     => esc_html__('Autoplay Speed (ms)', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::NUMBER,
                 'default'   => 3000,
                 'min'       => 500,
@@ -282,10 +282,10 @@ class ProductCarouselWidget extends Widget_Base
         $this->add_control(
             'infinite_loop',
             [
-                'label'        => esc_html__('Infinite Loop', 'fluent-cart'),
+                'label'        => esc_html__('Infinite Loop', 'fluent-cart-elementor-blocks'),
                 'type'         => Controls_Manager::SWITCHER,
-                'label_on'     => esc_html__('Yes', 'fluent-cart'),
-                'label_off'    => esc_html__('No', 'fluent-cart'),
+                'label_on'     => esc_html__('Yes', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('No', 'fluent-cart-elementor-blocks'),
                 'return_value' => 'yes',
                 'default'      => '',
             ]
@@ -294,10 +294,10 @@ class ProductCarouselWidget extends Widget_Base
         $this->add_control(
             'show_arrows',
             [
-                'label'        => esc_html__('Show Arrows', 'fluent-cart'),
+                'label'        => esc_html__('Show Arrows', 'fluent-cart-elementor-blocks'),
                 'type'         => Controls_Manager::SWITCHER,
-                'label_on'     => esc_html__('Yes', 'fluent-cart'),
-                'label_off'    => esc_html__('No', 'fluent-cart'),
+                'label_on'     => esc_html__('Yes', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('No', 'fluent-cart-elementor-blocks'),
                 'return_value' => 'yes',
                 'default'      => 'yes',
             ]
@@ -306,13 +306,13 @@ class ProductCarouselWidget extends Widget_Base
         $this->add_control(
             'arrow_size',
             [
-                'label'     => esc_html__('Arrow Size', 'fluent-cart'),
+                'label'     => esc_html__('Arrow Size', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::SELECT,
                 'default'   => 'md',
                 'options'   => [
-                    'sm' => esc_html__('Small', 'fluent-cart'),
-                    'md' => esc_html__('Medium', 'fluent-cart'),
-                    'lg' => esc_html__('Large', 'fluent-cart'),
+                    'sm' => esc_html__('Small', 'fluent-cart-elementor-blocks'),
+                    'md' => esc_html__('Medium', 'fluent-cart-elementor-blocks'),
+                    'lg' => esc_html__('Large', 'fluent-cart-elementor-blocks'),
                 ],
                 'condition' => [
                     'show_arrows' => 'yes',
@@ -323,10 +323,10 @@ class ProductCarouselWidget extends Widget_Base
         $this->add_control(
             'show_pagination',
             [
-                'label'        => esc_html__('Show Pagination', 'fluent-cart'),
+                'label'        => esc_html__('Show Pagination', 'fluent-cart-elementor-blocks'),
                 'type'         => Controls_Manager::SWITCHER,
-                'label_on'     => esc_html__('Yes', 'fluent-cart'),
-                'label_off'    => esc_html__('No', 'fluent-cart'),
+                'label_on'     => esc_html__('Yes', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('No', 'fluent-cart-elementor-blocks'),
                 'return_value' => 'yes',
                 'default'      => 'yes',
             ]
@@ -335,13 +335,13 @@ class ProductCarouselWidget extends Widget_Base
         $this->add_control(
             'pagination_type',
             [
-                'label'     => esc_html__('Pagination Type', 'fluent-cart'),
+                'label'     => esc_html__('Pagination Type', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::SELECT,
                 'default'   => 'dots',
                 'options'   => [
-                    'dots'     => esc_html__('Dots', 'fluent-cart'),
-                    'fraction' => esc_html__('Fraction', 'fluent-cart'),
-                    'progress' => esc_html__('Progress Bar', 'fluent-cart'),
+                    'dots'     => esc_html__('Dots', 'fluent-cart-elementor-blocks'),
+                    'fraction' => esc_html__('Fraction', 'fluent-cart-elementor-blocks'),
+                    'progress' => esc_html__('Progress Bar', 'fluent-cart-elementor-blocks'),
                 ],
                 'condition' => [
                     'show_pagination' => 'yes',
@@ -357,7 +357,7 @@ class ProductCarouselWidget extends Widget_Base
         $this->start_controls_section(
             'card_layout_section',
             [
-                'label' => esc_html__('Card Layout', 'fluent-cart'),
+                'label' => esc_html__('Card Layout', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_CONTENT,
             ]
         );
@@ -367,15 +367,15 @@ class ProductCarouselWidget extends Widget_Base
         $repeater->add_control(
             'element_type',
             [
-                'label'   => esc_html__('Element', 'fluent-cart'),
+                'label'   => esc_html__('Element', 'fluent-cart-elementor-blocks'),
                 'type'    => Controls_Manager::SELECT,
                 'default' => 'image',
                 'options' => [
-                    'image'   => esc_html__('Image', 'fluent-cart'),
-                    'title'   => esc_html__('Title', 'fluent-cart'),
-                    'excerpt' => esc_html__('Excerpt', 'fluent-cart'),
-                    'price'   => esc_html__('Price', 'fluent-cart'),
-                    'button'  => esc_html__('Button', 'fluent-cart'),
+                    'image'   => esc_html__('Image', 'fluent-cart-elementor-blocks'),
+                    'title'   => esc_html__('Title', 'fluent-cart-elementor-blocks'),
+                    'excerpt' => esc_html__('Excerpt', 'fluent-cart-elementor-blocks'),
+                    'price'   => esc_html__('Price', 'fluent-cart-elementor-blocks'),
+                    'button'  => esc_html__('Button', 'fluent-cart-elementor-blocks'),
                 ],
             ]
         );
@@ -383,7 +383,7 @@ class ProductCarouselWidget extends Widget_Base
         $this->add_control(
             'card_elements',
             [
-                'label'       => esc_html__('Card Elements', 'fluent-cart'),
+                'label'       => esc_html__('Card Elements', 'fluent-cart-elementor-blocks'),
                 'type'        => Controls_Manager::REPEATER,
                 'fields'      => $repeater->get_controls(),
                 'default'     => [
@@ -399,13 +399,13 @@ class ProductCarouselWidget extends Widget_Base
         $this->add_control(
             'price_format',
             [
-                'label'   => esc_html__('Price Format', 'fluent-cart'),
+                'label'   => esc_html__('Price Format', 'fluent-cart-elementor-blocks'),
                 'type'    => Controls_Manager::SELECT,
                 'default' => 'starts_from',
                 'options' => [
-                    'starts_from' => esc_html__('Starts From', 'fluent-cart'),
-                    'range'       => esc_html__('Range', 'fluent-cart'),
-                    'lowest'      => esc_html__('Lowest', 'fluent-cart'),
+                    'starts_from' => esc_html__('Starts From', 'fluent-cart-elementor-blocks'),
+                    'range'       => esc_html__('Range', 'fluent-cart-elementor-blocks'),
+                    'lowest'      => esc_html__('Lowest', 'fluent-cart-elementor-blocks'),
                 ],
             ]
         );
@@ -418,7 +418,7 @@ class ProductCarouselWidget extends Widget_Base
         $this->start_controls_section(
             'navigation_style_section',
             [
-                'label'     => esc_html__('Navigation Arrows', 'fluent-cart'),
+                'label'     => esc_html__('Navigation Arrows', 'fluent-cart-elementor-blocks'),
                 'tab'       => Controls_Manager::TAB_STYLE,
                 'condition' => [
                     'show_arrows' => 'yes',
@@ -429,7 +429,7 @@ class ProductCarouselWidget extends Widget_Base
         $this->add_control(
             'arrow_color',
             [
-                'label'     => esc_html__('Arrow Color', 'fluent-cart'),
+                'label'     => esc_html__('Arrow Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .swiper-button-prev, {{WRAPPER}} .swiper-button-next' => 'color: {{VALUE}};',
@@ -441,7 +441,7 @@ class ProductCarouselWidget extends Widget_Base
         $this->add_control(
             'arrow_background',
             [
-                'label'     => esc_html__('Arrow Background', 'fluent-cart'),
+                'label'     => esc_html__('Arrow Background', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .swiper-button-prev, {{WRAPPER}} .swiper-button-next' => 'background-color: {{VALUE}};',
@@ -452,7 +452,7 @@ class ProductCarouselWidget extends Widget_Base
         $this->add_control(
             'arrow_hover_color',
             [
-                'label'     => esc_html__('Hover Color', 'fluent-cart'),
+                'label'     => esc_html__('Hover Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .swiper-button-prev:hover, {{WRAPPER}} .swiper-button-next:hover' => 'color: {{VALUE}};',
@@ -464,7 +464,7 @@ class ProductCarouselWidget extends Widget_Base
         $this->add_control(
             'arrow_hover_background',
             [
-                'label'     => esc_html__('Hover Background', 'fluent-cart'),
+                'label'     => esc_html__('Hover Background', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .swiper-button-prev:hover, {{WRAPPER}} .swiper-button-next:hover' => 'background-color: {{VALUE}};',
@@ -480,7 +480,7 @@ class ProductCarouselWidget extends Widget_Base
         $this->start_controls_section(
             'pagination_style_section',
             [
-                'label'     => esc_html__('Pagination', 'fluent-cart'),
+                'label'     => esc_html__('Pagination', 'fluent-cart-elementor-blocks'),
                 'tab'       => Controls_Manager::TAB_STYLE,
                 'condition' => [
                     'show_pagination' => 'yes',
@@ -491,7 +491,7 @@ class ProductCarouselWidget extends Widget_Base
         $this->add_control(
             'pagination_color',
             [
-                'label'     => esc_html__('Color', 'fluent-cart'),
+                'label'     => esc_html__('Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .swiper-pagination-bullet' => 'background-color: {{VALUE}};',
@@ -503,7 +503,7 @@ class ProductCarouselWidget extends Widget_Base
         $this->add_control(
             'pagination_active_color',
             [
-                'label'     => esc_html__('Active Color', 'fluent-cart'),
+                'label'     => esc_html__('Active Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .swiper-pagination-bullet-active' => 'background-color: {{VALUE}};',
@@ -515,7 +515,7 @@ class ProductCarouselWidget extends Widget_Base
         $this->add_responsive_control(
             'pagination_size',
             [
-                'label'      => esc_html__('Size', 'fluent-cart'),
+                'label'      => esc_html__('Size', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::SLIDER,
                 'size_units' => ['px'],
                 'range'      => [
@@ -560,7 +560,7 @@ class ProductCarouselWidget extends Widget_Base
 
         if ($products->isEmpty()) {
             if ($isEditor) {
-                $this->renderPlaceholder(esc_html__('No products found for the selected IDs.', 'fluent-cart'));
+                $this->renderPlaceholder(esc_html__('No products found for the selected IDs.', 'fluent-cart-elementor-blocks'));
             }
             return;
         }
@@ -629,7 +629,7 @@ class ProductCarouselWidget extends Widget_Base
 
         echo '<div class="fluent-cart-carousel-skeleton">';
         echo '<div class="fluent-cart-empty">';
-        echo '<div class="fct-loading-header"><div class="fct-loading-spinner"></div><span>' . esc_html__('Loading products...', 'fluent-cart') . '</span></div>';
+        echo '<div class="fct-loading-header"><div class="fct-loading-spinner"></div><span>' . esc_html__('Loading products...', 'fluent-cart-elementor-blocks') . '</span></div>';
         echo '<div class="dummy-grid" style="--fct-slides-per-view: ' . (int) $slidesToShow . ';">';
 
         for ($i = 0; $i < $slidesToShow; $i++) {
@@ -652,7 +652,7 @@ class ProductCarouselWidget extends Widget_Base
     private function renderPlaceholder(string $message = '')
     {
         if (empty($message)) {
-            $message = esc_html__('Please select products to display in the carousel.', 'fluent-cart');
+            $message = esc_html__('Please select products to display in the carousel.', 'fluent-cart-elementor-blocks');
         }
         ?>
         <div class="fluent-cart-placeholder" style="text-align:center; padding: 40px 20px; background: #f0f0f1; border: 1px dashed #ccc; border-radius: 4px;">
@@ -704,14 +704,14 @@ class ProductCarouselWidget extends Widget_Base
 
                     <?php if ($carouselSettings['arrows'] === 'yes') : ?>
                         <div class="fct-carousel-controls fct-arrows-<?php echo esc_attr($arrowsSize); ?>">
-                            <div class="swiper-button-prev" aria-label="<?php esc_attr_e('Previous slide', 'fluent-cart'); ?>">
+                            <div class="swiper-button-prev" aria-label="<?php esc_attr_e('Previous slide', 'fluent-cart-elementor-blocks'); ?>">
                                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
                                      stroke="currentColor" stroke-width="2"
                                      stroke-linecap="round" stroke-linejoin="round">
                                     <polyline points="15 18 9 12 15 6"></polyline>
                                 </svg>
                             </div>
-                            <div class="swiper-button-next" aria-label="<?php esc_attr_e('Next slide', 'fluent-cart'); ?>">
+                            <div class="swiper-button-next" aria-label="<?php esc_attr_e('Next slide', 'fluent-cart-elementor-blocks'); ?>">
                                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
                                      stroke="currentColor" stroke-width="2"
                                      stroke-linecap="round" stroke-linejoin="round">

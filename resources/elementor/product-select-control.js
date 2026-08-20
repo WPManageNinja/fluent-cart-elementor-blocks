@@ -1,6 +1,15 @@
 (function($) {
     var initialized = false;
 
+    // Translated editor strings come from wp_localize_script (fluentCartElementor.i18n).
+    // The English argument is the fallback for the window where the global is
+    // not yet printed, so the control still renders a usable placeholder.
+    var getEditorString = function(key, fallback) {
+        var strings = (window.fluentCartElementor || {}).i18n || {};
+
+        return strings[key] || fallback;
+    };
+
     var initFluentProductSelectControl = function() {
         if (initialized) {
             return;
@@ -54,7 +63,7 @@
                 var options = {
                     allowClear: true,
                     multiple: isMultiple,
-                    placeholder: this.model.get('placeholder') || 'Search for products...',
+                    placeholder: this.model.get('placeholder') || getEditorString('searchProducts', 'Search for products...'),
                     dir: (window.elementorCommon && elementorCommon.config && elementorCommon.config.isRTL) ? 'rtl' : 'ltr',
                     ajax: {
                         url: fluentCartElementor.restUrl + 'products',

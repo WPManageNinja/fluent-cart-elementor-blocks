@@ -29,12 +29,12 @@ class FluentCartProductPost extends Post
 
     public static function get_title()
     {
-        return esc_html__('FluentCart Product Post', 'fluent-cart');
+        return esc_html__('FluentCart Product Post', 'fluent-cart-elementor-blocks');
     }
 
     public static function get_plural_title()
     {
-        return esc_html__('FluentCart Product Posts', 'fluent-cart');
+        return esc_html__('FluentCart Product Posts', 'fluent-cart-elementor-blocks');
     }
 
     protected static function get_editor_panel_categories()
@@ -48,11 +48,11 @@ class FluentCartProductPost extends Post
             'theme-elements',
             [
                 'fluent-cart-product' => [
-                    'title'  => esc_html__('FluentCart Product', 'fluent-cart'),
+                    'title'  => esc_html__('FluentCart Product', 'fluent-cart-elementor-blocks'),
                     'active' => true,
                 ],
                 'fluent-cart' => [
-                    'title'  => esc_html__('FluentCart', 'fluent-cart'),
+                    'title'  => esc_html__('FluentCart', 'fluent-cart-elementor-blocks'),
                     'active' => false,
                 ],
             ]

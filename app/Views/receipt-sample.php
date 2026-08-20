@@ -20,27 +20,27 @@ if (!defined('ABSPATH')) {
         <div class="fct-thank-you-page-content email-template-content">
             <div class="fct-thank-you-page-header" style="background: #dcfce7;">
                 <div class="fct-thank-you-page-header-icon" style="background: #16a34a;">✓</div>
-                <h1 class="fct-thank-you-page-header-title" style="color:#166534;"><?php esc_html_e('Purchase Successful!', 'fluent-cart'); ?></h1>
+                <h1 class="fct-thank-you-page-header-title" style="color:#166534;"><?php esc_html_e('Purchase Successful!', 'fluent-cart-elementor-blocks'); ?></h1>
             </div>
             <div class="fct-thank-you-page-body">
                 <div class="fct-thank-you-page-body-inner">
                     <div class="fct-thank-you-page-body-content">
                         <div class="fct-thank-you-page-body-content-inner">
                             <div class="no-print">
-                                <div class="no-print-title"><?php esc_html_e('Hello Jane Smith!', 'fluent-cart'); ?></div>
-                                <p><?php esc_html_e('Your order', 'fluent-cart'); ?> <strong style="color: #007bff;"><a href="#">#INV-001</a></strong><?php esc_html_e(' has been placed successfully.', 'fluent-cart'); ?></p>
+                                <div class="no-print-title"><?php esc_html_e('Hello Jane Smith!', 'fluent-cart-elementor-blocks'); ?></div>
+                                <p><?php esc_html_e('Your order', 'fluent-cart-elementor-blocks'); ?> <strong style="color: #007bff;"><a href="#">#INV-001</a></strong><?php esc_html_e(' has been placed successfully.', 'fluent-cart-elementor-blocks'); ?></p>
                             </div>
 
                             <div class="fct-thank-you-page-order-items">
                                 <div class="fct-thank-you-page-order-items-header">
-                                    <div class="fct-thank-you-page-order-items-header-row"><?php esc_html_e('Item', 'fluent-cart'); ?></div>
-                                    <div class="fct-thank-you-page-order-items-header-row"><?php esc_html_e('Total', 'fluent-cart'); ?></div>
+                                    <div class="fct-thank-you-page-order-items-header-row"><?php esc_html_e('Item', 'fluent-cart-elementor-blocks'); ?></div>
+                                    <div class="fct-thank-you-page-order-items-header-row"><?php esc_html_e('Total', 'fluent-cart-elementor-blocks'); ?></div>
                                 </div>
                                 <div class="fct-thank-you-page-order-items-body">
                                     <div class="fct-thank-you-page-order-items-list">
                                         <div class="fct-thank-you-page-order-items-list-title">
                                             <p class="fct-thank-you-page-order-items-list-quantity">
-                                                <?php esc_html_e('Stylish white and blue sneakers', 'fluent-cart'); ?>
+                                                <?php esc_html_e('Stylish white and blue sneakers', 'fluent-cart-elementor-blocks'); ?>
                                                 <span>x 2</span>
                                             </p>
                                         </div>
@@ -51,7 +51,7 @@ if (!defined('ABSPATH')) {
                                     <div class="fct-thank-you-page-order-items-list">
                                         <div class="fct-thank-you-page-order-items-list-title">
                                             <p class="fct-thank-you-page-order-items-list-quantity">
-                                                <?php esc_html_e('Elegant running shoe', 'fluent-cart'); ?>
+                                                <?php esc_html_e('Elegant running shoe', 'fluent-cart-elementor-blocks'); ?>
                                             </p>
                                         </div>
                                         <div class="fct-thank-you-page-order-items-list-price">
@@ -61,20 +61,20 @@ if (!defined('ABSPATH')) {
 
                                     <div class="fct-thank-you-page-order-items-total">
                                         <div class="fct-meta-line fct-thank-you-page-order-items-total-subtotal">
-                                            <div class="fct-meta-line-label fct-thank-you-page-order-items-total-label"><?php esc_html_e('Subtotal', 'fluent-cart'); ?></div>
+                                            <div class="fct-meta-line-label fct-thank-you-page-order-items-total-label"><?php esc_html_e('Subtotal', 'fluent-cart-elementor-blocks'); ?></div>
                                             <div class="fct-meta-line-value fct-thank-you-page-order-items-total-value">$39.00</div>
                                         </div>
                                         <div class="fct-meta-line fct-thank-you-page-order-items-total-shipping">
-                                            <div class="fct-meta-line-label fct-thank-you-page-order-items-total-label"><?php esc_html_e('Shipping', 'fluent-cart'); ?></div>
+                                            <div class="fct-meta-line-label fct-thank-you-page-order-items-total-label"><?php esc_html_e('Shipping', 'fluent-cart-elementor-blocks'); ?></div>
                                             <div class="fct-meta-line-value fct-thank-you-page-order-items-total-value">$10.00</div>
                                         </div>
                                         <div class="fct-meta-line fct-thank-you-page-order-items-total-total">
-                                            <div class="fct-meta-line-label fct-thank-you-page-order-items-total-label"><?php esc_html_e('Total', 'fluent-cart'); ?></div>
+                                            <div class="fct-meta-line-label fct-thank-you-page-order-items-total-label"><?php esc_html_e('Total', 'fluent-cart-elementor-blocks'); ?></div>
                                             <div class="fct-meta-line-value fct-thank-you-page-order-items-total-value">$49.00</div>
                                         </div>
                                         <div class="fct-meta-line fct-thank-you-page-order-items-total-payment-method">
-                                            <div class="fct-meta-line-label fct-thank-you-page-order-items-total-label"><?php esc_html_e('Payment Method', 'fluent-cart'); ?></div>
-                                            <div class="fct-meta-line-value fct-thank-you-page-order-items-total-value"><?php esc_html_e('Cash', 'fluent-cart'); ?></div>
+                                            <div class="fct-meta-line-label fct-thank-you-page-order-items-total-label"><?php esc_html_e('Payment Method', 'fluent-cart-elementor-blocks'); ?></div>
+                                            <div class="fct-meta-line-value fct-thank-you-page-order-items-total-value"><?php esc_html_e('Cash', 'fluent-cart-elementor-blocks'); ?></div>
                                         </div>
                                     </div>
                                 </div>
@@ -82,12 +82,12 @@ if (!defined('ABSPATH')) {
 
                             <div class="fct-thank-you-page-order-items-addresses">
                                 <div class="fct-thank-you-page-order-items-addresses-bill-to">
-                                    <h5><?php esc_html_e('Bill To', 'fluent-cart'); ?></h5>
+                                    <h5><?php esc_html_e('Bill To', 'fluent-cart-elementor-blocks'); ?></h5>
                                     <div class="fct-thank-you-page-order-items-addresses-bill-to-address">Jane Smith, 123 Main Street, Springfield, 1207</div>
                                     <div class="fct-thank-you-page-order-items-addresses-bill-to-email"><a style="color: #007bff;" href="#">jane.smith@example.com</a></div>
                                 </div>
                                 <div class="fct-thank-you-page-order-items-addresses-ship-to">
-                                    <h5 class="fct-thank-you-page-order-items-addresses-ship-to-title"><?php esc_html_e('Ship To', 'fluent-cart'); ?></h5>
+                                    <h5 class="fct-thank-you-page-order-items-addresses-ship-to-title"><?php esc_html_e('Ship To', 'fluent-cart-elementor-blocks'); ?></h5>
                                     <div class="fct-thank-you-page-order-items-addresses-ship-to-address">Jane Smith, 123 Main Street, Springfield, 1207</div>
                                 </div>
                             </div>
@@ -99,6 +99,6 @@ if (!defined('ABSPATH')) {
     </div>
 </div>
 <div class="fct-thank-you-page-footer">
-    <a class="fct-thank-you-page-view-order-button" href="#"><?php esc_html_e('View Order', 'fluent-cart'); ?></a>
-    <a class="fct-thank-you-page-download-receipt-button" href="#"><?php esc_html_e('Download Receipt', 'fluent-cart'); ?></a>
+    <a class="fct-thank-you-page-view-order-button" href="#"><?php esc_html_e('View Order', 'fluent-cart-elementor-blocks'); ?></a>
+    <a class="fct-thank-you-page-download-receipt-button" href="#"><?php esc_html_e('Download Receipt', 'fluent-cart-elementor-blocks'); ?></a>
 </div>

@@ -23,7 +23,7 @@ class BuyNowWidget extends Widget_Base
 
     public function get_title()
     {
-        return esc_html__('Buy Now Button', 'fluent-cart');
+        return esc_html__('Buy Now Button', 'fluent-cart-elementor-blocks');
     }
 
     public function get_icon()
@@ -47,7 +47,7 @@ class BuyNowWidget extends Widget_Base
         $this->start_controls_section(
             'content_section',
             [
-                'label' => esc_html__('Content', 'fluent-cart'),
+                'label' => esc_html__('Content', 'fluent-cart-elementor-blocks'),
                 'tab' => Controls_Manager::TAB_CONTENT,
             ]
         );
@@ -55,22 +55,22 @@ class BuyNowWidget extends Widget_Base
         $this->add_control(
             'variant_id',
             [
-                'label' => esc_html__('Select Product Variation', 'fluent-cart'),
+                'label' => esc_html__('Select Product Variation', 'fluent-cart-elementor-blocks'),
                 'type' => (new ProductVariationSelectControl())->get_type(),
                 'label_block' => true,
-                'description' => esc_html__('Search and select the product variation (Non-subscription only).', 'fluent-cart'),
+                'description' => esc_html__('Search and select the product variation (Non-subscription only).', 'fluent-cart-elementor-blocks'),
                 'default' => '',
-                'placeholder' => esc_html__('Search for a variation...', 'fluent-cart'),
+                'placeholder' => esc_html__('Search for a variation...', 'fluent-cart-elementor-blocks'),
             ]
         );
 
         $this->add_control(
             'text',
             [
-                'label'       => esc_html__('Button Text', 'fluent-cart'),
+                'label'       => esc_html__('Button Text', 'fluent-cart-elementor-blocks'),
                 'type'        => Controls_Manager::TEXT,
-                'default'     => esc_html__('Buy Now', 'fluent-cart'),
-                'placeholder' => esc_html__('Buy Now', 'fluent-cart'),
+                'default'     => esc_html__('Buy Now', 'fluent-cart-elementor-blocks'),
+                'placeholder' => esc_html__('Buy Now', 'fluent-cart-elementor-blocks'),
                 'dynamic'     => [
                     'active' => true,
                 ],
@@ -80,10 +80,10 @@ class BuyNowWidget extends Widget_Base
         $this->add_control(
             'enable_modal_checkout',
             [
-                'label'        => esc_html__('Enable Modal Checkout', 'fluent-cart'),
+                'label'        => esc_html__('Enable Modal Checkout', 'fluent-cart-elementor-blocks'),
                 'type'         => Controls_Manager::SWITCHER,
-                'label_on'     => esc_html__('Yes', 'fluent-cart'),
-                'label_off'    => esc_html__('No', 'fluent-cart'),
+                'label_on'     => esc_html__('Yes', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('No', 'fluent-cart-elementor-blocks'),
                 'return_value' => 'yes',
                 'default'      => '',
             ]
@@ -95,7 +95,7 @@ class BuyNowWidget extends Widget_Base
         $this->start_controls_section(
             'style_section',
             [
-                'label' => esc_html__('Button Style', 'fluent-cart'),
+                'label' => esc_html__('Button Style', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
@@ -114,14 +114,14 @@ class BuyNowWidget extends Widget_Base
         $this->start_controls_tab(
             'tab_button_normal',
             [
-                'label' => esc_html__('Normal', 'fluent-cart'),
+                'label' => esc_html__('Normal', 'fluent-cart-elementor-blocks'),
             ]
         );
 
         $this->add_control(
             'button_text_color',
             [
-                'label'     => esc_html__('Text Color', 'fluent-cart'),
+                'label'     => esc_html__('Text Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .wp-block-button__link' => 'color: {{VALUE}};',
@@ -149,7 +149,7 @@ class BuyNowWidget extends Widget_Base
         $this->add_control(
             'button_border_radius',
             [
-                'label'      => esc_html__('Border Radius', 'fluent-cart'),
+                'label'      => esc_html__('Border Radius', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', '%', 'em'],
                 // No default: inherit WordPress core's button radius
@@ -173,7 +173,7 @@ class BuyNowWidget extends Widget_Base
         $this->add_responsive_control(
             'button_padding',
             [
-                'label'      => esc_html__('Padding', 'fluent-cart'),
+                'label'      => esc_html__('Padding', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', 'em', '%'],
                 'selectors'  => [
@@ -185,7 +185,7 @@ class BuyNowWidget extends Widget_Base
         $this->add_responsive_control(
             'button_margin',
             [
-                'label'      => esc_html__('Margin', 'fluent-cart'),
+                'label'      => esc_html__('Margin', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', 'em', '%'],
                 'selectors'  => [
@@ -200,14 +200,14 @@ class BuyNowWidget extends Widget_Base
         $this->start_controls_tab(
             'tab_button_hover',
             [
-                'label' => esc_html__('Hover', 'fluent-cart'),
+                'label' => esc_html__('Hover', 'fluent-cart-elementor-blocks'),
             ]
         );
 
         $this->add_control(
             'button_hover_text_color',
             [
-                'label'     => esc_html__('Text Color', 'fluent-cart'),
+                'label'     => esc_html__('Text Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .wp-block-button__link:hover' => 'color: {{VALUE}};',
@@ -300,7 +300,7 @@ class BuyNowWidget extends Widget_Base
      */
     private function renderFallbackButton($text)
     {
-        $text = ($text !== null && $text !== '') ? $text : __('Buy Now', 'fluent-cart');
+        $text = ($text !== null && $text !== '') ? $text : __('Buy Now', 'fluent-cart-elementor-blocks');
 
         echo '<div class="fluent-cart-elementor-buy-now">';
         echo '<a class="wp-block-button__link wp-element-button" role="button">' . esc_html($text) . '</a>';

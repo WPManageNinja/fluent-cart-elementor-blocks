@@ -22,7 +22,7 @@ class CheckoutWidget extends Widget_Base
 
     public function get_title()
     {
-        return esc_html__('Checkout', 'fluent-cart');
+        return esc_html__('Checkout', 'fluent-cart-elementor-blocks');
     }
 
     public function get_icon()
@@ -126,7 +126,7 @@ class CheckoutWidget extends Widget_Base
         $this->start_controls_section(
                 'general_section',
                 [
-                        'label' => esc_html__('General Settings', 'fluent-cart'),
+                        'label' => esc_html__('General Settings', 'fluent-cart-elementor-blocks'),
                         'tab'   => Controls_Manager::TAB_CONTENT,
                 ]
         );
@@ -134,12 +134,12 @@ class CheckoutWidget extends Widget_Base
         $this->add_control(
                 'layout_type',
                 [
-                        'label'   => esc_html__('Layout', 'fluent-cart'),
+                        'label'   => esc_html__('Layout', 'fluent-cart-elementor-blocks'),
                         'type'    => Controls_Manager::SELECT,
                         'default' => 'two-column',
                         'options' => [
-                                'one-column' => esc_html__('One Column', 'fluent-cart'),
-                                'two-column' => esc_html__('Two Column', 'fluent-cart'),
+                                'one-column' => esc_html__('One Column', 'fluent-cart-elementor-blocks'),
+                                'two-column' => esc_html__('Two Column', 'fluent-cart-elementor-blocks'),
                         ],
                 ]
         );
@@ -147,7 +147,7 @@ class CheckoutWidget extends Widget_Base
         $this->add_responsive_control(
                 'form_column_width',
                 [
-                        'label'      => esc_html__('Form Column Width (%)', 'fluent-cart'),
+                        'label'      => esc_html__('Form Column Width (%)', 'fluent-cart-elementor-blocks'),
                         'type'       => Controls_Manager::SLIDER,
                         'size_units' => ['%'],
                         'range'      => [
@@ -166,7 +166,7 @@ class CheckoutWidget extends Widget_Base
         $this->add_responsive_control(
                 'summary_column_width',
                 [
-                        'label'      => esc_html__('Summary Column Width (%)', 'fluent-cart'),
+                        'label'      => esc_html__('Summary Column Width (%)', 'fluent-cart-elementor-blocks'),
                         'type'       => Controls_Manager::SLIDER,
                         'size_units' => ['%'],
                         'range'      => [
@@ -185,7 +185,7 @@ class CheckoutWidget extends Widget_Base
         $this->add_responsive_control(
                 'column_gap',
                 [
-                        'label'      => esc_html__('Column Gap', 'fluent-cart'),
+                        'label'      => esc_html__('Column Gap', 'fluent-cart-elementor-blocks'),
                         'type'       => Controls_Manager::SLIDER,
                         'size_units' => ['px', 'em'],
                         'range'      => [
@@ -205,10 +205,10 @@ class CheckoutWidget extends Widget_Base
         $this->add_control(
                 'use_default_style',
                 [
-                        'label'        => esc_html__('Use Default FluentCart Styles', 'fluent-cart'),
+                        'label'        => esc_html__('Use Default FluentCart Styles', 'fluent-cart-elementor-blocks'),
                         'type'         => Controls_Manager::SWITCHER,
-                        'label_on'     => esc_html__('Yes', 'fluent-cart'),
-                        'label_off'    => esc_html__('No', 'fluent-cart'),
+                        'label_on'     => esc_html__('Yes', 'fluent-cart-elementor-blocks'),
+                        'label_off'    => esc_html__('No', 'fluent-cart-elementor-blocks'),
                         'return_value' => 'yes',
                         'default'      => 'yes',
                 ]
@@ -225,7 +225,7 @@ class CheckoutWidget extends Widget_Base
         $this->start_controls_section(
                 'form_fields_section',
                 [
-                        'label' => esc_html__('Form Fields', 'fluent-cart'),
+                        'label' => esc_html__('Form Fields', 'fluent-cart-elementor-blocks'),
                         'tab'   => Controls_Manager::TAB_CONTENT,
                 ]
         );
@@ -235,19 +235,19 @@ class CheckoutWidget extends Widget_Base
         $repeater->add_control(
                 'element_type',
                 [
-                        'label'   => esc_html__('Section', 'fluent-cart'),
+                        'label'   => esc_html__('Section', 'fluent-cart-elementor-blocks'),
                         'type'    => Controls_Manager::SELECT,
                         'default' => 'name_fields',
                         'options' => [
-                                'name_fields'      => esc_html__('Name Fields', 'fluent-cart'),
-                                'create_account'   => esc_html__('Create Account', 'fluent-cart'),
-                                'address_fields'   => esc_html__('Address Fields', 'fluent-cart'),
-                                'shipping_methods'  => esc_html__('Shipping Methods', 'fluent-cart'),
-                                'business_details' => esc_html__('Business Details', 'fluent-cart'),
-                                'payment_methods'  => esc_html__('Payment Methods', 'fluent-cart'),
-                                'agree_terms'      => esc_html__('Agree to Terms', 'fluent-cart'),
-                                'order_notes'      => esc_html__('Order Notes', 'fluent-cart'),
-                                'submit_button'    => esc_html__('Submit Button', 'fluent-cart'),
+                                'name_fields'      => esc_html__('Name Fields', 'fluent-cart-elementor-blocks'),
+                                'create_account'   => esc_html__('Create Account', 'fluent-cart-elementor-blocks'),
+                                'address_fields'   => esc_html__('Address Fields', 'fluent-cart-elementor-blocks'),
+                                'shipping_methods'  => esc_html__('Shipping Methods', 'fluent-cart-elementor-blocks'),
+                                'business_details' => esc_html__('Business Details', 'fluent-cart-elementor-blocks'),
+                                'payment_methods'  => esc_html__('Payment Methods', 'fluent-cart-elementor-blocks'),
+                                'agree_terms'      => esc_html__('Agree to Terms', 'fluent-cart-elementor-blocks'),
+                                'order_notes'      => esc_html__('Order Notes', 'fluent-cart-elementor-blocks'),
+                                'submit_button'    => esc_html__('Submit Button', 'fluent-cart-elementor-blocks'),
                         ],
                 ]
         );
@@ -255,10 +255,10 @@ class CheckoutWidget extends Widget_Base
         $repeater->add_control(
                 'element_visibility',
                 [
-                        'label'        => esc_html__('Visible', 'fluent-cart'),
+                        'label'        => esc_html__('Visible', 'fluent-cart-elementor-blocks'),
                         'type'         => Controls_Manager::SWITCHER,
-                        'label_on'     => esc_html__('Yes', 'fluent-cart'),
-                        'label_off'    => esc_html__('No', 'fluent-cart'),
+                        'label_on'     => esc_html__('Yes', 'fluent-cart-elementor-blocks'),
+                        'label_off'    => esc_html__('No', 'fluent-cart-elementor-blocks'),
                         'return_value' => 'yes',
                         'default'      => 'yes',
                 ]
@@ -268,13 +268,13 @@ class CheckoutWidget extends Widget_Base
         $repeater->add_control(
                 'address_type',
                 [
-                        'label'     => esc_html__('Address Display', 'fluent-cart'),
+                        'label'     => esc_html__('Address Display', 'fluent-cart-elementor-blocks'),
                         'type'      => Controls_Manager::SELECT,
                         'default'   => 'both',
                         'options'   => [
-                                'both'     => esc_html__('Billing + Shipping', 'fluent-cart'),
-                                'billing'  => esc_html__('Billing Only', 'fluent-cart'),
-                                'shipping' => esc_html__('Shipping Only', 'fluent-cart'),
+                                'both'     => esc_html__('Billing + Shipping', 'fluent-cart-elementor-blocks'),
+                                'billing'  => esc_html__('Billing Only', 'fluent-cart-elementor-blocks'),
+                                'shipping' => esc_html__('Shipping Only', 'fluent-cart-elementor-blocks'),
                         ],
                         'condition' => [
                                 'element_type' => 'address_fields',
@@ -285,10 +285,10 @@ class CheckoutWidget extends Widget_Base
         $repeater->add_control(
                 'show_ship_to_different',
                 [
-                        'label'        => esc_html__('Show "Ship to Different Address"', 'fluent-cart'),
+                        'label'        => esc_html__('Show "Ship to Different Address"', 'fluent-cart-elementor-blocks'),
                         'type'         => Controls_Manager::SWITCHER,
-                        'label_on'     => esc_html__('Yes', 'fluent-cart'),
-                        'label_off'    => esc_html__('No', 'fluent-cart'),
+                        'label_on'     => esc_html__('Yes', 'fluent-cart-elementor-blocks'),
+                        'label_off'    => esc_html__('No', 'fluent-cart-elementor-blocks'),
                         'return_value' => 'yes',
                         'default'      => 'yes',
                         'condition'    => [
@@ -302,16 +302,16 @@ class CheckoutWidget extends Widget_Base
         $repeater->add_control(
                 'custom_heading',
                 [
-                        'label'       => esc_html__('Custom Section Heading', 'fluent-cart'),
+                        'label'       => esc_html__('Custom Section Heading', 'fluent-cart-elementor-blocks'),
                         'type'        => Controls_Manager::TEXT,
-                        'placeholder' => esc_html__('Leave empty for default', 'fluent-cart'),
+                        'placeholder' => esc_html__('Leave empty for default', 'fluent-cart-elementor-blocks'),
                 ]
         );
 
         $this->add_control(
                 'form_elements',
                 [
-                        'label'       => esc_html__('Form Sections', 'fluent-cart'),
+                        'label'       => esc_html__('Form Sections', 'fluent-cart-elementor-blocks'),
                         'type'        => Controls_Manager::REPEATER,
                         'fields'      => $repeater->get_controls(),
                         'default'     => [
@@ -339,7 +339,7 @@ class CheckoutWidget extends Widget_Base
         $this->start_controls_section(
                 'summary_section',
                 [
-                        'label' => esc_html__('Order Summary', 'fluent-cart'),
+                        'label' => esc_html__('Order Summary', 'fluent-cart-elementor-blocks'),
                         'tab'   => Controls_Manager::TAB_CONTENT,
                 ]
         );
@@ -349,19 +349,19 @@ class CheckoutWidget extends Widget_Base
         $repeater->add_control(
                 'element_type',
                 [
-                        'label'   => esc_html__('Section', 'fluent-cart'),
+                        'label'   => esc_html__('Section', 'fluent-cart-elementor-blocks'),
                         'type'    => Controls_Manager::SELECT,
                         'default' => 'order_summary',
                         'options' => [
-                                'order_summary'   => esc_html__('Order Summary (Items)', 'fluent-cart'),
-                                'subtotal'        => esc_html__('Subtotal', 'fluent-cart'),
-                                'shipping'        => esc_html__('Shipping', 'fluent-cart'),
-                                'coupon'          => esc_html__('Coupon Field', 'fluent-cart'),
-                                'manual_discount' => esc_html__('Manual Discount', 'fluent-cart'),
-                                'tax'             => esc_html__('Tax', 'fluent-cart'),
-                                'shipping_tax'    => esc_html__('Shipping Tax', 'fluent-cart'),
-                                'total'           => esc_html__('Total', 'fluent-cart'),
-                                'order_bump'      => esc_html__('Order Bump (Pro)', 'fluent-cart'),
+                                'order_summary'   => esc_html__('Order Summary (Items)', 'fluent-cart-elementor-blocks'),
+                                'subtotal'        => esc_html__('Subtotal', 'fluent-cart-elementor-blocks'),
+                                'shipping'        => esc_html__('Shipping', 'fluent-cart-elementor-blocks'),
+                                'coupon'          => esc_html__('Coupon Field', 'fluent-cart-elementor-blocks'),
+                                'manual_discount' => esc_html__('Manual Discount', 'fluent-cart-elementor-blocks'),
+                                'tax'             => esc_html__('Tax', 'fluent-cart-elementor-blocks'),
+                                'shipping_tax'    => esc_html__('Shipping Tax', 'fluent-cart-elementor-blocks'),
+                                'total'           => esc_html__('Total', 'fluent-cart-elementor-blocks'),
+                                'order_bump'      => esc_html__('Order Bump (Pro)', 'fluent-cart-elementor-blocks'),
                         ],
                 ]
         );
@@ -369,10 +369,10 @@ class CheckoutWidget extends Widget_Base
         $repeater->add_control(
                 'element_visibility',
                 [
-                        'label'        => esc_html__('Visible', 'fluent-cart'),
+                        'label'        => esc_html__('Visible', 'fluent-cart-elementor-blocks'),
                         'type'         => Controls_Manager::SWITCHER,
-                        'label_on'     => esc_html__('Yes', 'fluent-cart'),
-                        'label_off'    => esc_html__('No', 'fluent-cart'),
+                        'label_on'     => esc_html__('Yes', 'fluent-cart-elementor-blocks'),
+                        'label_off'    => esc_html__('No', 'fluent-cart-elementor-blocks'),
                         'return_value' => 'yes',
                         'default'      => 'yes',
                 ]
@@ -382,10 +382,10 @@ class CheckoutWidget extends Widget_Base
         $repeater->add_control(
                 'coupon_collapsible',
                 [
-                        'label'        => esc_html__('Collapsible', 'fluent-cart'),
+                        'label'        => esc_html__('Collapsible', 'fluent-cart-elementor-blocks'),
                         'type'         => Controls_Manager::SWITCHER,
-                        'label_on'     => esc_html__('Yes', 'fluent-cart'),
-                        'label_off'    => esc_html__('No', 'fluent-cart'),
+                        'label_on'     => esc_html__('Yes', 'fluent-cart-elementor-blocks'),
+                        'label_off'    => esc_html__('No', 'fluent-cart-elementor-blocks'),
                         'return_value' => 'yes',
                         'default'      => 'yes',
                         'condition'    => [
@@ -397,9 +397,9 @@ class CheckoutWidget extends Widget_Base
         $repeater->add_control(
                 'coupon_label',
                 [
-                        'label'     => esc_html__('Coupon Label', 'fluent-cart'),
+                        'label'     => esc_html__('Coupon Label', 'fluent-cart-elementor-blocks'),
                         'type'      => Controls_Manager::TEXT,
-                        'default'   => esc_html__('Have a Coupon?', 'fluent-cart'),
+                        'default'   => esc_html__('Have a Coupon?', 'fluent-cart-elementor-blocks'),
                         'condition' => [
                                 'element_type' => 'coupon',
                         ],
@@ -409,7 +409,7 @@ class CheckoutWidget extends Widget_Base
         $this->add_control(
                 'summary_elements',
                 [
-                        'label'       => esc_html__('Summary Sections', 'fluent-cart'),
+                        'label'       => esc_html__('Summary Sections', 'fluent-cart-elementor-blocks'),
                         'type'        => Controls_Manager::REPEATER,
                         'fields'      => $repeater->get_controls(),
                         'default'     => [
@@ -430,9 +430,9 @@ class CheckoutWidget extends Widget_Base
         $this->add_control(
                 'summary_heading',
                 [
-                        'label'   => esc_html__('Summary Heading', 'fluent-cart'),
+                        'label'   => esc_html__('Summary Heading', 'fluent-cart-elementor-blocks'),
                         'type'    => Controls_Manager::TEXT,
-                        'default' => esc_html__('Order Summary', 'fluent-cart'),
+                        'default' => esc_html__('Order Summary', 'fluent-cart-elementor-blocks'),
                 ]
         );
 
@@ -447,7 +447,7 @@ class CheckoutWidget extends Widget_Base
         $this->start_controls_section(
                 'layout_section',
                 [
-                        'label' => esc_html__('Layout Options', 'fluent-cart'),
+                        'label' => esc_html__('Layout Options', 'fluent-cart-elementor-blocks'),
                         'tab'   => Controls_Manager::TAB_CONTENT,
                 ]
         );
@@ -455,10 +455,10 @@ class CheckoutWidget extends Widget_Base
         $this->add_control(
                 'sticky_summary',
                 [
-                        'label'        => esc_html__('Sticky Summary', 'fluent-cart'),
+                        'label'        => esc_html__('Sticky Summary', 'fluent-cart-elementor-blocks'),
                         'type'         => Controls_Manager::SWITCHER,
-                        'label_on'     => esc_html__('Yes', 'fluent-cart'),
-                        'label_off'    => esc_html__('No', 'fluent-cart'),
+                        'label_on'     => esc_html__('Yes', 'fluent-cart-elementor-blocks'),
+                        'label_off'    => esc_html__('No', 'fluent-cart-elementor-blocks'),
                         'return_value' => 'yes',
                         'default'      => '',
                         'condition'    => [
@@ -470,7 +470,7 @@ class CheckoutWidget extends Widget_Base
         $this->add_responsive_control(
                 'sticky_offset',
                 [
-                        'label'      => esc_html__('Sticky Offset', 'fluent-cart'),
+                        'label'      => esc_html__('Sticky Offset', 'fluent-cart-elementor-blocks'),
                         'type'       => Controls_Manager::SLIDER,
                         'size_units' => ['px'],
                         'range'      => [
@@ -490,9 +490,9 @@ class CheckoutWidget extends Widget_Base
         $this->add_control(
                 'empty_cart_message',
                 [
-                        'label'   => esc_html__('Empty Cart Message', 'fluent-cart'),
+                        'label'   => esc_html__('Empty Cart Message', 'fluent-cart-elementor-blocks'),
                         'type'    => Controls_Manager::TEXT,
-                        'default' => esc_html__('Your cart is empty.', 'fluent-cart'),
+                        'default' => esc_html__('Your cart is empty.', 'fluent-cart-elementor-blocks'),
                 ]
         );
 
@@ -507,7 +507,7 @@ class CheckoutWidget extends Widget_Base
         $this->start_controls_section(
                 'form_field_style_section',
                 [
-                        'label' => esc_html__('Form Fields', 'fluent-cart'),
+                        'label' => esc_html__('Form Fields', 'fluent-cart-elementor-blocks'),
                         'tab'   => Controls_Manager::TAB_STYLE,
                 ]
         );
@@ -516,7 +516,7 @@ class CheckoutWidget extends Widget_Base
                 Group_Control_Typography::get_type(),
                 [
                         'name'     => 'input_typography',
-                        'label'    => esc_html__('Input Typography', 'fluent-cart'),
+                        'label'    => esc_html__('Input Typography', 'fluent-cart-elementor-blocks'),
                         'selector' => '{{WRAPPER}} .fct_checkout input, {{WRAPPER}} .fct_checkout select, {{WRAPPER}} .fct_checkout textarea',
                 ]
         );
@@ -525,7 +525,7 @@ class CheckoutWidget extends Widget_Base
                 Group_Control_Typography::get_type(),
                 [
                         'name'     => 'label_typography',
-                        'label'    => esc_html__('Label Typography', 'fluent-cart'),
+                        'label'    => esc_html__('Label Typography', 'fluent-cart-elementor-blocks'),
                         'selector' => '{{WRAPPER}} .fct_checkout label, {{WRAPPER}} .fct_checkout .fct_input_label',
                 ]
         );
@@ -533,7 +533,7 @@ class CheckoutWidget extends Widget_Base
         $this->add_control(
                 'label_color',
                 [
-                        'label'     => esc_html__('Label Color', 'fluent-cart'),
+                        'label'     => esc_html__('Label Color', 'fluent-cart-elementor-blocks'),
                         'type'      => Controls_Manager::COLOR,
                         'selectors' => [
                                 '{{WRAPPER}} .fct_checkout label, {{WRAPPER}} .fct_checkout .fct_input_label' => 'color: {{VALUE}};',
@@ -546,13 +546,13 @@ class CheckoutWidget extends Widget_Base
         // Normal State
         $this->start_controls_tab(
                 'input_normal_tab',
-                ['label' => esc_html__('Normal', 'fluent-cart')]
+                ['label' => esc_html__('Normal', 'fluent-cart-elementor-blocks')]
         );
 
         $this->add_control(
                 'input_bg_color',
                 [
-                        'label'     => esc_html__('Background Color', 'fluent-cart'),
+                        'label'     => esc_html__('Background Color', 'fluent-cart-elementor-blocks'),
                         'type'      => Controls_Manager::COLOR,
                         'selectors' => [
                                 '{{WRAPPER}} .fct_checkout input, {{WRAPPER}} .fct_checkout select, {{WRAPPER}} .fct_checkout textarea' => 'background-color: {{VALUE}};',
@@ -563,7 +563,7 @@ class CheckoutWidget extends Widget_Base
         $this->add_control(
                 'input_text_color',
                 [
-                        'label'     => esc_html__('Text Color', 'fluent-cart'),
+                        'label'     => esc_html__('Text Color', 'fluent-cart-elementor-blocks'),
                         'type'      => Controls_Manager::COLOR,
                         'selectors' => [
                                 '{{WRAPPER}} .fct_checkout input, {{WRAPPER}} .fct_checkout select, {{WRAPPER}} .fct_checkout textarea' => 'color: {{VALUE}};',
@@ -574,7 +574,7 @@ class CheckoutWidget extends Widget_Base
         $this->add_control(
                 'input_placeholder_color',
                 [
-                        'label'     => esc_html__('Placeholder Color', 'fluent-cart'),
+                        'label'     => esc_html__('Placeholder Color', 'fluent-cart-elementor-blocks'),
                         'type'      => Controls_Manager::COLOR,
                         'selectors' => [
                                 '{{WRAPPER}} .fct_checkout input::placeholder, {{WRAPPER}} .fct_checkout textarea::placeholder' => 'color: {{VALUE}};',
@@ -595,13 +595,13 @@ class CheckoutWidget extends Widget_Base
         // Focus State
         $this->start_controls_tab(
                 'input_focus_tab',
-                ['label' => esc_html__('Focus', 'fluent-cart')]
+                ['label' => esc_html__('Focus', 'fluent-cart-elementor-blocks')]
         );
 
         $this->add_control(
                 'input_focus_bg_color',
                 [
-                        'label'     => esc_html__('Background Color', 'fluent-cart'),
+                        'label'     => esc_html__('Background Color', 'fluent-cart-elementor-blocks'),
                         'type'      => Controls_Manager::COLOR,
                         'selectors' => [
                                 '{{WRAPPER}} .fct_checkout input:focus, {{WRAPPER}} .fct_checkout select:focus, {{WRAPPER}} .fct_checkout textarea:focus' => 'background-color: {{VALUE}};',
@@ -612,7 +612,7 @@ class CheckoutWidget extends Widget_Base
         $this->add_control(
                 'input_focus_border_color',
                 [
-                        'label'     => esc_html__('Border Color', 'fluent-cart'),
+                        'label'     => esc_html__('Border Color', 'fluent-cart-elementor-blocks'),
                         'type'      => Controls_Manager::COLOR,
                         'selectors' => [
                                 '{{WRAPPER}} .fct_checkout input:focus, {{WRAPPER}} .fct_checkout select:focus, {{WRAPPER}} .fct_checkout textarea:focus' => 'border-color: {{VALUE}};',
@@ -634,7 +634,7 @@ class CheckoutWidget extends Widget_Base
         $this->add_control(
                 'input_border_radius',
                 [
-                        'label'      => esc_html__('Border Radius', 'fluent-cart'),
+                        'label'      => esc_html__('Border Radius', 'fluent-cart-elementor-blocks'),
                         'type'       => Controls_Manager::DIMENSIONS,
                         'size_units' => ['px', '%'],
                         'separator'  => 'before',
@@ -647,7 +647,7 @@ class CheckoutWidget extends Widget_Base
         $this->add_responsive_control(
                 'input_padding',
                 [
-                        'label'      => esc_html__('Padding', 'fluent-cart'),
+                        'label'      => esc_html__('Padding', 'fluent-cart-elementor-blocks'),
                         'type'       => Controls_Manager::DIMENSIONS,
                         'size_units' => ['px', 'em'],
                         'selectors'  => [
@@ -659,7 +659,7 @@ class CheckoutWidget extends Widget_Base
         $this->add_responsive_control(
                 'input_height',
                 [
-                        'label'      => esc_html__('Input Height', 'fluent-cart'),
+                        'label'      => esc_html__('Input Height', 'fluent-cart-elementor-blocks'),
                         'type'       => Controls_Manager::SLIDER,
                         'size_units' => ['px'],
                         'range'      => [
@@ -674,7 +674,7 @@ class CheckoutWidget extends Widget_Base
         $this->add_responsive_control(
                 'field_spacing',
                 [
-                        'label'      => esc_html__('Field Spacing', 'fluent-cart'),
+                        'label'      => esc_html__('Field Spacing', 'fluent-cart-elementor-blocks'),
                         'type'       => Controls_Manager::SLIDER,
                         'size_units' => ['px', 'em'],
                         'range'      => [
@@ -689,7 +689,7 @@ class CheckoutWidget extends Widget_Base
         $this->add_control(
                 'transition_duration',
                 [
-                        'label'     => esc_html__('Transition Duration (ms)', 'fluent-cart'),
+                        'label'     => esc_html__('Transition Duration (ms)', 'fluent-cart-elementor-blocks'),
                         'type'      => Controls_Manager::NUMBER,
                         'default'   => 200,
                         'selectors' => [
@@ -709,7 +709,7 @@ class CheckoutWidget extends Widget_Base
         $this->start_controls_section(
                 'section_heading_style_section',
                 [
-                        'label' => esc_html__('Section Headings', 'fluent-cart'),
+                        'label' => esc_html__('Section Headings', 'fluent-cart-elementor-blocks'),
                         'tab'   => Controls_Manager::TAB_STYLE,
                 ]
         );
@@ -727,7 +727,7 @@ class CheckoutWidget extends Widget_Base
         $this->add_control(
                 'section_heading_color',
                 [
-                        'label'     => esc_html__('Color', 'fluent-cart'),
+                        'label'     => esc_html__('Color', 'fluent-cart-elementor-blocks'),
                         'type'      => Controls_Manager::COLOR,
                         'selectors' => [
                                 $headingTextSelector => 'color: {{VALUE}};',
@@ -738,7 +738,7 @@ class CheckoutWidget extends Widget_Base
         $this->add_control(
                 'section_heading_bg_color',
                 [
-                        'label'     => esc_html__('Background Color', 'fluent-cart'),
+                        'label'     => esc_html__('Background Color', 'fluent-cart-elementor-blocks'),
                         'type'      => Controls_Manager::COLOR,
                         'selectors' => [
                                 '{{WRAPPER}} .fct_checkout .fct_form_section_header' => 'background-color: {{VALUE}};',
@@ -749,7 +749,7 @@ class CheckoutWidget extends Widget_Base
         $this->add_responsive_control(
                 'section_heading_padding',
                 [
-                        'label'      => esc_html__('Padding', 'fluent-cart'),
+                        'label'      => esc_html__('Padding', 'fluent-cart-elementor-blocks'),
                         'type'       => Controls_Manager::DIMENSIONS,
                         'size_units' => ['px', 'em'],
                         'selectors'  => [
@@ -761,7 +761,7 @@ class CheckoutWidget extends Widget_Base
         $this->add_responsive_control(
                 'section_heading_margin',
                 [
-                        'label'      => esc_html__('Margin', 'fluent-cart'),
+                        'label'      => esc_html__('Margin', 'fluent-cart-elementor-blocks'),
                         'type'       => Controls_Manager::DIMENSIONS,
                         'size_units' => ['px', 'em'],
                         'selectors'  => [
@@ -789,7 +789,7 @@ class CheckoutWidget extends Widget_Base
         $this->start_controls_section(
                 'submit_button_style_section',
                 [
-                        'label' => esc_html__('Submit Button', 'fluent-cart'),
+                        'label' => esc_html__('Submit Button', 'fluent-cart-elementor-blocks'),
                         'tab'   => Controls_Manager::TAB_STYLE,
                 ]
         );
@@ -808,12 +808,12 @@ class CheckoutWidget extends Widget_Base
         $this->add_control(
                 'submit_button_width',
                 [
-                        'label'                => esc_html__('Button Width', 'fluent-cart'),
+                        'label'                => esc_html__('Button Width', 'fluent-cart-elementor-blocks'),
                         'type'                 => Controls_Manager::SELECT,
                         'default'              => 'full',
                         'options'              => [
-                                'auto' => esc_html__('Auto', 'fluent-cart'),
-                                'full' => esc_html__('Full Width', 'fluent-cart'),
+                                'auto' => esc_html__('Auto', 'fluent-cart-elementor-blocks'),
+                                'full' => esc_html__('Full Width', 'fluent-cart-elementor-blocks'),
                         ],
                         'selectors_dictionary' => [
                                 'auto' => 'auto',
@@ -828,12 +828,12 @@ class CheckoutWidget extends Widget_Base
         $this->add_responsive_control(
                 'submit_button_alignment',
                 [
-                        'label'     => esc_html__('Alignment', 'fluent-cart'),
+                        'label'     => esc_html__('Alignment', 'fluent-cart-elementor-blocks'),
                         'type'      => Controls_Manager::CHOOSE,
                         'options'   => [
-                                'left'   => ['title' => esc_html__('Left', 'fluent-cart'), 'icon' => 'eicon-text-align-left'],
-                                'center' => ['title' => esc_html__('Center', 'fluent-cart'), 'icon' => 'eicon-text-align-center'],
-                                'right'  => ['title' => esc_html__('Right', 'fluent-cart'), 'icon' => 'eicon-text-align-right'],
+                                'left'   => ['title' => esc_html__('Left', 'fluent-cart-elementor-blocks'), 'icon' => 'eicon-text-align-left'],
+                                'center' => ['title' => esc_html__('Center', 'fluent-cart-elementor-blocks'), 'icon' => 'eicon-text-align-center'],
+                                'right'  => ['title' => esc_html__('Right', 'fluent-cart-elementor-blocks'), 'icon' => 'eicon-text-align-right'],
                         ],
                         'selectors' => [
                                 '{{WRAPPER}} .fct_checkout .fct_place_order_btn_wrap' => 'text-align: {{VALUE}};',
@@ -849,13 +849,13 @@ class CheckoutWidget extends Widget_Base
         // Normal State
         $this->start_controls_tab(
                 'submit_button_normal_tab',
-                ['label' => esc_html__('Normal', 'fluent-cart')]
+                ['label' => esc_html__('Normal', 'fluent-cart-elementor-blocks')]
         );
 
         $this->add_control(
                 'submit_button_text_color',
                 [
-                        'label'     => esc_html__('Text Color', 'fluent-cart'),
+                        'label'     => esc_html__('Text Color', 'fluent-cart-elementor-blocks'),
                         'type'      => Controls_Manager::COLOR,
                         'selectors' => [
                                 $btnSelector => 'color: {{VALUE}};',
@@ -893,13 +893,13 @@ class CheckoutWidget extends Widget_Base
         // Hover State
         $this->start_controls_tab(
                 'submit_button_hover_tab',
-                ['label' => esc_html__('Hover', 'fluent-cart')]
+                ['label' => esc_html__('Hover', 'fluent-cart-elementor-blocks')]
         );
 
         $this->add_control(
                 'submit_button_hover_text_color',
                 [
-                        'label'     => esc_html__('Text Color', 'fluent-cart'),
+                        'label'     => esc_html__('Text Color', 'fluent-cart-elementor-blocks'),
                         'type'      => Controls_Manager::COLOR,
                         'selectors' => [
                                 $btnHoverSelector => 'color: {{VALUE}};',
@@ -935,14 +935,14 @@ class CheckoutWidget extends Widget_Base
         $this->add_control(
                 'submit_button_hover_animation',
                 [
-                        'label'   => esc_html__('Hover Animation', 'fluent-cart'),
+                        'label'   => esc_html__('Hover Animation', 'fluent-cart-elementor-blocks'),
                         'type'    => Controls_Manager::SELECT,
                         'default' => 'none',
                         'options' => [
-                                'none'       => esc_html__('None', 'fluent-cart'),
-                                'scale'      => esc_html__('Scale Up', 'fluent-cart'),
-                                'scale-down' => esc_html__('Scale Down', 'fluent-cart'),
-                                'lift'       => esc_html__('Lift', 'fluent-cart'),
+                                'none'       => esc_html__('None', 'fluent-cart-elementor-blocks'),
+                                'scale'      => esc_html__('Scale Up', 'fluent-cart-elementor-blocks'),
+                                'scale-down' => esc_html__('Scale Down', 'fluent-cart-elementor-blocks'),
+                                'lift'       => esc_html__('Lift', 'fluent-cart-elementor-blocks'),
                         ],
                 ]
         );
@@ -953,7 +953,7 @@ class CheckoutWidget extends Widget_Base
         $this->add_control(
                 'submit_button_border_radius',
                 [
-                        'label'      => esc_html__('Border Radius', 'fluent-cart'),
+                        'label'      => esc_html__('Border Radius', 'fluent-cart-elementor-blocks'),
                         'type'       => Controls_Manager::DIMENSIONS,
                         'size_units' => ['px', '%'],
                         'separator'  => 'before',
@@ -966,7 +966,7 @@ class CheckoutWidget extends Widget_Base
         $this->add_responsive_control(
                 'submit_button_padding',
                 [
-                        'label'      => esc_html__('Padding', 'fluent-cart'),
+                        'label'      => esc_html__('Padding', 'fluent-cart-elementor-blocks'),
                         'type'       => Controls_Manager::DIMENSIONS,
                         'size_units' => ['px', 'em'],
                         'selectors'  => [
@@ -978,7 +978,7 @@ class CheckoutWidget extends Widget_Base
         $this->add_control(
                 'submit_button_transition',
                 [
-                        'label'     => esc_html__('Transition Duration (ms)', 'fluent-cart'),
+                        'label'     => esc_html__('Transition Duration (ms)', 'fluent-cart-elementor-blocks'),
                         'type'      => Controls_Manager::NUMBER,
                         'default'   => 300,
                         'selectors' => [
@@ -991,7 +991,7 @@ class CheckoutWidget extends Widget_Base
         $this->add_control(
                 'loading_state_heading',
                 [
-                        'label'     => esc_html__('Loading State', 'fluent-cart'),
+                        'label'     => esc_html__('Loading State', 'fluent-cart-elementor-blocks'),
                         'type'      => Controls_Manager::HEADING,
                         'separator' => 'before',
                 ]
@@ -1000,7 +1000,7 @@ class CheckoutWidget extends Widget_Base
         $this->add_control(
                 'loading_opacity',
                 [
-                        'label'     => esc_html__('Disabled Opacity', 'fluent-cart'),
+                        'label'     => esc_html__('Disabled Opacity', 'fluent-cart-elementor-blocks'),
                         'type'      => Controls_Manager::SLIDER,
                         'range'     => [
                                 'px' => ['min' => 0.1, 'max' => 1, 'step' => 0.1],
@@ -1023,7 +1023,7 @@ class CheckoutWidget extends Widget_Base
         $this->start_controls_section(
                 'summary_box_style_section',
                 [
-                        'label' => esc_html__('Summary Box', 'fluent-cart'),
+                        'label' => esc_html__('Summary Box', 'fluent-cart-elementor-blocks'),
                         'tab'   => Controls_Manager::TAB_STYLE,
                 ]
         );
@@ -1048,7 +1048,7 @@ class CheckoutWidget extends Widget_Base
         $this->add_control(
                 'summary_box_border_radius',
                 [
-                        'label'      => esc_html__('Border Radius', 'fluent-cart'),
+                        'label'      => esc_html__('Border Radius', 'fluent-cart-elementor-blocks'),
                         'type'       => Controls_Manager::DIMENSIONS,
                         'size_units' => ['px', '%'],
                         'selectors'  => [
@@ -1068,7 +1068,7 @@ class CheckoutWidget extends Widget_Base
         $this->add_responsive_control(
                 'summary_box_padding',
                 [
-                        'label'      => esc_html__('Padding', 'fluent-cart'),
+                        'label'      => esc_html__('Padding', 'fluent-cart-elementor-blocks'),
                         'type'       => Controls_Manager::DIMENSIONS,
                         'size_units' => ['px', 'em'],
                         'selectors'  => [
@@ -1088,7 +1088,7 @@ class CheckoutWidget extends Widget_Base
         $this->start_controls_section(
                 'summary_items_style_section',
                 [
-                        'label' => esc_html__('Summary Items', 'fluent-cart'),
+                        'label' => esc_html__('Summary Items', 'fluent-cart-elementor-blocks'),
                         'tab'   => Controls_Manager::TAB_STYLE,
                 ]
         );
@@ -1097,7 +1097,7 @@ class CheckoutWidget extends Widget_Base
                 Group_Control_Typography::get_type(),
                 [
                         'name'     => 'summary_label_typography',
-                        'label'    => esc_html__('Label Typography', 'fluent-cart'),
+                        'label'    => esc_html__('Label Typography', 'fluent-cart-elementor-blocks'),
                         'selector' => '{{WRAPPER}} .fct_summary_items_list li .fct_summary_label',
                 ]
         );
@@ -1106,7 +1106,7 @@ class CheckoutWidget extends Widget_Base
                 Group_Control_Typography::get_type(),
                 [
                         'name'     => 'summary_value_typography',
-                        'label'    => esc_html__('Value Typography', 'fluent-cart'),
+                        'label'    => esc_html__('Value Typography', 'fluent-cart-elementor-blocks'),
                         'selector' => '{{WRAPPER}} .fct_summary_items_list li .fct_summary_value',
                 ]
         );
@@ -1114,7 +1114,7 @@ class CheckoutWidget extends Widget_Base
         $this->add_control(
                 'summary_label_color',
                 [
-                        'label'     => esc_html__('Label Color', 'fluent-cart'),
+                        'label'     => esc_html__('Label Color', 'fluent-cart-elementor-blocks'),
                         'type'      => Controls_Manager::COLOR,
                         'selectors' => [
                                 '{{WRAPPER}} .fct_summary_items_list li .fct_summary_label' => 'color: {{VALUE}};',
@@ -1125,7 +1125,7 @@ class CheckoutWidget extends Widget_Base
         $this->add_control(
                 'summary_value_color',
                 [
-                        'label'     => esc_html__('Value Color', 'fluent-cart'),
+                        'label'     => esc_html__('Value Color', 'fluent-cart-elementor-blocks'),
                         'type'      => Controls_Manager::COLOR,
                         'selectors' => [
                                 '{{WRAPPER}} .fct_summary_items_list li .fct_summary_value' => 'color: {{VALUE}};',
@@ -1136,14 +1136,14 @@ class CheckoutWidget extends Widget_Base
         $this->add_control(
                 'summary_separator_style',
                 [
-                        'label'     => esc_html__('Separator Style', 'fluent-cart'),
+                        'label'     => esc_html__('Separator Style', 'fluent-cart-elementor-blocks'),
                         'type'      => Controls_Manager::SELECT,
                         'default'   => 'none',
                         'options'   => [
-                                'none'   => esc_html__('None', 'fluent-cart'),
-                                'solid'  => esc_html__('Solid', 'fluent-cart'),
-                                'dashed' => esc_html__('Dashed', 'fluent-cart'),
-                                'dotted' => esc_html__('Dotted', 'fluent-cart'),
+                                'none'   => esc_html__('None', 'fluent-cart-elementor-blocks'),
+                                'solid'  => esc_html__('Solid', 'fluent-cart-elementor-blocks'),
+                                'dashed' => esc_html__('Dashed', 'fluent-cart-elementor-blocks'),
+                                'dotted' => esc_html__('Dotted', 'fluent-cart-elementor-blocks'),
                         ],
                         'selectors' => [
                                 '{{WRAPPER}} .fct_summary_items_list li' => 'border-bottom-style: {{VALUE}};',
@@ -1154,7 +1154,7 @@ class CheckoutWidget extends Widget_Base
         $this->add_control(
                 'summary_separator_width',
                 [
-                        'label'      => esc_html__('Separator Width', 'fluent-cart'),
+                        'label'      => esc_html__('Separator Width', 'fluent-cart-elementor-blocks'),
                         'type'       => Controls_Manager::SLIDER,
                         'size_units' => ['px'],
                         'range'      => [
@@ -1173,7 +1173,7 @@ class CheckoutWidget extends Widget_Base
         $this->add_control(
                 'summary_separator_color',
                 [
-                        'label'     => esc_html__('Separator Color', 'fluent-cart'),
+                        'label'     => esc_html__('Separator Color', 'fluent-cart-elementor-blocks'),
                         'type'      => Controls_Manager::COLOR,
                         'selectors' => [
                                 '{{WRAPPER}} .fct_summary_items_list li' => 'border-bottom-color: {{VALUE}};',
@@ -1187,7 +1187,7 @@ class CheckoutWidget extends Widget_Base
         $this->add_responsive_control(
                 'summary_row_padding',
                 [
-                        'label'      => esc_html__('Row Padding', 'fluent-cart'),
+                        'label'      => esc_html__('Row Padding', 'fluent-cart-elementor-blocks'),
                         'type'       => Controls_Manager::DIMENSIONS,
                         'size_units' => ['px', 'em'],
                         'selectors'  => [
@@ -1200,7 +1200,7 @@ class CheckoutWidget extends Widget_Base
         $this->add_control(
                 'total_row_heading',
                 [
-                        'label'     => esc_html__('Total Row', 'fluent-cart'),
+                        'label'     => esc_html__('Total Row', 'fluent-cart-elementor-blocks'),
                         'type'      => Controls_Manager::HEADING,
                         'separator' => 'before',
                 ]
@@ -1217,7 +1217,7 @@ class CheckoutWidget extends Widget_Base
         $this->add_control(
                 'total_color',
                 [
-                        'label'     => esc_html__('Total Color', 'fluent-cart'),
+                        'label'     => esc_html__('Total Color', 'fluent-cart-elementor-blocks'),
                         'type'      => Controls_Manager::COLOR,
                         'selectors' => [
                                 '{{WRAPPER}} .fct_summary_items_list li.fct_summary_items_total .fct_summary_label, {{WRAPPER}} .fct_summary_items_list li.fct_summary_items_total .fct_summary_value' => 'color: {{VALUE}};',
@@ -1228,7 +1228,7 @@ class CheckoutWidget extends Widget_Base
         $this->add_control(
                 'total_bg_color',
                 [
-                        'label'     => esc_html__('Total Background', 'fluent-cart'),
+                        'label'     => esc_html__('Total Background', 'fluent-cart-elementor-blocks'),
                         'type'      => Controls_Manager::COLOR,
                         'selectors' => [
                                 '{{WRAPPER}} .fct_summary_items_total' => 'background-color: {{VALUE}};',
@@ -1247,7 +1247,7 @@ class CheckoutWidget extends Widget_Base
         $this->start_controls_section(
                 'line_items_style_section',
                 [
-                        'label' => esc_html__('Line Items', 'fluent-cart'),
+                        'label' => esc_html__('Line Items', 'fluent-cart-elementor-blocks'),
                         'tab'   => Controls_Manager::TAB_STYLE,
                 ]
         );
@@ -1256,7 +1256,7 @@ class CheckoutWidget extends Widget_Base
                 Group_Control_Typography::get_type(),
                 [
                         'name'     => 'line_item_title_typography',
-                        'label'    => esc_html__('Title Typography', 'fluent-cart'),
+                        'label'    => esc_html__('Title Typography', 'fluent-cart-elementor-blocks'),
                         'selector' => '{{WRAPPER}} .fct_item_title, {{WRAPPER}} .fct_item_title a',
                 ]
         );
@@ -1264,7 +1264,7 @@ class CheckoutWidget extends Widget_Base
         $this->add_control(
                 'line_item_title_color',
                 [
-                        'label'     => esc_html__('Title Color', 'fluent-cart'),
+                        'label'     => esc_html__('Title Color', 'fluent-cart-elementor-blocks'),
                         'type'      => Controls_Manager::COLOR,
                         'selectors' => [
                                 '{{WRAPPER}} .fct_item_title, {{WRAPPER}} .fct_item_title a' => 'color: {{VALUE}};',
@@ -1276,7 +1276,7 @@ class CheckoutWidget extends Widget_Base
                 Group_Control_Typography::get_type(),
                 [
                         'name'     => 'line_item_price_typography',
-                        'label'    => esc_html__('Price Typography', 'fluent-cart'),
+                        'label'    => esc_html__('Price Typography', 'fluent-cart-elementor-blocks'),
                         'selector' => '{{WRAPPER}} .fct_line_item_price, {{WRAPPER}} .fct_line_item_total',
                 ]
         );
@@ -1284,7 +1284,7 @@ class CheckoutWidget extends Widget_Base
         $this->add_control(
                 'line_item_price_color',
                 [
-                        'label'     => esc_html__('Price Color', 'fluent-cart'),
+                        'label'     => esc_html__('Price Color', 'fluent-cart-elementor-blocks'),
                         'type'      => Controls_Manager::COLOR,
                         'selectors' => [
                                 '{{WRAPPER}} .fct_line_item_price, {{WRAPPER}} .fct_line_item_total' => 'color: {{VALUE}};',
@@ -1295,7 +1295,7 @@ class CheckoutWidget extends Widget_Base
         $this->add_control(
                 'line_item_image_border_radius',
                 [
-                        'label'      => esc_html__('Image Border Radius', 'fluent-cart'),
+                        'label'      => esc_html__('Image Border Radius', 'fluent-cart-elementor-blocks'),
                         'type'       => Controls_Manager::DIMENSIONS,
                         'size_units' => ['px', '%'],
                         'separator'  => 'before',
@@ -1308,7 +1308,7 @@ class CheckoutWidget extends Widget_Base
         $this->add_responsive_control(
                 'line_item_spacing',
                 [
-                        'label'      => esc_html__('Item Spacing', 'fluent-cart'),
+                        'label'      => esc_html__('Item Spacing', 'fluent-cart-elementor-blocks'),
                         'type'       => Controls_Manager::SLIDER,
                         'size_units' => ['px'],
                         'range'      => [
@@ -1324,7 +1324,7 @@ class CheckoutWidget extends Widget_Base
                 Group_Control_Border::get_type(),
                 [
                         'name'     => 'line_item_border',
-                        'label'    => esc_html__('Item Border', 'fluent-cart'),
+                        'label'    => esc_html__('Item Border', 'fluent-cart-elementor-blocks'),
                         'selector' => '{{WRAPPER}} .fct_line_item',
                 ]
         );
@@ -1332,7 +1332,7 @@ class CheckoutWidget extends Widget_Base
         $this->add_responsive_control(
                 'line_item_padding',
                 [
-                        'label'      => esc_html__('Item Padding', 'fluent-cart'),
+                        'label'      => esc_html__('Item Padding', 'fluent-cart-elementor-blocks'),
                         'type'       => Controls_Manager::DIMENSIONS,
                         'size_units' => ['px', 'em'],
                         'selectors'  => [
@@ -1352,7 +1352,7 @@ class CheckoutWidget extends Widget_Base
         $this->start_controls_section(
                 'coupon_field_style_section',
                 [
-                        'label' => esc_html__('Coupon Field', 'fluent-cart'),
+                        'label' => esc_html__('Coupon Field', 'fluent-cart-elementor-blocks'),
                         'tab'   => Controls_Manager::TAB_STYLE,
                 ]
         );
@@ -1363,7 +1363,7 @@ class CheckoutWidget extends Widget_Base
         $this->add_control(
                 'coupon_toggle_color',
                 [
-                        'label'     => esc_html__('Toggle Link Color', 'fluent-cart'),
+                        'label'     => esc_html__('Toggle Link Color', 'fluent-cart-elementor-blocks'),
                         'type'      => Controls_Manager::COLOR,
                         'selectors' => [
                                 '{{WRAPPER}} .fct_coupon_toggle, {{WRAPPER}} .fct_coupon_toggle a' => 'color: {{VALUE}};',
@@ -1374,7 +1374,7 @@ class CheckoutWidget extends Widget_Base
         $this->add_control(
                 'coupon_apply_heading',
                 [
-                        'label'     => esc_html__('Apply Button', 'fluent-cart'),
+                        'label'     => esc_html__('Apply Button', 'fluent-cart-elementor-blocks'),
                         'type'      => Controls_Manager::HEADING,
                         'separator' => 'before',
                 ]
@@ -1384,13 +1384,13 @@ class CheckoutWidget extends Widget_Base
 
         $this->start_controls_tab(
                 'coupon_button_normal_tab',
-                ['label' => esc_html__('Normal', 'fluent-cart')]
+                ['label' => esc_html__('Normal', 'fluent-cart-elementor-blocks')]
         );
 
         $this->add_control(
                 'coupon_button_text_color',
                 [
-                        'label'     => esc_html__('Text Color', 'fluent-cart'),
+                        'label'     => esc_html__('Text Color', 'fluent-cart-elementor-blocks'),
                         'type'      => Controls_Manager::COLOR,
                         'selectors' => [
                                 $couponBtnSelector => 'color: {{VALUE}};',
@@ -1401,7 +1401,7 @@ class CheckoutWidget extends Widget_Base
         $this->add_control(
                 'coupon_button_bg_color',
                 [
-                        'label'     => esc_html__('Background', 'fluent-cart'),
+                        'label'     => esc_html__('Background', 'fluent-cart-elementor-blocks'),
                         'type'      => Controls_Manager::COLOR,
                         'selectors' => [
                                 $couponBtnSelector => 'background-color: {{VALUE}};',
@@ -1413,13 +1413,13 @@ class CheckoutWidget extends Widget_Base
 
         $this->start_controls_tab(
                 'coupon_button_hover_tab',
-                ['label' => esc_html__('Hover', 'fluent-cart')]
+                ['label' => esc_html__('Hover', 'fluent-cart-elementor-blocks')]
         );
 
         $this->add_control(
                 'coupon_button_hover_text_color',
                 [
-                        'label'     => esc_html__('Text Color', 'fluent-cart'),
+                        'label'     => esc_html__('Text Color', 'fluent-cart-elementor-blocks'),
                         'type'      => Controls_Manager::COLOR,
                         'selectors' => [
                                 $couponBtnHoverSelector => 'color: {{VALUE}};',
@@ -1430,7 +1430,7 @@ class CheckoutWidget extends Widget_Base
         $this->add_control(
                 'coupon_button_hover_bg_color',
                 [
-                        'label'     => esc_html__('Background', 'fluent-cart'),
+                        'label'     => esc_html__('Background', 'fluent-cart-elementor-blocks'),
                         'type'      => Controls_Manager::COLOR,
                         'selectors' => [
                                 $couponBtnHoverSelector => 'background-color: {{VALUE}};',
@@ -1444,7 +1444,7 @@ class CheckoutWidget extends Widget_Base
         $this->add_control(
                 'coupon_messages_heading',
                 [
-                        'label'     => esc_html__('Messages', 'fluent-cart'),
+                        'label'     => esc_html__('Messages', 'fluent-cart-elementor-blocks'),
                         'type'      => Controls_Manager::HEADING,
                         'separator' => 'before',
                 ]
@@ -1453,7 +1453,7 @@ class CheckoutWidget extends Widget_Base
         $this->add_control(
                 'coupon_success_color',
                 [
-                        'label'     => esc_html__('Success Color', 'fluent-cart'),
+                        'label'     => esc_html__('Success Color', 'fluent-cart-elementor-blocks'),
                         'type'      => Controls_Manager::COLOR,
                         'selectors' => [
                                 '{{WRAPPER}} .fct_coupon_success' => 'color: {{VALUE}};',
@@ -1464,7 +1464,7 @@ class CheckoutWidget extends Widget_Base
         $this->add_control(
                 'coupon_error_color',
                 [
-                        'label'     => esc_html__('Error Color', 'fluent-cart'),
+                        'label'     => esc_html__('Error Color', 'fluent-cart-elementor-blocks'),
                         'type'      => Controls_Manager::COLOR,
                         'selectors' => [
                                 '{{WRAPPER}} .fct_coupon_error' => 'color: {{VALUE}};',
@@ -1483,7 +1483,7 @@ class CheckoutWidget extends Widget_Base
         $this->start_controls_section(
                 'payment_methods_style_section',
                 [
-                        'label' => esc_html__('Payment Methods', 'fluent-cart'),
+                        'label' => esc_html__('Payment Methods', 'fluent-cart-elementor-blocks'),
                         'tab'   => Controls_Manager::TAB_STYLE,
                 ]
         );
@@ -1491,7 +1491,7 @@ class CheckoutWidget extends Widget_Base
         $this->add_control(
                 'payment_method_bg_color',
                 [
-                        'label'     => esc_html__('Background Color', 'fluent-cart'),
+                        'label'     => esc_html__('Background Color', 'fluent-cart-elementor-blocks'),
                         'type'      => Controls_Manager::COLOR,
                         'selectors' => [
                                 '{{WRAPPER}} .fct_payment_method_wrapper' => 'background-color: {{VALUE}};',
@@ -1502,7 +1502,7 @@ class CheckoutWidget extends Widget_Base
         $this->add_control(
                 'payment_method_selected_bg_color',
                 [
-                        'label'     => esc_html__('Selected Background', 'fluent-cart'),
+                        'label'     => esc_html__('Selected Background', 'fluent-cart-elementor-blocks'),
                         'type'      => Controls_Manager::COLOR,
                         'selectors' => [
                                 '{{WRAPPER}} .fct_payment_method_wrapper.active' => 'background-color: {{VALUE}};',
@@ -1521,7 +1521,7 @@ class CheckoutWidget extends Widget_Base
         $this->add_control(
                 'payment_method_selected_border_color',
                 [
-                        'label'     => esc_html__('Selected Border Color', 'fluent-cart'),
+                        'label'     => esc_html__('Selected Border Color', 'fluent-cart-elementor-blocks'),
                         'type'      => Controls_Manager::COLOR,
                         'selectors' => [
                                 '{{WRAPPER}} .fct_payment_method_wrapper.active' => 'border-color: {{VALUE}};',
@@ -1532,7 +1532,7 @@ class CheckoutWidget extends Widget_Base
         $this->add_control(
                 'payment_method_border_radius',
                 [
-                        'label'      => esc_html__('Border Radius', 'fluent-cart'),
+                        'label'      => esc_html__('Border Radius', 'fluent-cart-elementor-blocks'),
                         'type'       => Controls_Manager::DIMENSIONS,
                         'size_units' => ['px', '%'],
                         'selectors'  => [
@@ -1544,7 +1544,7 @@ class CheckoutWidget extends Widget_Base
         $this->add_responsive_control(
                 'payment_method_padding',
                 [
-                        'label'      => esc_html__('Padding', 'fluent-cart'),
+                        'label'      => esc_html__('Padding', 'fluent-cart-elementor-blocks'),
                         'type'       => Controls_Manager::DIMENSIONS,
                         'size_units' => ['px', 'em'],
                         'selectors'  => [
@@ -1556,7 +1556,7 @@ class CheckoutWidget extends Widget_Base
         $this->add_responsive_control(
                 'payment_method_spacing',
                 [
-                        'label'      => esc_html__('Spacing', 'fluent-cart'),
+                        'label'      => esc_html__('Spacing', 'fluent-cart-elementor-blocks'),
                         'type'       => Controls_Manager::SLIDER,
                         'size_units' => ['px'],
                         'range'      => [
@@ -1572,7 +1572,7 @@ class CheckoutWidget extends Widget_Base
                 Group_Control_Typography::get_type(),
                 [
                         'name'     => 'payment_method_title_typography',
-                        'label'    => esc_html__('Title Typography', 'fluent-cart'),
+                        'label'    => esc_html__('Title Typography', 'fluent-cart-elementor-blocks'),
                         'selector' => '{{WRAPPER}} .fct_payment_method_wrapper label',
                 ]
         );
@@ -1580,7 +1580,7 @@ class CheckoutWidget extends Widget_Base
         $this->add_control(
                 'payment_method_title_color',
                 [
-                        'label'     => esc_html__('Title Color', 'fluent-cart'),
+                        'label'     => esc_html__('Title Color', 'fluent-cart-elementor-blocks'),
                         'type'      => Controls_Manager::COLOR,
                         'selectors' => [
                                 '{{WRAPPER}} .fct_payment_method_wrapper label' => 'color: {{VALUE}};',
@@ -1592,7 +1592,7 @@ class CheckoutWidget extends Widget_Base
                 Group_Control_Typography::get_type(),
                 [
                         'name'     => 'payment_method_desc_typography',
-                        'label'    => esc_html__('Description Typography', 'fluent-cart'),
+                        'label'    => esc_html__('Description Typography', 'fluent-cart-elementor-blocks'),
                         'selector' => '{{WRAPPER}} .fct_payment_method_instructions',
                 ]
         );
@@ -1600,7 +1600,7 @@ class CheckoutWidget extends Widget_Base
         $this->add_control(
                 'payment_method_desc_color',
                 [
-                        'label'     => esc_html__('Description Color', 'fluent-cart'),
+                        'label'     => esc_html__('Description Color', 'fluent-cart-elementor-blocks'),
                         'type'      => Controls_Manager::COLOR,
                         'selectors' => [
                                 '{{WRAPPER}} .fct_payment_method_instructions' => 'color: {{VALUE}};',
@@ -1619,7 +1619,7 @@ class CheckoutWidget extends Widget_Base
         $this->start_controls_section(
                 'address_fields_style_section',
                 [
-                        'label' => esc_html__('Address Fields', 'fluent-cart'),
+                        'label' => esc_html__('Address Fields', 'fluent-cart-elementor-blocks'),
                         'tab'   => Controls_Manager::TAB_STYLE,
                 ]
         );
@@ -1631,7 +1631,7 @@ class CheckoutWidget extends Widget_Base
                 Group_Control_Border::get_type(),
                 [
                         'name'     => 'address_group_border',
-                        'label'    => esc_html__('Section Border', 'fluent-cart'),
+                        'label'    => esc_html__('Section Border', 'fluent-cart-elementor-blocks'),
                         'selector' => $addressSectionSelector,
                 ]
         );
@@ -1639,7 +1639,7 @@ class CheckoutWidget extends Widget_Base
         $this->add_control(
                 'address_group_border_radius',
                 [
-                        'label'      => esc_html__('Section Border Radius', 'fluent-cart'),
+                        'label'      => esc_html__('Section Border Radius', 'fluent-cart-elementor-blocks'),
                         'type'       => Controls_Manager::DIMENSIONS,
                         'size_units' => ['px', '%'],
                         'selectors'  => [
@@ -1651,7 +1651,7 @@ class CheckoutWidget extends Widget_Base
         $this->add_responsive_control(
                 'address_group_padding',
                 [
-                        'label'      => esc_html__('Section Padding', 'fluent-cart'),
+                        'label'      => esc_html__('Section Padding', 'fluent-cart-elementor-blocks'),
                         'type'       => Controls_Manager::DIMENSIONS,
                         'size_units' => ['px', 'em'],
                         'selectors'  => [
@@ -1664,7 +1664,7 @@ class CheckoutWidget extends Widget_Base
                 Group_Control_Typography::get_type(),
                 [
                         'name'     => 'address_title_typography',
-                        'label'    => esc_html__('Address Title Typography', 'fluent-cart'),
+                        'label'    => esc_html__('Address Title Typography', 'fluent-cart-elementor-blocks'),
                         'selector' => $addressTitleSelector,
                 ]
         );
@@ -1672,7 +1672,7 @@ class CheckoutWidget extends Widget_Base
         $this->add_control(
                 'address_title_color',
                 [
-                        'label'     => esc_html__('Address Title Color', 'fluent-cart'),
+                        'label'     => esc_html__('Address Title Color', 'fluent-cart-elementor-blocks'),
                         'type'      => Controls_Manager::COLOR,
                         'selectors' => [
                                 $addressTitleSelector => 'color: {{VALUE}};',
@@ -1691,7 +1691,7 @@ class CheckoutWidget extends Widget_Base
         $this->start_controls_section(
                 'error_validation_style_section',
                 [
-                        'label' => esc_html__('Error/Validation', 'fluent-cart'),
+                        'label' => esc_html__('Error/Validation', 'fluent-cart-elementor-blocks'),
                         'tab'   => Controls_Manager::TAB_STYLE,
                 ]
         );
@@ -1699,7 +1699,7 @@ class CheckoutWidget extends Widget_Base
         $this->add_control(
                 'error_message_color',
                 [
-                        'label'     => esc_html__('Error Message Color', 'fluent-cart'),
+                        'label'     => esc_html__('Error Message Color', 'fluent-cart-elementor-blocks'),
                         'type'      => Controls_Manager::COLOR,
                         'default'   => '#dc3545',
                         'selectors' => [
@@ -1711,7 +1711,7 @@ class CheckoutWidget extends Widget_Base
         $this->add_control(
                 'error_border_color',
                 [
-                        'label'     => esc_html__('Error Field Border Color', 'fluent-cart'),
+                        'label'     => esc_html__('Error Field Border Color', 'fluent-cart-elementor-blocks'),
                         'type'      => Controls_Manager::COLOR,
                         'default'   => '#dc3545',
                         'selectors' => [
@@ -1724,7 +1724,7 @@ class CheckoutWidget extends Widget_Base
                 Group_Control_Typography::get_type(),
                 [
                         'name'     => 'error_message_typography',
-                        'label'    => esc_html__('Error Message Typography', 'fluent-cart'),
+                        'label'    => esc_html__('Error Message Typography', 'fluent-cart-elementor-blocks'),
                         'selector' => '{{WRAPPER}} .fct_form_error',
                 ]
         );

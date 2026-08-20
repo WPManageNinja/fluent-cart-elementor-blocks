@@ -54,7 +54,7 @@ class ReceiptWidget extends Widget_Base
 
     public function get_title()
     {
-        return esc_html__('Order Receipt', 'fluent-cart');
+        return esc_html__('Order Receipt', 'fluent-cart-elementor-blocks');
     }
 
     public function get_icon()
@@ -151,7 +151,7 @@ class ReceiptWidget extends Widget_Base
         $this->start_controls_section(
             'style_confirmation',
             [
-                'label'     => esc_html__('Confirmation', 'fluent-cart'),
+                'label'     => esc_html__('Confirmation', 'fluent-cart-elementor-blocks'),
                 'tab'       => Controls_Manager::TAB_STYLE,
                 'condition' => [
                     'show_confirmation' => 'yes',
@@ -162,7 +162,7 @@ class ReceiptWidget extends Widget_Base
         $this->add_control(
             'confirmation_background',
             [
-                'label'     => esc_html__('Background Color', 'fluent-cart'),
+                'label'     => esc_html__('Background Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .fct-thank-you-page-header' => 'background: {{VALUE}} !important;',
@@ -173,7 +173,7 @@ class ReceiptWidget extends Widget_Base
         $this->add_control(
             'confirmation_icon_background',
             [
-                'label'     => esc_html__('Icon Background', 'fluent-cart'),
+                'label'     => esc_html__('Icon Background', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .fct-thank-you-page-header-icon' => 'background: {{VALUE}} !important;',
@@ -184,7 +184,7 @@ class ReceiptWidget extends Widget_Base
         $this->add_control(
             'confirmation_title_color',
             [
-                'label'     => esc_html__('Title Color', 'fluent-cart'),
+                'label'     => esc_html__('Title Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .fct-thank-you-page-header-title' => 'color: {{VALUE}} !important;',
@@ -196,7 +196,7 @@ class ReceiptWidget extends Widget_Base
             Group_Control_Typography::get_type(),
             [
                 'name'     => 'confirmation_title_typography',
-                'label'    => esc_html__('Title Typography', 'fluent-cart'),
+                'label'    => esc_html__('Title Typography', 'fluent-cart-elementor-blocks'),
                 'selector' => '{{WRAPPER}} .fct-thank-you-page-header-title',
             ]
         );
@@ -209,7 +209,7 @@ class ReceiptWidget extends Widget_Base
         $this->start_controls_section(
             'style_headings',
             [
-                'label' => esc_html__('Headings', 'fluent-cart'),
+                'label' => esc_html__('Headings', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
@@ -226,7 +226,7 @@ class ReceiptWidget extends Widget_Base
         $this->add_control(
             'headings_color',
             [
-                'label'     => esc_html__('Color', 'fluent-cart'),
+                'label'     => esc_html__('Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     $headingSelector => 'color: {{VALUE}} !important;',
@@ -250,7 +250,7 @@ class ReceiptWidget extends Widget_Base
         $this->start_controls_section(
             'style_paragraph',
             [
-                'label' => esc_html__('Paragraph', 'fluent-cart'),
+                'label' => esc_html__('Paragraph', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
@@ -272,7 +272,7 @@ class ReceiptWidget extends Widget_Base
         $this->add_control(
             'paragraph_color',
             [
-                'label'     => esc_html__('Color', 'fluent-cart'),
+                'label'     => esc_html__('Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     $textSelector => 'color: {{VALUE}} !important;',
@@ -296,7 +296,7 @@ class ReceiptWidget extends Widget_Base
         $this->start_controls_section(
             'style_links',
             [
-                'label' => esc_html__('Links', 'fluent-cart'),
+                'label' => esc_html__('Links', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
@@ -310,7 +310,7 @@ class ReceiptWidget extends Widget_Base
         $this->add_control(
             'links_color',
             [
-                'label'     => esc_html__('Color', 'fluent-cart'),
+                'label'     => esc_html__('Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     $linkSelector => 'color: {{VALUE}} !important;',
@@ -321,7 +321,7 @@ class ReceiptWidget extends Widget_Base
         $this->add_control(
             'links_hover_color',
             [
-                'label'     => esc_html__('Hover Color', 'fluent-cart'),
+                'label'     => esc_html__('Hover Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .fce-order-receipt a:not(.fct-thank-you-page-view-order-button):hover' => 'color: {{VALUE}} !important;',
@@ -337,7 +337,7 @@ class ReceiptWidget extends Widget_Base
         $this->start_controls_section(
             'style_item_table',
             [
-                'label'     => esc_html__('Item Table', 'fluent-cart'),
+                'label'     => esc_html__('Item Table', 'fluent-cart-elementor-blocks'),
                 'tab'       => Controls_Manager::TAB_STYLE,
                 'condition' => [
                     'show_order_items' => 'yes',
@@ -348,7 +348,7 @@ class ReceiptWidget extends Widget_Base
         $this->add_control(
             'table_header_background',
             [
-                'label'     => esc_html__('Header Background', 'fluent-cart'),
+                'label'     => esc_html__('Header Background', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .fct-thank-you-page-order-items-header' => 'background-color: {{VALUE}} !important;',
@@ -359,7 +359,7 @@ class ReceiptWidget extends Widget_Base
         $this->add_control(
             'table_header_text_color',
             [
-                'label'     => esc_html__('Header Text Color', 'fluent-cart'),
+                'label'     => esc_html__('Header Text Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .fct-thank-you-page-order-items-header-row' => 'color: {{VALUE}} !important;',
@@ -370,7 +370,7 @@ class ReceiptWidget extends Widget_Base
         $this->add_control(
             'table_body_text_color',
             [
-                'label'     => esc_html__('Body Text Color', 'fluent-cart'),
+                'label'     => esc_html__('Body Text Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .fct-thank-you-page-order-items-list, {{WRAPPER}} .fct-thank-you-page-order-items-list :where(p, div, span, b)' => 'color: {{VALUE}} !important;',
@@ -381,7 +381,7 @@ class ReceiptWidget extends Widget_Base
         $this->add_control(
             'table_divider_color',
             [
-                'label'     => esc_html__('Divider Color', 'fluent-cart'),
+                'label'     => esc_html__('Divider Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .fct-thank-you-page-order-items-header, {{WRAPPER}} .fct-thank-you-page-order-items-list, {{WRAPPER}} .fct-thank-you-page-order-items-total .fct-meta-line' => 'border-color: {{VALUE}} !important;',
@@ -397,7 +397,7 @@ class ReceiptWidget extends Widget_Base
         $this->start_controls_section(
             'style_view_order_button',
             [
-                'label'     => esc_html__('View Order Button', 'fluent-cart'),
+                'label'     => esc_html__('View Order Button', 'fluent-cart-elementor-blocks'),
                 'tab'       => Controls_Manager::TAB_STYLE,
                 'condition' => [
                     'show_actions'    => 'yes',
@@ -422,14 +422,14 @@ class ReceiptWidget extends Widget_Base
         $this->start_controls_tab(
             'view_order_tab_normal',
             [
-                'label' => esc_html__('Normal', 'fluent-cart'),
+                'label' => esc_html__('Normal', 'fluent-cart-elementor-blocks'),
             ]
         );
 
         $this->add_control(
             'view_order_text_color',
             [
-                'label'     => esc_html__('Text Color', 'fluent-cart'),
+                'label'     => esc_html__('Text Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     $buttonSelector => 'color: {{VALUE}} !important;',
@@ -440,7 +440,7 @@ class ReceiptWidget extends Widget_Base
         $this->add_control(
             'view_order_background',
             [
-                'label'     => esc_html__('Background Color', 'fluent-cart'),
+                'label'     => esc_html__('Background Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     $buttonSelector => 'background-color: {{VALUE}} !important;',
@@ -453,14 +453,14 @@ class ReceiptWidget extends Widget_Base
         $this->start_controls_tab(
             'view_order_tab_hover',
             [
-                'label' => esc_html__('Hover', 'fluent-cart'),
+                'label' => esc_html__('Hover', 'fluent-cart-elementor-blocks'),
             ]
         );
 
         $this->add_control(
             'view_order_hover_text_color',
             [
-                'label'     => esc_html__('Text Color', 'fluent-cart'),
+                'label'     => esc_html__('Text Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     $buttonHoverSelector => 'color: {{VALUE}} !important;',
@@ -471,7 +471,7 @@ class ReceiptWidget extends Widget_Base
         $this->add_control(
             'view_order_hover_background',
             [
-                'label'     => esc_html__('Background Color', 'fluent-cart'),
+                'label'     => esc_html__('Background Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     $buttonHoverSelector => 'background-color: {{VALUE}} !important;',
@@ -495,7 +495,7 @@ class ReceiptWidget extends Widget_Base
         $this->add_responsive_control(
             'view_order_border_radius',
             [
-                'label'      => esc_html__('Border Radius', 'fluent-cart'),
+                'label'      => esc_html__('Border Radius', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', '%'],
                 'selectors'  => [
@@ -507,7 +507,7 @@ class ReceiptWidget extends Widget_Base
         $this->add_responsive_control(
             'view_order_padding',
             [
-                'label'      => esc_html__('Padding', 'fluent-cart'),
+                'label'      => esc_html__('Padding', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', 'em'],
                 'selectors'  => [
@@ -528,7 +528,7 @@ class ReceiptWidget extends Widget_Base
         $this->start_controls_section(
             'section_preview',
             [
-                'label' => esc_html__('Preview Settings', 'fluent-cart'),
+                'label' => esc_html__('Preview Settings', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_CONTENT,
             ]
         );
@@ -536,14 +536,14 @@ class ReceiptWidget extends Widget_Base
         $this->add_control(
             'preview_order_type',
             [
-                'label'       => esc_html__('Preview order with', 'fluent-cart'),
+                'label'       => esc_html__('Preview order with', 'fluent-cart-elementor-blocks'),
                 'type'        => Controls_Manager::SELECT,
                 'default'     => '',
                 'options'     => [
-                    ''       => esc_html__('Latest Order', 'fluent-cart'),
-                    'custom' => esc_html__('Order ID', 'fluent-cart'),
+                    ''       => esc_html__('Latest Order', 'fluent-cart-elementor-blocks'),
+                    'custom' => esc_html__('Order ID', 'fluent-cart-elementor-blocks'),
                 ],
-                'description' => esc_html__('Editor preview only. On the live page the order always comes from the checkout redirect URL.', 'fluent-cart'),
+                'description' => esc_html__('Editor preview only. On the live page the order always comes from the checkout redirect URL.', 'fluent-cart-elementor-blocks'),
                 'render_type' => 'template',
             ]
         );
@@ -551,13 +551,13 @@ class ReceiptWidget extends Widget_Base
         $this->add_control(
             'preview_order_id',
             [
-                'label'       => esc_html__('Order ID', 'fluent-cart'),
+                'label'       => esc_html__('Order ID', 'fluent-cart-elementor-blocks'),
                 'type'        => Controls_Manager::NUMBER,
                 'min'         => 1,
                 'condition'   => [
                     'preview_order_type' => 'custom',
                 ],
-                'description' => esc_html__('Find order IDs under FluentCart → Orders. A sample receipt is shown when no order is found.', 'fluent-cart'),
+                'description' => esc_html__('Find order IDs under FluentCart → Orders. A sample receipt is shown when no order is found.', 'fluent-cart-elementor-blocks'),
                 'render_type' => 'template',
             ]
         );
@@ -570,7 +570,7 @@ class ReceiptWidget extends Widget_Base
         $this->start_controls_section(
             'section_visibility',
             [
-                'label' => esc_html__('Sections', 'fluent-cart'),
+                'label' => esc_html__('Sections', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_CONTENT,
             ]
         );
@@ -588,8 +588,8 @@ class ReceiptWidget extends Widget_Base
                 [
                     'label'        => $label,
                     'type'         => Controls_Manager::SWITCHER,
-                    'label_on'     => esc_html__('Show', 'fluent-cart'),
-                    'label_off'    => esc_html__('Hide', 'fluent-cart'),
+                    'label_on'     => esc_html__('Show', 'fluent-cart-elementor-blocks'),
+                    'label_off'    => esc_html__('Hide', 'fluent-cart-elementor-blocks'),
                     'return_value' => 'yes',
                     'default'      => 'yes',
                 ]
@@ -604,7 +604,7 @@ class ReceiptWidget extends Widget_Base
         $this->start_controls_section(
             'section_confirmation',
             [
-                'label'     => esc_html__('Confirmation', 'fluent-cart'),
+                'label'     => esc_html__('Confirmation', 'fluent-cart-elementor-blocks'),
                 'tab'       => Controls_Manager::TAB_CONTENT,
                 'condition' => [
                     'show_confirmation' => 'yes',
@@ -616,11 +616,11 @@ class ReceiptWidget extends Widget_Base
             'confirmation_title',
             [
                 'render_type' => 'template',
-                'label'       => esc_html__('Title', 'fluent-cart'),
+                'label'       => esc_html__('Title', 'fluent-cart-elementor-blocks'),
                 'type'        => Controls_Manager::TEXT,
-                'placeholder' => esc_html__('Purchase Successful!', 'fluent-cart'),
+                'placeholder' => esc_html__('Purchase Successful!', 'fluent-cart-elementor-blocks'),
                 'label_block' => true,
-                'description' => esc_html__('Short codes supported, e.g. {{order.customer.first_name}}. Leave empty to keep the default title.', 'fluent-cart'),
+                'description' => esc_html__('Short codes supported, e.g. {{order.customer.first_name}}. Leave empty to keep the default title.', 'fluent-cart-elementor-blocks'),
             ]
         );
 
@@ -628,9 +628,9 @@ class ReceiptWidget extends Widget_Base
             'confirmation_message',
             [
                 'render_type' => 'template',
-                'label'       => esc_html__('Message', 'fluent-cart'),
+                'label'       => esc_html__('Message', 'fluent-cart-elementor-blocks'),
                 'type'        => Controls_Manager::WYSIWYG,
-                'description' => esc_html__('Replaces the order confirmation line — links and formatting are supported, and the Short Codes button in the editor toolbar inserts order data (e.g. {{order.customer.full_name}}). Leave empty to keep the default (which links to the order).', 'fluent-cart'),
+                'description' => esc_html__('Replaces the order confirmation line — links and formatting are supported, and the Short Codes button in the editor toolbar inserts order data (e.g. {{order.customer.full_name}}). Leave empty to keep the default (which links to the order).', 'fluent-cart-elementor-blocks'),
                 'condition'   => [
                     'show_order_info' => 'yes',
                 ],
@@ -645,7 +645,7 @@ class ReceiptWidget extends Widget_Base
         $this->start_controls_section(
             'section_actions',
             [
-                'label'     => esc_html__('Actions', 'fluent-cart'),
+                'label'     => esc_html__('Actions', 'fluent-cart-elementor-blocks'),
                 'tab'       => Controls_Manager::TAB_CONTENT,
                 'condition' => [
                     'show_actions' => 'yes',
@@ -656,10 +656,10 @@ class ReceiptWidget extends Widget_Base
         $this->add_control(
             'show_view_order',
             [
-                'label'        => esc_html__('View Order Button', 'fluent-cart'),
+                'label'        => esc_html__('View Order Button', 'fluent-cart-elementor-blocks'),
                 'type'         => Controls_Manager::SWITCHER,
-                'label_on'     => esc_html__('Show', 'fluent-cart'),
-                'label_off'    => esc_html__('Hide', 'fluent-cart'),
+                'label_on'     => esc_html__('Show', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('Hide', 'fluent-cart-elementor-blocks'),
                 'return_value' => 'yes',
                 'default'      => 'yes',
             ]
@@ -669,9 +669,9 @@ class ReceiptWidget extends Widget_Base
             'view_order_text',
             [
                 'render_type' => 'template',
-                'label'       => esc_html__('View Order Text', 'fluent-cart'),
+                'label'       => esc_html__('View Order Text', 'fluent-cart-elementor-blocks'),
                 'type'        => Controls_Manager::TEXT,
-                'placeholder' => esc_html__('View Order', 'fluent-cart'),
+                'placeholder' => esc_html__('View Order', 'fluent-cart-elementor-blocks'),
                 'condition'   => [
                     'show_view_order' => 'yes',
                 ],
@@ -681,10 +681,10 @@ class ReceiptWidget extends Widget_Base
         $this->add_control(
             'show_download_receipt',
             [
-                'label'        => esc_html__('Download Receipt Button', 'fluent-cart'),
+                'label'        => esc_html__('Download Receipt Button', 'fluent-cart-elementor-blocks'),
                 'type'         => Controls_Manager::SWITCHER,
-                'label_on'     => esc_html__('Show', 'fluent-cart'),
-                'label_off'    => esc_html__('Hide', 'fluent-cart'),
+                'label_on'     => esc_html__('Show', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('Hide', 'fluent-cart-elementor-blocks'),
                 'return_value' => 'yes',
                 'default'      => 'yes',
             ]
@@ -694,9 +694,9 @@ class ReceiptWidget extends Widget_Base
             'download_receipt_text',
             [
                 'render_type' => 'template',
-                'label'       => esc_html__('Download Receipt Text', 'fluent-cart'),
+                'label'       => esc_html__('Download Receipt Text', 'fluent-cart-elementor-blocks'),
                 'type'        => Controls_Manager::TEXT,
-                'placeholder' => esc_html__('Download Receipt', 'fluent-cart'),
+                'placeholder' => esc_html__('Download Receipt', 'fluent-cart-elementor-blocks'),
                 'condition'   => [
                     'show_download_receipt' => 'yes',
                 ],
@@ -760,17 +760,17 @@ class ReceiptWidget extends Widget_Base
     {
         return [
             'show_confirmation' => [
-                'label' => esc_html__('Confirmation', 'fluent-cart'),
+                'label' => esc_html__('Confirmation', 'fluent-cart-elementor-blocks'),
                 'class' => 'fce-receipt--hide-confirmation',
                 'hides' => ['.fct-thank-you-page-header'],
             ],
             'show_order_info' => [
-                'label' => esc_html__('Order Information', 'fluent-cart'),
+                'label' => esc_html__('Order Information', 'fluent-cart-elementor-blocks'),
                 'class' => 'fce-receipt--hide-order-info',
                 'hides' => ['.fct-thank-you-page .no-print'],
             ],
             'show_order_items' => [
-                'label' => esc_html__('Order Items', 'fluent-cart'),
+                'label' => esc_html__('Order Items', 'fluent-cart-elementor-blocks'),
                 'class' => 'fce-receipt--hide-order-items',
                 'hides' => [
                     '.fct-thank-you-page-order-items-header',
@@ -778,22 +778,22 @@ class ReceiptWidget extends Widget_Base
                 ],
             ],
             'show_order_summary' => [
-                'label' => esc_html__('Order Summary', 'fluent-cart'),
+                'label' => esc_html__('Order Summary', 'fluent-cart-elementor-blocks'),
                 'class' => 'fce-receipt--hide-order-summary',
                 'hides' => ['.fct-thank-you-page-order-items-total'],
             ],
             'show_billing_address' => [
-                'label' => esc_html__('Billing Address', 'fluent-cart'),
+                'label' => esc_html__('Billing Address', 'fluent-cart-elementor-blocks'),
                 'class' => 'fce-receipt--hide-billing',
                 'hides' => ['.fct-thank-you-page-order-items-addresses-bill-to'],
             ],
             'show_shipping_address' => [
-                'label' => esc_html__('Shipping Address', 'fluent-cart'),
+                'label' => esc_html__('Shipping Address', 'fluent-cart-elementor-blocks'),
                 'class' => 'fce-receipt--hide-shipping',
                 'hides' => ['.fct-thank-you-page-order-items-addresses-ship-to'],
             ],
             'show_actions' => [
-                'label' => esc_html__('Actions', 'fluent-cart'),
+                'label' => esc_html__('Actions', 'fluent-cart-elementor-blocks'),
                 'class' => 'fce-receipt--hide-actions',
                 'hides' => ['.fct-thank-you-page-footer'],
             ],

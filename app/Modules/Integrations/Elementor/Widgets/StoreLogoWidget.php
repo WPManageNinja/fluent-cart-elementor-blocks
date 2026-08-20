@@ -22,7 +22,7 @@ class StoreLogoWidget extends Widget_Base
 
     public function get_title()
     {
-        return esc_html__('Store Logo', 'fluent-cart');
+        return esc_html__('Store Logo', 'fluent-cart-elementor-blocks');
     }
 
     public function get_icon()
@@ -62,7 +62,7 @@ class StoreLogoWidget extends Widget_Base
         $this->start_controls_section(
             'content_section',
             [
-                'label' => esc_html__('Store Logo', 'fluent-cart'),
+                'label' => esc_html__('Store Logo', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_CONTENT,
             ]
         );
@@ -70,7 +70,7 @@ class StoreLogoWidget extends Widget_Base
         $this->add_control(
             'custom_logo',
             [
-                'label'       => esc_html__('Logo', 'fluent-cart'),
+                'label'       => esc_html__('Logo', 'fluent-cart-elementor-blocks'),
                 'type'        => Controls_Manager::MEDIA,
                 'dynamic'     => [
                     'active' => true,
@@ -78,19 +78,19 @@ class StoreLogoWidget extends Widget_Base
                 'default'     => [
                     'url' => '',
                 ],
-                'description' => esc_html__('Leave empty to use the logo from FluentCart store settings.', 'fluent-cart'),
+                'description' => esc_html__('Leave empty to use the logo from FluentCart store settings.', 'fluent-cart-elementor-blocks'),
             ]
         );
 
         $this->add_control(
             'link_to',
             [
-                'label'   => esc_html__('Link', 'fluent-cart'),
+                'label'   => esc_html__('Link', 'fluent-cart-elementor-blocks'),
                 'type'    => Controls_Manager::SELECT,
                 'default' => 'home',
                 'options' => [
-                    'home' => esc_html__('Home Page', 'fluent-cart'),
-                    'none' => esc_html__('None', 'fluent-cart'),
+                    'home' => esc_html__('Home Page', 'fluent-cart-elementor-blocks'),
+                    'none' => esc_html__('None', 'fluent-cart-elementor-blocks'),
                 ],
             ]
         );
@@ -98,10 +98,10 @@ class StoreLogoWidget extends Widget_Base
         $this->add_control(
             'link_target',
             [
-                'label'     => esc_html__('Open in New Tab', 'fluent-cart'),
+                'label'     => esc_html__('Open in New Tab', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::SWITCHER,
-                'label_on'  => esc_html__('Yes', 'fluent-cart'),
-                'label_off' => esc_html__('No', 'fluent-cart'),
+                'label_on'  => esc_html__('Yes', 'fluent-cart-elementor-blocks'),
+                'label_off' => esc_html__('No', 'fluent-cart-elementor-blocks'),
                 'default'   => '',
                 'condition' => [
                     'link_to' => 'home',
@@ -121,7 +121,7 @@ class StoreLogoWidget extends Widget_Base
         $this->start_controls_section(
             'logo_style_section',
             [
-                'label' => esc_html__('Logo Settings', 'fluent-cart'),
+                'label' => esc_html__('Logo Settings', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
@@ -133,7 +133,7 @@ class StoreLogoWidget extends Widget_Base
         $this->start_controls_section(
             'alignment_style_section',
             [
-                'label' => esc_html__('Alignment', 'fluent-cart'),
+                'label' => esc_html__('Alignment', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
@@ -145,7 +145,7 @@ class StoreLogoWidget extends Widget_Base
         $this->start_controls_section(
             'store_name_style_section',
             [
-                'label' => esc_html__('Store Name (Fallback)', 'fluent-cart'),
+                'label' => esc_html__('Store Name (Fallback)', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
@@ -167,7 +167,7 @@ class StoreLogoWidget extends Widget_Base
         $widget->add_responsive_control(
             'logo_max_width',
             [
-                'label'      => esc_html__('Max Width', 'fluent-cart'),
+                'label'      => esc_html__('Max Width', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::SLIDER,
                 'size_units' => ['px'],
                 'range'      => [
@@ -183,7 +183,7 @@ class StoreLogoWidget extends Widget_Base
         $widget->add_responsive_control(
             'logo_max_height',
             [
-                'label'      => esc_html__('Max Height', 'fluent-cart'),
+                'label'      => esc_html__('Max Height', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::SLIDER,
                 'size_units' => ['px'],
                 'range'      => [
@@ -205,19 +205,19 @@ class StoreLogoWidget extends Widget_Base
         $widget->add_responsive_control(
             'logo_alignment',
             [
-                'label'     => esc_html__('Alignment', 'fluent-cart'),
+                'label'     => esc_html__('Alignment', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::CHOOSE,
                 'options'   => [
                     'left'   => [
-                        'title' => esc_html__('Left', 'fluent-cart'),
+                        'title' => esc_html__('Left', 'fluent-cart-elementor-blocks'),
                         'icon'  => 'eicon-text-align-left',
                     ],
                     'center' => [
-                        'title' => esc_html__('Center', 'fluent-cart'),
+                        'title' => esc_html__('Center', 'fluent-cart-elementor-blocks'),
                         'icon'  => 'eicon-text-align-center',
                     ],
                     'right'  => [
-                        'title' => esc_html__('Right', 'fluent-cart'),
+                        'title' => esc_html__('Right', 'fluent-cart-elementor-blocks'),
                         'icon'  => 'eicon-text-align-right',
                     ],
                 ],
@@ -244,7 +244,7 @@ class StoreLogoWidget extends Widget_Base
         $widget->add_control(
             'store_name_color',
             [
-                'label'     => esc_html__('Color', 'fluent-cart'),
+                'label'     => esc_html__('Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     $selector => 'color: {{VALUE}};',

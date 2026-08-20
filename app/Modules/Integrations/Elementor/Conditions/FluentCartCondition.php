@@ -23,12 +23,12 @@ class FluentCartCondition extends Condition_Base
 
     public function get_label()
     {
-        return esc_html__('FluentCart', 'fluent-cart');
+        return esc_html__('FluentCart', 'fluent-cart-elementor-blocks');
     }
 
     public function get_all_label()
     {
-        return esc_html__('All Products', 'fluent-cart');
+        return esc_html__('All Products', 'fluent-cart-elementor-blocks');
     }
 
     public function register_sub_conditions()

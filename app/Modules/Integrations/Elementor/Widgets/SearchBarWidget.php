@@ -22,7 +22,7 @@ class SearchBarWidget extends Widget_Base
 
     public function get_title()
     {
-        return esc_html__('Product Search Bar', 'fluent-cart');
+        return esc_html__('Product Search Bar', 'fluent-cart-elementor-blocks');
     }
 
     public function get_icon()
@@ -93,7 +93,7 @@ class SearchBarWidget extends Widget_Base
         $this->start_controls_section(
             'content_section',
             [
-                'label' => esc_html__('Search Bar', 'fluent-cart'),
+                'label' => esc_html__('Search Bar', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_CONTENT,
             ]
         );
@@ -101,25 +101,25 @@ class SearchBarWidget extends Widget_Base
         $this->add_control(
             'show_category_filter',
             [
-                'label'        => esc_html__('Show Category Filter', 'fluent-cart'),
+                'label'        => esc_html__('Show Category Filter', 'fluent-cart-elementor-blocks'),
                 'type'         => Controls_Manager::SWITCHER,
-                'label_on'     => esc_html__('Yes', 'fluent-cart'),
-                'label_off'    => esc_html__('No', 'fluent-cart'),
+                'label_on'     => esc_html__('Yes', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('No', 'fluent-cart-elementor-blocks'),
                 'return_value' => 'yes',
                 'default'      => 'yes',
-                'description'  => esc_html__('Display a category dropdown alongside the search input.', 'fluent-cart'),
+                'description'  => esc_html__('Display a category dropdown alongside the search input.', 'fluent-cart-elementor-blocks'),
             ]
         );
 
         $this->add_control(
             'url_mode',
             [
-                'label'   => esc_html__('Link Target', 'fluent-cart'),
+                'label'   => esc_html__('Link Target', 'fluent-cart-elementor-blocks'),
                 'type'    => Controls_Manager::SELECT,
                 'default' => '',
                 'options' => [
-                    ''        => esc_html__('Same Tab', 'fluent-cart'),
-                    'new-tab' => esc_html__('New Tab', 'fluent-cart'),
+                    ''        => esc_html__('Same Tab', 'fluent-cart-elementor-blocks'),
+                    'new-tab' => esc_html__('New Tab', 'fluent-cart-elementor-blocks'),
                 ],
             ]
         );
@@ -127,26 +127,26 @@ class SearchBarWidget extends Widget_Base
         $this->add_control(
             'link_with_shop_app',
             [
-                'label'        => esc_html__('Link With Shop App', 'fluent-cart'),
+                'label'        => esc_html__('Link With Shop App', 'fluent-cart-elementor-blocks'),
                 'type'         => Controls_Manager::SWITCHER,
-                'label_on'     => esc_html__('Yes', 'fluent-cart'),
-                'label_off'    => esc_html__('No', 'fluent-cart'),
+                'label_on'     => esc_html__('Yes', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('No', 'fluent-cart-elementor-blocks'),
                 'return_value' => 'yes',
                 'default'      => '',
-                'description'  => esc_html__('When enabled, search results will update a Shop App widget on the same page instead of navigating.', 'fluent-cart'),
+                'description'  => esc_html__('When enabled, search results will update a Shop App widget on the same page instead of navigating.', 'fluent-cart-elementor-blocks'),
             ]
         );
 
         $this->add_control(
             'show_thumbnail',
             [
-                'label'        => esc_html__('Show Thumbnail', 'fluent-cart'),
+                'label'        => esc_html__('Show Thumbnail', 'fluent-cart-elementor-blocks'),
                 'type'         => Controls_Manager::SWITCHER,
-                'label_on'     => esc_html__('Yes', 'fluent-cart'),
-                'label_off'    => esc_html__('No', 'fluent-cart'),
+                'label_on'     => esc_html__('Yes', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('No', 'fluent-cart-elementor-blocks'),
                 'return_value' => 'yes',
                 'default'      => 'yes',
-                'description'  => esc_html__('Display product thumbnails in search results.', 'fluent-cart'),
+                'description'  => esc_html__('Display product thumbnails in search results.', 'fluent-cart-elementor-blocks'),
             ]
         );
 
@@ -159,7 +159,7 @@ class SearchBarWidget extends Widget_Base
         $this->start_controls_section(
             'wrapper_style_section',
             [
-                'label' => esc_html__('Search Bar Wrapper', 'fluent-cart'),
+                'label' => esc_html__('Search Bar Wrapper', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
@@ -184,7 +184,7 @@ class SearchBarWidget extends Widget_Base
         $this->add_control(
             'wrapper_border_radius',
             [
-                'label'      => esc_html__('Border Radius', 'fluent-cart'),
+                'label'      => esc_html__('Border Radius', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', '%', 'em'],
                 'selectors'  => [
@@ -204,7 +204,7 @@ class SearchBarWidget extends Widget_Base
         $this->add_responsive_control(
             'wrapper_padding',
             [
-                'label'      => esc_html__('Padding', 'fluent-cart'),
+                'label'      => esc_html__('Padding', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', 'em', '%'],
                 'selectors'  => [
@@ -219,7 +219,7 @@ class SearchBarWidget extends Widget_Base
         $this->start_controls_section(
             'input_style_section',
             [
-                'label' => esc_html__('Search Input', 'fluent-cart'),
+                'label' => esc_html__('Search Input', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
@@ -230,7 +230,7 @@ class SearchBarWidget extends Widget_Base
         $this->start_controls_tab(
             'tab_input_normal',
             [
-                'label' => esc_html__('Normal', 'fluent-cart'),
+                'label' => esc_html__('Normal', 'fluent-cart-elementor-blocks'),
             ]
         );
 
@@ -246,7 +246,7 @@ class SearchBarWidget extends Widget_Base
         $this->add_control(
             'input_text_color',
             [
-                'label'     => esc_html__('Text Color', 'fluent-cart'),
+                'label'     => esc_html__('Text Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .fluent-cart-search-bar-app-input' => 'color: {{VALUE}};',
@@ -257,7 +257,7 @@ class SearchBarWidget extends Widget_Base
         $this->add_control(
             'input_placeholder_color',
             [
-                'label'     => esc_html__('Placeholder Color', 'fluent-cart'),
+                'label'     => esc_html__('Placeholder Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .fluent-cart-search-bar-app-input::placeholder' => 'color: {{VALUE}};',
@@ -268,7 +268,7 @@ class SearchBarWidget extends Widget_Base
         $this->add_control(
             'input_icon_color',
             [
-                'label'     => esc_html__('Search Icon Color', 'fluent-cart'),
+                'label'     => esc_html__('Search Icon Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .fluent-cart-search-bar-app-input-search svg' => 'stroke: {{VALUE}}; color: {{VALUE}};',
@@ -295,7 +295,7 @@ class SearchBarWidget extends Widget_Base
         $this->add_control(
             'input_border_radius',
             [
-                'label'      => esc_html__('Border Radius', 'fluent-cart'),
+                'label'      => esc_html__('Border Radius', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', '%', 'em'],
                 'selectors'  => [
@@ -307,7 +307,7 @@ class SearchBarWidget extends Widget_Base
         $this->add_responsive_control(
             'input_padding',
             [
-                'label'      => esc_html__('Padding', 'fluent-cart'),
+                'label'      => esc_html__('Padding', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', 'em', '%'],
                 'selectors'  => [
@@ -322,7 +322,7 @@ class SearchBarWidget extends Widget_Base
         $this->start_controls_tab(
             'tab_input_focus',
             [
-                'label' => esc_html__('Focus', 'fluent-cart'),
+                'label' => esc_html__('Focus', 'fluent-cart-elementor-blocks'),
             ]
         );
 
@@ -338,7 +338,7 @@ class SearchBarWidget extends Widget_Base
         $this->add_control(
             'input_focus_text_color',
             [
-                'label'     => esc_html__('Text Color', 'fluent-cart'),
+                'label'     => esc_html__('Text Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .fluent-cart-search-bar-app-input:focus' => 'color: {{VALUE}};',
@@ -364,7 +364,7 @@ class SearchBarWidget extends Widget_Base
         $this->start_controls_section(
             'category_style_section',
             [
-                'label'     => esc_html__('Category Dropdown', 'fluent-cart'),
+                'label'     => esc_html__('Category Dropdown', 'fluent-cart-elementor-blocks'),
                 'tab'       => Controls_Manager::TAB_STYLE,
                 'condition' => [
                     'show_category_filter' => 'yes',
@@ -384,7 +384,7 @@ class SearchBarWidget extends Widget_Base
         $this->add_control(
             'category_text_color',
             [
-                'label'     => esc_html__('Text Color', 'fluent-cart'),
+                'label'     => esc_html__('Text Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .fluent-cart-search-bar-app-wrapper-select-container select' => 'color: {{VALUE}};',
@@ -411,7 +411,7 @@ class SearchBarWidget extends Widget_Base
         $this->add_control(
             'category_border_radius',
             [
-                'label'      => esc_html__('Border Radius', 'fluent-cart'),
+                'label'      => esc_html__('Border Radius', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', '%', 'em'],
                 'selectors'  => [
@@ -423,7 +423,7 @@ class SearchBarWidget extends Widget_Base
         $this->add_responsive_control(
             'category_padding',
             [
-                'label'      => esc_html__('Padding', 'fluent-cart'),
+                'label'      => esc_html__('Padding', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', 'em', '%'],
                 'selectors'  => [
@@ -438,7 +438,7 @@ class SearchBarWidget extends Widget_Base
         $this->start_controls_section(
             'results_style_section',
             [
-                'label' => esc_html__('Results Dropdown', 'fluent-cart'),
+                'label' => esc_html__('Results Dropdown', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
@@ -463,7 +463,7 @@ class SearchBarWidget extends Widget_Base
         $this->add_control(
             'results_border_radius',
             [
-                'label'      => esc_html__('Border Radius', 'fluent-cart'),
+                'label'      => esc_html__('Border Radius', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', '%', 'em'],
                 'selectors'  => [
@@ -483,7 +483,7 @@ class SearchBarWidget extends Widget_Base
         $this->add_control(
             'results_item_color',
             [
-                'label'     => esc_html__('Item Text Color', 'fluent-cart'),
+                'label'     => esc_html__('Item Text Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .fluent-cart-search-bar-app-list-wrapper li a' => 'color: {{VALUE}};',
@@ -494,7 +494,7 @@ class SearchBarWidget extends Widget_Base
         $this->add_control(
             'results_item_hover_color',
             [
-                'label'     => esc_html__('Item Hover Color', 'fluent-cart'),
+                'label'     => esc_html__('Item Hover Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .fluent-cart-search-bar-app-list-wrapper li:hover a' => 'color: {{VALUE}};',

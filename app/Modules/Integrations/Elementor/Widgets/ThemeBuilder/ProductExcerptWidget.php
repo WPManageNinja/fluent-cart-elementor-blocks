@@ -24,7 +24,7 @@ class ProductExcerptWidget extends Widget_Base
 
     public function get_title()
     {
-        return esc_html__('Product Excerpt', 'fluent-cart');
+        return esc_html__('Product Excerpt', 'fluent-cart-elementor-blocks');
     }
 
     public function get_icon()
@@ -47,7 +47,7 @@ class ProductExcerptWidget extends Widget_Base
         $widget->add_control(
             'excerpt_color',
             [
-                'label'     => esc_html__('Text Color', 'fluent-cart'),
+                'label'     => esc_html__('Text Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     $selector => 'color: {{VALUE}};',
@@ -69,7 +69,7 @@ class ProductExcerptWidget extends Widget_Base
         $this->start_controls_section(
             'content_section',
             [
-                'label' => esc_html__('Content', 'fluent-cart'),
+                'label' => esc_html__('Content', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_CONTENT,
             ]
         );
@@ -79,13 +79,13 @@ class ProductExcerptWidget extends Widget_Base
         $this->add_responsive_control(
             'align',
             [
-                'label'     => esc_html__('Alignment', 'fluent-cart'),
+                'label'     => esc_html__('Alignment', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::CHOOSE,
                 'options'   => [
-                    'left'    => ['title' => esc_html__('Left', 'fluent-cart'), 'icon' => 'eicon-text-align-left'],
-                    'center'  => ['title' => esc_html__('Center', 'fluent-cart'), 'icon' => 'eicon-text-align-center'],
-                    'right'   => ['title' => esc_html__('Right', 'fluent-cart'), 'icon' => 'eicon-text-align-right'],
-                    'justify' => ['title' => esc_html__('Justified', 'fluent-cart'), 'icon' => 'eicon-text-align-justify'],
+                    'left'    => ['title' => esc_html__('Left', 'fluent-cart-elementor-blocks'), 'icon' => 'eicon-text-align-left'],
+                    'center'  => ['title' => esc_html__('Center', 'fluent-cart-elementor-blocks'), 'icon' => 'eicon-text-align-center'],
+                    'right'   => ['title' => esc_html__('Right', 'fluent-cart-elementor-blocks'), 'icon' => 'eicon-text-align-right'],
+                    'justify' => ['title' => esc_html__('Justified', 'fluent-cart-elementor-blocks'), 'icon' => 'eicon-text-align-justify'],
                 ],
                 'selectors' => [
                     '{{WRAPPER}} .fluentcart-product-excerpt' => 'text-align: {{VALUE}};',
@@ -99,7 +99,7 @@ class ProductExcerptWidget extends Widget_Base
         $this->start_controls_section(
             'style_section',
             [
-                'label' => esc_html__('Style', 'fluent-cart'),
+                'label' => esc_html__('Style', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
@@ -115,7 +115,7 @@ class ProductExcerptWidget extends Widget_Base
         $product = $this->getProduct($settings);
 
         if (!$product) {
-            $this->renderPlaceholder(__('Please select a product or use this widget inside a product template.', 'fluent-cart'));
+            $this->renderPlaceholder(__('Please select a product or use this widget inside a product template.', 'fluent-cart-elementor-blocks'));
             return;
         }
 
