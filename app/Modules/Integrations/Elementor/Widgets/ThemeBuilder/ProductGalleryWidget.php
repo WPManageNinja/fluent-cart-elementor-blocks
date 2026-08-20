@@ -23,7 +23,7 @@ class ProductGalleryWidget extends Widget_Base
 
     public function get_title()
     {
-        return esc_html__('Product Gallery', 'fluent-cart');
+        return esc_html__('Product Gallery', 'fluent-cart-elementor-blocks');
     }
 
     public function get_icon()
@@ -54,14 +54,14 @@ class ProductGalleryWidget extends Widget_Base
         $widget->add_control(
             'thumb_position',
             [
-                'label'   => esc_html__('Thumbnail Position', 'fluent-cart'),
+                'label'   => esc_html__('Thumbnail Position', 'fluent-cart-elementor-blocks'),
                 'type'    => Controls_Manager::SELECT,
                 'default' => 'bottom',
                 'options' => [
-                    'bottom' => esc_html__('Bottom', 'fluent-cart'),
-                    'left'   => esc_html__('Left', 'fluent-cart'),
-                    'right'  => esc_html__('Right', 'fluent-cart'),
-                    'top'    => esc_html__('Top', 'fluent-cart'),
+                    'bottom' => esc_html__('Bottom', 'fluent-cart-elementor-blocks'),
+                    'left'   => esc_html__('Left', 'fluent-cart-elementor-blocks'),
+                    'right'  => esc_html__('Right', 'fluent-cart-elementor-blocks'),
+                    'top'    => esc_html__('Top', 'fluent-cart-elementor-blocks'),
                 ],
             ]
         );
@@ -75,25 +75,25 @@ class ProductGalleryWidget extends Widget_Base
         $widget->add_control(
             'scrollable_thumbs',
             [
-                'label'        => esc_html__('Scrollable Thumbnails', 'fluent-cart'),
+                'label'        => esc_html__('Scrollable Thumbnails', 'fluent-cart-elementor-blocks'),
                 'type'         => Controls_Manager::SWITCHER,
-                'label_on'     => esc_html__('Yes', 'fluent-cart'),
-                'label_off'    => esc_html__('No', 'fluent-cart'),
+                'label_on'     => esc_html__('Yes', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('No', 'fluent-cart-elementor-blocks'),
                 'return_value' => 'yes',
                 'default'      => '',
-                'description'  => esc_html__('Enable scrolling when thumbnails exceed the main image dimensions.', 'fluent-cart'),
+                'description'  => esc_html__('Enable scrolling when thumbnails exceed the main image dimensions.', 'fluent-cart-elementor-blocks'),
             ]
         );
 
         $widget->add_control(
             'max_thumbnails',
             [
-                'label'       => esc_html__('Max Thumbnails', 'fluent-cart'),
+                'label'       => esc_html__('Max Thumbnails', 'fluent-cart-elementor-blocks'),
                 'type'        => Controls_Manager::NUMBER,
                 'min'         => 1,
                 'step'        => 1,
                 'default'     => '',
-                'description' => esc_html__('Leave empty for no limit. Excess images accessible via "See More" button.', 'fluent-cart'),
+                'description' => esc_html__('Leave empty for no limit. Excess images accessible via "See More" button.', 'fluent-cart-elementor-blocks'),
             ]
         );
     }
@@ -103,7 +103,7 @@ class ProductGalleryWidget extends Widget_Base
         $this->start_controls_section(
             'content_section',
             [
-                'label' => esc_html__('Content', 'fluent-cart'),
+                'label' => esc_html__('Content', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_CONTENT,
             ]
         );
@@ -121,7 +121,7 @@ class ProductGalleryWidget extends Widget_Base
         $product = $this->getProduct($settings);
 
         if (!$product) {
-            $this->renderPlaceholder(__('Please select a product or use this widget inside a product template.', 'fluent-cart'));
+            $this->renderPlaceholder(__('Please select a product or use this widget inside a product template.', 'fluent-cart-elementor-blocks'));
             return;
         }
 

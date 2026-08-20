@@ -21,12 +21,12 @@ trait ProductWidgetTrait
         $this->add_control(
             'source',
             [
-                'label'   => esc_html__('Source', 'fluent-cart'),
+                'label'   => esc_html__('Source', 'fluent-cart-elementor-blocks'),
                 'type'    => Controls_Manager::SELECT,
                 'default' => 'default',
                 'options' => [
-                    'default' => esc_html__('Current Product', 'fluent-cart'),
-                    'custom'  => esc_html__('Custom', 'fluent-cart'),
+                    'default' => esc_html__('Current Product', 'fluent-cart-elementor-blocks'),
+                    'custom'  => esc_html__('Custom', 'fluent-cart-elementor-blocks'),
                 ],
             ]
         );
@@ -34,7 +34,7 @@ trait ProductWidgetTrait
         $this->add_control(
             'product_id',
             [
-                'label'       => esc_html__('Select Product', 'fluent-cart'),
+                'label'       => esc_html__('Select Product', 'fluent-cart-elementor-blocks'),
                 'type'        => (new ProductSelectControl())->get_type(),
                 'label_block' => true,
                 'multiple'    => false,

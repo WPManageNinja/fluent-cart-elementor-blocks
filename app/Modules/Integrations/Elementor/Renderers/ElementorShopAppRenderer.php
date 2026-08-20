@@ -101,7 +101,7 @@ class ElementorShopAppRenderer extends ShopAppRenderer
             'data-default-filters'                   => wp_json_encode($this->defaultFilters),
         ];
         ?>
-        <div class="fct-products-wrapper" data-fluent-cart-shop-app data-fluent-cart-product-wrapper role="main" aria-label="<?php esc_attr_e('Products', 'fluent-cart'); ?>">
+        <div class="fct-products-wrapper" data-fluent-cart-shop-app data-fluent-cart-product-wrapper role="main" aria-label="<?php esc_attr_e('Products', 'fluent-cart-elementor-blocks'); ?>">
             <?php
             // Render before-wrapper sections (view_switcher, sort_by) in a shared container
             if (!empty($beforeWrapper)) {
@@ -200,7 +200,7 @@ class ElementorShopAppRenderer extends ShopAppRenderer
         <div class="fct-products-container grid-columns-<?php echo esc_attr($this->productBoxGridSize); ?>"
              data-fluent-cart-shop-app-product-list
              role="list"
-             aria-label="<?php esc_attr_e('Product list', 'fluent-cart'); ?>"
+             aria-label="<?php esc_attr_e('Product list', 'fluent-cart-elementor-blocks'); ?>"
         >
             <?php
             if ($this->products->count() !== 0) {
@@ -254,7 +254,7 @@ class ElementorShopAppRenderer extends ShopAppRenderer
                 <?php echo $cursorData; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
                 <?php echo $providerAttr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
                  aria-label="<?php echo esc_attr(sprintf(
-                         __('%s product card', 'fluent-cart'), $product->post_title));
+                         __('%s product card', 'fluent-cart-elementor-blocks'), $product->post_title));
                  ?>">
             <?php static::renderCardElements($cardRender, $this->cardElements); ?>
         </article>

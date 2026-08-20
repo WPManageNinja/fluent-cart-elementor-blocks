@@ -5,7 +5,8 @@
     "build": "node resources/vite/vite.js --build && vite build",
     "production": "npm run build",
     "prod": "npm run build",
-    "build:zip": "npm run build && npm run pack",
+    "build:zip": "npm run build && npm run i18n && npm run pack",
+    "i18n": "wp i18n make-pot . language/fluent-cart-elementor-blocks.pot --domain=fluent-cart-elementor-blocks --exclude=resources,builds,node_modules,vendor,assets",
     "pack": "node resources/dev/zip.js",
     "zip": "node resources/dev/zip.js"
   },

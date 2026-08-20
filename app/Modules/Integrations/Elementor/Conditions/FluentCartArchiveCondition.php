@@ -29,12 +29,12 @@ class FluentCartArchiveCondition extends Condition_Base
 
     public function get_label()
     {
-        return esc_html__('FluentCart Product Archives', 'fluent-cart');
+        return esc_html__('FluentCart Product Archives', 'fluent-cart-elementor-blocks');
     }
 
     public function get_all_label()
     {
-        return esc_html__('All FluentCart Product Archives', 'fluent-cart');
+        return esc_html__('All FluentCart Product Archives', 'fluent-cart-elementor-blocks');
     }
 
     public function check($args)

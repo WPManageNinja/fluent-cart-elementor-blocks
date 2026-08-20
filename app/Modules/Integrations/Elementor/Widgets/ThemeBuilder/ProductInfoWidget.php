@@ -30,7 +30,7 @@ class ProductInfoWidget extends Widget_Base
 
     public function get_title()
     {
-        return esc_html__('Product Info', 'fluent-cart');
+        return esc_html__('Product Info', 'fluent-cart-elementor-blocks');
     }
 
     public function get_icon()
@@ -54,7 +54,7 @@ class ProductInfoWidget extends Widget_Base
         $this->start_controls_section(
             'content_section',
             [
-                'label' => esc_html__('Content', 'fluent-cart'),
+                'label' => esc_html__('Content', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_CONTENT,
             ]
         );
@@ -67,7 +67,7 @@ class ProductInfoWidget extends Widget_Base
         $this->start_controls_section(
             'sections_section',
             [
-                'label' => esc_html__('Sections', 'fluent-cart'),
+                'label' => esc_html__('Sections', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_CONTENT,
             ]
         );
@@ -75,10 +75,10 @@ class ProductInfoWidget extends Widget_Base
         $this->add_control(
             'show_gallery',
             [
-                'label'        => esc_html__('Gallery', 'fluent-cart'),
+                'label'        => esc_html__('Gallery', 'fluent-cart-elementor-blocks'),
                 'type'         => Controls_Manager::SWITCHER,
-                'label_on'     => esc_html__('Show', 'fluent-cart'),
-                'label_off'    => esc_html__('Hide', 'fluent-cart'),
+                'label_on'     => esc_html__('Show', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('Hide', 'fluent-cart-elementor-blocks'),
                 'return_value' => 'yes',
                 'default'      => 'yes',
             ]
@@ -89,17 +89,17 @@ class ProductInfoWidget extends Widget_Base
         $summaryRepeater->add_control(
             'section_type',
             [
-                'label'   => esc_html__('Section', 'fluent-cart'),
+                'label'   => esc_html__('Section', 'fluent-cart-elementor-blocks'),
                 'type'    => Controls_Manager::SELECT,
                 'default' => 'title',
                 'options' => [
-                    'title'               => esc_html__('Title', 'fluent-cart'),
-                    'stock'               => esc_html__('Stock', 'fluent-cart'),
-                    'sku'                 => esc_html__('SKU', 'fluent-cart'),
-                    'excerpt'             => esc_html__('Excerpt', 'fluent-cart'),
-                    'price'               => esc_html__('Price', 'fluent-cart'),
-                    'package_description' => esc_html__('Package Description', 'fluent-cart'),
-                    'buy_section'         => esc_html__('Buy Section', 'fluent-cart'),
+                    'title'               => esc_html__('Title', 'fluent-cart-elementor-blocks'),
+                    'stock'               => esc_html__('Stock', 'fluent-cart-elementor-blocks'),
+                    'sku'                 => esc_html__('SKU', 'fluent-cart-elementor-blocks'),
+                    'excerpt'             => esc_html__('Excerpt', 'fluent-cart-elementor-blocks'),
+                    'price'               => esc_html__('Price', 'fluent-cart-elementor-blocks'),
+                    'package_description' => esc_html__('Package Description', 'fluent-cart-elementor-blocks'),
+                    'buy_section'         => esc_html__('Buy Section', 'fluent-cart-elementor-blocks'),
                 ],
             ]
         );
@@ -107,10 +107,10 @@ class ProductInfoWidget extends Widget_Base
         $summaryRepeater->add_control(
             'show',
             [
-                'label'        => esc_html__('Visibility', 'fluent-cart'),
+                'label'        => esc_html__('Visibility', 'fluent-cart-elementor-blocks'),
                 'type'         => Controls_Manager::SWITCHER,
-                'label_on'     => esc_html__('Show', 'fluent-cart'),
-                'label_off'    => esc_html__('Hide', 'fluent-cart'),
+                'label_on'     => esc_html__('Show', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('Hide', 'fluent-cart-elementor-blocks'),
                 'return_value' => 'yes',
                 'default'      => 'yes',
             ]
@@ -119,7 +119,7 @@ class ProductInfoWidget extends Widget_Base
         $this->add_control(
             'summary_sections',
             [
-                'label'       => esc_html__('Summary Sections', 'fluent-cart'),
+                'label'       => esc_html__('Summary Sections', 'fluent-cart-elementor-blocks'),
                 'type'        => Controls_Manager::REPEATER,
                 'fields'      => $summaryRepeater->get_controls(),
                 'default'     => [
@@ -131,7 +131,7 @@ class ProductInfoWidget extends Widget_Base
                     ['section_type' => 'package_description', 'show' => 'yes'],
                     ['section_type' => 'buy_section', 'show' => 'yes'],
                 ],
-                'title_field' => '<# var labels = { title: "' . esc_js(__('Title', 'fluent-cart')) . '", stock: "' . esc_js(__('Stock', 'fluent-cart')) . '", sku: "' . esc_js(__('SKU', 'fluent-cart')) . '", excerpt: "' . esc_js(__('Excerpt', 'fluent-cart')) . '", price: "' . esc_js(__('Price', 'fluent-cart')) . '", package_description: "' . esc_js(__('Package Description', 'fluent-cart')) . '", buy_section: "' . esc_js(__('Buy Section', 'fluent-cart')) . '" }; print( labels[ section_type ] || section_type ); #>',
+                'title_field' => '<# var labels = { title: "' . esc_js(__('Title', 'fluent-cart-elementor-blocks')) . '", stock: "' . esc_js(__('Stock', 'fluent-cart-elementor-blocks')) . '", sku: "' . esc_js(__('SKU', 'fluent-cart-elementor-blocks')) . '", excerpt: "' . esc_js(__('Excerpt', 'fluent-cart-elementor-blocks')) . '", price: "' . esc_js(__('Price', 'fluent-cart-elementor-blocks')) . '", package_description: "' . esc_js(__('Package Description', 'fluent-cart-elementor-blocks')) . '", buy_section: "' . esc_js(__('Buy Section', 'fluent-cart-elementor-blocks')) . '" }; print( labels[ section_type ] || section_type ); #>',
                 'prevent_empty' => false,
             ]
         );
@@ -139,10 +139,10 @@ class ProductInfoWidget extends Widget_Base
         $this->add_control(
             'show_description',
             [
-                'label'        => esc_html__('Description', 'fluent-cart'),
+                'label'        => esc_html__('Description', 'fluent-cart-elementor-blocks'),
                 'type'         => Controls_Manager::SWITCHER,
-                'label_on'     => esc_html__('Show', 'fluent-cart'),
-                'label_off'    => esc_html__('Hide', 'fluent-cart'),
+                'label_on'     => esc_html__('Show', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('Hide', 'fluent-cart-elementor-blocks'),
                 'return_value' => 'yes',
                 'default'      => 'yes',
             ]
@@ -151,10 +151,10 @@ class ProductInfoWidget extends Widget_Base
         $this->add_control(
             'show_related_products',
             [
-                'label'        => esc_html__('Related Products', 'fluent-cart'),
+                'label'        => esc_html__('Related Products', 'fluent-cart-elementor-blocks'),
                 'type'         => Controls_Manager::SWITCHER,
-                'label_on'     => esc_html__('Show', 'fluent-cart'),
-                'label_off'    => esc_html__('Hide', 'fluent-cart'),
+                'label_on'     => esc_html__('Show', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('Hide', 'fluent-cart-elementor-blocks'),
                 'return_value' => 'yes',
                 'default'      => 'yes',
             ]
@@ -168,7 +168,7 @@ class ProductInfoWidget extends Widget_Base
         $this->start_controls_section(
             'gallery_section',
             [
-                'label'     => esc_html__('Gallery', 'fluent-cart'),
+                'label'     => esc_html__('Gallery', 'fluent-cart-elementor-blocks'),
                 'tab'       => Controls_Manager::TAB_CONTENT,
                 'condition' => [
                     'show_gallery' => 'yes',
@@ -184,7 +184,7 @@ class ProductInfoWidget extends Widget_Base
         $this->start_controls_section(
             'title_style_section',
             [
-                'label' => esc_html__('Title', 'fluent-cart'),
+                'label' => esc_html__('Title', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
@@ -197,7 +197,7 @@ class ProductInfoWidget extends Widget_Base
         $this->start_controls_section(
             'price_style_section',
             [
-                'label' => esc_html__('Price', 'fluent-cart'),
+                'label' => esc_html__('Price', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
@@ -210,7 +210,7 @@ class ProductInfoWidget extends Widget_Base
         $this->start_controls_section(
             'stock_style_section',
             [
-                'label' => esc_html__('Stock', 'fluent-cart'),
+                'label' => esc_html__('Stock', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
@@ -223,7 +223,7 @@ class ProductInfoWidget extends Widget_Base
         $this->start_controls_section(
             'sku_style_section',
             [
-                'label' => esc_html__('SKU', 'fluent-cart'),
+                'label' => esc_html__('SKU', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
@@ -236,7 +236,7 @@ class ProductInfoWidget extends Widget_Base
         $this->start_controls_section(
             'excerpt_style_section',
             [
-                'label' => esc_html__('Excerpt', 'fluent-cart'),
+                'label' => esc_html__('Excerpt', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
@@ -250,7 +250,7 @@ class ProductInfoWidget extends Widget_Base
         $this->start_controls_section(
             'package_description_style_section',
             [
-                'label' => esc_html__('Package Description', 'fluent-cart'),
+                'label' => esc_html__('Package Description', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
@@ -264,7 +264,7 @@ class ProductInfoWidget extends Widget_Base
         $this->start_controls_section(
             'buy_now_button_style_section',
             [
-                'label' => esc_html__('Buy Now Button', 'fluent-cart'),
+                'label' => esc_html__('Buy Now Button', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
@@ -285,7 +285,7 @@ class ProductInfoWidget extends Widget_Base
         $this->start_controls_section(
             'add_to_cart_button_style_section',
             [
-                'label' => esc_html__('Add To Cart Button', 'fluent-cart'),
+                'label' => esc_html__('Add To Cart Button', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
@@ -306,7 +306,7 @@ class ProductInfoWidget extends Widget_Base
         $this->start_controls_section(
             'description_style_section',
             [
-                'label'     => esc_html__('Description', 'fluent-cart'),
+                'label'     => esc_html__('Description', 'fluent-cart-elementor-blocks'),
                 'tab'       => Controls_Manager::TAB_STYLE,
                 'condition' => [
                     'show_description' => 'yes',
@@ -317,7 +317,7 @@ class ProductInfoWidget extends Widget_Base
         $this->add_control(
             'description_color',
             [
-                'label'     => esc_html__('Text Color', 'fluent-cart'),
+                'label'     => esc_html__('Text Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .fct-product-description' => 'color: {{VALUE}};',
@@ -366,7 +366,7 @@ class ProductInfoWidget extends Widget_Base
         $this->start_controls_section(
             'sale_badge_settings_section',
             [
-                'label' => esc_html__('Badge', 'fluent-cart'),
+                'label' => esc_html__('Badge', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_CONTENT,
             ]
         );
@@ -374,10 +374,10 @@ class ProductInfoWidget extends Widget_Base
         $this->add_control(
             'show_sale_badge',
             [
-                'label'        => esc_html__('Sale Badge', 'fluent-cart'),
+                'label'        => esc_html__('Sale Badge', 'fluent-cart-elementor-blocks'),
                 'type'         => Controls_Manager::SWITCHER,
-                'label_on'     => esc_html__('Show', 'fluent-cart'),
-                'label_off'    => esc_html__('Hide', 'fluent-cart'),
+                'label_on'     => esc_html__('Show', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('Hide', 'fluent-cart-elementor-blocks'),
                 'return_value' => 'yes',
                 'default'      => '',
             ]
@@ -386,10 +386,10 @@ class ProductInfoWidget extends Widget_Base
         $this->add_control(
             'sale_badge_text',
             [
-                'label'       => esc_html__('Badge Text', 'fluent-cart'),
+                'label'       => esc_html__('Badge Text', 'fluent-cart-elementor-blocks'),
                 'type'        => Controls_Manager::TEXT,
-                'default'     => esc_html__('Sale!', 'fluent-cart'),
-                'description' => esc_html__('Text shown when not using percentage mode.', 'fluent-cart'),
+                'default'     => esc_html__('Sale!', 'fluent-cart-elementor-blocks'),
+                'description' => esc_html__('Text shown when not using percentage mode.', 'fluent-cart-elementor-blocks'),
                 'condition'   => ['show_sale_badge' => 'yes'],
             ]
         );
@@ -397,10 +397,10 @@ class ProductInfoWidget extends Widget_Base
         $this->add_control(
             'show_percentage',
             [
-                'label'        => esc_html__('Show Discount Percentage', 'fluent-cart'),
+                'label'        => esc_html__('Show Discount Percentage', 'fluent-cart-elementor-blocks'),
                 'type'         => Controls_Manager::SWITCHER,
-                'label_on'     => esc_html__('Yes', 'fluent-cart'),
-                'label_off'    => esc_html__('No', 'fluent-cart'),
+                'label_on'     => esc_html__('Yes', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('No', 'fluent-cart-elementor-blocks'),
                 'return_value' => 'yes',
                 'default'      => '',
                 'condition'    => ['show_sale_badge' => 'yes'],
@@ -410,10 +410,10 @@ class ProductInfoWidget extends Widget_Base
         $this->add_control(
             'sale_percentage_text',
             [
-                'label'       => esc_html__('Percentage Format', 'fluent-cart'),
+                'label'       => esc_html__('Percentage Format', 'fluent-cart-elementor-blocks'),
                 'type'        => Controls_Manager::TEXT,
                 'default'     => '-{percent}%',
-                'description' => esc_html__('Use {percent} as placeholder. E.g., "-{percent}% OFF"', 'fluent-cart'),
+                'description' => esc_html__('Use {percent} as placeholder. E.g., "-{percent}% OFF"', 'fluent-cart-elementor-blocks'),
                 'condition'   => [
                     'show_sale_badge' => 'yes',
                     'show_percentage' => 'yes',
@@ -424,14 +424,14 @@ class ProductInfoWidget extends Widget_Base
         $this->add_control(
             'sale_price_source',
             [
-                'label'       => esc_html__('Price Source', 'fluent-cart'),
+                'label'       => esc_html__('Price Source', 'fluent-cart-elementor-blocks'),
                 'type'        => Controls_Manager::SELECT,
                 'default'     => 'default_variant',
                 'options'     => [
-                    'default_variant' => esc_html__('Default Variant', 'fluent-cart'),
-                    'best_discount'   => esc_html__('Best Discount (All Variants)', 'fluent-cart'),
+                    'default_variant' => esc_html__('Default Variant', 'fluent-cart-elementor-blocks'),
+                    'best_discount'   => esc_html__('Best Discount (All Variants)', 'fluent-cart-elementor-blocks'),
                 ],
-                'description' => esc_html__('Where to check the sale price from.', 'fluent-cart'),
+                'description' => esc_html__('Where to check the sale price from.', 'fluent-cart-elementor-blocks'),
                 'condition'   => ['show_sale_badge' => 'yes'],
             ]
         );
@@ -440,7 +440,7 @@ class ProductInfoWidget extends Widget_Base
         $this->add_control(
             'sale_badge_ps_heading',
             [
-                'label'     => esc_html__('Position & Style', 'fluent-cart'),
+                'label'     => esc_html__('Position & Style', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::HEADING,
                 'separator' => 'before',
                 'condition' => ['show_sale_badge' => 'yes'],
@@ -450,13 +450,13 @@ class ProductInfoWidget extends Widget_Base
         $this->add_control(
             'sale_badge_style',
             [
-                'label'     => esc_html__('Badge Style', 'fluent-cart'),
+                'label'     => esc_html__('Badge Style', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::SELECT,
                 'default'   => 'badge',
                 'options'   => [
-                    'badge'  => esc_html__('Badge', 'fluent-cart'),
-                    'ribbon' => esc_html__('Ribbon', 'fluent-cart'),
-                    'tag'    => esc_html__('Tag', 'fluent-cart'),
+                    'badge'  => esc_html__('Badge', 'fluent-cart-elementor-blocks'),
+                    'ribbon' => esc_html__('Ribbon', 'fluent-cart-elementor-blocks'),
+                    'tag'    => esc_html__('Tag', 'fluent-cart-elementor-blocks'),
                 ],
                 'condition' => ['show_sale_badge' => 'yes'],
             ]
@@ -467,15 +467,15 @@ class ProductInfoWidget extends Widget_Base
         $this->add_control(
             'sale_badge_position',
             [
-                'label'     => esc_html__('Position', 'fluent-cart'),
+                'label'     => esc_html__('Position', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::SELECT,
                 'default'   => 'below-title',
                 'options'   => [
-                    'below-title'   => esc_html__('Below Title', 'fluent-cart'),
-                    'below-excerpt' => esc_html__('Below Excerpt', 'fluent-cart'),
-                    'above-price'   => esc_html__('Above Price', 'fluent-cart'),
-                    'below-price'   => esc_html__('Below Price', 'fluent-cart'),
-                    'below-package' => esc_html__('Below Package Description', 'fluent-cart'),
+                    'below-title'   => esc_html__('Below Title', 'fluent-cart-elementor-blocks'),
+                    'below-excerpt' => esc_html__('Below Excerpt', 'fluent-cart-elementor-blocks'),
+                    'above-price'   => esc_html__('Above Price', 'fluent-cart-elementor-blocks'),
+                    'below-price'   => esc_html__('Below Price', 'fluent-cart-elementor-blocks'),
+                    'below-package' => esc_html__('Below Package Description', 'fluent-cart-elementor-blocks'),
                 ],
                 'condition' => ['show_sale_badge' => 'yes'],
             ]
@@ -503,7 +503,7 @@ class ProductInfoWidget extends Widget_Base
             }
 
             if (!$product) {
-                $this->renderPlaceholder(__('Please select a product or use this widget inside a product template.', 'fluent-cart'));
+                $this->renderPlaceholder(__('Please select a product or use this widget inside a product template.', 'fluent-cart-elementor-blocks'));
                 return;
             }
         }
@@ -618,7 +618,7 @@ class ProductInfoWidget extends Widget_Base
             if (!empty($products)) {
                 (new ProductListRenderer(
                     $products,
-                    __('Related Products', 'fluent-cart'),
+                    __('Related Products', 'fluent-cart-elementor-blocks'),
                     'fct-similar-product-list-container'
                 ))->render();
             }
@@ -652,7 +652,7 @@ class ProductInfoWidget extends Widget_Base
         }
 
         $html = BadgeRenderer::sale($product, [
-            'badgeText'      => Arr::get($settings, 'sale_badge_text', __('Sale!', 'fluent-cart')),
+            'badgeText'      => Arr::get($settings, 'sale_badge_text', __('Sale!', 'fluent-cart-elementor-blocks')),
             'showPercentage' => Arr::get($settings, 'show_percentage', '') === 'yes',
             'percentageText' => Arr::get($settings, 'sale_percentage_text', '-{percent}%'),
             'priceSource'    => Arr::get($settings, 'sale_price_source', 'default_variant'),

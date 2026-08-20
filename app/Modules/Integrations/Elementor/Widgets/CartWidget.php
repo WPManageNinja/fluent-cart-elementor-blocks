@@ -24,7 +24,7 @@ class CartWidget extends Widget_Base
 
     public function get_title()
     {
-        return esc_html__('Cart', 'fluent-cart');
+        return esc_html__('Cart', 'fluent-cart-elementor-blocks');
     }
 
     public function get_icon()
@@ -56,7 +56,7 @@ class CartWidget extends Widget_Base
         $this->start_controls_section(
             'section_cart',
             [
-                'label' => esc_html__('Cart', 'fluent-cart'),
+                'label' => esc_html__('Cart', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_CONTENT,
             ]
         );
@@ -65,7 +65,7 @@ class CartWidget extends Widget_Base
             'cart_info',
             [
                 'type'            => Controls_Manager::RAW_HTML,
-                'raw'             => esc_html__('Renders the FluentCart shopping cart — item rows, quantities, totals and the empty-cart state. Styling and behaviour come from FluentCart core.', 'fluent-cart'),
+                'raw'             => esc_html__('Renders the FluentCart shopping cart — item rows, quantities, totals and the empty-cart state. Styling and behaviour come from FluentCart core.', 'fluent-cart-elementor-blocks'),
                 'content_classes' => 'elementor-descriptor',
             ]
         );
@@ -87,7 +87,7 @@ class CartWidget extends Widget_Base
         $this->start_controls_section(
             'style_item_row',
             [
-                'label' => esc_html__('Item Row', 'fluent-cart'),
+                'label' => esc_html__('Item Row', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
@@ -97,7 +97,7 @@ class CartWidget extends Widget_Base
         $this->add_control(
             'row_background',
             [
-                'label'     => esc_html__('Background Color', 'fluent-cart'),
+                'label'     => esc_html__('Background Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     $row => 'background-color: {{VALUE}} !important;',
@@ -116,7 +116,7 @@ class CartWidget extends Widget_Base
         $this->add_responsive_control(
             'row_border_radius',
             [
-                'label'      => esc_html__('Border Radius', 'fluent-cart'),
+                'label'      => esc_html__('Border Radius', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', '%'],
                 'selectors'  => [
@@ -128,7 +128,7 @@ class CartWidget extends Widget_Base
         $this->add_responsive_control(
             'row_padding',
             [
-                'label'      => esc_html__('Padding', 'fluent-cart'),
+                'label'      => esc_html__('Padding', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', 'em'],
                 'selectors'  => [
@@ -140,7 +140,7 @@ class CartWidget extends Widget_Base
         $this->add_responsive_control(
             'row_spacing',
             [
-                'label'      => esc_html__('Row Spacing', 'fluent-cart'),
+                'label'      => esc_html__('Row Spacing', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::SLIDER,
                 'size_units' => ['px'],
                 'range'      => [
@@ -160,7 +160,7 @@ class CartWidget extends Widget_Base
         $this->start_controls_section(
             'style_checkout_button',
             [
-                'label' => esc_html__('Checkout Button', 'fluent-cart'),
+                'label' => esc_html__('Checkout Button', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
@@ -180,13 +180,13 @@ class CartWidget extends Widget_Base
 
         $this->start_controls_tab(
             'checkout_button_tab_normal',
-            ['label' => esc_html__('Normal', 'fluent-cart')]
+            ['label' => esc_html__('Normal', 'fluent-cart-elementor-blocks')]
         );
 
         $this->add_control(
             'checkout_button_text_color',
             [
-                'label'     => esc_html__('Text Color', 'fluent-cart'),
+                'label'     => esc_html__('Text Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     $button => 'color: {{VALUE}} !important;',
@@ -197,7 +197,7 @@ class CartWidget extends Widget_Base
         $this->add_control(
             'checkout_button_background',
             [
-                'label'     => esc_html__('Background Color', 'fluent-cart'),
+                'label'     => esc_html__('Background Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     $button => 'background-color: {{VALUE}} !important;',
@@ -209,13 +209,13 @@ class CartWidget extends Widget_Base
 
         $this->start_controls_tab(
             'checkout_button_tab_hover',
-            ['label' => esc_html__('Hover', 'fluent-cart')]
+            ['label' => esc_html__('Hover', 'fluent-cart-elementor-blocks')]
         );
 
         $this->add_control(
             'checkout_button_hover_text_color',
             [
-                'label'     => esc_html__('Text Color', 'fluent-cart'),
+                'label'     => esc_html__('Text Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     $buttonHover => 'color: {{VALUE}} !important;',
@@ -226,7 +226,7 @@ class CartWidget extends Widget_Base
         $this->add_control(
             'checkout_button_hover_background',
             [
-                'label'     => esc_html__('Background Color', 'fluent-cart'),
+                'label'     => esc_html__('Background Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     $buttonHover => 'background-color: {{VALUE}} !important;',
@@ -250,7 +250,7 @@ class CartWidget extends Widget_Base
         $this->add_responsive_control(
             'checkout_button_border_radius',
             [
-                'label'      => esc_html__('Border Radius', 'fluent-cart'),
+                'label'      => esc_html__('Border Radius', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', '%'],
                 'selectors'  => [
@@ -270,7 +270,7 @@ class CartWidget extends Widget_Base
         $this->add_responsive_control(
             'checkout_button_padding',
             [
-                'label'      => esc_html__('Padding', 'fluent-cart'),
+                'label'      => esc_html__('Padding', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', 'em'],
                 'selectors'  => [

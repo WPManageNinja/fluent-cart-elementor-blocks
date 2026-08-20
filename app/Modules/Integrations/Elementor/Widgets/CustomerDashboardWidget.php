@@ -25,7 +25,7 @@ class CustomerDashboardWidget extends Widget_Base
 
     public function get_title()
     {
-        return esc_html__('Customer Dashboard', 'fluent-cart');
+        return esc_html__('Customer Dashboard', 'fluent-cart-elementor-blocks');
     }
 
     public function get_icon()
@@ -58,7 +58,7 @@ class CustomerDashboardWidget extends Widget_Base
         $this->start_controls_section(
             'section_dashboard',
             [
-                'label' => esc_html__('Customer Dashboard', 'fluent-cart'),
+                'label' => esc_html__('Customer Dashboard', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_CONTENT,
             ]
         );
@@ -67,7 +67,7 @@ class CustomerDashboardWidget extends Widget_Base
             'dashboard_info',
             [
                 'type'            => Controls_Manager::RAW_HTML,
-                'raw'             => esc_html__('Renders the FluentCart customer account area — dashboard, orders, subscriptions, downloads and profile — for the logged-in customer, or a login prompt otherwise. Styling and behaviour come from FluentCart core.', 'fluent-cart'),
+                'raw'             => esc_html__('Renders the FluentCart customer account area — dashboard, orders, subscriptions, downloads and profile — for the logged-in customer, or a login prompt otherwise. Styling and behaviour come from FluentCart core.', 'fluent-cart-elementor-blocks'),
                 'content_classes' => 'elementor-descriptor',
             ]
         );
@@ -98,7 +98,7 @@ class CustomerDashboardWidget extends Widget_Base
             . '<style>.fce-customer-dashboard-preview .el-skeleton.is-animated .el-skeleton__item{animation:none !important;}</style>'
             . '<div style="position:absolute;top:10px;left:50%%;transform:translateX(-50%%);z-index:10;background:#1f2124;color:#fff;font-size:11px;font-weight:600;letter-spacing:.3px;padding:6px 14px;border-radius:999px;white-space:nowrap;">%s</div>'
             . '%s</div>',
-            esc_html__('Layout preview — the interactive dashboard loads on the frontend', 'fluent-cart'),
+            esc_html__('Layout preview — the interactive dashboard loads on the frontend', 'fluent-cart-elementor-blocks'),
             $html // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- core-rendered markup
         );
     }

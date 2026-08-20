@@ -22,7 +22,7 @@ class ShopAppWidget extends Widget_Base
 
     public function get_title()
     {
-        return esc_html__('Products', 'fluent-cart');
+        return esc_html__('Products', 'fluent-cart-elementor-blocks');
     }
 
     public function get_icon()
@@ -79,7 +79,7 @@ class ShopAppWidget extends Widget_Base
         $this->start_controls_section(
             'content_section',
             [
-                'label' => esc_html__('General Settings', 'fluent-cart'),
+                'label' => esc_html__('General Settings', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_CONTENT,
             ]
         );
@@ -87,7 +87,7 @@ class ShopAppWidget extends Widget_Base
         $this->add_control(
             'per_page',
             [
-                'label'   => esc_html__('Products Per Page', 'fluent-cart'),
+                'label'   => esc_html__('Products Per Page', 'fluent-cart-elementor-blocks'),
                 'type'    => Controls_Manager::NUMBER,
                 'default' => 10,
                 'min'     => 1,
@@ -99,12 +99,12 @@ class ShopAppWidget extends Widget_Base
         $this->add_control(
             'view_mode',
             [
-                'label'   => esc_html__('View Mode', 'fluent-cart'),
+                'label'   => esc_html__('View Mode', 'fluent-cart-elementor-blocks'),
                 'type'    => Controls_Manager::SELECT,
                 'default' => 'grid',
                 'options' => [
-                    'grid' => esc_html__('Grid', 'fluent-cart'),
-                    'list' => esc_html__('List', 'fluent-cart'),
+                    'grid' => esc_html__('Grid', 'fluent-cart-elementor-blocks'),
+                    'list' => esc_html__('List', 'fluent-cart-elementor-blocks'),
                 ],
             ]
         );
@@ -112,7 +112,7 @@ class ShopAppWidget extends Widget_Base
         $this->add_control(
             'product_box_grid_size',
             [
-                'label'   => esc_html__('Grid Columns', 'fluent-cart'),
+                'label'   => esc_html__('Grid Columns', 'fluent-cart-elementor-blocks'),
                 'type'    => Controls_Manager::SELECT,
                 'default' => '4',
                 'options' => [
@@ -129,12 +129,12 @@ class ShopAppWidget extends Widget_Base
         $this->add_control(
             'paginator',
             [
-                'label'   => esc_html__('Pagination Type', 'fluent-cart'),
+                'label'   => esc_html__('Pagination Type', 'fluent-cart-elementor-blocks'),
                 'type'    => Controls_Manager::SELECT,
                 'default' => 'scroll',
                 'options' => [
-                    'scroll'  => esc_html__('Infinite Scroll', 'fluent-cart'),
-                    'numbers' => esc_html__('Page Numbers', 'fluent-cart'),
+                    'scroll'  => esc_html__('Infinite Scroll', 'fluent-cart-elementor-blocks'),
+                    'numbers' => esc_html__('Page Numbers', 'fluent-cart-elementor-blocks'),
                 ],
             ]
         );
@@ -142,12 +142,12 @@ class ShopAppWidget extends Widget_Base
         $this->add_control(
             'price_format',
             [
-                'label'   => esc_html__('Price Format', 'fluent-cart'),
+                'label'   => esc_html__('Price Format', 'fluent-cart-elementor-blocks'),
                 'type'    => Controls_Manager::SELECT,
                 'default' => 'starts_from',
                 'options' => [
-                    'starts_from' => esc_html__('Starts From', 'fluent-cart'),
-                    'range'       => esc_html__('Range', 'fluent-cart'),
+                    'starts_from' => esc_html__('Starts From', 'fluent-cart-elementor-blocks'),
+                    'range'       => esc_html__('Range', 'fluent-cart-elementor-blocks'),
                 ],
             ]
         );
@@ -155,10 +155,10 @@ class ShopAppWidget extends Widget_Base
         $this->add_control(
             'use_default_style',
             [
-                'label'        => esc_html__('Use Default Style', 'fluent-cart'),
+                'label'        => esc_html__('Use Default Style', 'fluent-cart-elementor-blocks'),
                 'type'         => Controls_Manager::SWITCHER,
-                'label_on'     => esc_html__('Yes', 'fluent-cart'),
-                'label_off'    => esc_html__('No', 'fluent-cart'),
+                'label_on'     => esc_html__('Yes', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('No', 'fluent-cart-elementor-blocks'),
                 'return_value' => 'yes',
                 'default'      => 'yes',
             ]
@@ -172,7 +172,7 @@ class ShopAppWidget extends Widget_Base
         $this->start_controls_section(
             'shop_layout_section',
             [
-                'label' => esc_html__('Shop Layout', 'fluent-cart'),
+                'label' => esc_html__('Shop Layout', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_CONTENT,
             ]
         );
@@ -182,15 +182,15 @@ class ShopAppWidget extends Widget_Base
         $repeater->add_control(
             'element_type',
             [
-                'label'   => esc_html__('Section', 'fluent-cart'),
+                'label'   => esc_html__('Section', 'fluent-cart-elementor-blocks'),
                 'type'    => Controls_Manager::SELECT,
                 'default' => 'view_switcher',
                 'options' => [
-                    'view_switcher' => esc_html__('View Switcher', 'fluent-cart'),
-                    'sort_by'       => esc_html__('Sort By', 'fluent-cart'),
-                    'filter'        => esc_html__('Filter', 'fluent-cart'),
-                    'product_grid'  => esc_html__('Product Grid', 'fluent-cart'),
-                    'paginator'     => esc_html__('Paginator', 'fluent-cart'),
+                    'view_switcher' => esc_html__('View Switcher', 'fluent-cart-elementor-blocks'),
+                    'sort_by'       => esc_html__('Sort By', 'fluent-cart-elementor-blocks'),
+                    'filter'        => esc_html__('Filter', 'fluent-cart-elementor-blocks'),
+                    'product_grid'  => esc_html__('Product Grid', 'fluent-cart-elementor-blocks'),
+                    'paginator'     => esc_html__('Paginator', 'fluent-cart-elementor-blocks'),
                 ],
             ]
         );
@@ -198,7 +198,7 @@ class ShopAppWidget extends Widget_Base
         $this->add_control(
             'shop_layout',
             [
-                'label'       => esc_html__('Layout Sections', 'fluent-cart'),
+                'label'       => esc_html__('Layout Sections', 'fluent-cart-elementor-blocks'),
                 'type'        => Controls_Manager::REPEATER,
                 'fields'      => $repeater->get_controls(),
                 'default'     => [
@@ -220,7 +220,7 @@ class ShopAppWidget extends Widget_Base
         $this->start_controls_section(
             'card_layout_section',
             [
-                'label' => esc_html__('Product Card Layout', 'fluent-cart'),
+                'label' => esc_html__('Product Card Layout', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_CONTENT,
             ]
         );
@@ -230,15 +230,15 @@ class ShopAppWidget extends Widget_Base
         $repeater->add_control(
             'element_type',
             [
-                'label'   => esc_html__('Element', 'fluent-cart'),
+                'label'   => esc_html__('Element', 'fluent-cart-elementor-blocks'),
                 'type'    => Controls_Manager::SELECT,
                 'default' => 'image',
                 'options' => [
-                    'image'   => esc_html__('Image', 'fluent-cart'),
-                    'title'   => esc_html__('Title', 'fluent-cart'),
-                    'excerpt' => esc_html__('Excerpt', 'fluent-cart'),
-                    'price'   => esc_html__('Price', 'fluent-cart'),
-                    'button'  => esc_html__('Button', 'fluent-cart'),
+                    'image'   => esc_html__('Image', 'fluent-cart-elementor-blocks'),
+                    'title'   => esc_html__('Title', 'fluent-cart-elementor-blocks'),
+                    'excerpt' => esc_html__('Excerpt', 'fluent-cart-elementor-blocks'),
+                    'price'   => esc_html__('Price', 'fluent-cart-elementor-blocks'),
+                    'button'  => esc_html__('Button', 'fluent-cart-elementor-blocks'),
                 ],
             ]
         );
@@ -246,7 +246,7 @@ class ShopAppWidget extends Widget_Base
         $this->add_control(
             'card_elements',
             [
-                'label'       => esc_html__('Card Elements', 'fluent-cart'),
+                'label'       => esc_html__('Card Elements', 'fluent-cart-elementor-blocks'),
                 'type'        => Controls_Manager::REPEATER,
                 'fields'      => $repeater->get_controls(),
                 'default'     => [
@@ -267,7 +267,7 @@ class ShopAppWidget extends Widget_Base
         $this->start_controls_section(
             'filter_section',
             [
-                'label' => esc_html__('Filter Settings', 'fluent-cart'),
+                'label' => esc_html__('Filter Settings', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_CONTENT,
             ]
         );
@@ -275,10 +275,10 @@ class ShopAppWidget extends Widget_Base
         $this->add_control(
             'enable_filter',
             [
-                'label'        => esc_html__('Enable Filter', 'fluent-cart'),
+                'label'        => esc_html__('Enable Filter', 'fluent-cart-elementor-blocks'),
                 'type'         => Controls_Manager::SWITCHER,
-                'label_on'     => esc_html__('Yes', 'fluent-cart'),
-                'label_off'    => esc_html__('No', 'fluent-cart'),
+                'label_on'     => esc_html__('Yes', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('No', 'fluent-cart-elementor-blocks'),
                 'return_value' => 'yes',
                 'default'      => '',
             ]
@@ -287,13 +287,13 @@ class ShopAppWidget extends Widget_Base
         $this->add_control(
             'live_filter',
             [
-                'label'        => esc_html__('Live Filter', 'fluent-cart'),
+                'label'        => esc_html__('Live Filter', 'fluent-cart-elementor-blocks'),
                 'type'         => Controls_Manager::SWITCHER,
-                'label_on'     => esc_html__('Yes', 'fluent-cart'),
-                'label_off'    => esc_html__('No', 'fluent-cart'),
+                'label_on'     => esc_html__('Yes', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('No', 'fluent-cart-elementor-blocks'),
                 'return_value' => 'yes',
                 'default'      => 'yes',
-                'description'  => esc_html__('Apply filters instantly without a submit button.', 'fluent-cart'),
+                'description'  => esc_html__('Apply filters instantly without a submit button.', 'fluent-cart-elementor-blocks'),
                 'condition'    => [
                     'enable_filter' => 'yes',
                 ],
@@ -303,10 +303,10 @@ class ShopAppWidget extends Widget_Base
         $this->add_control(
             'enable_wildcard_filter',
             [
-                'label'        => esc_html__('Wildcard Filter', 'fluent-cart'),
+                'label'        => esc_html__('Wildcard Filter', 'fluent-cart-elementor-blocks'),
                 'type'         => Controls_Manager::SWITCHER,
-                'label_on'     => esc_html__('Yes', 'fluent-cart'),
-                'label_off'    => esc_html__('No', 'fluent-cart'),
+                'label_on'     => esc_html__('Yes', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('No', 'fluent-cart-elementor-blocks'),
                 'return_value' => 'yes',
                 'default'      => '',
                 'condition'    => [
@@ -318,10 +318,10 @@ class ShopAppWidget extends Widget_Base
         $this->add_control(
             'enable_wildcard_for_post_content',
             [
-                'label'        => esc_html__('Search in Post Content', 'fluent-cart'),
+                'label'        => esc_html__('Search in Post Content', 'fluent-cart-elementor-blocks'),
                 'type'         => Controls_Manager::SWITCHER,
-                'label_on'     => esc_html__('Yes', 'fluent-cart'),
-                'label_off'    => esc_html__('No', 'fluent-cart'),
+                'label_on'     => esc_html__('Yes', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('No', 'fluent-cart-elementor-blocks'),
                 'return_value' => 'yes',
                 'default'      => '',
                 'condition'    => [
@@ -342,8 +342,8 @@ class ShopAppWidget extends Widget_Base
                 [
                     'label'        => $label,
                     'type'         => Controls_Manager::SWITCHER,
-                    'label_on'     => esc_html__('Yes', 'fluent-cart'),
-                    'label_off'    => esc_html__('No', 'fluent-cart'),
+                    'label_on'     => esc_html__('Yes', 'fluent-cart-elementor-blocks'),
+                    'label_off'    => esc_html__('No', 'fluent-cart-elementor-blocks'),
                     'return_value' => 'yes',
                     'default'      => '',
                     'separator'    => 'before',
@@ -356,7 +356,7 @@ class ShopAppWidget extends Widget_Base
             $this->add_control(
                 'taxonomy_label_' . $key,
                 [
-                    'label'     => esc_html__('Display Name', 'fluent-cart'),
+                    'label'     => esc_html__('Display Name', 'fluent-cart-elementor-blocks'),
                     'type'      => Controls_Manager::TEXT,
                     'default'   => $label,
                     'condition' => [
@@ -371,10 +371,10 @@ class ShopAppWidget extends Widget_Base
         $this->add_control(
             'enable_price_range_filter',
             [
-                'label'        => esc_html__('Price Range', 'fluent-cart'),
+                'label'        => esc_html__('Price Range', 'fluent-cart-elementor-blocks'),
                 'type'         => Controls_Manager::SWITCHER,
-                'label_on'     => esc_html__('Yes', 'fluent-cart'),
-                'label_off'    => esc_html__('No', 'fluent-cart'),
+                'label_on'     => esc_html__('Yes', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('No', 'fluent-cart-elementor-blocks'),
                 'return_value' => 'yes',
                 'default'      => '',
                 'separator'    => 'before',
@@ -387,9 +387,9 @@ class ShopAppWidget extends Widget_Base
         $this->add_control(
             'price_range_label',
             [
-                'label'     => esc_html__('Display Name', 'fluent-cart'),
+                'label'     => esc_html__('Display Name', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::TEXT,
-                'default'   => esc_html__('Price', 'fluent-cart'),
+                'default'   => esc_html__('Price', 'fluent-cart-elementor-blocks'),
                 'condition' => [
                     'enable_filter'             => 'yes',
                     'enable_price_range_filter' => 'yes',
@@ -405,7 +405,7 @@ class ShopAppWidget extends Widget_Base
         $this->start_controls_section(
             'default_filter_section',
             [
-                'label' => esc_html__('Default Filter', 'fluent-cart'),
+                'label' => esc_html__('Default Filter', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_CONTENT,
             ]
         );
@@ -413,23 +413,23 @@ class ShopAppWidget extends Widget_Base
         $this->add_control(
             'default_filter_enabled',
             [
-                'label'        => esc_html__('Enable Default Filter', 'fluent-cart'),
+                'label'        => esc_html__('Enable Default Filter', 'fluent-cart-elementor-blocks'),
                 'type'         => Controls_Manager::SWITCHER,
-                'label_on'     => esc_html__('Yes', 'fluent-cart'),
-                'label_off'    => esc_html__('No', 'fluent-cart'),
+                'label_on'     => esc_html__('Yes', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('No', 'fluent-cart-elementor-blocks'),
                 'return_value' => 'yes',
                 'default'      => '',
-                'description'  => esc_html__('Presets applied to the product query by default, independent of the visitor-facing filter above.', 'fluent-cart'),
+                'description'  => esc_html__('Presets applied to the product query by default, independent of the visitor-facing filter above.', 'fluent-cart-elementor-blocks'),
             ]
         );
 
         $this->add_control(
             'default_filter_allow_out_of_stock',
             [
-                'label'        => esc_html__('Allow Out Of Stock', 'fluent-cart'),
+                'label'        => esc_html__('Allow Out Of Stock', 'fluent-cart-elementor-blocks'),
                 'type'         => Controls_Manager::SWITCHER,
-                'label_on'     => esc_html__('Yes', 'fluent-cart'),
-                'label_off'    => esc_html__('No', 'fluent-cart'),
+                'label_on'     => esc_html__('Yes', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('No', 'fluent-cart-elementor-blocks'),
                 'return_value' => 'yes',
                 'default'      => '',
                 'condition'    => [
@@ -441,7 +441,7 @@ class ShopAppWidget extends Widget_Base
         $this->add_control(
             'default_filter_wildcard',
             [
-                'label'     => esc_html__('Search', 'fluent-cart'),
+                'label'     => esc_html__('Search', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::TEXT,
                 'default'   => '',
                 'condition' => [
@@ -489,7 +489,7 @@ class ShopAppWidget extends Widget_Base
         $this->start_controls_section(
             'card_style_section',
             [
-                'label' => esc_html__('Product Card', 'fluent-cart'),
+                'label' => esc_html__('Product Card', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
@@ -501,7 +501,7 @@ class ShopAppWidget extends Widget_Base
         $this->start_controls_section(
             'image_style_section',
             [
-                'label' => esc_html__('Product Image', 'fluent-cart'),
+                'label' => esc_html__('Product Image', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
@@ -511,7 +511,7 @@ class ShopAppWidget extends Widget_Base
         $this->start_controls_section(
             'title_style_section',
             [
-                'label' => esc_html__('Product Title', 'fluent-cart'),
+                'label' => esc_html__('Product Title', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
@@ -521,7 +521,7 @@ class ShopAppWidget extends Widget_Base
         $this->start_controls_section(
             'excerpt_style_section',
             [
-                'label' => esc_html__('Product Excerpt', 'fluent-cart'),
+                'label' => esc_html__('Product Excerpt', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
@@ -531,7 +531,7 @@ class ShopAppWidget extends Widget_Base
         $this->start_controls_section(
             'price_style_section',
             [
-                'label' => esc_html__('Product Price', 'fluent-cart'),
+                'label' => esc_html__('Product Price', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
@@ -544,7 +544,7 @@ class ShopAppWidget extends Widget_Base
         $this->start_controls_section(
             'button_style_section',
             [
-                'label' => esc_html__('Product Button', 'fluent-cart'),
+                'label' => esc_html__('Product Button', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
@@ -560,7 +560,7 @@ class ShopAppWidget extends Widget_Base
         $this->start_controls_section(
             'grid_style_section',
             [
-                'label' => esc_html__('Grid Layout', 'fluent-cart'),
+                'label' => esc_html__('Grid Layout', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
@@ -568,7 +568,7 @@ class ShopAppWidget extends Widget_Base
         $this->add_responsive_control(
             'grid_column_gap',
             [
-                'label'      => esc_html__('Column Gap', 'fluent-cart'),
+                'label'      => esc_html__('Column Gap', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::SLIDER,
                 'size_units' => ['px', 'em'],
                 'range'      => [
@@ -584,7 +584,7 @@ class ShopAppWidget extends Widget_Base
         $this->add_responsive_control(
             'grid_row_gap',
             [
-                'label'      => esc_html__('Row Gap', 'fluent-cart'),
+                'label'      => esc_html__('Row Gap', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::SLIDER,
                 'size_units' => ['px', 'em'],
                 'range'      => [
@@ -605,7 +605,7 @@ class ShopAppWidget extends Widget_Base
         $this->start_controls_section(
             'filter_style_section',
             [
-                'label' => esc_html__('Filter', 'fluent-cart'),
+                'label' => esc_html__('Filter', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
@@ -614,7 +614,7 @@ class ShopAppWidget extends Widget_Base
             Group_Control_Typography::get_type(),
             [
                 'name'     => 'filter_heading_typography',
-                'label'    => esc_html__('Heading Typography', 'fluent-cart'),
+                'label'    => esc_html__('Heading Typography', 'fluent-cart-elementor-blocks'),
                 'selector' => '{{WRAPPER}} .fct-shop-filter-form .item-heading',
             ]
         );
@@ -622,7 +622,7 @@ class ShopAppWidget extends Widget_Base
         $this->add_control(
             'filter_heading_color',
             [
-                'label'     => esc_html__('Heading Color', 'fluent-cart'),
+                'label'     => esc_html__('Heading Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .fct-shop-filter-form .item-heading' => 'color: {{VALUE}};',
@@ -633,7 +633,7 @@ class ShopAppWidget extends Widget_Base
         $this->add_control(
             'filter_checkbox_color',
             [
-                'label'     => esc_html__('Checkbox Label Color', 'fluent-cart'),
+                'label'     => esc_html__('Checkbox Label Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .fct-shop-checkbox' => 'color: {{VALUE}};',
@@ -644,7 +644,7 @@ class ShopAppWidget extends Widget_Base
         $this->add_control(
             'filter_search_bg',
             [
-                'label'     => esc_html__('Search Background', 'fluent-cart'),
+                'label'     => esc_html__('Search Background', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .fct-shop-product-search .fct-shop-input' => 'background-color: {{VALUE}};',
@@ -655,7 +655,7 @@ class ShopAppWidget extends Widget_Base
         $this->add_control(
             'filter_search_border_color',
             [
-                'label'     => esc_html__('Search Border Color', 'fluent-cart'),
+                'label'     => esc_html__('Search Border Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .fct-shop-product-search .fct-shop-input' => 'border-color: {{VALUE}};',
@@ -666,7 +666,7 @@ class ShopAppWidget extends Widget_Base
         $this->add_control(
             'filter_apply_btn_heading',
             [
-                'label'     => esc_html__('Apply Button', 'fluent-cart'),
+                'label'     => esc_html__('Apply Button', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::HEADING,
                 'separator' => 'before',
             ]
@@ -675,7 +675,7 @@ class ShopAppWidget extends Widget_Base
         $this->add_control(
             'filter_apply_btn_color',
             [
-                'label'     => esc_html__('Text Color', 'fluent-cart'),
+                'label'     => esc_html__('Text Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .fct-shop-apply-filter-button' => 'color: {{VALUE}};',
@@ -686,7 +686,7 @@ class ShopAppWidget extends Widget_Base
         $this->add_control(
             'filter_apply_btn_bg',
             [
-                'label'     => esc_html__('Background', 'fluent-cart'),
+                'label'     => esc_html__('Background', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .fct-shop-apply-filter-button' => 'background-color: {{VALUE}};',
@@ -702,7 +702,7 @@ class ShopAppWidget extends Widget_Base
         $this->start_controls_section(
             'pagination_style_section',
             [
-                'label' => esc_html__('Pagination', 'fluent-cart'),
+                'label' => esc_html__('Pagination', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
@@ -718,7 +718,7 @@ class ShopAppWidget extends Widget_Base
         $this->add_control(
             'pagination_color',
             [
-                'label'     => esc_html__('Color', 'fluent-cart'),
+                'label'     => esc_html__('Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .fct-shop-paginator'                          => 'color: {{VALUE}};',
@@ -730,7 +730,7 @@ class ShopAppWidget extends Widget_Base
         $this->add_control(
             'pagination_active_color',
             [
-                'label'     => esc_html__('Active Page Color', 'fluent-cart'),
+                'label'     => esc_html__('Active Page Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .fct-shop-paginator-pager .active button' => 'color: {{VALUE}};',
@@ -741,7 +741,7 @@ class ShopAppWidget extends Widget_Base
         $this->add_control(
             'pagination_active_bg',
             [
-                'label'     => esc_html__('Active Page Background', 'fluent-cart'),
+                'label'     => esc_html__('Active Page Background', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .fct-shop-paginator-pager .active button' => 'background-color: {{VALUE}};',
@@ -752,7 +752,7 @@ class ShopAppWidget extends Widget_Base
         $this->add_responsive_control(
             'pagination_spacing',
             [
-                'label'      => esc_html__('Top Spacing', 'fluent-cart'),
+                'label'      => esc_html__('Top Spacing', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::SLIDER,
                 'size_units' => ['px', 'em'],
                 'range'      => [
@@ -819,7 +819,7 @@ class ShopAppWidget extends Widget_Base
             }
 
             if ($enablePriceRange) {
-                $priceLabel = sanitize_text_field($settings['price_range_label'] ?? __('Price', 'fluent-cart'));
+                $priceLabel = sanitize_text_field($settings['price_range_label'] ?? __('Price', 'fluent-cart-elementor-blocks'));
                 $filters['price_range'] = [
                     'enabled'     => true,
                     'filter_type' => 'range',

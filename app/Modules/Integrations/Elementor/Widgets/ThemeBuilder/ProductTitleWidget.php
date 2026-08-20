@@ -22,7 +22,7 @@ class ProductTitleWidget extends Widget_Base
 
     public function get_title()
     {
-        return esc_html__('Product Title', 'fluent-cart');
+        return esc_html__('Product Title', 'fluent-cart-elementor-blocks');
     }
 
     public function get_icon()
@@ -45,7 +45,7 @@ class ProductTitleWidget extends Widget_Base
         $widget->add_control(
             'title_color',
             [
-                'label'     => esc_html__('Text Color', 'fluent-cart'),
+                'label'     => esc_html__('Text Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     $selector => 'color: {{VALUE}};',
@@ -67,7 +67,7 @@ class ProductTitleWidget extends Widget_Base
         $this->start_controls_section(
             'content_section',
             [
-                'label' => esc_html__('Content', 'fluent-cart'),
+                'label' => esc_html__('Content', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_CONTENT,
             ]
         );
@@ -77,7 +77,7 @@ class ProductTitleWidget extends Widget_Base
         $this->add_control(
             'html_tag',
             [
-                'label'   => esc_html__('HTML Tag', 'fluent-cart'),
+                'label'   => esc_html__('HTML Tag', 'fluent-cart-elementor-blocks'),
                 'type'    => Controls_Manager::SELECT,
                 'default' => 'h1',
                 'options' => [
@@ -97,12 +97,12 @@ class ProductTitleWidget extends Widget_Base
         $this->add_responsive_control(
             'align',
             [
-                'label'     => esc_html__('Alignment', 'fluent-cart'),
+                'label'     => esc_html__('Alignment', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::CHOOSE,
                 'options'   => [
-                    'left'   => ['title' => esc_html__('Left', 'fluent-cart'), 'icon' => 'eicon-text-align-left'],
-                    'center' => ['title' => esc_html__('Center', 'fluent-cart'), 'icon' => 'eicon-text-align-center'],
-                    'right'  => ['title' => esc_html__('Right', 'fluent-cart'), 'icon' => 'eicon-text-align-right'],
+                    'left'   => ['title' => esc_html__('Left', 'fluent-cart-elementor-blocks'), 'icon' => 'eicon-text-align-left'],
+                    'center' => ['title' => esc_html__('Center', 'fluent-cart-elementor-blocks'), 'icon' => 'eicon-text-align-center'],
+                    'right'  => ['title' => esc_html__('Right', 'fluent-cart-elementor-blocks'), 'icon' => 'eicon-text-align-right'],
                 ],
                 'selectors' => [
                     '{{WRAPPER}} .fluentcart-product-title' => 'text-align: {{VALUE}};',
@@ -116,7 +116,7 @@ class ProductTitleWidget extends Widget_Base
         $this->start_controls_section(
             'style_section',
             [
-                'label' => esc_html__('Style', 'fluent-cart'),
+                'label' => esc_html__('Style', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
@@ -132,7 +132,7 @@ class ProductTitleWidget extends Widget_Base
         $product = $this->getProduct($settings);
 
         if (!$product) {
-            $this->renderPlaceholder(__('Please select a product or use this widget inside a product template.', 'fluent-cart'));
+            $this->renderPlaceholder(__('Please select a product or use this widget inside a product template.', 'fluent-cart-elementor-blocks'));
             return;
         }
 

@@ -30,12 +30,12 @@ class FluentCartProduct extends Single_Base
 
     public static function get_title()
     {
-        return esc_html__('FluentCart Product', 'fluent-cart');
+        return esc_html__('FluentCart Product', 'fluent-cart-elementor-blocks');
     }
 
     public static function get_plural_title()
     {
-        return esc_html__('FluentCart Products', 'fluent-cart');
+        return esc_html__('FluentCart Products', 'fluent-cart-elementor-blocks');
     }
 
     protected static function get_site_editor_icon()
@@ -46,9 +46,9 @@ class FluentCartProduct extends Single_Base
     protected static function get_site_editor_tooltip_data()
     {
         return [
-            'title'   => esc_html__('What is a FluentCart Product Template?', 'fluent-cart'),
-            'content' => esc_html__('A FluentCart product template allows you to design the layout and style of single product pages, and apply that template to various conditions.', 'fluent-cart'),
-            'tip'     => esc_html__('You can create multiple product templates, and assign each to different types of products.', 'fluent-cart'),
+            'title'   => esc_html__('What is a FluentCart Product Template?', 'fluent-cart-elementor-blocks'),
+            'content' => esc_html__('A FluentCart product template allows you to design the layout and style of single product pages, and apply that template to various conditions.', 'fluent-cart-elementor-blocks'),
+            'tip'     => esc_html__('You can create multiple product templates, and assign each to different types of products.', 'fluent-cart-elementor-blocks'),
         ];
     }
 
@@ -56,11 +56,11 @@ class FluentCartProduct extends Single_Base
     {
         $categories = [
             'fluent-cart-product' => [
-                'title'  => esc_html__('FluentCart Product', 'fluent-cart'),
+                'title'  => esc_html__('FluentCart Product', 'fluent-cart-elementor-blocks'),
                 'active' => true,
             ],
             'fluent-cart' => [
-                'title'  => esc_html__('FluentCart', 'fluent-cart'),
+                'title'  => esc_html__('FluentCart', 'fluent-cart-elementor-blocks'),
             ],
         ];
 

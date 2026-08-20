@@ -24,7 +24,7 @@ class ProductStockWidget extends Widget_Base
 
     public function get_title()
     {
-        return esc_html__('Product Stock', 'fluent-cart');
+        return esc_html__('Product Stock', 'fluent-cart-elementor-blocks');
     }
 
     public function get_icon()
@@ -55,7 +55,7 @@ class ProductStockWidget extends Widget_Base
         $widget->add_control(
             'in_stock_color',
             [
-                'label'     => esc_html__('In Stock Color', 'fluent-cart'),
+                'label'     => esc_html__('In Stock Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     $selector . ' .fct-stock-badge.fct_status_badge_in-stock' => 'color: {{VALUE}} !important;',
@@ -66,7 +66,7 @@ class ProductStockWidget extends Widget_Base
         $widget->add_control(
             'out_of_stock_color',
             [
-                'label'     => esc_html__('Out of Stock Color', 'fluent-cart'),
+                'label'     => esc_html__('Out of Stock Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     $selector . ' .fct-stock-badge.fct_status_badge_out-of-stock' => 'color: {{VALUE}} !important;',
@@ -79,7 +79,7 @@ class ProductStockWidget extends Widget_Base
         $widget->add_control(
             'in_stock_background',
             [
-                'label'     => esc_html__('In Stock Background', 'fluent-cart'),
+                'label'     => esc_html__('In Stock Background', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'separator' => 'before',
                 'selectors' => [
@@ -91,7 +91,7 @@ class ProductStockWidget extends Widget_Base
         $widget->add_control(
             'out_of_stock_background',
             [
-                'label'     => esc_html__('Out of Stock Background', 'fluent-cart'),
+                'label'     => esc_html__('Out of Stock Background', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     $selector . ' .fct-stock-badge.fct_status_badge_out-of-stock' => 'background-color: {{VALUE}} !important;',
@@ -102,7 +102,7 @@ class ProductStockWidget extends Widget_Base
         $widget->add_responsive_control(
             'stock_badge_padding',
             [
-                'label'      => esc_html__('Badge Padding', 'fluent-cart'),
+                'label'      => esc_html__('Badge Padding', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', 'em'],
                 'selectors'  => [
@@ -114,7 +114,7 @@ class ProductStockWidget extends Widget_Base
         $widget->add_responsive_control(
             'stock_badge_border_radius',
             [
-                'label'      => esc_html__('Badge Border Radius', 'fluent-cart'),
+                'label'      => esc_html__('Badge Border Radius', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', '%'],
                 'selectors'  => [
@@ -129,7 +129,7 @@ class ProductStockWidget extends Widget_Base
         $this->start_controls_section(
             'content_section',
             [
-                'label' => esc_html__('Content', 'fluent-cart'),
+                'label' => esc_html__('Content', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_CONTENT,
             ]
         );
@@ -142,7 +142,7 @@ class ProductStockWidget extends Widget_Base
         $this->start_controls_section(
             'style_section',
             [
-                'label' => esc_html__('Style', 'fluent-cart'),
+                'label' => esc_html__('Style', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
@@ -158,7 +158,7 @@ class ProductStockWidget extends Widget_Base
         $product = $this->getProduct($settings);
 
         if (!$product) {
-            $this->renderPlaceholder(__('Please select a product or use this widget inside a product template.', 'fluent-cart'));
+            $this->renderPlaceholder(__('Please select a product or use this widget inside a product template.', 'fluent-cart-elementor-blocks'));
             return;
         }
 

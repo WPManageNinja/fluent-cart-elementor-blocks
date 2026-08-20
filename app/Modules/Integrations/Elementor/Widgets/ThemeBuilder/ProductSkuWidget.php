@@ -24,7 +24,7 @@ class ProductSkuWidget extends Widget_Base
 
     public function get_title()
     {
-        return esc_html__('Product SKU', 'fluent-cart');
+        return esc_html__('Product SKU', 'fluent-cart-elementor-blocks');
     }
 
     public function get_icon()
@@ -48,7 +48,7 @@ class ProductSkuWidget extends Widget_Base
             Group_Control_Typography::get_type(),
             [
                 'name'     => 'sku_label_typography',
-                'label'    => esc_html__('Label Typography', 'fluent-cart'),
+                'label'    => esc_html__('Label Typography', 'fluent-cart-elementor-blocks'),
                 'selector' => $selector . ' .fct-product-sku__label',
             ]
         );
@@ -56,7 +56,7 @@ class ProductSkuWidget extends Widget_Base
         $widget->add_control(
             'sku_label_color',
             [
-                'label'     => esc_html__('Label Color', 'fluent-cart'),
+                'label'     => esc_html__('Label Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     $selector . ' .fct-product-sku__label' => 'color: {{VALUE}};',
@@ -68,7 +68,7 @@ class ProductSkuWidget extends Widget_Base
             Group_Control_Typography::get_type(),
             [
                 'name'     => 'sku_value_typography',
-                'label'    => esc_html__('Value Typography', 'fluent-cart'),
+                'label'    => esc_html__('Value Typography', 'fluent-cart-elementor-blocks'),
                 'selector' => $selector . ' .fct-product-sku__value',
             ]
         );
@@ -76,7 +76,7 @@ class ProductSkuWidget extends Widget_Base
         $widget->add_control(
             'sku_value_color',
             [
-                'label'     => esc_html__('Value Color', 'fluent-cart'),
+                'label'     => esc_html__('Value Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     $selector . ' .fct-product-sku__value' => 'color: {{VALUE}};',
@@ -90,7 +90,7 @@ class ProductSkuWidget extends Widget_Base
         $this->start_controls_section(
             'content_section',
             [
-                'label' => esc_html__('Content', 'fluent-cart'),
+                'label' => esc_html__('Content', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_CONTENT,
             ]
         );
@@ -100,10 +100,10 @@ class ProductSkuWidget extends Widget_Base
         $this->add_control(
             'show_label',
             [
-                'label'        => esc_html__('Show Label', 'fluent-cart'),
+                'label'        => esc_html__('Show Label', 'fluent-cart-elementor-blocks'),
                 'type'         => Controls_Manager::SWITCHER,
-                'label_on'     => esc_html__('Yes', 'fluent-cart'),
-                'label_off'    => esc_html__('No', 'fluent-cart'),
+                'label_on'     => esc_html__('Yes', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('No', 'fluent-cart-elementor-blocks'),
                 'return_value' => 'yes',
                 'default'      => 'yes',
                 'separator'    => 'before',
@@ -113,9 +113,9 @@ class ProductSkuWidget extends Widget_Base
         $this->add_control(
             'custom_label',
             [
-                'label'       => esc_html__('Custom Label', 'fluent-cart'),
+                'label'       => esc_html__('Custom Label', 'fluent-cart-elementor-blocks'),
                 'type'        => Controls_Manager::TEXT,
-                'placeholder' => esc_html__('SKU:', 'fluent-cart'),
+                'placeholder' => esc_html__('SKU:', 'fluent-cart-elementor-blocks'),
                 'condition'   => [
                     'show_label' => 'yes',
                 ],
@@ -128,7 +128,7 @@ class ProductSkuWidget extends Widget_Base
         $this->start_controls_section(
             'sku_style_section',
             [
-                'label' => esc_html__('Style', 'fluent-cart'),
+                'label' => esc_html__('Style', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
@@ -144,7 +144,7 @@ class ProductSkuWidget extends Widget_Base
         $product = $this->getProduct($settings);
 
         if (!$product) {
-            $this->renderPlaceholder(__('Please select a product or use this widget inside a product template.', 'fluent-cart'));
+            $this->renderPlaceholder(__('Please select a product or use this widget inside a product template.', 'fluent-cart-elementor-blocks'));
             return;
         }
 

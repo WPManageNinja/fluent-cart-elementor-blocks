@@ -25,7 +25,7 @@ class ProductCardWidget extends Widget_Base
 
     public function get_title()
     {
-        return esc_html__('Product Card', 'fluent-cart');
+        return esc_html__('Product Card', 'fluent-cart-elementor-blocks');
     }
 
     public function get_icon()
@@ -69,7 +69,7 @@ class ProductCardWidget extends Widget_Base
         $this->start_controls_section(
             'content_section',
             [
-                'label' => esc_html__('Product', 'fluent-cart'),
+                'label' => esc_html__('Product', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_CONTENT,
             ]
         );
@@ -77,26 +77,26 @@ class ProductCardWidget extends Widget_Base
         $this->add_control(
             'product_id',
             [
-                'label'       => esc_html__('Select Product', 'fluent-cart'),
+                'label'       => esc_html__('Select Product', 'fluent-cart-elementor-blocks'),
                 'type'        => (new ProductSelectControl())->get_type(),
                 'multiple'    => false,
                 'label_block' => true,
-                'description' => esc_html__('Search and select a product to display.', 'fluent-cart'),
+                'description' => esc_html__('Search and select a product to display.', 'fluent-cart-elementor-blocks'),
                 'default'     => '',
-                'placeholder' => esc_html__('Search for a product...', 'fluent-cart'),
+                'placeholder' => esc_html__('Search for a product...', 'fluent-cart-elementor-blocks'),
             ]
         );
 
         $this->add_control(
             'price_format',
             [
-                'label'   => esc_html__('Price Format', 'fluent-cart'),
+                'label'   => esc_html__('Price Format', 'fluent-cart-elementor-blocks'),
                 'type'    => Controls_Manager::SELECT,
                 'default' => 'starts_from',
                 'options' => [
-                    'starts_from' => esc_html__('Starts From', 'fluent-cart'),
-                    'range'       => esc_html__('Range', 'fluent-cart'),
-                    'lowest'      => esc_html__('Lowest', 'fluent-cart'),
+                    'starts_from' => esc_html__('Starts From', 'fluent-cart-elementor-blocks'),
+                    'range'       => esc_html__('Range', 'fluent-cart-elementor-blocks'),
+                    'lowest'      => esc_html__('Lowest', 'fluent-cart-elementor-blocks'),
                 ],
             ]
         );
@@ -111,7 +111,7 @@ class ProductCardWidget extends Widget_Base
         $this->add_responsive_control(
             'card_width',
             [
-                'label'      => esc_html__('Card Width', 'fluent-cart'),
+                'label'      => esc_html__('Card Width', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::SLIDER,
                 'size_units' => ['px', '%', 'em'],
                 'range'      => [
@@ -133,7 +133,7 @@ class ProductCardWidget extends Widget_Base
         $this->start_controls_section(
             'card_layout_section',
             [
-                'label' => esc_html__('Card Layout', 'fluent-cart'),
+                'label' => esc_html__('Card Layout', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_CONTENT,
             ]
         );
@@ -143,15 +143,15 @@ class ProductCardWidget extends Widget_Base
         $repeater->add_control(
             'element_type',
             [
-                'label'   => esc_html__('Element', 'fluent-cart'),
+                'label'   => esc_html__('Element', 'fluent-cart-elementor-blocks'),
                 'type'    => Controls_Manager::SELECT,
                 'default' => 'image',
                 'options' => [
-                    'image'   => esc_html__('Image', 'fluent-cart'),
-                    'title'   => esc_html__('Title', 'fluent-cart'),
-                    'excerpt' => esc_html__('Excerpt', 'fluent-cart'),
-                    'price'   => esc_html__('Price', 'fluent-cart'),
-                    'button'  => esc_html__('Button', 'fluent-cart'),
+                    'image'   => esc_html__('Image', 'fluent-cart-elementor-blocks'),
+                    'title'   => esc_html__('Title', 'fluent-cart-elementor-blocks'),
+                    'excerpt' => esc_html__('Excerpt', 'fluent-cart-elementor-blocks'),
+                    'price'   => esc_html__('Price', 'fluent-cart-elementor-blocks'),
+                    'button'  => esc_html__('Button', 'fluent-cart-elementor-blocks'),
                 ],
             ]
         );
@@ -159,7 +159,7 @@ class ProductCardWidget extends Widget_Base
         $this->add_control(
             'card_elements',
             [
-                'label'       => esc_html__('Card Elements', 'fluent-cart'),
+                'label'       => esc_html__('Card Elements', 'fluent-cart-elementor-blocks'),
                 'type'        => Controls_Manager::REPEATER,
                 'fields'      => $repeater->get_controls(),
                 'default'     => [
@@ -180,7 +180,7 @@ class ProductCardWidget extends Widget_Base
         $this->start_controls_section(
             'card_style_section',
             [
-                'label' => esc_html__('Product Card', 'fluent-cart'),
+                'label' => esc_html__('Product Card', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
@@ -190,7 +190,7 @@ class ProductCardWidget extends Widget_Base
         $this->start_controls_section(
             'image_style_section',
             [
-                'label' => esc_html__('Product Image', 'fluent-cart'),
+                'label' => esc_html__('Product Image', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
@@ -200,7 +200,7 @@ class ProductCardWidget extends Widget_Base
         $this->start_controls_section(
             'title_style_section',
             [
-                'label' => esc_html__('Product Title', 'fluent-cart'),
+                'label' => esc_html__('Product Title', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
@@ -210,7 +210,7 @@ class ProductCardWidget extends Widget_Base
         $this->start_controls_section(
             'excerpt_style_section',
             [
-                'label' => esc_html__('Product Excerpt', 'fluent-cart'),
+                'label' => esc_html__('Product Excerpt', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
@@ -220,7 +220,7 @@ class ProductCardWidget extends Widget_Base
         $this->start_controls_section(
             'price_style_section',
             [
-                'label' => esc_html__('Product Price', 'fluent-cart'),
+                'label' => esc_html__('Product Price', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
@@ -233,7 +233,7 @@ class ProductCardWidget extends Widget_Base
         $this->start_controls_section(
             'button_style_section',
             [
-                'label' => esc_html__('Product Button', 'fluent-cart'),
+                'label' => esc_html__('Product Button', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
@@ -270,7 +270,7 @@ class ProductCardWidget extends Widget_Base
         $widget->add_control(
             'card_border_radius',
             [
-                'label'      => esc_html__('Border Radius', 'fluent-cart'),
+                'label'      => esc_html__('Border Radius', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', '%', 'em'],
                 'selectors'  => [
@@ -290,7 +290,7 @@ class ProductCardWidget extends Widget_Base
         $widget->add_responsive_control(
             'card_padding',
             [
-                'label'      => esc_html__('Padding', 'fluent-cart'),
+                'label'      => esc_html__('Padding', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', 'em', '%'],
                 'selectors'  => [
@@ -310,7 +310,7 @@ class ProductCardWidget extends Widget_Base
         $widget->add_responsive_control(
             'image_height',
             [
-                'label'      => esc_html__('Height', 'fluent-cart'),
+                'label'      => esc_html__('Height', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::SLIDER,
                 'size_units' => ['px', 'em', 'vh'],
                 'range'      => [
@@ -327,14 +327,14 @@ class ProductCardWidget extends Widget_Base
         $widget->add_control(
             'image_object_fit',
             [
-                'label'     => esc_html__('Object Fit', 'fluent-cart'),
+                'label'     => esc_html__('Object Fit', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::SELECT,
                 'default'   => '',
                 'options'   => [
-                    ''        => esc_html__('Default', 'fluent-cart'),
-                    'cover'   => esc_html__('Cover', 'fluent-cart'),
-                    'contain' => esc_html__('Contain', 'fluent-cart'),
-                    'fill'    => esc_html__('Fill', 'fluent-cart'),
+                    ''        => esc_html__('Default', 'fluent-cart-elementor-blocks'),
+                    'cover'   => esc_html__('Cover', 'fluent-cart-elementor-blocks'),
+                    'contain' => esc_html__('Contain', 'fluent-cart-elementor-blocks'),
+                    'fill'    => esc_html__('Fill', 'fluent-cart-elementor-blocks'),
                 ],
                 'selectors' => [
                     $selector => 'object-fit: {{VALUE}};',
@@ -353,7 +353,7 @@ class ProductCardWidget extends Widget_Base
         $widget->add_control(
             'image_border_radius',
             [
-                'label'      => esc_html__('Border Radius', 'fluent-cart'),
+                'label'      => esc_html__('Border Radius', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', '%', 'em'],
                 'selectors'  => [
@@ -374,7 +374,7 @@ class ProductCardWidget extends Widget_Base
         $widget->add_responsive_control(
             'image_padding',
             [
-                'label'      => esc_html__('Padding', 'fluent-cart'),
+                'label'      => esc_html__('Padding', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', 'em', '%'],
                 'selectors'  => [
@@ -400,7 +400,7 @@ class ProductCardWidget extends Widget_Base
         $widget->add_control(
             'title_color',
             [
-                'label'     => esc_html__('Color', 'fluent-cart'),
+                'label'     => esc_html__('Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     $selector          => 'color: {{VALUE}};',
@@ -412,7 +412,7 @@ class ProductCardWidget extends Widget_Base
         $widget->add_control(
             'title_hover_color',
             [
-                'label'     => esc_html__('Hover Color', 'fluent-cart'),
+                'label'     => esc_html__('Hover Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     $selector . ':hover'   => 'color: {{VALUE}};',
@@ -424,7 +424,7 @@ class ProductCardWidget extends Widget_Base
         $widget->add_responsive_control(
             'title_spacing',
             [
-                'label'      => esc_html__('Spacing', 'fluent-cart'),
+                'label'      => esc_html__('Spacing', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::SLIDER,
                 'size_units' => ['px', 'em'],
                 'range'      => [
@@ -453,7 +453,7 @@ class ProductCardWidget extends Widget_Base
         $widget->add_control(
             'excerpt_color',
             [
-                'label'     => esc_html__('Color', 'fluent-cart'),
+                'label'     => esc_html__('Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     $selector => 'color: {{VALUE}};',
@@ -464,7 +464,7 @@ class ProductCardWidget extends Widget_Base
         $widget->add_responsive_control(
             'excerpt_spacing',
             [
-                'label'      => esc_html__('Spacing', 'fluent-cart'),
+                'label'      => esc_html__('Spacing', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::SLIDER,
                 'size_units' => ['px', 'em'],
                 'range'      => [
@@ -493,7 +493,7 @@ class ProductCardWidget extends Widget_Base
         $widget->add_control(
             'price_color',
             [
-                'label'     => esc_html__('Color', 'fluent-cart'),
+                'label'     => esc_html__('Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     $selector => 'color: {{VALUE}};',
@@ -504,7 +504,7 @@ class ProductCardWidget extends Widget_Base
         $widget->add_control(
             'compare_price_color',
             [
-                'label'     => esc_html__('Compare Price Color', 'fluent-cart'),
+                'label'     => esc_html__('Compare Price Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     $selector . ' .fct-compare-price' => 'color: {{VALUE}};',
@@ -515,7 +515,7 @@ class ProductCardWidget extends Widget_Base
         $widget->add_responsive_control(
             'price_spacing',
             [
-                'label'      => esc_html__('Spacing', 'fluent-cart'),
+                'label'      => esc_html__('Spacing', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::SLIDER,
                 'size_units' => ['px', 'em'],
                 'range'      => [
@@ -544,10 +544,10 @@ class ProductCardWidget extends Widget_Base
         $widget->add_control(
             'product_button_width',
             [
-                'label'     => esc_html__('Full Width', 'fluent-cart'),
+                'label'     => esc_html__('Full Width', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::SWITCHER,
-                'label_on'  => esc_html__('Yes', 'fluent-cart'),
-                'label_off' => esc_html__('No', 'fluent-cart'),
+                'label_on'  => esc_html__('Yes', 'fluent-cart-elementor-blocks'),
+                'label_off' => esc_html__('No', 'fluent-cart-elementor-blocks'),
                 'selectors' => [
                     $btnSelector => 'width: 100%; text-align: center;',
                 ],
@@ -560,14 +560,14 @@ class ProductCardWidget extends Widget_Base
         $widget->start_controls_tab(
             'tab_product_button_normal',
             [
-                'label' => esc_html__('Normal', 'fluent-cart'),
+                'label' => esc_html__('Normal', 'fluent-cart-elementor-blocks'),
             ]
         );
 
         $widget->add_control(
             'product_button_text_color',
             [
-                'label'     => esc_html__('Text Color', 'fluent-cart'),
+                'label'     => esc_html__('Text Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     $btnSelector => 'color: {{VALUE}};',
@@ -595,7 +595,7 @@ class ProductCardWidget extends Widget_Base
         $widget->add_control(
             'product_button_border_radius',
             [
-                'label'      => esc_html__('Border Radius', 'fluent-cart'),
+                'label'      => esc_html__('Border Radius', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', '%', 'em'],
                 'selectors'  => [
@@ -607,7 +607,7 @@ class ProductCardWidget extends Widget_Base
         $widget->add_responsive_control(
             'product_button_padding',
             [
-                'label'      => esc_html__('Padding', 'fluent-cart'),
+                'label'      => esc_html__('Padding', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', 'em', '%'],
                 'selectors'  => [
@@ -622,14 +622,14 @@ class ProductCardWidget extends Widget_Base
         $widget->start_controls_tab(
             'tab_product_button_hover',
             [
-                'label' => esc_html__('Hover', 'fluent-cart'),
+                'label' => esc_html__('Hover', 'fluent-cart-elementor-blocks'),
             ]
         );
 
         $widget->add_control(
             'product_button_hover_text_color',
             [
-                'label'     => esc_html__('Text Color', 'fluent-cart'),
+                'label'     => esc_html__('Text Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     $btnHoverSelector => 'color: {{VALUE}};',
@@ -696,7 +696,7 @@ class ProductCardWidget extends Widget_Base
 
         if (!$product) {
             if ($isEditor) {
-                $this->renderPlaceholder(esc_html__('Product not found.', 'fluent-cart'));
+                $this->renderPlaceholder(esc_html__('Product not found.', 'fluent-cart-elementor-blocks'));
             }
             return;
         }
@@ -800,11 +800,11 @@ class ProductCardWidget extends Widget_Base
                     break;
 
                 case 'title':
-                    echo '<h3 class="fct-product-card-title">' . esc_html__('Select a Product', 'fluent-cart') . '</h3>';
+                    echo '<h3 class="fct-product-card-title">' . esc_html__('Select a Product', 'fluent-cart-elementor-blocks') . '</h3>';
                     break;
 
                 case 'excerpt':
-                    echo '<div class="fct-product-card-excerpt"><p>' . esc_html__('A short sample excerpt for the product.', 'fluent-cart') . '</p></div>';
+                    echo '<div class="fct-product-card-excerpt"><p>' . esc_html__('A short sample excerpt for the product.', 'fluent-cart-elementor-blocks') . '</p></div>';
                     break;
 
                 case 'price':
@@ -814,7 +814,7 @@ class ProductCardWidget extends Widget_Base
                     break;
 
                 case 'button':
-                    echo '<button type="button" class="fct-product-view-button fct-single-product-card-view-button"><span class="fct-button-text">' . esc_html__('Add To Cart', 'fluent-cart') . '</span></button>';
+                    echo '<button type="button" class="fct-product-view-button fct-single-product-card-view-button"><span class="fct-button-text">' . esc_html__('Add To Cart', 'fluent-cart-elementor-blocks') . '</span></button>';
                     break;
             }
         }
@@ -825,7 +825,7 @@ class ProductCardWidget extends Widget_Base
     private function renderPlaceholder(string $message = '')
     {
         if (empty($message)) {
-            $message = esc_html__('Please select a product to display.', 'fluent-cart');
+            $message = esc_html__('Please select a product to display.', 'fluent-cart-elementor-blocks');
         }
         ?>
         <div class="fluent-cart-placeholder" style="text-align:center; padding: 40px 20px; background: #f0f0f1; border: 1px dashed #ccc; border-radius: 4px;">
