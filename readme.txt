@@ -85,7 +85,7 @@ Yes. Required CSS and JavaScript assets are enqueued automatically when widgets 
 
 == Changelog ==
 
-= 1.0.3 (August 18, 2026) =
+= 1.0.3 (August 20, 2026) =
 - Adds Template Library: 8 professionally designed store page templates (Shop, Single Product, Product Category, Cart, Checkout, Thank You, Customer Dashboard, Campaign Landing) seeded automatically into Elementor's Insert Template → My Templates modal with preview thumbnails.
 - Adds Version-gated template seeding that self-heals on every admin load, never duplicates items, updates plugin-seeded layouts in place on release upgrades, and never touches user-created templates.
 - Adds Cart widget: renders the full FluentCart cart (item rows, quantities, totals, empty state) with a Style tab for Item Row and Checkout Button.
