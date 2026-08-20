@@ -7,6 +7,7 @@ use Elementor\Controls_Manager;
 use Elementor\Group_Control_Typography;
 use FluentCart\App\Modules\Templating\AssetLoader;
 use FluentCart\App\Services\Renderer\StoreLogoRenderer;
+use FluentCart\Framework\Support\Arr;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -63,6 +64,21 @@ class StoreLogoWidget extends Widget_Base
             [
                 'label' => esc_html__('Store Logo', 'fluent-cart'),
                 'tab'   => Controls_Manager::TAB_CONTENT,
+            ]
+        );
+
+        $this->add_control(
+            'custom_logo',
+            [
+                'label'       => esc_html__('Logo', 'fluent-cart'),
+                'type'        => Controls_Manager::MEDIA,
+                'dynamic'     => [
+                    'active' => true,
+                ],
+                'default'     => [
+                    'url' => '',
+                ],
+                'description' => esc_html__('Leave empty to use the logo from FluentCart store settings.', 'fluent-cart'),
             ]
         );
 
@@ -261,6 +277,12 @@ class StoreLogoWidget extends Widget_Base
             'is_link'      => $isLink,
             'link_target'  => $linkTarget,
         ];
+
+        $customLogoUrl = trim((string) Arr::get($settings, 'custom_logo.url', ''));
+
+        if ($customLogoUrl !== '') {
+            $atts['logo_url'] = $customLogoUrl;
+        }
 
         $maxWidth  = (int) ($settings['logo_max_width']['size'] ?? 0);
         $maxHeight = (int) ($settings['logo_max_height']['size'] ?? 0);
