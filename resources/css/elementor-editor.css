@@ -1,0 +1,25 @@
+/* FluentCart Elementor Blocks — editor panel styles */
+
+/* Product select2 dropdown result rows (see resources/elementor/product-select-control.js) */
+.fluent-product-select-result {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.fluent-product-select-result .fluent-product-select-thumb {
+    width: 30px;
+    height: 30px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    object-fit: cover;
+}
+
+.fluent-product-select-result .fluent-product-select-title {
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.4;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

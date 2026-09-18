@@ -24,12 +24,12 @@ class ProductStockWidget extends Widget_Base
 
     public function get_title()
     {
-        return esc_html__('Product Stock', 'fluent-cart');
+        return esc_html__('Product Stock', 'fluent-cart-elementor-blocks');
     }
 
     public function get_icon()
     {
-        return 'eicon-product-stock';
+        return 'eicon-product-stock fluent-cart-widget-icon';
     }
 
     public function get_categories()
@@ -48,17 +48,17 @@ class ProductStockWidget extends Widget_Base
             Group_Control_Typography::get_type(),
             [
                 'name'     => 'stock_typography',
-                'selector' => $selector . ' .fct-stock-status',
+                'selector' => $selector . ' .fct-stock-badge',
             ]
         );
 
         $widget->add_control(
             'in_stock_color',
             [
-                'label'     => esc_html__('In Stock Color', 'fluent-cart'),
+                'label'     => esc_html__('In Stock Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
-                    $selector . ':not(.out-of-stock) .fct-stock-status' => 'color: {{VALUE}};',
+                    $selector . ' .fct-stock-badge.fct_status_badge_in-stock' => 'color: {{VALUE}} !important;',
                 ],
             ]
         );
@@ -66,10 +66,59 @@ class ProductStockWidget extends Widget_Base
         $widget->add_control(
             'out_of_stock_color',
             [
-                'label'     => esc_html__('Out of Stock Color', 'fluent-cart'),
+                'label'     => esc_html__('Out of Stock Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
-                    $selector . '.out-of-stock .fct-stock-status' => 'color: {{VALUE}};',
+                    $selector . ' .fct-stock-badge.fct_status_badge_out-of-stock' => 'color: {{VALUE}} !important;',
+                ],
+            ]
+        );
+
+        // Badge controls — the status renders as a pill, so each state gets
+        // its own background alongside the shared shape controls.
+        $widget->add_control(
+            'in_stock_background',
+            [
+                'label'     => esc_html__('In Stock Background', 'fluent-cart-elementor-blocks'),
+                'type'      => Controls_Manager::COLOR,
+                'separator' => 'before',
+                'selectors' => [
+                    $selector . ' .fct-stock-badge.fct_status_badge_in-stock' => 'background-color: {{VALUE}} !important;',
+                ],
+            ]
+        );
+
+        $widget->add_control(
+            'out_of_stock_background',
+            [
+                'label'     => esc_html__('Out of Stock Background', 'fluent-cart-elementor-blocks'),
+                'type'      => Controls_Manager::COLOR,
+                'selectors' => [
+                    $selector . ' .fct-stock-badge.fct_status_badge_out-of-stock' => 'background-color: {{VALUE}} !important;',
+                ],
+            ]
+        );
+
+        $widget->add_responsive_control(
+            'stock_badge_padding',
+            [
+                'label'      => esc_html__('Badge Padding', 'fluent-cart-elementor-blocks'),
+                'type'       => Controls_Manager::DIMENSIONS,
+                'size_units' => ['px', 'em'],
+                'selectors'  => [
+                    $selector . ' .fct-stock-badge' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}} !important;',
+                ],
+            ]
+        );
+
+        $widget->add_responsive_control(
+            'stock_badge_border_radius',
+            [
+                'label'      => esc_html__('Badge Border Radius', 'fluent-cart-elementor-blocks'),
+                'type'       => Controls_Manager::DIMENSIONS,
+                'size_units' => ['px', '%'],
+                'selectors'  => [
+                    $selector . ' .fct-stock-badge' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}} !important;',
                 ],
             ]
         );
@@ -80,7 +129,7 @@ class ProductStockWidget extends Widget_Base
         $this->start_controls_section(
             'content_section',
             [
-                'label' => esc_html__('Content', 'fluent-cart'),
+                'label' => esc_html__('Content', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_CONTENT,
             ]
         );
@@ -93,7 +142,7 @@ class ProductStockWidget extends Widget_Base
         $this->start_controls_section(
             'style_section',
             [
-                'label' => esc_html__('Style', 'fluent-cart'),
+                'label' => esc_html__('Style', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
@@ -109,7 +158,7 @@ class ProductStockWidget extends Widget_Base
         $product = $this->getProduct($settings);
 
         if (!$product) {
-            $this->renderPlaceholder(__('Please select a product or use this widget inside a product template.', 'fluent-cart'));
+            $this->renderPlaceholder(__('Please select a product or use this widget inside a product template.', 'fluent-cart-elementor-blocks'));
             return;
         }
 

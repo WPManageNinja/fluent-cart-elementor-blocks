@@ -9,10 +9,12 @@ use Elementor\Group_Control_Border;
 use Elementor\Group_Control_Box_Shadow;
 use Elementor\Group_Control_Background;
 use Elementor\Repeater;
+use FluentCart\App\Helpers\Helper;
 use FluentCart\App\Models\Product;
 use FluentCart\App\Modules\Templating\AssetLoader;
 use FluentCart\App\Services\Renderer\ProductCardRender;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Controls\ProductSelectControl;
+use FluentCartElementorBlocks\App\Services\Badges\BadgeRenderer;
 
 class ProductCardWidget extends Widget_Base
 {
@@ -23,12 +25,12 @@ class ProductCardWidget extends Widget_Base
 
     public function get_title()
     {
-        return esc_html__('Product Card', 'fluent-cart');
+        return esc_html__('Product Card', 'fluent-cart-elementor-blocks');
     }
 
     public function get_icon()
     {
-        return 'eicon-image-box';
+        return 'eicon-image-box fluent-cart-widget-icon';
     }
 
     public function get_categories()
@@ -57,7 +59,9 @@ class ProductCardWidget extends Widget_Base
     {
         $this->registerContentControls();
         $this->registerCardLayoutControls();
+        BadgeControls::registerBadgeContentControls($this, false);
         $this->registerStyleControls();
+        BadgeControls::registerBadgeStyleControls($this, false);
     }
 
     private function registerContentControls()
@@ -65,7 +69,7 @@ class ProductCardWidget extends Widget_Base
         $this->start_controls_section(
             'content_section',
             [
-                'label' => esc_html__('Product', 'fluent-cart'),
+                'label' => esc_html__('Product', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_CONTENT,
             ]
         );
@@ -73,26 +77,50 @@ class ProductCardWidget extends Widget_Base
         $this->add_control(
             'product_id',
             [
-                'label'       => esc_html__('Select Product', 'fluent-cart'),
+                'label'       => esc_html__('Select Product', 'fluent-cart-elementor-blocks'),
                 'type'        => (new ProductSelectControl())->get_type(),
                 'multiple'    => false,
                 'label_block' => true,
-                'description' => esc_html__('Search and select a product to display.', 'fluent-cart'),
+                'description' => esc_html__('Search and select a product to display.', 'fluent-cart-elementor-blocks'),
                 'default'     => '',
-                'placeholder' => esc_html__('Search for a product...', 'fluent-cart'),
+                'placeholder' => esc_html__('Search for a product...', 'fluent-cart-elementor-blocks'),
             ]
         );
 
         $this->add_control(
             'price_format',
             [
-                'label'   => esc_html__('Price Format', 'fluent-cart'),
+                'label'   => esc_html__('Price Format', 'fluent-cart-elementor-blocks'),
                 'type'    => Controls_Manager::SELECT,
                 'default' => 'starts_from',
                 'options' => [
-                    'starts_from' => esc_html__('Starts From', 'fluent-cart'),
-                    'range'       => esc_html__('Range', 'fluent-cart'),
-                    'lowest'      => esc_html__('Lowest', 'fluent-cart'),
+                    'starts_from' => esc_html__('Starts From', 'fluent-cart-elementor-blocks'),
+                    'range'       => esc_html__('Range', 'fluent-cart-elementor-blocks'),
+                    'lowest'      => esc_html__('Lowest', 'fluent-cart-elementor-blocks'),
+                ],
+            ]
+        );
+
+        // Card sizing — the Elementor equivalent of the Gutenberg block's "Card
+        // Sizing" (Full Width / Custom Width). One responsive slider does both:
+        // a % value fills the container (full width), a px value sets a fixed
+        // width. No default on purpose: a control default is applied retroactively
+        // to every existing instance that never set a width, which would silently
+        // resize already-placed cards. Leaving it empty keeps existing cards
+        // exactly as they are; setting a width is opt-in.
+        $this->add_responsive_control(
+            'card_width',
+            [
+                'label'      => esc_html__('Card Width', 'fluent-cart-elementor-blocks'),
+                'type'       => Controls_Manager::SLIDER,
+                'size_units' => ['px', '%', 'em'],
+                'range'      => [
+                    'px' => ['min' => 150, 'max' => 1000, 'step' => 10],
+                    '%'  => ['min' => 10, 'max' => 100],
+                    'em' => ['min' => 5, 'max' => 60],
+                ],
+                'selectors'  => [
+                    '{{WRAPPER}} .fct-product-card' => 'width: {{SIZE}}{{UNIT}}; max-width: 100%;',
                 ],
             ]
         );
@@ -105,7 +133,7 @@ class ProductCardWidget extends Widget_Base
         $this->start_controls_section(
             'card_layout_section',
             [
-                'label' => esc_html__('Card Layout', 'fluent-cart'),
+                'label' => esc_html__('Card Layout', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_CONTENT,
             ]
         );
@@ -115,15 +143,15 @@ class ProductCardWidget extends Widget_Base
         $repeater->add_control(
             'element_type',
             [
-                'label'   => esc_html__('Element', 'fluent-cart'),
+                'label'   => esc_html__('Element', 'fluent-cart-elementor-blocks'),
                 'type'    => Controls_Manager::SELECT,
                 'default' => 'image',
                 'options' => [
-                    'image'   => esc_html__('Image', 'fluent-cart'),
-                    'title'   => esc_html__('Title', 'fluent-cart'),
-                    'excerpt' => esc_html__('Excerpt', 'fluent-cart'),
-                    'price'   => esc_html__('Price', 'fluent-cart'),
-                    'button'  => esc_html__('Button', 'fluent-cart'),
+                    'image'   => esc_html__('Image', 'fluent-cart-elementor-blocks'),
+                    'title'   => esc_html__('Title', 'fluent-cart-elementor-blocks'),
+                    'excerpt' => esc_html__('Excerpt', 'fluent-cart-elementor-blocks'),
+                    'price'   => esc_html__('Price', 'fluent-cart-elementor-blocks'),
+                    'button'  => esc_html__('Button', 'fluent-cart-elementor-blocks'),
                 ],
             ]
         );
@@ -131,7 +159,7 @@ class ProductCardWidget extends Widget_Base
         $this->add_control(
             'card_elements',
             [
-                'label'       => esc_html__('Card Elements', 'fluent-cart'),
+                'label'       => esc_html__('Card Elements', 'fluent-cart-elementor-blocks'),
                 'type'        => Controls_Manager::REPEATER,
                 'fields'      => $repeater->get_controls(),
                 'default'     => [
@@ -152,7 +180,7 @@ class ProductCardWidget extends Widget_Base
         $this->start_controls_section(
             'card_style_section',
             [
-                'label' => esc_html__('Product Card', 'fluent-cart'),
+                'label' => esc_html__('Product Card', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
@@ -162,7 +190,7 @@ class ProductCardWidget extends Widget_Base
         $this->start_controls_section(
             'image_style_section',
             [
-                'label' => esc_html__('Product Image', 'fluent-cart'),
+                'label' => esc_html__('Product Image', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
@@ -172,7 +200,7 @@ class ProductCardWidget extends Widget_Base
         $this->start_controls_section(
             'title_style_section',
             [
-                'label' => esc_html__('Product Title', 'fluent-cart'),
+                'label' => esc_html__('Product Title', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
@@ -182,7 +210,7 @@ class ProductCardWidget extends Widget_Base
         $this->start_controls_section(
             'excerpt_style_section',
             [
-                'label' => esc_html__('Product Excerpt', 'fluent-cart'),
+                'label' => esc_html__('Product Excerpt', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
@@ -192,7 +220,7 @@ class ProductCardWidget extends Widget_Base
         $this->start_controls_section(
             'price_style_section',
             [
-                'label' => esc_html__('Product Price', 'fluent-cart'),
+                'label' => esc_html__('Product Price', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
@@ -205,7 +233,7 @@ class ProductCardWidget extends Widget_Base
         $this->start_controls_section(
             'button_style_section',
             [
-                'label' => esc_html__('Product Button', 'fluent-cart'),
+                'label' => esc_html__('Product Button', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
@@ -242,7 +270,7 @@ class ProductCardWidget extends Widget_Base
         $widget->add_control(
             'card_border_radius',
             [
-                'label'      => esc_html__('Border Radius', 'fluent-cart'),
+                'label'      => esc_html__('Border Radius', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', '%', 'em'],
                 'selectors'  => [
@@ -262,7 +290,7 @@ class ProductCardWidget extends Widget_Base
         $widget->add_responsive_control(
             'card_padding',
             [
-                'label'      => esc_html__('Padding', 'fluent-cart'),
+                'label'      => esc_html__('Padding', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', 'em', '%'],
                 'selectors'  => [
@@ -282,7 +310,7 @@ class ProductCardWidget extends Widget_Base
         $widget->add_responsive_control(
             'image_height',
             [
-                'label'      => esc_html__('Height', 'fluent-cart'),
+                'label'      => esc_html__('Height', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::SLIDER,
                 'size_units' => ['px', 'em', 'vh'],
                 'range'      => [
@@ -299,14 +327,14 @@ class ProductCardWidget extends Widget_Base
         $widget->add_control(
             'image_object_fit',
             [
-                'label'     => esc_html__('Object Fit', 'fluent-cart'),
+                'label'     => esc_html__('Object Fit', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::SELECT,
                 'default'   => '',
                 'options'   => [
-                    ''        => esc_html__('Default', 'fluent-cart'),
-                    'cover'   => esc_html__('Cover', 'fluent-cart'),
-                    'contain' => esc_html__('Contain', 'fluent-cart'),
-                    'fill'    => esc_html__('Fill', 'fluent-cart'),
+                    ''        => esc_html__('Default', 'fluent-cart-elementor-blocks'),
+                    'cover'   => esc_html__('Cover', 'fluent-cart-elementor-blocks'),
+                    'contain' => esc_html__('Contain', 'fluent-cart-elementor-blocks'),
+                    'fill'    => esc_html__('Fill', 'fluent-cart-elementor-blocks'),
                 ],
                 'selectors' => [
                     $selector => 'object-fit: {{VALUE}};',
@@ -325,7 +353,7 @@ class ProductCardWidget extends Widget_Base
         $widget->add_control(
             'image_border_radius',
             [
-                'label'      => esc_html__('Border Radius', 'fluent-cart'),
+                'label'      => esc_html__('Border Radius', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', '%', 'em'],
                 'selectors'  => [
@@ -346,7 +374,7 @@ class ProductCardWidget extends Widget_Base
         $widget->add_responsive_control(
             'image_padding',
             [
-                'label'      => esc_html__('Padding', 'fluent-cart'),
+                'label'      => esc_html__('Padding', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', 'em', '%'],
                 'selectors'  => [
@@ -372,7 +400,7 @@ class ProductCardWidget extends Widget_Base
         $widget->add_control(
             'title_color',
             [
-                'label'     => esc_html__('Color', 'fluent-cart'),
+                'label'     => esc_html__('Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     $selector          => 'color: {{VALUE}};',
@@ -384,7 +412,7 @@ class ProductCardWidget extends Widget_Base
         $widget->add_control(
             'title_hover_color',
             [
-                'label'     => esc_html__('Hover Color', 'fluent-cart'),
+                'label'     => esc_html__('Hover Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     $selector . ':hover'   => 'color: {{VALUE}};',
@@ -396,7 +424,7 @@ class ProductCardWidget extends Widget_Base
         $widget->add_responsive_control(
             'title_spacing',
             [
-                'label'      => esc_html__('Spacing', 'fluent-cart'),
+                'label'      => esc_html__('Spacing', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::SLIDER,
                 'size_units' => ['px', 'em'],
                 'range'      => [
@@ -425,7 +453,7 @@ class ProductCardWidget extends Widget_Base
         $widget->add_control(
             'excerpt_color',
             [
-                'label'     => esc_html__('Color', 'fluent-cart'),
+                'label'     => esc_html__('Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     $selector => 'color: {{VALUE}};',
@@ -436,7 +464,7 @@ class ProductCardWidget extends Widget_Base
         $widget->add_responsive_control(
             'excerpt_spacing',
             [
-                'label'      => esc_html__('Spacing', 'fluent-cart'),
+                'label'      => esc_html__('Spacing', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::SLIDER,
                 'size_units' => ['px', 'em'],
                 'range'      => [
@@ -465,7 +493,7 @@ class ProductCardWidget extends Widget_Base
         $widget->add_control(
             'price_color',
             [
-                'label'     => esc_html__('Color', 'fluent-cart'),
+                'label'     => esc_html__('Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     $selector => 'color: {{VALUE}};',
@@ -476,7 +504,7 @@ class ProductCardWidget extends Widget_Base
         $widget->add_control(
             'compare_price_color',
             [
-                'label'     => esc_html__('Compare Price Color', 'fluent-cart'),
+                'label'     => esc_html__('Compare Price Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     $selector . ' .fct-compare-price' => 'color: {{VALUE}};',
@@ -487,7 +515,7 @@ class ProductCardWidget extends Widget_Base
         $widget->add_responsive_control(
             'price_spacing',
             [
-                'label'      => esc_html__('Spacing', 'fluent-cart'),
+                'label'      => esc_html__('Spacing', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::SLIDER,
                 'size_units' => ['px', 'em'],
                 'range'      => [
@@ -516,10 +544,10 @@ class ProductCardWidget extends Widget_Base
         $widget->add_control(
             'product_button_width',
             [
-                'label'     => esc_html__('Full Width', 'fluent-cart'),
+                'label'     => esc_html__('Full Width', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::SWITCHER,
-                'label_on'  => esc_html__('Yes', 'fluent-cart'),
-                'label_off' => esc_html__('No', 'fluent-cart'),
+                'label_on'  => esc_html__('Yes', 'fluent-cart-elementor-blocks'),
+                'label_off' => esc_html__('No', 'fluent-cart-elementor-blocks'),
                 'selectors' => [
                     $btnSelector => 'width: 100%; text-align: center;',
                 ],
@@ -532,14 +560,14 @@ class ProductCardWidget extends Widget_Base
         $widget->start_controls_tab(
             'tab_product_button_normal',
             [
-                'label' => esc_html__('Normal', 'fluent-cart'),
+                'label' => esc_html__('Normal', 'fluent-cart-elementor-blocks'),
             ]
         );
 
         $widget->add_control(
             'product_button_text_color',
             [
-                'label'     => esc_html__('Text Color', 'fluent-cart'),
+                'label'     => esc_html__('Text Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     $btnSelector => 'color: {{VALUE}};',
@@ -567,7 +595,7 @@ class ProductCardWidget extends Widget_Base
         $widget->add_control(
             'product_button_border_radius',
             [
-                'label'      => esc_html__('Border Radius', 'fluent-cart'),
+                'label'      => esc_html__('Border Radius', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', '%', 'em'],
                 'selectors'  => [
@@ -579,7 +607,7 @@ class ProductCardWidget extends Widget_Base
         $widget->add_responsive_control(
             'product_button_padding',
             [
-                'label'      => esc_html__('Padding', 'fluent-cart'),
+                'label'      => esc_html__('Padding', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', 'em', '%'],
                 'selectors'  => [
@@ -594,14 +622,14 @@ class ProductCardWidget extends Widget_Base
         $widget->start_controls_tab(
             'tab_product_button_hover',
             [
-                'label' => esc_html__('Hover', 'fluent-cart'),
+                'label' => esc_html__('Hover', 'fluent-cart-elementor-blocks'),
             ]
         );
 
         $widget->add_control(
             'product_button_hover_text_color',
             [
-                'label'     => esc_html__('Text Color', 'fluent-cart'),
+                'label'     => esc_html__('Text Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     $btnHoverSelector => 'color: {{VALUE}};',
@@ -649,8 +677,15 @@ class ProductCardWidget extends Widget_Base
         $isEditor  = \Elementor\Plugin::$instance->editor->is_edit_mode();
 
         if (empty($productId)) {
+            // No product selected. In the editor, render a representative default
+            // card (placeholder image, "Select a Product", zero price, buy button)
+            // like core's Gutenberg Product Card block — so the card is visible
+            // and every Style control has a target the moment the widget is
+            // dropped in. The front end renders nothing (a card with no product
+            // has nothing to show).
             if ($isEditor) {
-                $this->renderPlaceholder();
+                AssetLoader::loadProductArchiveAssets();
+                $this->renderDefaultCard($settings);
             }
             return;
         }
@@ -661,7 +696,7 @@ class ProductCardWidget extends Widget_Base
 
         if (!$product) {
             if ($isEditor) {
-                $this->renderPlaceholder(esc_html__('Product not found.', 'fluent-cart'));
+                $this->renderPlaceholder(esc_html__('Product not found.', 'fluent-cart-elementor-blocks'));
             }
             return;
         }
@@ -678,6 +713,17 @@ class ProductCardWidget extends Widget_Base
         $cardRender = new ProductCardRender($product, [
             'price_format' => $priceFormat,
         ]);
+
+        // Sale badge overlay via core's before/after_image_block hooks (fire
+        // inside renderProductImage). The closures buffer the image and re-wrap
+        // it so the badge overlays the IMAGE, not the whole card. Scoped:
+        // removed right after the loop. Sale only ($includeSoldOut false) — Sold
+        // Out is Products/Carousel-only.
+        $badgeHooks = BadgeRenderer::cardBadgeClosures($settings, false);
+        if ($badgeHooks) {
+            add_action('fluent_cart/product/group/before_image_block', $badgeHooks['before'], 10, 1);
+            add_action('fluent_cart/product/group/after_image_block', $badgeHooks['after'], 10, 1);
+        }
 
         ?>
         <article class="fct-product-card" data-fct-product-card>
@@ -716,12 +762,70 @@ class ProductCardWidget extends Widget_Base
             ?>
         </article>
         <?php
+
+        BadgeRenderer::removeCardBadgeHooks($badgeHooks);
+    }
+
+    /**
+     * Editor-only default card shown when no product is selected, mirroring core's
+     * Gutenberg Product Card block (placeholder image, "Select a Product", zero
+     * price, buy button). Uses the same fct-product-card-* markup the real card
+     * (ProductCardRender) outputs, so every Style control applies and it looks
+     * like a real card. Honours the card_elements order/visibility. Zero price is
+     * store-currency formatted. Placeholder image is core's own placeholder.svg.
+     *
+     * @param array $settings
+     * @return void
+     */
+    private function renderDefaultCard($settings)
+    {
+        $cardElements = $settings['card_elements'] ?? [
+            ['element_type' => 'image'],
+            ['element_type' => 'title'],
+            ['element_type' => 'price'],
+            ['element_type' => 'button'],
+        ];
+
+        $img       = esc_url(\FluentCart\App\Vite::getAssetUrl('images/placeholder.svg'));
+        $zeroPrice = Helper::toDecimal(0);
+
+        echo '<article class="fct-product-card" data-fct-product-card>';
+
+        foreach ($cardElements as $element) {
+            $type = $element['element_type'] ?? '';
+
+            switch ($type) {
+                case 'image':
+                    echo '<a class="fct-product-card-image-wrap" style="display: block;"><img class="fct-product-card-image" src="' . $img . '" alt="" width="300" height="300" loading="lazy" /></a>';
+                    break;
+
+                case 'title':
+                    echo '<h3 class="fct-product-card-title">' . esc_html__('Select a Product', 'fluent-cart-elementor-blocks') . '</h3>';
+                    break;
+
+                case 'excerpt':
+                    echo '<div class="fct-product-card-excerpt"><p>' . esc_html__('A short sample excerpt for the product.', 'fluent-cart-elementor-blocks') . '</p></div>';
+                    break;
+
+                case 'price':
+                    // toDecimal() output is HTML-safe (currency symbol may be an
+                    // entity), so it is printed as-is, matching core's price markup.
+                    echo '<div class="fct-product-card-prices" role="region"><span class="fct-item-price"><span>' . $zeroPrice . '</span></span></div>';
+                    break;
+
+                case 'button':
+                    echo '<button type="button" class="fct-product-view-button fct-single-product-card-view-button"><span class="fct-button-text">' . esc_html__('Add To Cart', 'fluent-cart-elementor-blocks') . '</span></button>';
+                    break;
+            }
+        }
+
+        echo '</article>';
     }
 
     private function renderPlaceholder(string $message = '')
     {
         if (empty($message)) {
-            $message = esc_html__('Please select a product to display.', 'fluent-cart');
+            $message = esc_html__('Please select a product to display.', 'fluent-cart-elementor-blocks');
         }
         ?>
         <div class="fluent-cart-placeholder" style="text-align:center; padding: 40px 20px; background: #f0f0f1; border: 1px dashed #ccc; border-radius: 4px;">

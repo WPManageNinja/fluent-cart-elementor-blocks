@@ -10,14 +10,18 @@ use FluentCart\Framework\Support\Arr;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Controls\ProductSelectControl;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Controls\ProductVariationSelectControl;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Renderers\ElementorShopAppRenderer;
+use FluentCartElementorBlocks\App\Services\Badges\BadgeRenderer;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\AddToCartWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\BuyNowWidget;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\CartWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\CheckoutWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\CustomerDashboardButtonWidget;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\CustomerDashboardWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\MiniCartWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ProductCardWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ProductCarouselWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ProductCategoriesListWidget;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ReceiptWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\SearchBarWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ShopAppWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\StoreLogoWidget;
@@ -35,6 +39,7 @@ use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ThemeBu
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Documents\FluentCartProduct;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Documents\FluentCartProductPost;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Conditions\FluentCartCondition;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Conditions\FluentCartArchiveCondition;
 use FluentCartElementorBlocks\App\Utils\Enqueuer\Enqueue;
 
 class ElementorIntegration
@@ -49,28 +54,65 @@ class ElementorIntegration
         \add_action('elementor/widgets/register', [$this, 'registerWidgets']);
         \add_action('elementor/controls/register', [$this, 'registerControls']);
         \add_action('elementor/editor/after_enqueue_scripts', [$this, 'enqueueEditorScripts']);
+
+        // Short Codes dropdown in the panel WYSIWYG toolbar (Order Receipt's
+        // Message control). Elementor clones the base 'elementorwpeditor'
+        // config into every panel WYSIWYG, so registering on that base editor
+        // is the supported way in; the TinyMCE plugin hides the button unless
+        // the edited widget is the Order Receipt.
+        // Priority 11 is load-bearing: Elementor's get_wp_editor_config() runs
+        // remove_all_filters('mce_buttons', 10) / ('mce_external_plugins', 10)
+        // before printing the base editor — priority-10 callbacks never fire.
+        \add_filter('mce_external_plugins', [$this, 'registerShortCodeTinyMcePlugin'], 11, 2);
+        \add_filter('mce_buttons', [$this, 'registerShortCodeTinyMceButton'], 11, 2);
         \add_action('elementor/frontend/after_enqueue_scripts', [$this, 'enqueueFrontendScripts']);
+        \add_action('elementor/preview/enqueue_styles', [$this, 'enqueuePreviewStyles']);
         \add_action('elementor/widget/before_render_content', [$this, 'maybeEnqueueSingleProductSync']);
+        \add_action('elementor/widget/before_render_content', [$this, 'maybeEnqueueAdvancedVariation']);
 
         \add_filter('fluent_cart/products_views/preload_collection_elementor', [$this, 'preloadProductCollectionsAjax'], 10, 2);
 
-        // Theme Builder integration (requires Elementor Pro)
-        if (class_exists('\ElementorPro\Modules\ThemeBuilder\Module')) {
-            \add_action('elementor/documents/register', [$this, 'registerDocuments']);
-            \add_action('elementor/theme/register_conditions', [$this, 'registerConditions']);
-            \add_filter('elementor/theme/need_override_location', [$this, 'themeTemplateInclude'], 10, 2);
-            // \add_filter('elementor_pro/utils/get_public_post_types', [$this, 'removeFluentProductsFromGenericConditions']);
+        // FluentCart core provides a fallback template for product taxonomy
+        // archives (category/brand pages) and asks builder integrations first
+        // via this filter before loading it. Defer whenever an Elementor Pro
+        // Theme Builder archive template claims the current request, so the
+        // designer's layout wins and core's fallback covers everything else.
+        // Same contract the Divi addon implements.
+        \add_filter('fluent_cart/template/disable_taxonomy_fallback', [$this, 'deferToThemeBuilderArchive']);
 
-            // Disable FluentCart core's auto single product rendering when a Theme Builder template is active
-            \add_filter('fluent_cart/disable_auto_single_product_page', [$this, 'maybeDisableAutoSingleProduct']);
+        // Theme Builder integration (requires Elementor Pro or ProElements).
+        // Deferred to after_setup_theme: this method runs on fluentcart_loaded
+        // (inside plugins_loaded), and ProElements — which shares the ElementorPro
+        // namespace but sorts after fluent-cart* in the plugin load order — has not
+        // registered its autoloader yet at that point. after_setup_theme runs after
+        // every plugin has loaded, and before any of the hooks below fire
+        // (elementor/documents/register earliest at init 0, register_conditions on wp_loaded).
+        \add_action('after_setup_theme', [$this, 'registerThemeBuilderIntegration']);
+    }
+
+    /**
+     * Wire the Elementor Pro Theme Builder integration.
+     */
+    public function registerThemeBuilderIntegration()
+    {
+        if (!class_exists('\ElementorPro\Modules\ThemeBuilder\Module')) {
+            return;
         }
+
+        \add_action('elementor/documents/register', [$this, 'registerDocuments']);
+        \add_action('elementor/theme/register_conditions', [$this, 'registerConditions']);
+        \add_filter('elementor/theme/need_override_location', [$this, 'themeTemplateInclude'], 10, 2);
+        // \add_filter('elementor_pro/utils/get_public_post_types', [$this, 'removeFluentProductsFromGenericConditions']);
+
+        // Disable FluentCart core's auto single product rendering when a Theme Builder template is active
+        \add_filter('fluent_cart/disable_auto_single_product_page', [$this, 'maybeDisableAutoSingleProduct']);
     }
 
     public function registerCategories($elements_manager)
     {
         $elements_manager->add_category('fluent-cart', [
-            'title' => esc_html__('FluentCart', 'fluent-cart'),
-            'icon'  => 'fa fa-shopping-cart',
+            'title' => esc_html__('FluentCart', 'fluent-cart-elementor-blocks'),
+            'icon' => 'fa fa-shopping-cart',
         ]);
     }
 
@@ -79,12 +121,15 @@ class ElementorIntegration
         $widgets_manager->register(new AddToCartWidget());
         $widgets_manager->register(new BuyNowWidget());
         $widgets_manager->register(new MiniCartWidget());
+        $widgets_manager->register(new CartWidget());
         $widgets_manager->register(new ShopAppWidget());
         $widgets_manager->register(new ProductCardWidget());
         $widgets_manager->register(new ProductCarouselWidget());
         $widgets_manager->register(new ProductCategoriesListWidget());
         $widgets_manager->register(new CheckoutWidget());
+        $widgets_manager->register(new ReceiptWidget());
         $widgets_manager->register(new CustomerDashboardButtonWidget());
+        $widgets_manager->register(new CustomerDashboardWidget());
         $widgets_manager->register(new SearchBarWidget());
         $widgets_manager->register(new StoreLogoWidget());
 
@@ -108,6 +153,40 @@ class ElementorIntegration
         $controls_manager->register(new ProductSelectControl());
     }
 
+    /**
+     * Let Elementor Pro's Theme Builder handle the archive when it has an
+     * applicable archive document for the current request (Pro's conditions
+     * manager resolves each document's display conditions against the request,
+     * so an unrelated archive template never triggers this). Uses the same
+     * FluentCart fallback opt-out contract as the Divi integration.
+     *
+     * @param bool $disable
+     * @return bool
+     */
+    public function deferToThemeBuilderArchive($disable)
+    {
+        if ($disable || !class_exists('\ElementorPro\Modules\ThemeBuilder\Module')) {
+            return $disable;
+        }
+
+        // Only act on FluentCart's own taxonomy archives — any other request
+        // is none of this adapter's business, whatever core asks about.
+        $taxonomies = get_object_taxonomies('fluent-products');
+        if (empty($taxonomies) || !is_tax($taxonomies)) {
+            return $disable;
+        }
+
+        $documents = \ElementorPro\Modules\ThemeBuilder\Module::instance()
+            ->get_conditions_manager()
+            ->get_documents_for_location('archive');
+
+        if (!empty($documents)) {
+            return true;
+        }
+
+        return $disable;
+    }
+
     public function preloadProductCollectionsAjax($view, $args)
     {
         $products = Arr::get($args, 'products', []);
@@ -116,6 +195,17 @@ class ElementorIntegration
         $cardElements = get_transient('fc_el_collection_' . $clientId);
         if (!$cardElements) {
             return $view;
+        }
+
+        // Re-apply the widget's Sale/Sold Out overlays on paginated pages. Page 1
+        // wraps the render inline; here we read the settings cached under the same
+        // client id and register the same image-block closures around the loop, so
+        // the cards keep both the configured layout AND their badges.
+        $badgeSettings = get_transient('fc_el_badges_' . $clientId);
+        $badgeHooks = is_array($badgeSettings) ? BadgeRenderer::cardBadgeClosures($badgeSettings, true) : null;
+        if ($badgeHooks) {
+            \add_action('fluent_cart/product/group/before_image_block', $badgeHooks['before'], 10, 1);
+            \add_action('fluent_cart/product/group/after_image_block', $badgeHooks['after'], 10, 1);
         }
 
         ob_start();
@@ -131,22 +221,48 @@ class ElementorIntegration
                 $isFirst = false;
             }
             ?>
-            <article data-fluent-cart-shop-app-single-product data-fct-product-card=""
-                     class="fct-product-card"
-                    <?php echo $providerAttr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-                     aria-label="<?php echo esc_attr(sprintf(
-                             __('%s product card', 'fluent-cart'), $product->post_title));
-                     ?>">
+            <article data-fluent-cart-shop-app-single-product data-fct-product-card="" class="fct-product-card" <?php echo $providerAttr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> aria-label="<?php echo esc_attr(sprintf(
+                    /* translators: %s: product name. */
+                    __('%s product card', 'fluent-cart-elementor-blocks'),
+                    $product->post_title
+                ));
+                ?>">
                 <?php ElementorShopAppRenderer::renderCardElements($cardRender, $cardElements); ?>
             </article>
             <?php
         }
+
+        BadgeRenderer::removeCardBadgeHooks($badgeHooks);
 
         return ob_get_clean();
     }
 
     public function enqueueEditorScripts()
     {
+        $svgIcon = '<svg width="300" height="300" viewBox="0 0 300 300" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="300" height="300" rx="30" fill="#00009F"/><path d="M136.561 205.944H47.1367L61.1704 173.491C65.2906 163.963 74.6784 157.795 85.0589 157.795H191.584L184.338 174.551C176.098 193.607 157.322 205.944 136.561 205.944Z" fill="white"/><path d="M210.643 142.439H84.8574L92.1035 125.683C100.344 106.627 119.12 94.2905 139.881 94.2905H248.565L234.531 126.743C230.411 136.271 221.023 142.439 210.643 142.439Z" fill="white"/></svg>';
+        $svgBase64 = base64_encode($svgIcon);
+
+        wp_enqueue_style(
+            'fluent-cart-elementor-editor-css',
+            FLUENTCART_ELEMENTOR_BLOCKS_URL . 'assets/css/elementor-editor.css',
+            [],
+            FLUENTCART_ELEMENTOR_BLOCKS_VERSION
+        );
+
+        wp_register_style('fluent-cart-elementor-editor-badge', false, [], FLUENTCART_VERSION);
+        wp_enqueue_style('fluent-cart-elementor-editor-badge');
+        wp_add_inline_style('fluent-cart-elementor-editor-badge', '
+            .elementor-element .icon .fluent-cart-widget-icon::after {
+                content: "";
+                position: absolute;
+                top: 4px;
+                right: 4px;
+                width: 16px;
+                height: 16px;
+                background: url("data:image/svg+xml;base64,' . $svgBase64 . '") center / contain no-repeat;
+            }
+        ');
+
         $restInfo = Helper::getRestInfo();
 
         Enqueue::script(
@@ -167,8 +283,124 @@ class ElementorIntegration
 
         \wp_localize_script('fluent-cart-elementor-editor', 'fluentCartElementor', [
             'restUrl' => \trailingslashit($restInfo['url']),
-            'nonce' => $restInfo['nonce']
+            'nonce' => $restInfo['nonce'],
+            // Strings for the Select2-based product/variation controls. Elementor
+            // renders panel UI from the PHP control definitions, so these are the
+            // only editor strings JavaScript builds itself — translate them here
+            // and hand them over, the same way core feeds its JS through
+            // wp_localize_script rather than wp_set_script_translations.
+            'i18n'    => [
+                'searchProducts'  => \__('Search for products...', 'fluent-cart-elementor-blocks'),
+                'searchVariation' => \__('Search for a variation...', 'fluent-cart-elementor-blocks'),
+                'unknownProduct'  => \__('Unknown Product', 'fluent-cart-elementor-blocks'),
+            ],
         ]);
+
+        // Data for the Short Codes toolbar dropdown (Order Receipt Message).
+        \wp_localize_script('fluent-cart-elementor-editor', 'fceReceiptShortCodes', [
+            'buttonLabel' => \__('Short Codes', 'fluent-cart-elementor-blocks'),
+            'groups' => $this->receiptShortCodeGroups(),
+        ]);
+
+        // The {{:}} button face styling lives in the TinyMCE plugin itself
+        // (inline on the element in onPostRender) — stylesheet rules proved
+        // unreliable against the skin's per-state colors.
+    }
+
+    /**
+     * TinyMCE external plugin for the Short Codes dropdown. Registered only on
+     * Elementor's base panel editor — never on regular wp-admin editors.
+     *
+     * @param array  $plugins
+     * @param string $editorId
+     * @return array
+     */
+    public function registerShortCodeTinyMcePlugin($plugins, $editorId = '')
+    {
+        if ($editorId !== 'elementorwpeditor') {
+            return $plugins;
+        }
+
+        $plugins = (array) $plugins;
+
+        // TinyMCE loads this URL as-is (no wp_enqueue versioning), so carry
+        // the plugin version explicitly — otherwise browsers keep the cached
+        // copy across releases.
+        $plugins['fce_shortcodes'] = \add_query_arg(
+            'ver',
+            FLUENTCART_ELEMENTOR_BLOCKS_VERSION,
+            FLUENTCART_ELEMENTOR_BLOCKS_URL . 'assets/js/receipt-shortcode-picker.js'
+        );
+
+        return $plugins;
+    }
+
+    /**
+     * Add the Short Codes button to the base panel editor's toolbar.
+     *
+     * @param array  $buttons
+     * @param string $editorId
+     * @return array
+     */
+    public function registerShortCodeTinyMceButton($buttons, $editorId = '')
+    {
+        if ($editorId !== 'elementorwpeditor') {
+            return $buttons;
+        }
+
+        // Right after the Paragraph (format) dropdown — appended last, the
+        // narrow panel toolbar wraps the button onto its own row.
+        $buttons = (array) $buttons;
+        $position = \array_search('formatselect', $buttons, true);
+
+        if ($position === false) {
+            \array_unshift($buttons, 'fce_shortcodes');
+        } else {
+            \array_splice($buttons, $position + 1, 0, ['fce_shortcodes']);
+        }
+
+        return $buttons;
+    }
+
+    /**
+     * Short-code groups for the dropdown, from core's canonical registry (the
+     * same list the email composer offers, respecting the
+     * fluent_cart/editor_shortcodes filter).
+     *
+     * @return array<int, array{title: string, codes: array<int, array{code: string, label: string}>}>
+     */
+    private function receiptShortCodeGroups()
+    {
+        if (!\class_exists('\FluentCart\App\Helpers\EditorShortCodeHelper')) {
+            return [];
+        }
+
+        try {
+            $registry = \FluentCart\App\Helpers\EditorShortCodeHelper::getEmailNotificationShortcodes();
+        } catch (\Throwable $e) {
+            return [];
+        }
+
+        $groups = [];
+
+        foreach ((array) $registry as $group) {
+            $codes = isset($group['shortcodes']) && \is_array($group['shortcodes']) ? $group['shortcodes'] : [];
+            if (!$codes) {
+                continue;
+            }
+
+            $items = [];
+            foreach ($codes as $code => $label) {
+                $items[] = ['code' => (string) $code, 'label' => (string) $label];
+            }
+
+            $groups[] = [
+                'title' => isset($group['title']) ? (string) $group['title'] : '',
+                'codes' => $items,
+            ];
+        }
+
+        return $groups;
     }
 
     /**
@@ -188,6 +420,43 @@ class ElementorIntegration
             FLUENTCART_VERSION,
             true
         );
+    }
+
+    public function enqueuePreviewStyles()
+    {
+        do_action('fluent_cart/advanced_variation/enqueue_assets');
+
+        // Product Carousel loading-skeleton styles for the editor preview (shown
+        // when no products are selected yet). Editor-preview only — never enqueued
+        // on the front end.
+        wp_enqueue_style(
+            'fluent-cart-elementor-carousel-skeleton',
+            FLUENTCART_ELEMENTOR_BLOCKS_URL . 'assets/css/carousel-skeleton.css',
+            [],
+            FLUENTCART_ELEMENTOR_BLOCKS_VERSION
+        );
+    }
+
+    public function maybeEnqueueAdvancedVariation($widget)
+    {
+        static $enqueued = false;
+        if ($enqueued) {
+            return;
+        }
+
+        $targetWidgets = [
+            'fluent_cart_shop_app',
+            'fluent_cart_product_card',
+            'fluent_cart_product_carousel',
+            'fluentcart_product_info',
+        ];
+
+        if (!in_array($widget->get_name(), $targetWidgets, true)) {
+            return;
+        }
+
+        $enqueued = true;
+        do_action('fluent_cart/advanced_variation/enqueue_assets');
     }
 
     /**
@@ -212,7 +481,19 @@ class ElementorIntegration
         ];
 
         $isRelevant = in_array($widget->get_name(), $syncWidgets, true);
-        $shouldEnqueue = \apply_filters('fluent_cart/elementor/enqueue_single_product_sync', $isRelevant, $widget);
+
+        // Standardized on the fluent_cart_elementor/ prefix — the same one the
+        // template library filters use. The hook shipped under the old
+        // fluent_cart/elementor/ name in 1.0.2, so keep that firing (deprecated)
+        // until a major version bump so existing consumers are not silently
+        // dropped.
+        $shouldEnqueue = \apply_filters('fluent_cart_elementor/enqueue_single_product_sync', $isRelevant, $widget);
+        $shouldEnqueue = \apply_filters_deprecated(
+            'fluent_cart/elementor/enqueue_single_product_sync',
+            [$shouldEnqueue, $widget],
+            '1.0.3',
+            'fluent_cart_elementor/enqueue_single_product_sync'
+        );
 
         if (!$shouldEnqueue) {
             return;
@@ -245,6 +526,14 @@ class ElementorIntegration
         $condition = new FluentCartCondition();
 
         $conditions_manager->get_condition('general')->register_sub_condition($condition);
+
+        // FluentCart taxonomy archives under the Archive group — Pro's own
+        // "Products Archive" condition is WooCommerce-only and never matches
+        // FluentCart's product-categories / product-brands URLs.
+        $archiveGroup = $conditions_manager->get_condition('archive');
+        if ($archiveGroup) {
+            $archiveGroup->register_sub_condition(new FluentCartArchiveCondition());
+        }
     }
 
     /**

@@ -69,7 +69,7 @@ class ElementorCheckoutRenderer
      */
     protected function renderEmptyCart(): string
     {
-        $message = $this->settings['empty_cart_message'] ?? __('Your cart is empty.', 'fluent-cart');
+        $message = $this->settings['empty_cart_message'] ?? __('Your cart is empty.', 'fluent-cart-elementor-blocks');
 
         ob_start();
         ?>
@@ -134,7 +134,7 @@ class ElementorCheckoutRenderer
 
         do_action('fluent_cart/before_checkout_form', ['cart' => $this->cart]);
         ?>
-        <form <?php RenderHelper::renderAtts($formAttributes); ?> aria-label="<?php esc_attr_e('Checkout Form', 'fluent-cart'); ?>">
+        <form <?php RenderHelper::renderAtts($formAttributes); ?> aria-label="<?php esc_attr_e('Checkout Form', 'fluent-cart-elementor-blocks'); ?>">
             <?php do_action('fluent_cart/checkout_form_opening', ['cart' => $this->cart]); ?>
 
             <?php if ($layoutType === 'two-column'): ?>
@@ -226,8 +226,8 @@ class ElementorCheckoutRenderer
                 $this->renderShippingMethods();
                 break;
 
-            case 'eu_vat':
-                $this->renderEuVat();
+            case 'business_details':
+                $this->checkoutRenderer->renderB2BToggle();
                 break;
 
             case 'payment_methods':
@@ -300,9 +300,7 @@ class ElementorCheckoutRenderer
      */
     protected function renderPaymentMethods(): void
     {
-        if (!$this->hasFormElement('eu_vat')) {
-            do_action('fluent_cart/before_payment_methods', ['cart' => $this->cart]);
-        }
+        do_action('fluent_cart/before_payment_methods', ['cart' => $this->cart]);
         ?>
         <div class="fct_checkout_payment_methods" data-fluent-cart-checkout-payment-methods>
             <?php $this->checkoutRenderer->renderPaymentMethods(); ?>
@@ -312,28 +310,12 @@ class ElementorCheckoutRenderer
     }
 
     /**
-     * Render EU VAT block output from FluentCart core.
-     */
-    protected function renderEuVat(): void
-    {
-        ob_start();
-        do_action('fluent_cart/before_payment_methods', ['cart' => $this->cart]);
-        $output = trim(ob_get_clean());
-
-        if ($output === '') {
-            return;
-        }
-
-        echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-    }
-
-    /**
      * Render summary elements based on settings
      */
     protected function renderSummaryElements(): void
     {
         $summaryElements = $this->settings['summary_elements'] ?? [];
-        $summaryHeading = $this->settings['summary_heading'] ?? __('Order Summary', 'fluent-cart');
+        $summaryHeading = $this->settings['summary_heading'] ?? __('Order Summary', 'fluent-cart-elementor-blocks');
 
         ?>
         <div class="fct_summary active" data-fluent-cart-checkout-page-checkout-form-order-summary aria-labelledby="order-summary-heading">

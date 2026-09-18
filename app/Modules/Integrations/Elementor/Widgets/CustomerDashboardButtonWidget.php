@@ -10,6 +10,9 @@ use Elementor\Group_Control_Box_Shadow;
 use Elementor\Group_Control_Background;
 use FluentCart\App\Modules\Templating\AssetLoader;
 use FluentCart\App\Services\Renderer\CustomerDashboardButtonRenderer;
+use FluentCart\App\App;
+use FluentCart\App\Vite;
+use FluentCart\Framework\Support\Arr;
 
 class CustomerDashboardButtonWidget extends Widget_Base
 {
@@ -20,12 +23,12 @@ class CustomerDashboardButtonWidget extends Widget_Base
 
     public function get_title()
     {
-        return esc_html__('Customer Dashboard Button', 'fluent-cart');
+        return esc_html__('Customer Dashboard Button', 'fluent-cart-elementor-blocks');
     }
 
     public function get_icon()
     {
-        return 'eicon-person';
+        return 'eicon-person fluent-cart-widget-icon';
     }
 
     public function get_categories()
@@ -36,6 +39,19 @@ class CustomerDashboardButtonWidget extends Widget_Base
     public function get_keywords()
     {
         return ['customer', 'dashboard', 'account', 'login', 'button', 'fluent', 'cart'];
+    }
+
+    public function get_style_depends()
+    {
+        $app = App::getInstance();
+        $slug = $app->config->get('app.slug');
+
+        Vite::enqueueStyle(
+            $slug . '-customer-dashboard-button',
+            'public/customer-dashboard-button/customer-dashboard-button.scss'
+        );
+
+        return [$slug . '-customer-dashboard-button'];
     }
 
     protected function register_controls()
@@ -54,7 +70,7 @@ class CustomerDashboardButtonWidget extends Widget_Base
         $this->start_controls_section(
             'content_section',
             [
-                'label' => esc_html__('Content', 'fluent-cart'),
+                'label' => esc_html__('Content', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_CONTENT,
             ]
         );
@@ -62,12 +78,12 @@ class CustomerDashboardButtonWidget extends Widget_Base
         $this->add_control(
             'display_type',
             [
-                'label'   => esc_html__('Display Type', 'fluent-cart'),
+                'label'   => esc_html__('Display Type', 'fluent-cart-elementor-blocks'),
                 'type'    => Controls_Manager::SELECT,
                 'default' => 'button',
                 'options' => [
-                    'button' => esc_html__('Button', 'fluent-cart'),
-                    'link'   => esc_html__('Link', 'fluent-cart'),
+                    'button' => esc_html__('Button', 'fluent-cart-elementor-blocks'),
+                    'link'   => esc_html__('Link', 'fluent-cart-elementor-blocks'),
                 ],
             ]
         );
@@ -75,10 +91,10 @@ class CustomerDashboardButtonWidget extends Widget_Base
         $this->add_control(
             'button_text',
             [
-                'label'       => esc_html__('Label', 'fluent-cart'),
+                'label'       => esc_html__('Label', 'fluent-cart-elementor-blocks'),
                 'type'        => Controls_Manager::TEXT,
-                'default'     => esc_html__('My Account', 'fluent-cart'),
-                'placeholder' => esc_html__('My Account', 'fluent-cart'),
+                'default'     => esc_html__('My Account', 'fluent-cart-elementor-blocks'),
+                'placeholder' => esc_html__('My Account', 'fluent-cart-elementor-blocks'),
                 'dynamic'     => [
                     'active' => true,
                 ],
@@ -88,10 +104,10 @@ class CustomerDashboardButtonWidget extends Widget_Base
         $this->add_control(
             'show_icon',
             [
-                'label'     => esc_html__('Show Icon', 'fluent-cart'),
+                'label'     => esc_html__('Show Icon', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::SWITCHER,
-                'label_on'  => esc_html__('Yes', 'fluent-cart'),
-                'label_off' => esc_html__('No', 'fluent-cart'),
+                'label_on'  => esc_html__('Yes', 'fluent-cart-elementor-blocks'),
+                'label_off' => esc_html__('No', 'fluent-cart-elementor-blocks'),
                 'default'   => 'yes',
             ]
         );
@@ -99,12 +115,12 @@ class CustomerDashboardButtonWidget extends Widget_Base
         $this->add_control(
             'link_target',
             [
-                'label'   => esc_html__('Open In', 'fluent-cart'),
+                'label'   => esc_html__('Open In', 'fluent-cart-elementor-blocks'),
                 'type'    => Controls_Manager::SELECT,
                 'default' => '_self',
                 'options' => [
-                    '_self'  => esc_html__('Same Tab', 'fluent-cart'),
-                    '_blank' => esc_html__('New Tab', 'fluent-cart'),
+                    '_self'  => esc_html__('Same Tab', 'fluent-cart-elementor-blocks'),
+                    '_blank' => esc_html__('New Tab', 'fluent-cart-elementor-blocks'),
                 ],
             ]
         );
@@ -124,7 +140,7 @@ class CustomerDashboardButtonWidget extends Widget_Base
         $this->start_controls_section(
             'button_style_section',
             [
-                'label' => esc_html__('Button / Link', 'fluent-cart'),
+                'label' => esc_html__('Button / Link', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
@@ -140,7 +156,7 @@ class CustomerDashboardButtonWidget extends Widget_Base
         $this->add_responsive_control(
             'button_padding',
             [
-                'label'      => esc_html__('Padding', 'fluent-cart'),
+                'label'      => esc_html__('Padding', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', 'em', '%'],
                 'selectors'  => [
@@ -155,14 +171,14 @@ class CustomerDashboardButtonWidget extends Widget_Base
         $this->start_controls_tab(
             'tab_button_normal',
             [
-                'label' => esc_html__('Normal', 'fluent-cart'),
+                'label' => esc_html__('Normal', 'fluent-cart-elementor-blocks'),
             ]
         );
 
         $this->add_control(
             'button_text_color',
             [
-                'label'     => esc_html__('Text Color', 'fluent-cart'),
+                'label'     => esc_html__('Text Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     $btnSelector => 'color: {{VALUE}};',
@@ -190,7 +206,7 @@ class CustomerDashboardButtonWidget extends Widget_Base
         $this->add_control(
             'button_border_radius',
             [
-                'label'      => esc_html__('Border Radius', 'fluent-cart'),
+                'label'      => esc_html__('Border Radius', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', '%', 'em'],
                 'selectors'  => [
@@ -213,14 +229,14 @@ class CustomerDashboardButtonWidget extends Widget_Base
         $this->start_controls_tab(
             'tab_button_hover',
             [
-                'label' => esc_html__('Hover', 'fluent-cart'),
+                'label' => esc_html__('Hover', 'fluent-cart-elementor-blocks'),
             ]
         );
 
         $this->add_control(
             'button_hover_text_color',
             [
-                'label'     => esc_html__('Text Color', 'fluent-cart'),
+                'label'     => esc_html__('Text Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     $btnHoverSelector => 'color: {{VALUE}};',
@@ -270,7 +286,7 @@ class CustomerDashboardButtonWidget extends Widget_Base
         $this->start_controls_section(
             'icon_style_section',
             [
-                'label'     => esc_html__('Icon', 'fluent-cart'),
+                'label'     => esc_html__('Icon', 'fluent-cart-elementor-blocks'),
                 'tab'       => Controls_Manager::TAB_STYLE,
                 'condition' => [
                     'show_icon' => 'yes',
@@ -281,7 +297,7 @@ class CustomerDashboardButtonWidget extends Widget_Base
         $this->add_responsive_control(
             'icon_size',
             [
-                'label'      => esc_html__('Size', 'fluent-cart'),
+                'label'      => esc_html__('Size', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::SLIDER,
                 'size_units' => ['px', 'em'],
                 'range'      => [
@@ -297,7 +313,7 @@ class CustomerDashboardButtonWidget extends Widget_Base
         $this->add_control(
             'icon_color',
             [
-                'label'     => esc_html__('Color', 'fluent-cart'),
+                'label'     => esc_html__('Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     $iconSelector => 'fill: {{VALUE}}; color: {{VALUE}};',
@@ -308,7 +324,7 @@ class CustomerDashboardButtonWidget extends Widget_Base
         $this->add_responsive_control(
             'icon_gap',
             [
-                'label'      => esc_html__('Gap (between icon and label)', 'fluent-cart'),
+                'label'      => esc_html__('Gap (between icon and label)', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::SLIDER,
                 'size_units' => ['px', 'em'],
                 'range'      => [
@@ -341,13 +357,11 @@ class CustomerDashboardButtonWidget extends Widget_Base
             ? $settings['link_target']
             : '_self';
 
-        $showIcon = in_array($settings['show_icon'] ?? '', ['yes', 'no'], true)
-            ? $settings['show_icon'] === 'yes'
-            : true;
+        $showIcon = Arr::get($settings, 'show_icon', '') === 'yes';
 
         $buttonText = sanitize_text_field($settings['button_text'] ?? '');
         if (empty($buttonText)) {
-            $buttonText = __('My Account', 'fluent-cart');
+            $buttonText = __('My Account', 'fluent-cart-elementor-blocks');
         }
 
         AssetLoader::markFrontendAssetsRequired();

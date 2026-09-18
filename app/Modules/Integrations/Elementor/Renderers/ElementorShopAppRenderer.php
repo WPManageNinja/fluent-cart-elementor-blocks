@@ -5,7 +5,6 @@ namespace FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Renderers
 use FluentCart\App\Models\Product;
 use FluentCart\App\Modules\Templating\AssetLoader;
 use FluentCart\App\Services\Renderer\ProductCardRender;
-use FluentCart\App\Services\Renderer\ProductRenderer;
 use FluentCart\App\Services\Renderer\RenderHelper;
 use FluentCart\App\Services\Renderer\ShopAppRenderer;
 use FluentCart\Framework\Pagination\CursorPaginator;
@@ -31,14 +30,31 @@ class ElementorShopAppRenderer extends ShopAppRenderer
                 $this->cardElements,
                 48 * HOUR_IN_SECONDS
             );
+
+            // Cache badge settings on the SAME lifecycle as the card layout (only
+            // this uncached render path runs, never a cache hit), so AJAX
+            // pagination can re-apply the Sale/Sold Out overlays. Only when a
+            // badge is actually enabled.
+            $badgeSettings = Arr::get($config, 'badge_settings', []);
+            $badgesActive = Arr::get($badgeSettings, 'show_sale_badge') === 'yes'
+                || Arr::get($badgeSettings, 'show_sold_out_badge') === 'yes';
+            if ($badgesActive) {
+                set_transient('fc_el_badges_' . $this->clientId, $badgeSettings, 48 * HOUR_IN_SECONDS);
+            } else {
+                delete_transient('fc_el_badges_' . $this->clientId);
+            }
         }
 
         parent::__construct($products, $config);
 
+        // Apply user-set filter labels from the Elementor widget controls.
+        // ShopAppRenderer builds $this->filters with hardcoded labels from taxonomy slugs;
+        // the widget stores the user's custom label in $config['filters'][$key]['label'].
         $configFilters = Arr::get($config, 'filters', []);
         foreach ($this->filters as $key => &$filter) {
-            if (Arr::has($configFilters, $key . '.show_empty')) {
-                $filter['show_empty'] = Arr::get($configFilters, $key . '.show_empty');
+            $userLabel = Arr::get($configFilters, $key . '.label');
+            if ($userLabel) {
+                $filter['label'] = $userLabel;
             }
         }
         unset($filter);
@@ -60,7 +76,7 @@ class ElementorShopAppRenderer extends ShopAppRenderer
         $wrapperInnerTypes = ['filter', 'product_grid'];
         $beforeWrapper = [];
         $insideWrapper = [];
-        $afterWrapper  = [];
+        $afterWrapper = [];
 
         foreach ($layoutTypes as $type) {
             if (in_array($type, $wrapperInnerTypes, true)) {
@@ -76,16 +92,17 @@ class ElementorShopAppRenderer extends ShopAppRenderer
         $filterRenderer = new \FluentCart\App\Services\Renderer\ProductFilterRender($this->filters);
 
         $wrapperAttributes = [
-            'class'                                  => 'fct-products-wrapper-inner mode-' . $this->viewMode . $isFullWidth,
-            'data-fluent-cart-product-wrapper-inner'  => '',
-            'data-per-page'                          => $this->per_page,
-            'data-order-type'                        => $this->order_type,
-            'data-live-filter'                       => $this->liveFilter,
-            'data-paginator'                         => $this->paginator,
-            'data-default-filters'                   => wp_json_encode($this->defaultFilters),
+            'class' => 'fct-products-wrapper-inner mode-' . $this->viewMode . $isFullWidth,
+            'data-fluent-cart-product-wrapper-inner' => '',
+            'data-per-page' => $this->per_page,
+            'data-order-type' => $this->order_type,
+            'data-live-filter' => $this->liveFilter,
+            'data-paginator' => $this->paginator,
+            'data-default-filters' => wp_json_encode($this->defaultFilters),
         ];
         ?>
-        <div class="fct-products-wrapper" data-fluent-cart-shop-app data-fluent-cart-product-wrapper role="main" aria-label="<?php esc_attr_e('Products', 'fluent-cart'); ?>">
+        <div class="fct-products-wrapper" data-fluent-cart-shop-app data-fluent-cart-product-wrapper role="main"
+            aria-label="<?php esc_attr_e('Products', 'fluent-cart-elementor-blocks'); ?>">
             <?php
             // Render before-wrapper sections (view_switcher, sort_by) in a shared container
             if (!empty($beforeWrapper)) {
@@ -101,15 +118,19 @@ class ElementorShopAppRenderer extends ShopAppRenderer
             }
 
             if (!empty($insideWrapper)) {
-            ?>
-            <div <?php RenderHelper::renderAtts($wrapperAttributes); ?>>
-                <?php
-                foreach ($insideWrapper as $type) {
-                    $this->renderLayoutSection($type, $filterRenderer);
-                }
                 ?>
-            </div>
-            <?php
+                <div <?php RenderHelper::renderAtts($wrapperAttributes); ?>>
+                    <?php
+                    foreach ($insideWrapper as $type) {
+                        $this->renderLayoutSection($type, $filterRenderer);
+                    }
+                    ?>
+
+                    <div class="fluent-cart-product-loader loader-hidden" data-fluent-cart-product-loader>
+                        <div class="fluent-cart-product-spinner"></div>
+                    </div>
+                </div>
+                <?php
             }
 
             // Render after-wrapper sections (paginator)
@@ -178,15 +199,11 @@ class ElementorShopAppRenderer extends ShopAppRenderer
     {
         ?>
         <div class="fct-products-container grid-columns-<?php echo esc_attr($this->productBoxGridSize); ?>"
-             data-fluent-cart-shop-app-product-list
-             role="list"
-             aria-label="<?php esc_attr_e('Product list', 'fluent-cart'); ?>"
-        >
+            data-fluent-cart-shop-app-product-list role="list"
+            aria-label="<?php esc_attr_e('Product list', 'fluent-cart-elementor-blocks'); ?>">
             <?php
             if ($this->products->count() !== 0) {
                 $this->renderProduct();
-            } else {
-                ProductRenderer::renderNoProductFound();
             }
             ?>
         </div>
@@ -214,7 +231,13 @@ class ElementorShopAppRenderer extends ShopAppRenderer
 
     private function renderCardWithLayout(Product $product, $cursorAttr = '', $isFirst = false)
     {
-        $cardRender = new ProductCardRender($product, ['cursor' => $cursorAttr]);
+        $cardRender = new ProductCardRender(
+            $product,
+            [
+                'cursor' => $cursorAttr,
+                'price_format' => $this->priceFormat
+            ]
+        );
 
         $cursorData = '';
         if ($cursorAttr) {
@@ -226,13 +249,14 @@ class ElementorShopAppRenderer extends ShopAppRenderer
             $providerAttr = 'data-template-provider="elementor" data-fluent-client-id="' . esc_attr($this->clientId) . '"';
         }
         ?>
-        <article data-fluent-cart-shop-app-single-product data-fct-product-card=""
-                 class="fct-product-card"
-                <?php echo $cursorData; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-                <?php echo $providerAttr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-                 aria-label="<?php echo esc_attr(sprintf(
-                         __('%s product card', 'fluent-cart'), $product->post_title));
-                 ?>">
+        <article data-fluent-cart-shop-app-single-product data-fct-product-card="" class="fct-product-card" <?php echo $cursorData; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+            <?php echo $providerAttr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+            aria-label="
+    <?php echo esc_attr(sprintf(
+                __('%s product card', 'fluent-cart-elementor-blocks'),
+                $product->post_title
+            ));
+            ?>">
             <?php static::renderCardElements($cardRender, $this->cardElements); ?>
         </article>
         <?php

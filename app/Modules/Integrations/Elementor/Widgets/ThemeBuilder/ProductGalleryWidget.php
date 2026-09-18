@@ -23,12 +23,12 @@ class ProductGalleryWidget extends Widget_Base
 
     public function get_title()
     {
-        return esc_html__('Product Gallery', 'fluent-cart');
+        return esc_html__('Product Gallery', 'fluent-cart-elementor-blocks');
     }
 
     public function get_icon()
     {
-        return 'eicon-product-images';
+        return 'eicon-product-images fluent-cart-widget-icon';
     }
 
     public function get_categories()
@@ -41,59 +41,59 @@ class ProductGalleryWidget extends Widget_Base
         return ['product', 'gallery', 'images', 'photos', 'fluent'];
     }
 
+    /**
+     * Thumbnail mode passed to ProductRenderer::renderGallery(). Fixed at 'all'
+     * to match the Gutenberg (ProductGalleryBlockEditor) and Bricks
+     * (Elements\ProductGallery) integrations — no builder exposes this as a
+     * user-facing control.
+     */
+    const GALLERY_THUMBNAIL_MODE = 'all';
+
     public static function registerGalleryContentControls($widget)
     {
         $widget->add_control(
             'thumb_position',
             [
-                'label'   => esc_html__('Thumbnail Position', 'fluent-cart'),
+                'label'   => esc_html__('Thumbnail Position', 'fluent-cart-elementor-blocks'),
                 'type'    => Controls_Manager::SELECT,
                 'default' => 'bottom',
                 'options' => [
-                    'bottom' => esc_html__('Bottom', 'fluent-cart'),
-                    'left'   => esc_html__('Left', 'fluent-cart'),
-                    'right'  => esc_html__('Right', 'fluent-cart'),
-                    'top'    => esc_html__('Top', 'fluent-cart'),
+                    'bottom' => esc_html__('Bottom', 'fluent-cart-elementor-blocks'),
+                    'left'   => esc_html__('Left', 'fluent-cart-elementor-blocks'),
+                    'right'  => esc_html__('Right', 'fluent-cart-elementor-blocks'),
+                    'top'    => esc_html__('Top', 'fluent-cart-elementor-blocks'),
                 ],
             ]
         );
 
-        $widget->add_control(
-            'thumbnail_mode',
-            [
-                'label'   => esc_html__('Thumbnail Mode', 'fluent-cart'),
-                'type'    => Controls_Manager::SELECT,
-                'default' => 'all',
-                'options' => [
-                    'all'        => esc_html__('All', 'fluent-cart'),
-                    'horizontal' => esc_html__('Horizontal', 'fluent-cart'),
-                    'vertical'   => esc_html__('Vertical', 'fluent-cart'),
-                ],
-            ]
-        );
+        // No `thumbnail_mode` control. The renderer's only consumer of it is
+        // ImageGallery.js, which branches on 'all' vs not-'all' to decide whether
+        // thumbnails filter down to the selected variant — it has no notion of
+        // 'horizontal'/'vertical'. The Gutenberg and Bricks integrations both pin
+        // it to 'all'; Elementor now does the same via GALLERY_THUMBNAIL_MODE.
 
         $widget->add_control(
             'scrollable_thumbs',
             [
-                'label'        => esc_html__('Scrollable Thumbnails', 'fluent-cart'),
+                'label'        => esc_html__('Scrollable Thumbnails', 'fluent-cart-elementor-blocks'),
                 'type'         => Controls_Manager::SWITCHER,
-                'label_on'     => esc_html__('Yes', 'fluent-cart'),
-                'label_off'    => esc_html__('No', 'fluent-cart'),
+                'label_on'     => esc_html__('Yes', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('No', 'fluent-cart-elementor-blocks'),
                 'return_value' => 'yes',
                 'default'      => '',
-                'description'  => esc_html__('Enable scrolling when thumbnails exceed the main image dimensions.', 'fluent-cart'),
+                'description'  => esc_html__('Enable scrolling when thumbnails exceed the main image dimensions.', 'fluent-cart-elementor-blocks'),
             ]
         );
 
         $widget->add_control(
             'max_thumbnails',
             [
-                'label'       => esc_html__('Max Thumbnails', 'fluent-cart'),
+                'label'       => esc_html__('Max Thumbnails', 'fluent-cart-elementor-blocks'),
                 'type'        => Controls_Manager::NUMBER,
                 'min'         => 1,
                 'step'        => 1,
                 'default'     => '',
-                'description' => esc_html__('Leave empty for no limit. Excess images accessible via "See More" button.', 'fluent-cart'),
+                'description' => esc_html__('Leave empty for no limit. Excess images accessible via "See More" button.', 'fluent-cart-elementor-blocks'),
             ]
         );
     }
@@ -103,7 +103,7 @@ class ProductGalleryWidget extends Widget_Base
         $this->start_controls_section(
             'content_section',
             [
-                'label' => esc_html__('Content', 'fluent-cart'),
+                'label' => esc_html__('Content', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_CONTENT,
             ]
         );
@@ -121,7 +121,7 @@ class ProductGalleryWidget extends Widget_Base
         $product = $this->getProduct($settings);
 
         if (!$product) {
-            $this->renderPlaceholder(__('Please select a product or use this widget inside a product template.', 'fluent-cart'));
+            $this->renderPlaceholder(__('Please select a product or use this widget inside a product template.', 'fluent-cart-elementor-blocks'));
             return;
         }
 
@@ -132,7 +132,7 @@ class ProductGalleryWidget extends Widget_Base
         ob_start();
         $renderer->renderGallery([
             'thumb_position'    => $settings['thumb_position'] ?: 'bottom',
-            'thumbnail_mode'    => $settings['thumbnail_mode'] ?: 'all',
+            'thumbnail_mode'    => self::GALLERY_THUMBNAIL_MODE,
             'scrollable_thumbs' => !empty($settings['scrollable_thumbs']) ? 'yes' : 'no',
             'max_thumbnails'    => !empty($settings['max_thumbnails']) ? (int) $settings['max_thumbnails'] : null,
         ]);

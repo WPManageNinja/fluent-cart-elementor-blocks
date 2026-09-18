@@ -1,6 +1,15 @@
 (function($) {
     var initialized = false;
 
+    // Translated editor strings come from wp_localize_script (fluentCartElementor.i18n).
+    // The English argument is the fallback for the window where the global is
+    // not yet printed, so the control still renders a usable placeholder.
+    var getEditorString = function(key, fallback) {
+        var strings = (window.fluentCartElementor || {}).i18n || {};
+
+        return strings[key] || fallback;
+    };
+
     var initFluentProductSelectControl = function() {
         if (initialized) {
             return;
@@ -43,12 +52,18 @@
                     return;
                 }
 
+                // Destroy any Select2 instance Elementor auto-inited on .elementor-select2
+                // before we reinitialise with our own AJAX options.
+                if ($select.data('select2')) {
+                    $select.select2('destroy');
+                }
+
                 var isMultiple = this.model.get('multiple') !== false;
 
                 var options = {
                     allowClear: true,
                     multiple: isMultiple,
-                    placeholder: this.model.get('placeholder') || 'Search for products...',
+                    placeholder: this.model.get('placeholder') || getEditorString('searchProducts', 'Search for products...'),
                     dir: (window.elementorCommon && elementorCommon.config && elementorCommon.config.isRTL) ? 'rtl' : 'ltr',
                     ajax: {
                         url: fluentCartElementor.restUrl + 'products',
@@ -90,7 +105,12 @@
                         },
                         cache: true
                     },
-                    minimumInputLength: 1,
+                    // 0 (not 1) so opening the control immediately shows the
+                    // product list (the AJAX runs with an empty search term and
+                    // the products endpoint returns the latest published ones),
+                    // like the Gutenberg picker — instead of "enter 1 or more
+                    // characters". Typing still filters.
+                    minimumInputLength: 0,
                     templateResult: function(product) {
                         if (product.loading) {
                             return product.text;

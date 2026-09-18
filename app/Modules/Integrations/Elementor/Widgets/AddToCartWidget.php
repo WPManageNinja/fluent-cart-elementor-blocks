@@ -23,12 +23,12 @@ class AddToCartWidget extends Widget_Base
 
     public function get_title()
     {
-        return esc_html__('Add to Cart', 'fluent-cart');
+        return esc_html__('Add to Cart', 'fluent-cart-elementor-blocks');
     }
 
     public function get_icon()
     {
-        return 'eicon-cart';
+        return 'eicon-product-add-to-cart fluent-cart-widget-icon';
     }
 
     public function get_categories()
@@ -47,7 +47,7 @@ class AddToCartWidget extends Widget_Base
         $this->start_controls_section(
             'content_section',
             [
-                'label' => esc_html__('Content', 'fluent-cart'),
+                'label' => esc_html__('Content', 'fluent-cart-elementor-blocks'),
                 'tab' => Controls_Manager::TAB_CONTENT,
             ]
         );
@@ -55,12 +55,12 @@ class AddToCartWidget extends Widget_Base
         $this->add_control(
             'variant_id',
             [
-                'label' => esc_html__('Select Product Variation', 'fluent-cart'),
+                'label' => esc_html__('Select Product Variation', 'fluent-cart-elementor-blocks'),
                 'type' => (new ProductVariationSelectControl())->get_type(),
                 'label_block' => true,
-                'description' => esc_html__('Search and select the product variation.', 'fluent-cart'),
+                'description' => esc_html__('Search and select the product variation.', 'fluent-cart-elementor-blocks'),
                 'default' => '',
-                'placeholder' => esc_html__('Search for a variation...', 'fluent-cart'),
+                'placeholder' => esc_html__('Search for a variation...', 'fluent-cart-elementor-blocks'),
                 'query_params' => [
                         'subscription_status' => 'not_subscribable'
                 ]
@@ -70,10 +70,10 @@ class AddToCartWidget extends Widget_Base
         $this->add_control(
             'text',
             [
-                'label'       => esc_html__('Button Text', 'fluent-cart'),
+                'label'       => esc_html__('Button Text', 'fluent-cart-elementor-blocks'),
                 'type'        => Controls_Manager::TEXT,
-                'default'     => esc_html__('Add to Cart', 'fluent-cart'),
-                'placeholder' => esc_html__('Add to Cart', 'fluent-cart'),
+                'default'     => esc_html__('Add to Cart', 'fluent-cart-elementor-blocks'),
+                'placeholder' => esc_html__('Add to Cart', 'fluent-cart-elementor-blocks'),
                 'dynamic'     => [
                     'active' => true,
                 ],
@@ -86,7 +86,7 @@ class AddToCartWidget extends Widget_Base
         $this->start_controls_section(
             'style_section',
             [
-                'label' => esc_html__('Button Style', 'fluent-cart'),
+                'label' => esc_html__('Button Style', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
@@ -105,14 +105,14 @@ class AddToCartWidget extends Widget_Base
         $this->start_controls_tab(
             'tab_button_normal',
             [
-                'label' => esc_html__('Normal', 'fluent-cart'),
+                'label' => esc_html__('Normal', 'fluent-cart-elementor-blocks'),
             ]
         );
 
         $this->add_control(
             'button_text_color',
             [
-                'label'     => esc_html__('Text Color', 'fluent-cart'),
+                'label'     => esc_html__('Text Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .wp-block-button__link' => 'color: {{VALUE}};',
@@ -140,9 +140,13 @@ class AddToCartWidget extends Widget_Base
         $this->add_control(
             'button_border_radius',
             [
-                'label'      => esc_html__('Border Radius', 'fluent-cart'),
+                'label'      => esc_html__('Border Radius', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', '%', 'em'],
+                // No default: inherit WordPress core's button radius
+                // (:where(.wp-block-button__link){border-radius:9999px}) so the
+                // button matches the Gutenberg Add to Cart block out of the box.
+                // Setting a default here would override that pill. User-overridable.
                 'selectors'  => [
                     '{{WRAPPER}} .wp-block-button__link' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
                 ],
@@ -160,7 +164,7 @@ class AddToCartWidget extends Widget_Base
         $this->add_responsive_control(
             'button_padding',
             [
-                'label'      => esc_html__('Padding', 'fluent-cart'),
+                'label'      => esc_html__('Padding', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', 'em', '%'],
                 'selectors'  => [
@@ -172,7 +176,7 @@ class AddToCartWidget extends Widget_Base
         $this->add_responsive_control(
             'button_margin',
             [
-                'label'      => esc_html__('Margin', 'fluent-cart'),
+                'label'      => esc_html__('Margin', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', 'em', '%'],
                 'selectors'  => [
@@ -187,14 +191,14 @@ class AddToCartWidget extends Widget_Base
         $this->start_controls_tab(
             'tab_button_hover',
             [
-                'label' => esc_html__('Hover', 'fluent-cart'),
+                'label' => esc_html__('Hover', 'fluent-cart-elementor-blocks'),
             ]
         );
 
         $this->add_control(
             'button_hover_text_color',
             [
-                'label'     => esc_html__('Text Color', 'fluent-cart'),
+                'label'     => esc_html__('Text Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .wp-block-button__link:hover' => 'color: {{VALUE}};',
@@ -239,31 +243,20 @@ class AddToCartWidget extends Widget_Base
         $settings = $this->get_settings_for_display();
         $variantId = $settings['variant_id'];
 
-        if (empty($variantId)) {
-            if (\Elementor\Plugin::$instance->editor->is_edit_mode()) {
-                echo '<div class="fluent-cart-placeholder" style="text-align:center; padding: 20px; background: #f0f0f1; border: 1px dashed #ccc;">';
-                echo '<p>' . esc_html__('Please enter a Product Variant ID.', 'fluent-cart') . '</p>';
-                echo '</div>';
-            }
-            return;
-        }
-
-        $variation = ProductVariation::query()->find($variantId);
-
-
-        if (!$variation) {
-            if (\Elementor\Plugin::$instance->editor->is_edit_mode()) {
-                echo '<div class="fluent-cart-placeholder" style="text-align:center; padding: 20px; background: #f0f0f1; border: 1px dashed #ccc;">';
-                echo '<p>' . esc_html__('Invalid Variant ID. Product not found.', 'fluent-cart') . '</p>';
-                echo '</div>';
-            }
-            return;
-        }
-
-
-        $product = Product::query()->find($variation->post_id);
+        // No variant selected (or it no longer exists / its product is gone).
+        // Like core's Gutenberg Add to Cart block — which always renders the
+        // button and treats the variant as optional config — show the button
+        // anyway in the editor so the design is visible and every Style control
+        // has a target. The front end renders nothing: a button with no variant
+        // can't add anything to the cart.
+        $variation = !empty($variantId) ? ProductVariation::query()->find($variantId) : null;
+        $product = $variation ? Product::query()->find($variation->post_id) : null;
 
         if (!$product) {
+            if (\Elementor\Plugin::$instance->editor->is_edit_mode()) {
+                AssetLoader::loadAddToCartCss();
+                $this->renderFallbackButton($settings['text']);
+            }
             return;
         }
 
@@ -289,5 +282,24 @@ class AddToCartWidget extends Widget_Base
             ?>
         </div>
         <?php
+    }
+
+    /**
+     * Editor-only fallback button, shown when no valid variant is selected yet.
+     * Mirrors core's Gutenberg Add to Cart block, where the button always renders
+     * and the variant is optional config. Uses the same wp-block-button__link
+     * element the real button outputs so the Style controls apply. Non-functional
+     * until a variant is chosen.
+     *
+     * @param string $text
+     * @return void
+     */
+    private function renderFallbackButton($text)
+    {
+        $text = ($text !== null && $text !== '') ? $text : __('Add To Cart', 'fluent-cart-elementor-blocks');
+
+        echo '<div class="fluent-cart-elementor-add-to-cart">';
+        echo '<button type="button" class="wp-block-button__link wp-element-button"><span class="text">' . esc_html($text) . '</span></button>';
+        echo '</div>';
     }
 }

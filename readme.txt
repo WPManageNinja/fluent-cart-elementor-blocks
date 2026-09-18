@@ -2,9 +2,9 @@
 Contributors: wpmanageninja
 Tags: fluentcart, elementor, ecommerce, checkout, cart, shop
 Requires at least: 6.0
-Tested up to: 6.9
+Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.0.1
+Stable tag: 1.0.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Elementor Blocks for FluentCart lets you build checkout flows, cart interactions, and product layouts visually in Elementor while using FluentCart’s native commerce logic and assets.
@@ -84,6 +84,39 @@ Are FluentCart assets loaded automatically?
 Yes. Required CSS and JavaScript assets are enqueued automatically when widgets are rendered.
 
 == Changelog ==
+
+= 1.0.3 (August 20, 2026) =
+- Adds Template Library: 8 professionally designed store page templates (Shop, Single Product, Product Category, Cart, Checkout, Thank You, Customer Dashboard, Campaign Landing) seeded automatically into Elementor's Insert Template → My Templates modal with preview thumbnails.
+- Adds Version-gated template seeding that self-heals on every admin load, never duplicates items, updates plugin-seeded layouts in place on release upgrades, and never touches user-created templates.
+- Adds Cart widget: renders the full FluentCart cart (item rows, quantities, totals, empty state) with a Style tab for Item Row and Checkout Button.
+- Adds Order Receipt widget: real-order editor preview (latest order or a chosen Order ID, read-only), section show/hide toggles, custom confirmation title and message, custom action button texts, and a scoped Style tab (Confirmation, Headings, Paragraph, Links, Item Table, View Order Button).
+- Adds FluentCart short codes ({{order.customer.full_name}}, {{order.invoice_no}}, …) in the Order Receipt custom texts, with a {{:}} picker in the Message editor toolbar fed from core's short code registry.
+- Adds Customer Dashboard widget: renders the customer account area; the editor canvas presents core's loading skeleton as a labeled layout wireframe.
+- Adds Related Products widget Style tab: Heading, Grid (columns via core's CSS variable + gap), Card, Product Title, Price, and Button (covers Add To Cart, Buy Now and View Options variants).
+- Adds Product Info widget style coverage: Package Description section, Stock badge controls (per-state backgrounds, padding, radius), and independent Buy Now / Add To Cart button sections.
+- Adds Sale badge overlays to the product widgets: Sale badge on Product Card, Products, Product Carousel, Related Products, and Product Info.
+- Adds Sold Out badge on the Products widget when Allow Out Of Stock is enabled.
+- Changes The Products widget now automatically scopes to the current term on product category/brand archive pages — it lists only that category's or brand's products (previously the whole store) and hides that taxonomy's sidebar filter.
+
+= 1.0.2 (June 30, 2026) =
+- Adds `show_thumbnail` control to the Search Bar widget.
+- Adds Content controls to the Mini Cart widget.
+- Adds Product loader to the ShopApp widget and improves filter label customization.
+- Adds Lazy loading for Advanced Variation assets in widget rendering and editor preview.
+- Fixes The Show Icon toggle in the Customer Dashboard Button widget.
+- Fixes Missing CSS loading for the Customer Dashboard Button widget.
+- Fixes `price_format` formatting in the ShopApp widget.
+- Fixes Duplicate Select2 instances in ProductSelectControl.
+- Fixes The Store Logo widget not passing dimensions to the renderer.
+- Fixes Product widgets (Price, Stock, SKU, and Excerpt) not syncing with the selected variation.
+- Fixes Stale stock badges for variations without stock data.
+- Fixes Potential XSS in stock labels by using `textContent`.
+- Fixes Empty wrapper blocks when product fields have no content.
+- Removes Package type controls and output from the Product Package Description widget.
+- Removes Non-functional order controls from the ShopApp widget.
+- Cleans Widget labels, updates widget icons, and adds a FluentCart brand badge across all widgets.
+- Appends "(FluentCart)" to widget titles for better clarity in the Elementor panel.
+- Replaces The EU VAT field with a Business Details section in the Checkout widget.
 
 = 1.0.1 (May 13, 2026) =
 - Adds Product SKU widget for Elementor Theme Builder
