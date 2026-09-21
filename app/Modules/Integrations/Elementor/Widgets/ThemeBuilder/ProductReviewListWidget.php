@@ -146,6 +146,21 @@ class ProductReviewListWidget extends Widget_Base
             ]
         );
 
+        $this->add_control(
+            'content_max_words',
+            [
+                'label'       => esc_html__('Words shown', 'fluent-cart-elementor-blocks'),
+                'description' => esc_html__('Reviews show in full. Move the slider to cut longer ones down.', 'fluent-cart-elementor-blocks'),
+                'type'        => Controls_Manager::NUMBER,
+                'min'         => 0,
+                'max'         => 500,
+                'default'     => 0,
+                // Only a composed row carries a Review Content block of its
+                // own; core's storefront row prints the review in full.
+                'condition'   => ['row_layout' => 'custom'],
+            ]
+        );
+
         $this->end_controls_section();
 
         // ── Layout ────────────────────────────────────────
@@ -376,19 +391,6 @@ class ProductReviewListWidget extends Widget_Base
                 'type'      => Controls_Manager::COLOR,
                 'default'   => self::DEFAULT_STAR_COLOR,
                 'separator' => 'before',
-            ]
-        );
-
-        $this->add_control(
-            'content_max_words',
-            [
-                'label'       => esc_html__('Words shown', 'fluent-cart-elementor-blocks'),
-                'description' => esc_html__('Reviews show in full. Move the slider to cut longer ones down.', 'fluent-cart-elementor-blocks'),
-                'type'        => Controls_Manager::NUMBER,
-                'min'         => 0,
-                'max'         => 500,
-                'default'     => 0,
-                'condition'   => ['row_layout' => 'custom'],
             ]
         );
 
