@@ -318,14 +318,14 @@ class ProductReviewFormWidget extends Widget_Base
         $this->add_control(
             'layout',
             [
-                'label'       => esc_html__('Layout', 'fluent-cart-elementor-blocks'),
+                'label'       => esc_html__('Field Layout', 'fluent-cart-elementor-blocks'),
                 'type'        => Controls_Manager::SELECT,
                 'default'     => 'inline',
                 'options'     => [
-                    'inline' => esc_html__('All fields at once', 'fluent-cart-elementor-blocks'),
-                    'steps'  => esc_html__('Step by step', 'fluent-cart-elementor-blocks'),
+                    'inline' => esc_html__('Inline (all fields at once)', 'fluent-cart-elementor-blocks'),
+                    'steps'  => esc_html__('Steps (one at a time)', 'fluent-cart-elementor-blocks'),
                 ],
-                'description' => esc_html__('Step by step asks one question per screen, which suits a dedicated review page.', 'fluent-cart-elementor-blocks'),
+                'description' => esc_html__('Steps walks the reviewer through rating, details and photos. Inline shows every field at once.', 'fluent-cart-elementor-blocks'),
                 'separator'   => 'before',
             ]
         );

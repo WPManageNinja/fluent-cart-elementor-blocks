@@ -166,7 +166,7 @@ class ProductReviewListWidget extends Widget_Base
         $this->add_control(
             'view_mode',
             [
-                'label'   => esc_html__('View', 'fluent-cart-elementor-blocks'),
+                'label'   => esc_html__('View Mode', 'fluent-cart-elementor-blocks'),
                 'type'    => Controls_Manager::SELECT,
                 'default' => 'list',
                 'options' => [
@@ -194,7 +194,7 @@ class ProductReviewListWidget extends Widget_Base
         $this->add_control(
             'slider_arrows',
             [
-                'label'        => esc_html__('Arrows', 'fluent-cart-elementor-blocks'),
+                'label'        => esc_html__('Show arrows', 'fluent-cart-elementor-blocks'),
                 'type'         => Controls_Manager::SWITCHER,
                 'label_on'     => esc_html__('Show', 'fluent-cart-elementor-blocks'),
                 'label_off'    => esc_html__('Hide', 'fluent-cart-elementor-blocks'),
@@ -238,8 +238,9 @@ class ProductReviewListWidget extends Widget_Base
         $this->add_control(
             'slider_autoplay_delay',
             [
-                'label'     => esc_html__('Autoplay Delay (ms)', 'fluent-cart-elementor-blocks'),
-                'type'      => Controls_Manager::NUMBER,
+                'label'       => esc_html__('Autoplay Delay (ms)', 'fluent-cart-elementor-blocks'),
+                'description' => esc_html__('Time between slides in milliseconds', 'fluent-cart-elementor-blocks'),
+                'type'        => Controls_Manager::NUMBER,
                 'min'       => 1000,
                 'max'       => 30000,
                 'step'      => 500,
@@ -254,7 +255,7 @@ class ProductReviewListWidget extends Widget_Base
         $this->add_control(
             'slider_infinite',
             [
-                'label'        => esc_html__('Loop', 'fluent-cart-elementor-blocks'),
+                'label'        => esc_html__('Infinite loop', 'fluent-cart-elementor-blocks'),
                 'type'         => Controls_Manager::SWITCHER,
                 'label_on'     => esc_html__('Yes', 'fluent-cart-elementor-blocks'),
                 'label_off'    => esc_html__('No', 'fluent-cart-elementor-blocks'),
