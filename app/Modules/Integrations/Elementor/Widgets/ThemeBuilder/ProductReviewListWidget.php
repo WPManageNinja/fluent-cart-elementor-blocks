@@ -42,6 +42,7 @@ class ProductReviewListWidget extends Widget_Base
     const VIEW_MODES = ['list', 'grid', 'slider'];
     const SORT_COLUMNS = ['created_at', 'rating'];
     const SORT_ORDERS = ['DESC', 'ASC'];
+    const FALLBACK_SORT = 'created_at-DESC';
     const PAGINATION_TYPES = ['numbers', 'fraction', 'bullets'];
     const ARROW_SIZES = ['sm', 'md', 'lg'];
     const DEFAULT_STAR_COLOR = '#f59e0b';
@@ -128,27 +129,20 @@ class ProductReviewListWidget extends Widget_Base
         $this->registerProductSourceControls();
 
         $this->add_control(
-            'per_page',
-            [
-                'label'       => esc_html__('Reviews per Page', 'fluent-cart-elementor-blocks'),
-                'description' => esc_html__('0 uses the store setting.', 'fluent-cart-elementor-blocks'),
-                'type'        => Controls_Manager::NUMBER,
-                'min'         => 0,
-                'max'         => 100,
-                'default'     => 0,
-                'separator'   => 'before',
-            ]
-        );
-
-        $this->add_control(
             'min_rating',
             [
-                'label'       => esc_html__('Minimum Rating', 'fluent-cart-elementor-blocks'),
-                'description' => esc_html__('Show only reviews at or above this rating. 0 shows them all.', 'fluent-cart-elementor-blocks'),
-                'type'        => Controls_Manager::NUMBER,
-                'min'         => 0,
-                'max'         => 5,
-                'default'     => 0,
+                'label'       => esc_html__('Minimum rating', 'fluent-cart-elementor-blocks'),
+                'description' => esc_html__('Lower-rated reviews are left out of the list entirely, and the count and the pages follow.', 'fluent-cart-elementor-blocks'),
+                'type'        => Controls_Manager::SELECT,
+                'default'     => '0',
+                'options'     => [
+                    '0' => esc_html__('All ratings', 'fluent-cart-elementor-blocks'),
+                    '2' => esc_html__('2 stars and up', 'fluent-cart-elementor-blocks'),
+                    '3' => esc_html__('3 stars and up', 'fluent-cart-elementor-blocks'),
+                    '4' => esc_html__('4 stars and up', 'fluent-cart-elementor-blocks'),
+                    '5' => esc_html__('5 stars only', 'fluent-cart-elementor-blocks'),
+                ],
+                'separator'   => 'before',
             ]
         );
 
@@ -316,28 +310,12 @@ class ProductReviewListWidget extends Widget_Base
         );
 
         $this->add_control(
-            'default_sort_by',
+            'default_sort',
             [
-                'label'   => esc_html__('Sort By', 'fluent-cart-elementor-blocks'),
+                'label'   => esc_html__('Default Sort', 'fluent-cart-elementor-blocks'),
                 'type'    => Controls_Manager::SELECT,
-                'default' => 'created_at',
-                'options' => [
-                    'created_at' => esc_html__('Date', 'fluent-cart-elementor-blocks'),
-                    'rating'     => esc_html__('Rating', 'fluent-cart-elementor-blocks'),
-                ],
-            ]
-        );
-
-        $this->add_control(
-            'default_sort_order',
-            [
-                'label'   => esc_html__('Order', 'fluent-cart-elementor-blocks'),
-                'type'    => Controls_Manager::SELECT,
-                'default' => 'DESC',
-                'options' => [
-                    'DESC' => esc_html__('Newest / Highest first', 'fluent-cart-elementor-blocks'),
-                    'ASC'  => esc_html__('Oldest / Lowest first', 'fluent-cart-elementor-blocks'),
-                ],
+                'default' => self::FALLBACK_SORT,
+                'options' => static::sortChoices(),
             ]
         );
 
@@ -404,8 +382,8 @@ class ProductReviewListWidget extends Widget_Base
         $this->add_control(
             'content_max_words',
             [
-                'label'       => esc_html__('Trim Review Text', 'fluent-cart-elementor-blocks'),
-                'description' => esc_html__('Cut the review text to this many words. 0 shows all of it.', 'fluent-cart-elementor-blocks'),
+                'label'       => esc_html__('Words shown', 'fluent-cart-elementor-blocks'),
+                'description' => esc_html__('Reviews show in full. Move the slider to cut longer ones down.', 'fluent-cart-elementor-blocks'),
                 'type'        => Controls_Manager::NUMBER,
                 'min'         => 0,
                 'max'         => 500,
@@ -475,15 +453,27 @@ class ProductReviewListWidget extends Widget_Base
         $this->add_control(
             'pagination_type',
             [
-                'label'     => esc_html__('Style', 'fluent-cart-elementor-blocks'),
+                'label'     => esc_html__('Pagination Type', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::SELECT,
                 'default'   => 'numbers',
                 'options'   => [
                     'numbers'  => esc_html__('Numbers', 'fluent-cart-elementor-blocks'),
-                    'fraction' => esc_html__('Page X of Y', 'fluent-cart-elementor-blocks'),
+                    'fraction' => esc_html__('Fraction', 'fluent-cart-elementor-blocks'),
                     'bullets'  => esc_html__('Bullets', 'fluent-cart-elementor-blocks'),
                 ],
                 'condition' => ['show_pagination' => 'yes'],
+            ]
+        );
+
+        $this->add_control(
+            'per_page',
+            [
+                'label'       => esc_html__('Reviews Per Page', 'fluent-cart-elementor-blocks'),
+                'description' => esc_html__('0 uses the store setting.', 'fluent-cart-elementor-blocks'),
+                'type'        => Controls_Manager::NUMBER,
+                'min'         => 0,
+                'max'         => 100,
+                'default'     => 0,
             ]
         );
 
@@ -663,6 +653,76 @@ class ProductReviewListWidget extends Widget_Base
         return $this->block('fluent-cart/product-review-list', $attributes, $children);
     }
 
+
+    /**
+     * The sorts the storefront actually offers.
+     *
+     * Core keeps one filterable list behind 'fluent_cart/review/sort_options',
+     * so a store that adds a sort gets it here and in the block's dropdown
+     * from the same place. A core too old to expose the list still knows the
+     * four it ships with.
+     *
+     * @return array<string, string>
+     */
+    protected static function sortChoices(): array
+    {
+        $source = 'FluentCart\\App\\Hooks\\Handlers\\BlockEditors\\ProductReviewList\\InnerBlocks\\InnerBlocks';
+
+        if (class_exists($source) && method_exists($source, 'sortOptions')) {
+            $options = call_user_func([$source, 'sortOptions']);
+
+            if (is_array($options) && $options) {
+                return array_map('strval', $options);
+            }
+        }
+
+        return [
+            'created_at-DESC' => esc_html__('Newest', 'fluent-cart-elementor-blocks'),
+            'created_at-ASC'  => esc_html__('Oldest', 'fluent-cart-elementor-blocks'),
+            'rating-DESC'     => esc_html__('Highest Rating', 'fluent-cart-elementor-blocks'),
+            'rating-ASC'      => esc_html__('Lowest Rating', 'fluent-cart-elementor-blocks'),
+        ];
+    }
+
+    /**
+     * The chosen sort as the column and order the list block asks for.
+     *
+     * A sort key is 'column-ORDER', and the order is the tail, so a column
+     * carrying a dash of its own still splits correctly. Widgets saved before
+     * the two selects became one keep working from what they stored.
+     *
+     * @return array{0: string, 1: string}
+     */
+    protected function defaultSort(array $settings): array
+    {
+        $key = (string) ($settings['default_sort'] ?? '');
+
+        if ($key === '' || !array_key_exists($key, static::sortChoices())) {
+            $legacyBy = $this->pick($settings, 'default_sort_by', self::SORT_COLUMNS, '');
+            $legacyOrder = $this->pick($settings, 'default_sort_order', self::SORT_ORDERS, '');
+
+            if ($legacyBy && $legacyOrder) {
+                return [$legacyBy, $legacyOrder];
+            }
+
+            $key = self::FALLBACK_SORT;
+        }
+
+        $cut = strrpos($key, '-');
+
+        if ($cut === false) {
+            return ['created_at', 'DESC'];
+        }
+
+        $column = substr($key, 0, $cut);
+        $order = strtoupper(substr($key, $cut + 1));
+
+        return [
+            $column !== '' ? $column : 'created_at',
+            in_array($order, self::SORT_ORDERS, true) ? $order : 'DESC',
+        ];
+    }
+
     /**
      * The list block's own attributes, shared by both layouts.
      *
@@ -671,6 +731,8 @@ class ProductReviewListWidget extends Widget_Base
      */
     protected function listAttributes($productId, array $settings): array
     {
+        list($sortBy, $sortOrder) = $this->defaultSort($settings);
+
         return [
             // The widget has already resolved the product, including the
             // editor's preview fallback, so the block is told which one
@@ -682,8 +744,8 @@ class ProductReviewListWidget extends Widget_Base
             'gridColumns'      => max(1, min(6, absint($settings['grid_columns'] ?? 2))),
             'sliderSettings'   => $this->sliderSettings($settings),
             'showSortControls' => $this->isOn($settings, 'show_sorting'),
-            'defaultSortBy'    => $this->pick($settings, 'default_sort_by', self::SORT_COLUMNS, 'created_at'),
-            'defaultSortOrder' => $this->pick($settings, 'default_sort_order', self::SORT_ORDERS, 'DESC'),
+            'defaultSortBy'    => $sortBy,
+            'defaultSortOrder' => $sortOrder,
             'perPage'          => max(0, min(100, absint($settings['per_page'] ?? 0))),
         ];
     }
