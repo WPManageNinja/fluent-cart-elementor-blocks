@@ -284,6 +284,9 @@ class ProductReviewListWidget extends Widget_Base
                 'label_off'    => esc_html__('Hide', 'fluent-cart-elementor-blocks'),
                 'return_value' => 'yes',
                 'default'      => 'yes',
+                // Core's own header always prints the count; only a header
+                // composed from blocks can leave it out.
+                'condition'    => ['row_layout' => 'custom'],
             ]
         );
 
@@ -460,6 +463,11 @@ class ProductReviewListWidget extends Widget_Base
                 'label_off'    => esc_html__('Hide', 'fluent-cart-elementor-blocks'),
                 'return_value' => 'yes',
                 'default'      => 'yes',
+                // Core draws a pager as soon as there is a second page and
+                // offers no way to suppress it, so this can only mean
+                // something when the pager is a block of its own.
+                'condition'    => ['row_layout' => 'custom'],
+                'separator'    => 'after',
             ]
         );
 
@@ -498,7 +506,21 @@ class ProductReviewListWidget extends Widget_Base
                         'icon'  => 'eicon-text-align-right',
                     ],
                 ],
-                'condition' => ['show_pagination' => 'yes'],
+                'condition' => [
+                    'show_pagination' => 'yes',
+                    // Alignment rides on the pager block's own attribute.
+                    'row_layout'      => 'custom',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'pagination_note',
+            [
+                'type'            => Controls_Manager::RAW_HTML,
+                'raw'             => esc_html__('The standard layout paginates as soon as there is a second page, and FluentCart offers no way to turn that off. Pick Choose fields to control it.', 'fluent-cart-elementor-blocks'),
+                'content_classes' => 'elementor-descriptor',
+                'condition'       => ['row_layout' => 'standard'],
             ]
         );
 
@@ -694,9 +716,7 @@ class ProductReviewListWidget extends Widget_Base
             'showFilterChips'   => $this->isOn($settings, 'show_filter'),
             'starColor'         => sanitize_hex_color((string) ($settings['star_color'] ?? '')) ?: self::DEFAULT_STAR_COLOR,
             'minRating'         => max(0, min(5, absint($settings['min_rating'] ?? 0))),
-            'paginationType'    => $this->isOn($settings, 'show_pagination')
-                ? $this->pick($settings, 'pagination_type', self::PAGINATION_TYPES, 'numbers')
-                : 'numbers',
+            'paginationType'    => $this->pick($settings, 'pagination_type', self::PAGINATION_TYPES, 'numbers'),
         ];
     }
 

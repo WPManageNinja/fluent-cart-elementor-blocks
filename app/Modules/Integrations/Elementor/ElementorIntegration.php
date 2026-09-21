@@ -98,6 +98,13 @@ class ElementorIntegration
         // Same contract the Divi addon implements.
         \add_filter('fluent_cart/template/disable_taxonomy_fallback', [$this, 'deferToThemeBuilderArchive']);
 
+        // One review section per page, whichever way the page was built.
+        // Deliberately NOT inside registerThemeBuilderIntegration(): a product
+        // edited directly with free Elementor carries its own document, which
+        // documentsForCurrentRequest() reads, and would otherwise show core's
+        // auto-appended section alongside the widget's.
+        \add_action('template_redirect', [$this, 'preventDuplicateProductReviews'], 20);
+
         // Theme Builder integration (requires Elementor Pro or ProElements).
         // Deferred to after_setup_theme: this method runs on fluentcart_loaded
         // (inside plugins_loaded), and ProElements — which shares the ElementorPro
@@ -124,9 +131,6 @@ class ElementorIntegration
 
         // Disable FluentCart core's auto single product rendering when a Theme Builder template is active
         \add_filter('fluent_cart/disable_auto_single_product_page', [$this, 'maybeDisableAutoSingleProduct']);
-
-        // One review section per page, whichever way the page was built.
-        \add_action('template_redirect', [$this, 'preventDuplicateProductReviews'], 20);
     }
 
     public function registerCategories($elements_manager)
