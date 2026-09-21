@@ -6,6 +6,8 @@ use Elementor\Controls_Manager;
 use Elementor\Repeater;
 use Elementor\Widget_Base;
 use FluentCart\App\Modules\Templating\AssetLoader;
+use FluentCart\App\App;
+use FluentCart\App\Vite;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ReviewStyleControls;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ThemeBuilder\Traits\ReviewWidgetTrait;
 
@@ -97,8 +99,46 @@ class ProductReviewListWidget extends Widget_Base
     public function get_style_depends()
     {
         AssetLoader::loadSingleProductAssets();
+        static::registerSliderAssets();
 
         return [];
+    }
+
+    /**
+     * Swiper, ahead of any slider that might need it.
+     *
+     * Core loads it while drawing a slider, which is in time for a page but
+     * not for the editor: a list drawn in list view never loads it, so
+     * switching to slider view afterwards leaves the rows stacked with no
+     * script to build them. Registering it with the widget means it is always
+     * there before the first re-render.
+     */
+    public function get_script_depends()
+    {
+        // A class method wins over the trait's, so the shared re-init handler
+        // is named here rather than inherited.
+        static::registerReviewEditorScript();
+        static::registerSliderAssets();
+
+        return [
+            'fluentcart-product-reviews-elementor',
+            App::getInstance()->config->get('app.slug') . '-fluentcart-swiper-js',
+        ];
+    }
+
+    protected static function registerSliderAssets(): void
+    {
+        static $registered = false;
+
+        if ($registered) {
+            return;
+        }
+
+        $registered = true;
+        $slug = App::getInstance()->config->get('app.slug');
+
+        Vite::enqueueStaticScript($slug . '-fluentcart-swiper-js', 'public/lib/swiper/swiper-bundle.min.js', []);
+        Vite::enqueueStaticStyle($slug . '-fluentcart-swiper-css', 'public/lib/swiper/swiper-bundle.min.css');
     }
 
     protected function fieldLabels(): array

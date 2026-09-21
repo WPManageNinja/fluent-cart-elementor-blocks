@@ -3,6 +3,7 @@
 namespace FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ThemeBuilder\Traits;
 
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support\ReviewSupport;
+use FluentCartElementorBlocks\App\Utils\Enqueuer\Enqueue;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -34,6 +35,37 @@ trait ReviewWidgetTrait
         }
 
         return $this->productShowInPanel();
+    }
+
+    /**
+     * Core binds its review containers on DOM ready, which the editor is long
+     * past by the time it replaces a widget's markup. This is what re-binds
+     * the replacement, so a list switched to slider view actually becomes one.
+     */
+    public function get_script_depends()
+    {
+        static::registerReviewEditorScript();
+
+        return ['fluentcart-product-reviews-elementor'];
+    }
+
+    protected static function registerReviewEditorScript(): void
+    {
+        static $registered = false;
+
+        if ($registered) {
+            return;
+        }
+
+        $registered = true;
+
+        Enqueue::script(
+            'fluentcart-product-reviews-elementor',
+            'elementor/product-reviews-elementor.js',
+            ['jquery'],
+            FLUENTCART_ELEMENTOR_BLOCKS_VERSION,
+            true
+        );
     }
 
     /**
