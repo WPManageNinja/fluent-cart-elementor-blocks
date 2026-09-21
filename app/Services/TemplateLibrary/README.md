@@ -45,7 +45,7 @@ folders — a slug listed here **must** have a matching `<slug>/` folder.
 | `title`            | Shown on the library card and as the seeded post title.                 |
 | `type`             | Elementor template type → the `elementor_library_type` term. `page` for full pages. |
 | `category`         | Branded grouping label — `FluentCart` for all bundled templates, so they group under one filter (the optional `elementor_library_category` term). The specific page is carried by `title`. |
-| `template_version` | Bump this when the layout changes so installed copies re-seed.          |
+| `template_version` | Bump this when the layout changes. It stamps newly seeded copies; it does **not** rewrite a copy already in the library — see below. |
 | `preview`          | Bare WebP filename inside this template's own folder (e.g. `preview.webp`). |
 
 ## `<slug>/template.json` (the payload)
@@ -79,3 +79,22 @@ remaps bundled image references and writes the correctly-slashed
 
 > The `template.json` files in this scaffold are **placeholders** (empty
 > `content`) — real layouts are authored per page in follow-up PRs.
+
+
+## A seeded template is the merchant's
+
+The seeder creates a template that is missing and leaves one that is present
+exactly as it is, whatever version it carries.
+
+It used to overwrite an installed copy in place whenever the bundled one was
+newer. That meant a plugin update could put widgets onto a layout somebody was
+already using, or quietly undo edits they had made to a seeded copy. A template
+set is a starting point, not something the plugin keeps rewriting underneath
+them.
+
+So a newer bundled layout reaches a merchant only when they ask for it: delete
+the library item and the next admin load seeds the current one. Nothing changes
+without being asked for, and nothing is lost by waiting.
+
+The preview image is the one exception. It describes the item rather than being
+part of it, and a release can add one to a template that shipped without.

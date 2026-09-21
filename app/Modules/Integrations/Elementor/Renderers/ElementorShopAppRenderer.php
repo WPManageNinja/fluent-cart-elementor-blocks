@@ -283,6 +283,16 @@ class ElementorShopAppRenderer extends ShopAppRenderer
                 case 'price':
                     $cardRender->renderPrices();
                     break;
+                case 'rating':
+                    // Core gates this on the store's Show Rating In Shop
+                    // setting and on the product having reviews, so an
+                    // unrated product simply draws nothing. Guarded on the
+                    // method so a core without the review feature does not
+                    // fatal here.
+                    if (method_exists($cardRender, 'renderStarRating')) {
+                        $cardRender->renderStarRating();
+                    }
+                    break;
                 case 'button':
                     $cardRender->showBuyButton();
                     break;

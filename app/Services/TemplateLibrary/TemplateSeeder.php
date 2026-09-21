@@ -66,23 +66,25 @@ class TemplateSeeder
         $existing = self::findOwnItem($template['slug']);
 
         if ($existing) {
-            $installed = (string) get_post_meta($existing, self::META_VERSION, true);
-
-            // Version-aware: only replace when the bundled copy is strictly newer.
-            if ($installed !== '' && version_compare($template['version'], $installed, '<=')) {
-                // Still ensure the preview — it may have been added or changed in
-                // a later plugin version than the layout itself, or the image
-                // file may have changed without a template_version bump.
-                self::ensureThumbnail($existing, $template);
-                return 'skipped';
-            }
-
-            if (!self::update($existing, $template)) {
-                return 'failed';
-            }
-
+            // A template already in the library is the merchant's, and is left
+            // exactly as it is — including when the bundled copy is newer.
+            //
+            // It used to be overwritten in place on any version bump, which
+            // meant a plugin update could put widgets onto a layout somebody
+            // was already using, or undo edits they had made to a seeded copy.
+            // A template set is a starting point, not something the plugin
+            // keeps rewriting underneath them.
+            //
+            // The newer layout is still available: delete the library item and
+            // the next admin load seeds the current one. Nothing is lost by
+            // waiting, and nothing changes without being asked for.
+            //
+            // The preview image is the one exception, because it describes the
+            // item rather than being part of it, and a release can add one to a
+            // template that shipped without.
             self::ensureThumbnail($existing, $template);
-            return 'updated';
+
+            return 'skipped';
         }
 
         $postId = self::create($template);
@@ -169,73 +171,6 @@ class TemplateSeeder
         self::applyCategory($postId, $template['category']);
 
         return $postId;
-    }
-
-    /**
-     * Update an existing owned item in place — rewrite its element tree and
-     * bump the stored version.
-     *
-     * @param int   $postId
-     * @param array $template
-     * @return bool
-     */
-    private static function update($postId, array $template)
-    {
-        // Re-verify ownership before mutating. update() is only reached for
-        // items carrying our marker, but never trust that blindly.
-        if ((string) get_post_meta($postId, self::META_SLUG, true) !== $template['slug']) {
-            return false;
-        }
-
-        $document = ElementorPlugin::$instance->documents->get($postId);
-        if (!$document) {
-            return false;
-        }
-
-        // save() re-encodes + wp_slash's the element tree into _elementor_data.
-        // It returns false when the write did NOT happen (e.g. the document
-        // isn't editable by the current user). Bail before stamping the version:
-        // otherwise a failed write would still bump the installed-version meta,
-        // the gate would advance, and the stale content would never be repaired
-        // — a failed partial update marked complete.
-        if (!$document->save([
-            'elements' => $template['content'],
-            'settings' => $template['page_settings'],
-        ])) {
-            return false;
-        }
-
-        // Title may have changed between versions. wp_update_post unslashes, so
-        // pass it slashed. A failure here also aborts before the version stamp.
-        $updated = wp_update_post([
-            'ID'         => $postId,
-            'post_title' => wp_slash($template['title']),
-        ], true);
-
-        if (is_wp_error($updated) || !$updated) {
-            return false;
-        }
-
-        // Page settings are part of the authored template — persist and verify
-        // them BEFORE the version stamp, so a failed write leaves the item
-        // unstamped and the next pass repairs it instead of skipping it.
-        if (!self::persistPageSettings($postId, $template)) {
-            return false;
-        }
-
-        // Stamp the version LAST — its presence is what marks the item fully
-        // updated. If the markers don't persist, fail so the gate stays behind
-        // and the next admin load retries (idempotently) rather than recording
-        // the item as updated with a stale/missing version.
-        if (!self::stampOwnership($postId, $template)) {
-            return false;
-        }
-
-        // Category is cosmetic (admin filter only), so it runs after the version
-        // stamp and never fails the update.
-        self::applyCategory($postId, $template['category']);
-
-        return true;
     }
 
     /**
