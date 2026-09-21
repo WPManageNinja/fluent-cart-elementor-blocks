@@ -44,7 +44,7 @@ Three groups, because this widget draws three things:
 |---|---|
 | Rating Summary | `ProductReviewSummaryWidget::registerSummaryStyleControls()` |
 | Write a Review Button | `WriteAReviewButtonWidget::registerCtaStyleControls()` |
-| The eight list sections | `ReviewStyleControls::register($this, false)` |
+| The eight list sections | `ReviewStyleControls::registerReviewStyleControls($this, false)` |
 
 `false` is load-bearing: this widget always draws core's default section, which
 is **list view only**, so the Grid & Slider Gap control would be a control that

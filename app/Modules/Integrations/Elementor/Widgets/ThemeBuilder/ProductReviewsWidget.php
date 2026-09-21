@@ -117,7 +117,7 @@ class ProductReviewsWidget extends Widget_Base
 
         // false: this widget always draws core's default section, which is
         // list view, so a grid or slider gap control would never apply.
-        ReviewStyleControls::register($this, false);
+        ReviewStyleControls::registerReviewStyleControls($this, false);
     }
 
     protected function render()
