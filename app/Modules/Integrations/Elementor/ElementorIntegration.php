@@ -743,10 +743,13 @@ class ElementorIntegration
 
         $productId = isset($settings['product_id']) ? absint($settings['product_id']) : 0;
 
-        // A custom source with nothing chosen falls back to the current
-        // product in the widget itself, so it replaces this section too.
+        // A custom source with nothing chosen draws nothing at all:
+        // ProductWidgetTrait::getProduct() returns null for it rather than
+        // falling back to the current product. Counting it would take core's
+        // section off a page that then renders no reviews of its own — the
+        // page losing its reviews instead of losing a duplicate.
         if (!$productId) {
-            return true;
+            return false;
         }
 
         return $productId === (int) \get_the_ID();
