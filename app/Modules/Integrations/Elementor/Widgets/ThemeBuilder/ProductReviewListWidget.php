@@ -5,7 +5,6 @@ namespace FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\T
 use Elementor\Controls_Manager;
 use Elementor\Repeater;
 use Elementor\Widget_Base;
-use FluentCart\App\Hooks\Handlers\BlockEditors\ProductReviewList\InnerBlocks\InnerBlocks;
 use FluentCart\App\Modules\Templating\AssetLoader;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ReviewStyleControls;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ThemeBuilder\Traits\ReviewWidgetTrait;
@@ -677,34 +676,35 @@ class ProductReviewListWidget extends Widget_Base
 
 
     /**
-     * The sorts the storefront actually offers.
+     * The sorts this widget offers.
      *
-     * Core keeps one filterable list behind 'fluent_cart/review/sort_options',
-     * so a store that adds a sort gets it here and in the block's dropdown
-     * from the same place. A core too old to expose the list still knows the
-     * four it ships with.
+     * The widget's own list, not core's: the four the storefront ships with,
+     * written here in this plugin's words so the panel does not depend on a
+     * core class existing or on how core happens to spell them.
+     *
+     * Still run through the storefront's sort filter, because the renderer
+     * runs the dropdown through the same one. A store or Pro that adds a sort
+     * — Most Helpful arrives this way — would otherwise be offering the
+     * shopper an order the widget has no way to open on.
      *
      * @return array<string, string>
      */
     public static function sortChoices(): array
     {
-        // Not part of ReviewSupport's required API on purpose: a core that
-        // carries reviews but not this list is not a core the widgets should
-        // disappear on. It simply falls back to the four sorts core ships.
-        if (class_exists(InnerBlocks::class) && method_exists(InnerBlocks::class, 'sortOptions')) {
-            $options = InnerBlocks::sortOptions();
-
-            if (is_array($options) && $options) {
-                return array_map('strval', $options);
-            }
-        }
-
-        return [
+        $choices = [
             'created_at-DESC' => esc_html__('Newest', 'fluent-cart-elementor-blocks'),
             'created_at-ASC'  => esc_html__('Oldest', 'fluent-cart-elementor-blocks'),
             'rating-DESC'     => esc_html__('Highest Rating', 'fluent-cart-elementor-blocks'),
             'rating-ASC'      => esc_html__('Lowest Rating', 'fluent-cart-elementor-blocks'),
         ];
+
+        $filtered = apply_filters('fluent_cart/review/sort_options', $choices);
+
+        if (!is_array($filtered) || !$filtered) {
+            return $choices;
+        }
+
+        return array_map('strval', $filtered);
     }
 
     /**
