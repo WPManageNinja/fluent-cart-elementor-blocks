@@ -41,6 +41,7 @@ use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ThemeBu
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ThemeBuilder\WriteAReviewButtonWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ThemeBuilder\ProductReviewFormWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ThemeBuilder\ProductReviewListWidget;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ThemeBuilder\ProductReviewsWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Documents\FluentCartProduct;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Documents\FluentCartProductPost;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Conditions\FluentCartCondition;
@@ -155,6 +156,7 @@ class ElementorIntegration
         $widgets_manager->register(new WriteAReviewButtonWidget());
         $widgets_manager->register(new ProductReviewFormWidget());
         $widgets_manager->register(new ProductReviewListWidget());
+        $widgets_manager->register(new ProductReviewsWidget());
     }
 
     public function registerControls($controls_manager)

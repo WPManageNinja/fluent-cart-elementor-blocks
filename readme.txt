@@ -85,6 +85,11 @@ Yes. Required CSS and JavaScript assets are enqueued automatically when widgets 
 
 == Changelog ==
 
+= 1.1.0 =
+- Adds six Product Review widgets: Product Reviews (the whole section), Product Review List, Review Summary, Review Form, Write a Review Button and Product Rating. Each mirrors its FluentCart block, so a page built in Elementor and a page built in the editor draw the same markup.
+- Adds field-by-field control of the review row: reorder or remove the avatar, reviewer name, verified badge, variation, stars, date, title, text, photos, helpful votes and store reply, with list, grid and slider views, star filter chips, sorting and pagination.
+- Adds reviews to the bundled Single Product template, between the product info and the related products.
+
 = 1.0.3 (August 20, 2026) =
 - Adds Template Library: 8 professionally designed store page templates (Shop, Single Product, Product Category, Cart, Checkout, Thank You, Customer Dashboard, Campaign Landing) seeded automatically into Elementor's Insert Template → My Templates modal with preview thumbnails.
 - Adds Version-gated template seeding that self-heals on every admin load, never duplicates items, updates plugin-seeded layouts in place on release upgrades, and never touches user-created templates.
