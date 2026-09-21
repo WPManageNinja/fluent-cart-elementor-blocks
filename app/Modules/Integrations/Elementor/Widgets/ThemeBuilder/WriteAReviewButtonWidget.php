@@ -223,15 +223,15 @@ class WriteAReviewButtonWidget extends Widget_Base
         $this->add_control(
             'container',
             [
-                'label'       => esc_html__('Opens In', 'fluent-cart-elementor-blocks'),
+                'label'       => esc_html__('Open In', 'fluent-cart-elementor-blocks'),
                 'type'        => Controls_Manager::SELECT,
                 'default'     => 'drawer',
                 'options'     => [
-                    'drawer' => esc_html__('Drawer', 'fluent-cart-elementor-blocks'),
-                    'modal'  => esc_html__('Modal', 'fluent-cart-elementor-blocks'),
-                    'link'   => esc_html__('Link to a page', 'fluent-cart-elementor-blocks'),
+                    'drawer' => esc_html__('Drawer (slides in from the side)', 'fluent-cart-elementor-blocks'),
+                    'modal'  => esc_html__('Modal (centered on the screen)', 'fluent-cart-elementor-blocks'),
+                    'link'   => esc_html__('Link (open another page)', 'fluent-cart-elementor-blocks'),
                 ],
-                'description' => esc_html__('Drawer and Modal carry the form behind the button. Link sends the reviewer to a page that holds the Review Form widget.', 'fluent-cart-elementor-blocks'),
+                'description' => esc_html__('Where the form appears when the button is clicked.', 'fluent-cart-elementor-blocks'),
                 'separator'   => 'before',
             ]
         );
@@ -239,14 +239,15 @@ class WriteAReviewButtonWidget extends Widget_Base
         $this->add_control(
             'layout',
             [
-                'label'     => esc_html__('Form Layout', 'fluent-cart-elementor-blocks'),
-                'type'      => Controls_Manager::SELECT,
-                'default'   => 'inline',
-                'options'   => [
-                    'inline' => esc_html__('All fields at once', 'fluent-cart-elementor-blocks'),
-                    'steps'  => esc_html__('Step by step', 'fluent-cart-elementor-blocks'),
+                'label'       => esc_html__('Field Layout', 'fluent-cart-elementor-blocks'),
+                'type'        => Controls_Manager::SELECT,
+                'default'     => 'inline',
+                'options'     => [
+                    'inline' => esc_html__('Inline (all fields at once)', 'fluent-cart-elementor-blocks'),
+                    'steps'  => esc_html__('Steps (one at a time)', 'fluent-cart-elementor-blocks'),
                 ],
-                'condition' => [
+                'description' => esc_html__('Steps walks the reviewer through rating, details and photos. Inline shows every field at once.', 'fluent-cart-elementor-blocks'),
+                'condition'   => [
                     'container!' => 'link',
                 ],
             ]
@@ -259,6 +260,7 @@ class WriteAReviewButtonWidget extends Widget_Base
                 'type'        => Controls_Manager::URL,
                 'options'     => ['is_external', 'nofollow'],
                 'placeholder' => esc_html__('https://example.com/write-a-review/', 'fluent-cart-elementor-blocks'),
+                'description' => esc_html__('Where the button sends the visitor. Without one the button is not rendered.', 'fluent-cart-elementor-blocks'),
                 'condition'   => [
                     'container' => 'link',
                 ],
@@ -281,24 +283,33 @@ class WriteAReviewButtonWidget extends Widget_Base
                 'label'       => esc_html__('New Review', 'fluent-cart-elementor-blocks'),
                 'type'        => Controls_Manager::TEXT,
                 'placeholder' => esc_html__('Write a Review', 'fluent-cart-elementor-blocks'),
+                'description' => esc_html__('Shown when the visitor has not reviewed this product yet', 'fluent-cart-elementor-blocks'),
             ]
         );
 
         $this->add_control(
             'edit_review_button_text',
             [
-                'label'       => esc_html__('Already Reviewed', 'fluent-cart-elementor-blocks'),
+                'label'       => esc_html__('Edit Review', 'fluent-cart-elementor-blocks'),
                 'type'        => Controls_Manager::TEXT,
-                'placeholder' => esc_html__('Edit Your Review', 'fluent-cart-elementor-blocks'),
+                'placeholder' => esc_html__('Edit your review', 'fluent-cart-elementor-blocks'),
+                'description' => esc_html__('Shown when the visitor already has a review for this product', 'fluent-cart-elementor-blocks'),
+                'condition'   => [
+                    'container!' => 'link',
+                ],
             ]
         );
 
         $this->add_control(
             'login_review_button_text',
             [
-                'label'       => esc_html__('Needs to Log In', 'fluent-cart-elementor-blocks'),
+                'label'       => esc_html__('Logged Out', 'fluent-cart-elementor-blocks'),
                 'type'        => Controls_Manager::TEXT,
                 'placeholder' => esc_html__('Log in to Review', 'fluent-cart-elementor-blocks'),
+                'description' => esc_html__('Shown when a visitor must log in before reviewing', 'fluent-cart-elementor-blocks'),
+                'condition'   => [
+                    'container!' => 'link',
+                ],
             ]
         );
 
