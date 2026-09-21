@@ -9,7 +9,7 @@ The review form itself, inline on the page, with no button in front of it. Mirro
 **Icon:** `eicon-form-horizontal fluent-cart-widget-icon`
 **Requires:** a FluentCart with the review feature; Product Reviews module on
 
-The only difference from the Write a Review Button widget is one renderer option: `container => 'none'`. That is what makes this the form rather than a trigger — no CTA is drawn and nothing is hidden behind an overlay. It is what a dedicated review page is built from, which is also where the Button widget's link mode sends people.
+The only difference from the Write a Review Button widget is one renderer option: `container => 'none'`. That is what makes this the form rather than a trigger — no CTA is drawn and nothing is hidden behind an overlay. It is what a dedicated review page is built from.
 
 ---
 

@@ -19,17 +19,16 @@ if (!defined('ABSPATH')) {
  *
  * Mirrors the fluent-cart/write-a-review-button block. The button always
  * renders, because it is the widget's whole purpose; what sits behind it is
- * the Container setting. In link mode there is no overlay at all — the form
- * lives at the other end of the link, which is how a store sends reviewers to
- * one dedicated page.
+ * the Open In setting, a drawer or a modal. The form always travels with the
+ * button: to send reviewers to a page of their own, put the Review Form
+ * widget on that page and link to it with an ordinary button.
  */
 class WriteAReviewButtonWidget extends Widget_Base
 {
     use ReviewWidgetTrait;
 
-    const CONTAINERS = ['drawer', 'modal', 'link'];
+    const CONTAINERS = ['drawer', 'modal'];
     const LAYOUTS = ['inline', 'steps'];
-    const LINK_TARGETS = ['self', 'blank'];
 
     public function get_name()
     {
@@ -229,7 +228,6 @@ class WriteAReviewButtonWidget extends Widget_Base
                 'options'     => [
                     'drawer' => esc_html__('Drawer (slides in from the side)', 'fluent-cart-elementor-blocks'),
                     'modal'  => esc_html__('Modal (centered on the screen)', 'fluent-cart-elementor-blocks'),
-                    'link'   => esc_html__('Link (open another page)', 'fluent-cart-elementor-blocks'),
                 ],
                 'description' => esc_html__('Where the form appears when the button is clicked.', 'fluent-cart-elementor-blocks'),
                 'separator'   => 'before',
@@ -247,23 +245,6 @@ class WriteAReviewButtonWidget extends Widget_Base
                     'steps'  => esc_html__('Steps (one at a time)', 'fluent-cart-elementor-blocks'),
                 ],
                 'description' => esc_html__('Steps walks the reviewer through rating, details and photos. Inline shows every field at once.', 'fluent-cart-elementor-blocks'),
-                'condition'   => [
-                    'container!' => 'link',
-                ],
-            ]
-        );
-
-        $this->add_control(
-            'link_url',
-            [
-                'label'       => esc_html__('Link URL', 'fluent-cart-elementor-blocks'),
-                'type'        => Controls_Manager::URL,
-                'options'     => ['is_external', 'nofollow'],
-                'placeholder' => esc_html__('https://example.com/write-a-review/', 'fluent-cart-elementor-blocks'),
-                'description' => esc_html__('Where the button sends the visitor. Without one the button is not rendered.', 'fluent-cart-elementor-blocks'),
-                'condition'   => [
-                    'container' => 'link',
-                ],
             ]
         );
 
@@ -294,9 +275,6 @@ class WriteAReviewButtonWidget extends Widget_Base
                 'type'        => Controls_Manager::TEXT,
                 'placeholder' => esc_html__('Edit your review', 'fluent-cart-elementor-blocks'),
                 'description' => esc_html__('Shown when the visitor already has a review for this product', 'fluent-cart-elementor-blocks'),
-                'condition'   => [
-                    'container!' => 'link',
-                ],
             ]
         );
 
@@ -307,9 +285,6 @@ class WriteAReviewButtonWidget extends Widget_Base
                 'type'        => Controls_Manager::TEXT,
                 'placeholder' => esc_html__('Log in to Review', 'fluent-cart-elementor-blocks'),
                 'description' => esc_html__('Shown when a visitor must log in before reviewing', 'fluent-cart-elementor-blocks'),
-                'condition'   => [
-                    'container!' => 'link',
-                ],
             ]
         );
 
@@ -358,18 +333,9 @@ class WriteAReviewButtonWidget extends Widget_Base
         $container = $this->pick($settings, 'container', self::CONTAINERS, 'drawer');
         $layout = $this->pick($settings, 'layout', self::LAYOUTS, 'inline');
 
-        // Elementor's URL control is a group: the address plus is_external and
-        // nofollow. Only the address and the new-tab flag mean anything to the
-        // renderer, which takes 'self' or 'blank'.
-        $link = is_array($settings['link_url'] ?? null) ? $settings['link_url'] : [];
-        $linkUrl = esc_url_raw((string) ($link['url'] ?? ''));
-        $linkTarget = !empty($link['is_external']) ? 'blank' : 'self';
-
         $renderer = new ProductReviewRenderer($product->ID, [
             'container'    => $container,
             'layout'       => $layout,
-            'linkUrl'      => $linkUrl,
-            'linkTarget'   => $linkTarget,
             'ctaAddText'   => sanitize_text_field((string) ($settings['add_review_button_text'] ?? '')),
             'ctaEditText'  => sanitize_text_field((string) ($settings['edit_review_button_text'] ?? '')),
             'ctaLoginText' => sanitize_text_field((string) ($settings['login_review_button_text'] ?? '')),
@@ -377,8 +343,6 @@ class WriteAReviewButtonWidget extends Widget_Base
 
         ob_start();
         $renderer->renderWriteReviewCta();
-        // A no-op in link mode: the form is at the other end of the link, not
-        // hidden behind this button.
         $renderer->renderForm();
         $content = ob_get_clean();
 
