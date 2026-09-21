@@ -238,6 +238,7 @@ class ShopAppWidget extends Widget_Base
                     'title'   => esc_html__('Title', 'fluent-cart-elementor-blocks'),
                     'excerpt' => esc_html__('Excerpt', 'fluent-cart-elementor-blocks'),
                     'price'   => esc_html__('Price', 'fluent-cart-elementor-blocks'),
+                    'rating'  => esc_html__('Rating', 'fluent-cart-elementor-blocks'),
                     'button'  => esc_html__('Button', 'fluent-cart-elementor-blocks'),
                 ],
             ]
