@@ -73,7 +73,6 @@ These patterns appear in other widgets. When building a widget that needs them, 
 | Rendering core blocks via `render_block()` | `ThemeBuilder/ProductReviewListWidget.php` | Builds a parsed block tree from controls; gets core's field renderers, block supports and Pro decorations for free |
 | Repeater as field composer (order = display order) | `ThemeBuilder/ProductReviewListWidget.php` | `row_fields` becomes the Review Item's inner blocks |
 | Core-feature availability gate | `Support/ReviewSupport.php`, `Traits/ReviewWidgetTrait.php` | Widget hidden from the panel on a core without the feature; explains itself on canvas when only the module is off |
-| Suppressing a core auto-render to avoid a duplicate | `ElementorIntegration::preventDuplicateProductReviews()` | Locates core's listener by instance in `$wp_filter` and removes only that one |
 | Shared style-control class across widgets | `ReviewStyleControls.php` | Eight Style sections registered onto two widgets; takes a flag to omit controls one of them cannot use |
 | Beating core CSS that uses `!important` | `ReviewStyleControls::registerPaginationSection()` | Emits `!important` because core's pager does |
 | Restating a coupled CSS value | `ReviewStyleControls::registerListSection()` | A gap control must also rewrite `grid-template-columns`, which hardcodes the gap in a `calc()` |

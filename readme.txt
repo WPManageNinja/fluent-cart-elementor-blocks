@@ -89,9 +89,6 @@ Yes. Required CSS and JavaScript assets are enqueued automatically when widgets 
 - Adds six Product Review widgets: Product Reviews (the whole section), Product Review List, Review Summary, Review Form, Write a Review Button and Product Rating. Each mirrors its FluentCart block, so a page built in Elementor and a page built in the editor draw the same markup.
 - Adds field-by-field control of the review row: reorder or remove the avatar, reviewer name, verified badge, variation, stars, date, title, text, photos, helpful votes and store reply, with list, grid and slider views, star filter chips, sorting and pagination.
 - Adds reviews to the bundled Single Product template, between the product info and the related products.
-- Reviews can now be placed inside an Elementor product template. FluentCart attaches them to the post content, which such a template does not render, so a store using one had no way to show reviews at all. Add a review widget wherever you want them; templates you already have are left alone.
-- Fixes the review section rendering twice on a page that carries both the Product Content widget and a review widget.
-- The review widgets explain themselves in the editor when the Product Reviews module is switched off, or when the product they point at does not show reviews, rather than rendering nothing.
 
 = 1.0.3 (August 20, 2026) =
 - Adds Template Library: 8 professionally designed store page templates (Shop, Single Product, Product Category, Cart, Checkout, Thank You, Customer Dashboard, Campaign Landing) seeded automatically into Elementor's Insert Template → My Templates modal with preview thumbnails.
