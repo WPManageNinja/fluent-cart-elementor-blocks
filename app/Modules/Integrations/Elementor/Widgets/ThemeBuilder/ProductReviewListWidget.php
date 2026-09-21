@@ -46,6 +46,7 @@ class ProductReviewListWidget extends Widget_Base
     const PAGINATION_TYPES = ['numbers', 'fraction', 'bullets'];
     const ARROW_SIZES = ['sm', 'md', 'lg'];
     const AUTOPLAY_MODES = ['no', 'yes', 'hover'];
+    const MIN_COLUMNS = 2;
     const MAX_COLUMNS = 4;
     const DEFAULT_STAR_COLOR = '#f59e0b';
 
@@ -190,7 +191,7 @@ class ProductReviewListWidget extends Widget_Base
             [
                 'label'     => esc_html__('Columns', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::NUMBER,
-                'min'       => 1,
+                'min'       => self::MIN_COLUMNS,
                 'max'       => self::MAX_COLUMNS,
                 'default'   => 2,
                 'condition' => [
@@ -744,7 +745,7 @@ class ProductReviewListWidget extends Widget_Base
             'query_type'       => 'custom',
             'product_id'       => (int) $productId,
             'viewMode'         => $this->pick($settings, 'view_mode', self::VIEW_MODES, 'list'),
-            'gridColumns'      => max(1, min(self::MAX_COLUMNS, absint($settings['grid_columns'] ?? 2))),
+            'gridColumns'      => max(self::MIN_COLUMNS, min(self::MAX_COLUMNS, absint($settings['grid_columns'] ?? 2))),
             'sliderSettings'   => $this->sliderSettings($settings),
             'showSortControls' => $this->isOn($settings, 'show_sorting'),
             'defaultSortBy'    => $sortBy,
