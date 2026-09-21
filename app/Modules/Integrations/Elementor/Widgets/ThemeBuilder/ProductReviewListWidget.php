@@ -45,6 +45,7 @@ class ProductReviewListWidget extends Widget_Base
     const FALLBACK_SORT = 'created_at-DESC';
     const PAGINATION_TYPES = ['numbers', 'fraction', 'bullets'];
     const ARROW_SIZES = ['sm', 'md', 'lg'];
+    const AUTOPLAY_MODES = ['no', 'yes', 'hover'];
     const MAX_COLUMNS = 4;
     const DEFAULT_STAR_COLOR = '#f59e0b';
 
@@ -232,13 +233,15 @@ class ProductReviewListWidget extends Widget_Base
         $this->add_control(
             'slider_autoplay',
             [
-                'label'        => esc_html__('Autoplay', 'fluent-cart-elementor-blocks'),
-                'type'         => Controls_Manager::SWITCHER,
-                'label_on'     => esc_html__('Yes', 'fluent-cart-elementor-blocks'),
-                'label_off'    => esc_html__('No', 'fluent-cart-elementor-blocks'),
-                'return_value' => 'yes',
-                'default'      => '',
-                'condition'    => ['view_mode' => 'slider'],
+                'label'     => esc_html__('Autoplay', 'fluent-cart-elementor-blocks'),
+                'type'      => Controls_Manager::SELECT,
+                'default'   => 'no',
+                'options'   => [
+                    'no'    => esc_html__('Disabled', 'fluent-cart-elementor-blocks'),
+                    'yes'   => esc_html__('Always', 'fluent-cart-elementor-blocks'),
+                    'hover' => esc_html__('On Hover', 'fluent-cart-elementor-blocks'),
+                ],
+                'condition' => ['view_mode' => 'slider'],
             ]
         );
 
@@ -248,13 +251,13 @@ class ProductReviewListWidget extends Widget_Base
                 'label'       => esc_html__('Autoplay Delay (ms)', 'fluent-cart-elementor-blocks'),
                 'description' => esc_html__('Time between slides in milliseconds', 'fluent-cart-elementor-blocks'),
                 'type'        => Controls_Manager::NUMBER,
-                'min'       => 1000,
-                'max'       => 30000,
-                'step'      => 500,
+                'min'       => 300,
+                'max'       => 10000,
+                'step'      => 100,
                 'default'   => 3000,
                 'condition' => [
                     'view_mode'       => 'slider',
-                    'slider_autoplay' => 'yes',
+                    'slider_autoplay' => ['yes', 'hover'],
                 ],
             ]
         );
@@ -839,8 +842,8 @@ class ProductReviewListWidget extends Widget_Base
     protected function sliderSettings(array $settings): array
     {
         return [
-            'autoplay'      => $this->isOn($settings, 'slider_autoplay') ? 'yes' : 'no',
-            'autoplayDelay' => max(1000, min(30000, absint($settings['slider_autoplay_delay'] ?? 3000))),
+            'autoplay'      => $this->pick($settings, 'slider_autoplay', self::AUTOPLAY_MODES, 'no'),
+            'autoplayDelay' => max(300, min(10000, absint($settings['slider_autoplay_delay'] ?? 3000))),
             'arrows'        => $this->isOn($settings, 'slider_arrows') ? 'yes' : 'no',
             'arrowsSize'    => $this->pick($settings, 'slider_arrows_size', self::ARROW_SIZES, 'md'),
             'infinite'      => $this->isOn($settings, 'slider_infinite') ? 'yes' : 'no',
