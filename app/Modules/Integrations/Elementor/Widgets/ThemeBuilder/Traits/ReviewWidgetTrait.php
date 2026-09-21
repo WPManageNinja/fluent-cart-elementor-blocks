@@ -2,6 +2,7 @@
 
 namespace FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ThemeBuilder\Traits;
 
+use FluentCart\App\Services\ProductReviewService;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support\ReviewSupport;
 use FluentCartElementorBlocks\App\Utils\Enqueuer\Enqueue;
 use FluentCart\App\App;
@@ -81,12 +82,14 @@ trait ReviewWidgetTrait
      */
     protected static function verifiedBadgeDefault(): string
     {
-        if (!class_exists('FluentCart\\App\\Services\\ProductReviewService')
-            || !method_exists('FluentCart\\App\\Services\\ProductReviewService', 'getReviewSettings')) {
+        // A FluentCart without the review feature has no such class, and this
+        // runs while Elementor builds the controls for a widget it registers
+        // either way. ReviewSupport is where that question is answered once.
+        if (!ReviewSupport::isSupportedByCore()) {
             return 'yes';
         }
 
-        $settings = (array) call_user_func(['FluentCart\\App\\Services\\ProductReviewService', 'getReviewSettings']);
+        $settings = (array) ProductReviewService::getReviewSettings();
 
         return (!isset($settings['show_verified_badge']) || $settings['show_verified_badge'] === 'yes') ? 'yes' : '';
     }

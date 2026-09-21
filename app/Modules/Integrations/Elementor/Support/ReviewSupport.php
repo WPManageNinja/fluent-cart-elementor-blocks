@@ -48,6 +48,7 @@ class ReviewSupport
         ],
         'FluentCart\\App\\Services\\ProductReviewService' => [
             'getProductRatingSummary',
+            'getReviewSettings',
         ],
         'FluentCart\\App\\Services\\Renderer\\ProductReviewRenderer' => [
             'render',

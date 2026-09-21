@@ -5,6 +5,7 @@ namespace FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\T
 use Elementor\Controls_Manager;
 use Elementor\Repeater;
 use Elementor\Widget_Base;
+use FluentCart\App\Hooks\Handlers\BlockEditors\ProductReviewList\InnerBlocks\InnerBlocks;
 use FluentCart\App\Modules\Templating\AssetLoader;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ReviewStyleControls;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ThemeBuilder\Traits\ReviewWidgetTrait;
@@ -687,10 +688,11 @@ class ProductReviewListWidget extends Widget_Base
      */
     public static function sortChoices(): array
     {
-        $source = 'FluentCart\\App\\Hooks\\Handlers\\BlockEditors\\ProductReviewList\\InnerBlocks\\InnerBlocks';
-
-        if (class_exists($source) && method_exists($source, 'sortOptions')) {
-            $options = call_user_func([$source, 'sortOptions']);
+        // Not part of ReviewSupport's required API on purpose: a core that
+        // carries reviews but not this list is not a core the widgets should
+        // disappear on. It simply falls back to the four sorts core ships.
+        if (class_exists(InnerBlocks::class) && method_exists(InnerBlocks::class, 'sortOptions')) {
+            $options = InnerBlocks::sortOptions();
 
             if (is_array($options) && $options) {
                 return array_map('strval', $options);
