@@ -199,7 +199,7 @@ class ProductRatingWidget extends Widget_Base
             'min_review_count',
             [
                 'label'       => esc_html__('Minimum Reviews', 'fluent-cart-elementor-blocks'),
-                'description' => esc_html__('Hide the rating until the product has at least this many reviews. 0 always shows it.', 'fluent-cart-elementor-blocks'),
+                'description' => esc_html__('Hide the rating until the product has at least this many reviews. 0 always shows it, including five empty stars on a product with none.', 'fluent-cart-elementor-blocks'),
                 'type'        => Controls_Manager::NUMBER,
                 'min'         => 0,
                 'max'         => 1000,
@@ -213,11 +213,11 @@ class ProductRatingWidget extends Widget_Base
             'min_average_rating',
             [
                 'label'       => esc_html__('Minimum Average Rating', 'fluent-cart-elementor-blocks'),
-                'description' => esc_html__('Hide the rating when the average is below this. 0 always shows it.', 'fluent-cart-elementor-blocks'),
+                'description' => esc_html__('Hide the rating unless the product averages at least this many stars. 0 shows every rating. Half stars are allowed.', 'fluent-cart-elementor-blocks'),
                 'type'        => Controls_Manager::NUMBER,
                 'min'         => 0,
                 'max'         => 5,
-                'step'        => 0.1,
+                'step'        => 0.5,
                 'default'     => 0,
             ]
         );
