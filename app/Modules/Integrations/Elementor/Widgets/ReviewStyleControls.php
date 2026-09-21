@@ -49,7 +49,7 @@ class ReviewStyleControls
      *        section, which is list only, so offering it a grid gap control
      *        would be offering a control that can never do anything.
      */
-    public static function register($widget, bool $hasViewModes = true)
+    public static function registerReviewStyleControls($widget, bool $hasViewModes = true)
     {
         self::registerListSection($widget, $hasViewModes);
         self::registerHeaderSection($widget);
@@ -66,7 +66,7 @@ class ReviewStyleControls
     protected static function registerListSection($widget, bool $hasViewModes = true)
     {
         $widget->start_controls_section(
-            'fcr_list_style',
+            'review_list_style_section',
             [
                 'label' => esc_html__('Review List', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
@@ -74,7 +74,7 @@ class ReviewStyleControls
         );
 
         $widget->add_responsive_control(
-            'fcr_row_gap',
+            'review_row_gap',
             [
                 'label'       => esc_html__('Space Between Reviews', 'fluent-cart-elementor-blocks'),
                 'description' => esc_html__('Applies to the list view.', 'fluent-cart-elementor-blocks'),
@@ -96,7 +96,7 @@ class ReviewStyleControls
         }
 
         $widget->add_responsive_control(
-            'fcr_grid_gap',
+            'review_grid_gap',
             [
                 'label'       => esc_html__('Grid & Slider Gap', 'fluent-cart-elementor-blocks'),
                 'description' => esc_html__('Applies to the grid and slider views.', 'fluent-cart-elementor-blocks'),
@@ -125,7 +125,7 @@ class ReviewStyleControls
     protected static function registerHeaderSection($widget)
     {
         $widget->start_controls_section(
-            'fcr_header_style',
+            'review_header_style_section',
             [
                 'label' => esc_html__('Header', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
@@ -135,14 +135,14 @@ class ReviewStyleControls
         $widget->add_group_control(
             Group_Control_Typography::get_type(),
             [
-                'name'     => 'fcr_count_typography',
+                'name'     => 'review_count_typography',
                 'label'    => esc_html__('Review Count Typography', 'fluent-cart-elementor-blocks'),
                 'selector' => '{{WRAPPER}} .fct-reviews-section-title',
             ]
         );
 
         $widget->add_control(
-            'fcr_count_color',
+            'review_count_color',
             [
                 'label'     => esc_html__('Review Count Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
@@ -153,7 +153,7 @@ class ReviewStyleControls
         );
 
         $widget->add_control(
-            'fcr_chips_heading',
+            'review_chips_heading',
             [
                 'label'     => esc_html__('Filter Chips', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::HEADING,
@@ -168,17 +168,17 @@ class ReviewStyleControls
         $widget->add_group_control(
             Group_Control_Typography::get_type(),
             [
-                'name'     => 'fcr_chip_typography',
+                'name'     => 'review_chip_typography',
                 'selector' => $chip,
             ]
         );
 
-        $widget->start_controls_tabs('fcr_chip_tabs');
+        $widget->start_controls_tabs('review_chip_tabs');
 
-        $widget->start_controls_tab('fcr_chip_normal', ['label' => esc_html__('Normal', 'fluent-cart-elementor-blocks')]);
+        $widget->start_controls_tab('review_chip_normal', ['label' => esc_html__('Normal', 'fluent-cart-elementor-blocks')]);
 
         $widget->add_control(
-            'fcr_chip_color',
+            'review_chip_color',
             [
                 'label'     => esc_html__('Text Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
@@ -187,7 +187,7 @@ class ReviewStyleControls
         );
 
         $widget->add_control(
-            'fcr_chip_bg',
+            'review_chip_bg',
             [
                 'label'     => esc_html__('Background', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
@@ -196,7 +196,7 @@ class ReviewStyleControls
         );
 
         $widget->add_control(
-            'fcr_chip_border_color',
+            'review_chip_border_color',
             [
                 'label'     => esc_html__('Border Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
@@ -206,10 +206,10 @@ class ReviewStyleControls
 
         $widget->end_controls_tab();
 
-        $widget->start_controls_tab('fcr_chip_active', ['label' => esc_html__('Active', 'fluent-cart-elementor-blocks')]);
+        $widget->start_controls_tab('review_chip_active', ['label' => esc_html__('Active', 'fluent-cart-elementor-blocks')]);
 
         $widget->add_control(
-            'fcr_chip_color_active',
+            'review_chip_color_active',
             [
                 'label'     => esc_html__('Text Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
@@ -218,7 +218,7 @@ class ReviewStyleControls
         );
 
         $widget->add_control(
-            'fcr_chip_bg_active',
+            'review_chip_bg_active',
             [
                 'label'     => esc_html__('Background', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
@@ -227,7 +227,7 @@ class ReviewStyleControls
         );
 
         $widget->add_control(
-            'fcr_chip_border_color_active',
+            'review_chip_border_color_active',
             [
                 'label'     => esc_html__('Border Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
@@ -239,7 +239,7 @@ class ReviewStyleControls
         $widget->end_controls_tabs();
 
         $widget->add_control(
-            'fcr_chip_radius',
+            'review_chip_radius',
             [
                 'label'      => esc_html__('Chip Radius', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::DIMENSIONS,
@@ -252,7 +252,7 @@ class ReviewStyleControls
         );
 
         $widget->add_control(
-            'fcr_sort_heading',
+            'review_sort_heading',
             [
                 'label'     => esc_html__('Sort Control', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::HEADING,
@@ -263,13 +263,13 @@ class ReviewStyleControls
         $widget->add_group_control(
             Group_Control_Typography::get_type(),
             [
-                'name'     => 'fcr_sort_typography',
+                'name'     => 'review_sort_typography',
                 'selector' => '{{WRAPPER}} .fct-reviews-sort select',
             ]
         );
 
         $widget->add_control(
-            'fcr_sort_color',
+            'review_sort_color',
             [
                 'label'     => esc_html__('Text Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
@@ -282,7 +282,7 @@ class ReviewStyleControls
         );
 
         $widget->add_control(
-            'fcr_sort_bg',
+            'review_sort_bg',
             [
                 'label'     => esc_html__('Background', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
@@ -293,7 +293,7 @@ class ReviewStyleControls
         );
 
         $widget->add_control(
-            'fcr_sort_border_color',
+            'review_sort_border_color',
             [
                 'label'     => esc_html__('Border Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
@@ -311,7 +311,7 @@ class ReviewStyleControls
     protected static function registerCardSection($widget)
     {
         $widget->start_controls_section(
-            'fcr_card_style',
+            'review_card_style_section',
             [
                 'label' => esc_html__('Review Card', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
@@ -321,7 +321,7 @@ class ReviewStyleControls
         $card = '{{WRAPPER}} .fct-review-item';
 
         $widget->add_control(
-            'fcr_card_bg',
+            'review_card_bg',
             [
                 'label'     => esc_html__('Background', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
@@ -332,13 +332,13 @@ class ReviewStyleControls
         $widget->add_group_control(
             Group_Control_Border::get_type(),
             [
-                'name'     => 'fcr_card_border',
+                'name'     => 'review_card_border',
                 'selector' => $card,
             ]
         );
 
         $widget->add_control(
-            'fcr_card_radius',
+            'review_card_radius',
             [
                 'label'      => esc_html__('Border Radius', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::DIMENSIONS,
@@ -350,7 +350,7 @@ class ReviewStyleControls
         );
 
         $widget->add_responsive_control(
-            'fcr_card_padding',
+            'review_card_padding',
             [
                 'label'      => esc_html__('Padding', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::DIMENSIONS,
@@ -364,7 +364,7 @@ class ReviewStyleControls
         $widget->add_group_control(
             Group_Control_Box_Shadow::get_type(),
             [
-                'name'     => 'fcr_card_shadow',
+                'name'     => 'review_card_shadow',
                 'selector' => $card,
             ]
         );
@@ -377,7 +377,7 @@ class ReviewStyleControls
     protected static function registerReviewerSection($widget)
     {
         $widget->start_controls_section(
-            'fcr_reviewer_style',
+            'review_reviewer_style_section',
             [
                 'label' => esc_html__('Reviewer', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
@@ -385,7 +385,7 @@ class ReviewStyleControls
         );
 
         $widget->add_responsive_control(
-            'fcr_avatar_size',
+            'review_avatar_size',
             [
                 'label'      => esc_html__('Avatar Size', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::SLIDER,
@@ -398,7 +398,7 @@ class ReviewStyleControls
         );
 
         $widget->add_control(
-            'fcr_avatar_radius',
+            'review_avatar_radius',
             [
                 'label'      => esc_html__('Avatar Radius', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::DIMENSIONS,
@@ -415,7 +415,7 @@ class ReviewStyleControls
         $widget->add_group_control(
             Group_Control_Typography::get_type(),
             [
-                'name'      => 'fcr_author_typography',
+                'name'      => 'review_author_typography',
                 'label'     => esc_html__('Name Typography', 'fluent-cart-elementor-blocks'),
                 'selector'  => '{{WRAPPER}} .fct-review-item-author',
                 'separator' => 'before',
@@ -423,7 +423,7 @@ class ReviewStyleControls
         );
 
         $widget->add_control(
-            'fcr_author_color',
+            'review_author_color',
             [
                 'label'     => esc_html__('Name Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
@@ -434,7 +434,7 @@ class ReviewStyleControls
         );
 
         $widget->add_control(
-            'fcr_verified_heading',
+            'review_verified_heading',
             [
                 'label'     => esc_html__('Verified Badge', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::HEADING,
@@ -445,13 +445,13 @@ class ReviewStyleControls
         $widget->add_group_control(
             Group_Control_Typography::get_type(),
             [
-                'name'     => 'fcr_verified_typography',
+                'name'     => 'review_verified_typography',
                 'selector' => '{{WRAPPER}} .fct-review-verified',
             ]
         );
 
         $widget->add_control(
-            'fcr_verified_color',
+            'review_verified_color',
             [
                 'label'     => esc_html__('Text Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
@@ -460,7 +460,7 @@ class ReviewStyleControls
         );
 
         $widget->add_control(
-            'fcr_verified_bg',
+            'review_verified_bg',
             [
                 'label'     => esc_html__('Background', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
@@ -469,7 +469,7 @@ class ReviewStyleControls
         );
 
         $widget->add_control(
-            'fcr_variant_heading',
+            'review_variant_heading',
             [
                 'label'     => esc_html__('Variation Reviewed', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::HEADING,
@@ -480,13 +480,13 @@ class ReviewStyleControls
         $widget->add_group_control(
             Group_Control_Typography::get_type(),
             [
-                'name'     => 'fcr_variant_typography',
+                'name'     => 'review_variant_typography',
                 'selector' => '{{WRAPPER}} .fct-review-item-variant',
             ]
         );
 
         $widget->add_control(
-            'fcr_variant_color',
+            'review_variant_color',
             [
                 'label'     => esc_html__('Text Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
@@ -502,7 +502,7 @@ class ReviewStyleControls
     protected static function registerRatingSection($widget)
     {
         $widget->start_controls_section(
-            'fcr_rating_style',
+            'review_stars_style_section',
             [
                 'label' => esc_html__('Stars', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
@@ -510,7 +510,7 @@ class ReviewStyleControls
         );
 
         $widget->add_responsive_control(
-            'fcr_star_size',
+            'review_star_size',
             [
                 'label'      => esc_html__('Star Size', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::SLIDER,
@@ -529,7 +529,7 @@ class ReviewStyleControls
         );
 
         $widget->add_control(
-            'fcr_star_color',
+            'review_star_color',
             [
                 'label'       => esc_html__('Filled Star Color', 'fluent-cart-elementor-blocks'),
                 'description' => esc_html__('Overrides the Star Color set in the Content tab.', 'fluent-cart-elementor-blocks'),
@@ -542,7 +542,7 @@ class ReviewStyleControls
         );
 
         $widget->add_control(
-            'fcr_star_empty_color',
+            'review_star_empty_color',
             [
                 'label'     => esc_html__('Empty Star Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
@@ -560,7 +560,7 @@ class ReviewStyleControls
     protected static function registerContentSection($widget)
     {
         $widget->start_controls_section(
-            'fcr_content_style',
+            'review_content_style_section',
             [
                 'label' => esc_html__('Review Content', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
@@ -570,14 +570,14 @@ class ReviewStyleControls
         $widget->add_group_control(
             Group_Control_Typography::get_type(),
             [
-                'name'     => 'fcr_title_typography',
+                'name'     => 'review_title_typography',
                 'label'    => esc_html__('Title Typography', 'fluent-cart-elementor-blocks'),
                 'selector' => '{{WRAPPER}} .fct-review-item-title',
             ]
         );
 
         $widget->add_control(
-            'fcr_title_color',
+            'review_title_color',
             [
                 'label'     => esc_html__('Title Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
@@ -588,7 +588,7 @@ class ReviewStyleControls
         $widget->add_group_control(
             Group_Control_Typography::get_type(),
             [
-                'name'      => 'fcr_text_typography',
+                'name'      => 'review_text_typography',
                 'label'     => esc_html__('Text Typography', 'fluent-cart-elementor-blocks'),
                 'selector'  => '{{WRAPPER}} .fct-review-item-content',
                 'separator' => 'before',
@@ -596,7 +596,7 @@ class ReviewStyleControls
         );
 
         $widget->add_control(
-            'fcr_text_color',
+            'review_text_color',
             [
                 'label'     => esc_html__('Text Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
@@ -607,7 +607,7 @@ class ReviewStyleControls
         $widget->add_group_control(
             Group_Control_Typography::get_type(),
             [
-                'name'      => 'fcr_date_typography',
+                'name'      => 'review_date_typography',
                 'label'     => esc_html__('Date Typography', 'fluent-cart-elementor-blocks'),
                 'selector'  => '{{WRAPPER}} .fct-review-item-date',
                 'separator' => 'before',
@@ -615,7 +615,7 @@ class ReviewStyleControls
         );
 
         $widget->add_control(
-            'fcr_date_color',
+            'review_date_color',
             [
                 'label'     => esc_html__('Date Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
@@ -631,7 +631,7 @@ class ReviewStyleControls
     protected static function registerActionsSection($widget)
     {
         $widget->start_controls_section(
-            'fcr_actions_style',
+            'review_actions_style_section',
             [
                 'label' => esc_html__('Photos & Actions', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
@@ -639,7 +639,7 @@ class ReviewStyleControls
         );
 
         $widget->add_responsive_control(
-            'fcr_photo_size',
+            'review_photo_size',
             [
                 'label'      => esc_html__('Photo Size', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::SLIDER,
@@ -652,7 +652,7 @@ class ReviewStyleControls
         );
 
         $widget->add_control(
-            'fcr_photo_radius',
+            'review_photo_radius',
             [
                 'label'      => esc_html__('Photo Radius', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::DIMENSIONS,
@@ -664,7 +664,7 @@ class ReviewStyleControls
         );
 
         $widget->add_control(
-            'fcr_reply_heading',
+            'review_reply_heading',
             [
                 'label'     => esc_html__('Reply Button', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::HEADING,
@@ -678,13 +678,13 @@ class ReviewStyleControls
         $widget->add_group_control(
             Group_Control_Typography::get_type(),
             [
-                'name'     => 'fcr_reply_typography',
+                'name'     => 'review_reply_typography',
                 'selector' => $reply,
             ]
         );
 
         $widget->add_control(
-            'fcr_reply_color',
+            'review_reply_color',
             [
                 'label'     => esc_html__('Text Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
@@ -693,7 +693,7 @@ class ReviewStyleControls
         );
 
         $widget->add_control(
-            'fcr_reply_bg',
+            'review_reply_bg',
             [
                 'label'     => esc_html__('Background', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
@@ -702,7 +702,7 @@ class ReviewStyleControls
         );
 
         $widget->add_control(
-            'fcr_reply_border_color',
+            'review_reply_border_color',
             [
                 'label'     => esc_html__('Border Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
@@ -718,7 +718,7 @@ class ReviewStyleControls
     protected static function registerPaginationSection($widget)
     {
         $widget->start_controls_section(
-            'fcr_pagination_style',
+            'review_pagination_style_section',
             [
                 'label' => esc_html__('Pagination', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
@@ -733,7 +733,7 @@ class ReviewStyleControls
         $nav = '{{WRAPPER}} .fct-reviews-page-nav';
 
         $widget->add_control(
-            'fcr_pager_note',
+            'review_pager_note',
             [
                 'type'            => Controls_Manager::RAW_HTML,
                 'raw'             => esc_html__('Pagination styles are emitted with !important, because FluentCart sets the pager that way to survive themes that restyle every button.', 'fluent-cart-elementor-blocks'),
@@ -744,17 +744,17 @@ class ReviewStyleControls
         $widget->add_group_control(
             Group_Control_Typography::get_type(),
             [
-                'name'     => 'fcr_pager_typography',
+                'name'     => 'review_pager_typography',
                 'selector' => $btn . ', ' . $nav,
             ]
         );
 
-        $widget->start_controls_tabs('fcr_pager_tabs');
+        $widget->start_controls_tabs('review_pager_tabs');
 
-        $widget->start_controls_tab('fcr_pager_normal', ['label' => esc_html__('Normal', 'fluent-cart-elementor-blocks')]);
+        $widget->start_controls_tab('review_pager_normal', ['label' => esc_html__('Normal', 'fluent-cart-elementor-blocks')]);
 
         $widget->add_control(
-            'fcr_pager_color',
+            'review_pager_color',
             [
                 'label'     => esc_html__('Text Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
@@ -766,7 +766,7 @@ class ReviewStyleControls
         );
 
         $widget->add_control(
-            'fcr_pager_bg',
+            'review_pager_bg',
             [
                 'label'     => esc_html__('Background', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
@@ -775,7 +775,7 @@ class ReviewStyleControls
         );
 
         $widget->add_control(
-            'fcr_pager_border_color',
+            'review_pager_border_color',
             [
                 'label'     => esc_html__('Border Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
@@ -785,10 +785,10 @@ class ReviewStyleControls
 
         $widget->end_controls_tab();
 
-        $widget->start_controls_tab('fcr_pager_active_tab', ['label' => esc_html__('Active', 'fluent-cart-elementor-blocks')]);
+        $widget->start_controls_tab('review_pager_active_tab', ['label' => esc_html__('Active', 'fluent-cart-elementor-blocks')]);
 
         $widget->add_control(
-            'fcr_pager_color_active',
+            'review_pager_color_active',
             [
                 'label'     => esc_html__('Text Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
@@ -797,7 +797,7 @@ class ReviewStyleControls
         );
 
         $widget->add_control(
-            'fcr_pager_bg_active',
+            'review_pager_bg_active',
             [
                 'label'     => esc_html__('Background', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
@@ -806,7 +806,7 @@ class ReviewStyleControls
         );
 
         $widget->add_control(
-            'fcr_pager_border_color_active',
+            'review_pager_border_color_active',
             [
                 'label'     => esc_html__('Border Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
@@ -816,10 +816,10 @@ class ReviewStyleControls
 
         $widget->end_controls_tab();
 
-        $widget->start_controls_tab('fcr_pager_hover', ['label' => esc_html__('Hover', 'fluent-cart-elementor-blocks')]);
+        $widget->start_controls_tab('review_pager_hover', ['label' => esc_html__('Hover', 'fluent-cart-elementor-blocks')]);
 
         $widget->add_control(
-            'fcr_pager_color_hover',
+            'review_pager_color_hover',
             [
                 'label'     => esc_html__('Text Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
@@ -831,7 +831,7 @@ class ReviewStyleControls
         );
 
         $widget->add_control(
-            'fcr_pager_bg_hover',
+            'review_pager_bg_hover',
             [
                 'label'     => esc_html__('Background', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
@@ -840,7 +840,7 @@ class ReviewStyleControls
         );
 
         $widget->add_control(
-            'fcr_pager_border_color_hover',
+            'review_pager_border_color_hover',
             [
                 'label'     => esc_html__('Border Color', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::COLOR,
@@ -852,7 +852,7 @@ class ReviewStyleControls
         $widget->end_controls_tabs();
 
         $widget->add_control(
-            'fcr_pager_radius',
+            'review_pager_radius',
             [
                 'label'      => esc_html__('Border Radius', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::DIMENSIONS,
@@ -865,7 +865,7 @@ class ReviewStyleControls
         );
 
         $widget->add_responsive_control(
-            'fcr_pager_align',
+            'review_pager_align',
             [
                 'label'     => esc_html__('Alignment', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::CHOOSE,

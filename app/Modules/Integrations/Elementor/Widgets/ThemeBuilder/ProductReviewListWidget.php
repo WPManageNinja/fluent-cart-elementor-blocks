@@ -196,6 +196,8 @@ class ProductReviewListWidget extends Widget_Base
             [
                 'label'        => esc_html__('Arrows', 'fluent-cart-elementor-blocks'),
                 'type'         => Controls_Manager::SWITCHER,
+                'label_on'     => esc_html__('Show', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('Hide', 'fluent-cart-elementor-blocks'),
                 'return_value' => 'yes',
                 'default'      => 'yes',
                 'condition'    => ['view_mode' => 'slider'],
@@ -225,6 +227,8 @@ class ProductReviewListWidget extends Widget_Base
             [
                 'label'        => esc_html__('Autoplay', 'fluent-cart-elementor-blocks'),
                 'type'         => Controls_Manager::SWITCHER,
+                'label_on'     => esc_html__('Yes', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('No', 'fluent-cart-elementor-blocks'),
                 'return_value' => 'yes',
                 'default'      => '',
                 'condition'    => ['view_mode' => 'slider'],
@@ -252,6 +256,8 @@ class ProductReviewListWidget extends Widget_Base
             [
                 'label'        => esc_html__('Loop', 'fluent-cart-elementor-blocks'),
                 'type'         => Controls_Manager::SWITCHER,
+                'label_on'     => esc_html__('Yes', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('No', 'fluent-cart-elementor-blocks'),
                 'return_value' => 'yes',
                 'default'      => '',
                 'condition'    => ['view_mode' => 'slider'],
@@ -274,6 +280,8 @@ class ProductReviewListWidget extends Widget_Base
             [
                 'label'        => esc_html__('Review Count', 'fluent-cart-elementor-blocks'),
                 'type'         => Controls_Manager::SWITCHER,
+                'label_on'     => esc_html__('Show', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('Hide', 'fluent-cart-elementor-blocks'),
                 'return_value' => 'yes',
                 'default'      => 'yes',
             ]
@@ -284,6 +292,8 @@ class ProductReviewListWidget extends Widget_Base
             [
                 'label'        => esc_html__('Star Filter Chips', 'fluent-cart-elementor-blocks'),
                 'type'         => Controls_Manager::SWITCHER,
+                'label_on'     => esc_html__('Show', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('Hide', 'fluent-cart-elementor-blocks'),
                 'return_value' => 'yes',
                 'default'      => 'yes',
             ]
@@ -294,6 +304,8 @@ class ProductReviewListWidget extends Widget_Base
             [
                 'label'        => esc_html__('Sort Control', 'fluent-cart-elementor-blocks'),
                 'type'         => Controls_Manager::SWITCHER,
+                'label_on'     => esc_html__('Show', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('Hide', 'fluent-cart-elementor-blocks'),
                 'return_value' => 'yes',
                 'default'      => 'yes',
             ]
@@ -419,6 +431,8 @@ class ProductReviewListWidget extends Widget_Base
                 [
                     'label'        => $label,
                     'type'         => Controls_Manager::SWITCHER,
+                    'label_on'     => esc_html__('Show', 'fluent-cart-elementor-blocks'),
+                    'label_off'    => esc_html__('Hide', 'fluent-cart-elementor-blocks'),
                     'return_value' => 'yes',
                     'default'      => 'yes',
                     'condition'    => ['row_layout' => 'standard'],
@@ -442,6 +456,8 @@ class ProductReviewListWidget extends Widget_Base
             [
                 'label'        => esc_html__('Show Pagination', 'fluent-cart-elementor-blocks'),
                 'type'         => Controls_Manager::SWITCHER,
+                'label_on'     => esc_html__('Show', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('Hide', 'fluent-cart-elementor-blocks'),
                 'return_value' => 'yes',
                 'default'      => 'yes',
             ]
@@ -490,7 +506,7 @@ class ProductReviewListWidget extends Widget_Base
 
         // Style — every section for the list, shared with the all-in-one
         // widget so the two cannot drift.
-        ReviewStyleControls::register($this);
+        ReviewStyleControls::registerReviewStyleControls($this);
     }
 
     /**
