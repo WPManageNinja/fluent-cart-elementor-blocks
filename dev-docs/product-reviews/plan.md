@@ -12,7 +12,7 @@ Written 2026-09-18, implemented the same day.
 | R4 | Review Form widget | done |
 | R5 | Product Review List widget (block-tree composition) | done |
 | R6 | Product Reviews all-in-one widget | done |
-| R7 | Duplicate guard + reviews in `fc-single-product` | done |
+| R7 | Reviews in `fc-single-product` | done |
 | R8 | Per-widget docs, reference guide, changelog | done |
 
 Style panels for the List and the all-in-one landed after the first pass
