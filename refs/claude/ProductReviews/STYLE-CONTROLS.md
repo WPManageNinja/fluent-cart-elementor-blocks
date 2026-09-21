@@ -70,7 +70,7 @@ Core hangs its own copy of this section on `the_content`, through `fluent_cart/p
 
 **Only two widgets count**, listed in `ElementorIntegration::SECTION_REPLACING_WIDGETS`: the all-in-one, which draws the section outright, and the Review List, which draws its body. A lone Review Summary, Review Form or Write a Review Button replaces nothing, and suppressing core for one of those would take the review list off the page — leaving the visitor with less than they had, rather than fewer copies.
 
-**And only when the widget draws this product.** `widgetDrawsCurrentProduct()` reads the saved `source` and `product_id`: a widget pointed at another product shows that product's reviews and replaces nothing here. Without it, a Review List for last season's jacket sitting in a product template would strip the review section from every other product in the store. Anything that is not an explicit custom pick draws whatever is in context, which on this request is the current product.
+**And only when the widget draws this product.** `widgetDrawsCurrentProduct()` reads the saved `source` and `product_id`: a widget pointed at another product shows that product's reviews and replaces nothing here. Without it, a Review List for last season's jacket sitting in a product template would strip the review section from every other product in the store. A custom source with **no** product chosen also counts for nothing: `ProductWidgetTrait::getProduct()` returns null for it rather than falling back, so the widget draws nothing and suppressing core would leave the page with no reviews at all. Anything that is not a custom pick draws whatever is in context, which on this request is the current product.
 
 Two decisions worth keeping:
 
