@@ -13,7 +13,7 @@ The ProductRatingWidget (`app/Modules/Integrations/Elementor/Widgets/ThemeBuilde
 
 ## Availability gate
 
-Unlike every other widget in this addon, this one can be absent. `ReviewWidgetTrait` (which wraps `ProductWidgetTrait`) hides it from the panel when `ReviewSupport::isSupportedByCore()` is false — a FluentCart old enough to have no review classes. When the classes exist but the module is off, the widget stays listed and prints the reason on the editor canvas instead.
+`ReviewWidgetTrait` (which wraps `ProductWidgetTrait`) keeps the widget listed whatever the store has switched on. When the Product Reviews module is off, or the product does not show reviews, it prints the reason on the editor canvas instead of rendering nothing.
 
 | Condition | Panel | Canvas | Front end |
 |---|---|---|---|
