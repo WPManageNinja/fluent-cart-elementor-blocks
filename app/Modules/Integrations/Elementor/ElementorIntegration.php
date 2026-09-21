@@ -36,6 +36,10 @@ use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ThemeBu
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ThemeBuilder\ProductSkuWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ThemeBuilder\ProductPackageDescriptionWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ThemeBuilder\RelatedProductsWidget;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ThemeBuilder\ProductRatingWidget;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ThemeBuilder\ProductReviewSummaryWidget;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ThemeBuilder\WriteAReviewButtonWidget;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ThemeBuilder\ProductReviewFormWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Documents\FluentCartProduct;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Documents\FluentCartProductPost;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Conditions\FluentCartCondition;
@@ -145,6 +149,10 @@ class ElementorIntegration
         $widgets_manager->register(new ProductContentWidget());
         $widgets_manager->register(new ProductInfoWidget());
         $widgets_manager->register(new RelatedProductsWidget());
+        $widgets_manager->register(new ProductRatingWidget());
+        $widgets_manager->register(new ProductReviewSummaryWidget());
+        $widgets_manager->register(new WriteAReviewButtonWidget());
+        $widgets_manager->register(new ProductReviewFormWidget());
     }
 
     public function registerControls($controls_manager)
