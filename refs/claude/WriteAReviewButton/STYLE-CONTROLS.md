@@ -17,16 +17,15 @@ Two calls on one renderer, in order:
 
 ```php
 $renderer = new ProductReviewRenderer($product->ID, [
-    'container'  => 'drawer|modal|link',
+    'container'  => 'drawer|modal',
     'layout'     => 'inline|steps',
-    'linkUrl'    => '', 'linkTarget' => 'self|blank',
     'ctaAddText' => '', 'ctaEditText' => '', 'ctaLoginText' => '',
 ]);
 $renderer->renderWriteReviewCta();
-$renderer->renderForm();   // no-op in link mode
+$renderer->renderForm();
 ```
 
-`renderForm()` is a deliberate no-op when `container` is `link`: the form lives at the other end of the link, not behind this button.
+The form always travels with the button. To send reviewers to a page of their own, put the Review Form widget on that page and link to it with an ordinary button.
 
 **Assets:** `AssetLoader::loadReviewSubmissionFormAssets()` — the form's own bundle, not the full single-product one. This widget is a trigger plus a form and needs none of the gallery, product card or review list. On a product page the same handle is already enqueued.
 
@@ -51,9 +50,8 @@ Blank means the store default. All three go through `sanitize_text_field()`.
 | Control ID | Type | Default | Notes |
 |---|---|---|---|
 | `source` / `product_id` | from `ProductWidgetTrait` | `default` | |
-| `container` | SELECT | `drawer` | `drawer`, `modal`, `link`. Validated against the whitelist at render |
-| `layout` | SELECT | `inline` | `inline` or `steps`. Hidden when `container=link` |
-| `link_url` | URL | — | Shown when `container=link`. Elementor's URL control is a group; only `url` and `is_external` are used, the latter mapping to the renderer's `linkTarget` of `blank` |
+| `container` | SELECT | `drawer` | `drawer` or `modal`. Validated against the whitelist at render |
+| `layout` | SELECT | `inline` | `inline` or `steps` |
 | `add_review_button_text` | TEXT | `''` | |
 | `edit_review_button_text` | TEXT | `''` | |
 | `login_review_button_text` | TEXT | `''` | |
