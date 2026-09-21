@@ -137,7 +137,7 @@ Guards: an unknown field value is skipped, and a field listed twice renders once
 
 ---
 
-## Style Controls — `ReviewStyleControls::register($widget, $hasViewModes = true)`
+## Style Controls — `ReviewStyleControls::registerReviewStyleControls($widget, $hasViewModes = true)`
 
 Shared with the other review-section widget so the two cannot drift, the same
 reason `BadgeControls` exists. Eight sections:
