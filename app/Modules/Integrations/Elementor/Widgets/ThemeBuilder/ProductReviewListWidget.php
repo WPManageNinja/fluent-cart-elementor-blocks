@@ -818,6 +818,7 @@ class ProductReviewListWidget extends Widget_Base
             'showFilterChips'   => $this->isOn($settings, 'show_filter'),
             'starColor'         => sanitize_hex_color((string) ($settings['star_color'] ?? '')) ?: self::DEFAULT_STAR_COLOR,
             'minRating'         => max(0, min(5, absint($settings['min_rating'] ?? 0))),
+            'maxWords'          => max(0, min(500, absint($settings['content_max_words'] ?? 0))),
             'paginationType'    => $this->pick($settings, 'pagination_type', self::PAGINATION_TYPES, 'numbers'),
         ];
     }

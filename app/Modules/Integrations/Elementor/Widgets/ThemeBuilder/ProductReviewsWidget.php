@@ -258,6 +258,18 @@ class ProductReviewsWidget extends Widget_Base
         );
 
         $this->add_control(
+            'content_max_words',
+            [
+                'label'       => esc_html__('Words shown', 'fluent-cart-elementor-blocks'),
+                'description' => esc_html__('Reviews show in full. Move the slider to cut longer ones down.', 'fluent-cart-elementor-blocks'),
+                'type'        => Controls_Manager::NUMBER,
+                'min'         => 0,
+                'max'         => 500,
+                'default'     => 0,
+            ]
+        );
+
+        $this->add_control(
             'view_mode',
             [
                 'label'     => esc_html__('View Mode', 'fluent-cart-elementor-blocks'),
@@ -590,6 +602,7 @@ class ProductReviewsWidget extends Widget_Base
             'defaultSortOrder'  => $sortOrder,
             'perPage'           => max(0, min(100, absint($settings['per_page'] ?? 0))),
             'minRating'         => max(0, min(5, absint($settings['min_rating'] ?? 0))),
+            'maxWords'          => max(0, min(500, absint($settings['content_max_words'] ?? 0))),
             'paginationType'    => $this->pick($settings, 'pagination_type', self::PAGINATION_TYPES, 'numbers'),
             'viewMode'          => $this->pick($settings, 'view_mode', self::VIEW_MODES, 'list'),
             'gridColumns'       => max(self::MIN_COLUMNS, min(self::MAX_COLUMNS, absint($settings['grid_columns'] ?? 2))),
