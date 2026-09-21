@@ -13,17 +13,12 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * What every review widget shares on top of ProductWidgetTrait: it is hidden
- * outright on a core with no review feature, and it explains itself in the
- * editor instead of rendering nothing when the store or the product has
- * reviews switched off.
+ * What every review widget shares on top of ProductWidgetTrait: it explains
+ * itself in the editor instead of rendering nothing when the store or the
+ * product has reviews switched off.
  *
- * Panel visibility and render-time availability are separate on purpose. A
- * core without the feature hides the widget, because offering a control that
- * could never work is worse than an absent widget. A store that merely has
- * the module switched off keeps the widget listed and says so on the canvas —
- * the merchant can go and switch it on, and an existing page keeps its widget
- * rather than silently losing it.
+ * The store module remains visible in Elementor when disabled so the merchant
+ * can enable it without silently losing an existing widget.
  */
 trait ReviewWidgetTrait
 {
@@ -33,10 +28,6 @@ trait ReviewWidgetTrait
 
     public function show_in_panel()
     {
-        if (!ReviewSupport::isSupportedByCore()) {
-            return false;
-        }
-
         return $this->productShowInPanel();
     }
 
@@ -82,13 +73,6 @@ trait ReviewWidgetTrait
      */
     protected static function verifiedBadgeDefault(): string
     {
-        // A FluentCart without the review feature has no such class, and this
-        // runs while Elementor builds the controls for a widget it registers
-        // either way. ReviewSupport is where that question is answered once.
-        if (!ReviewSupport::isSupportedByCore()) {
-            return 'yes';
-        }
-
         $settings = (array) ProductReviewService::getReviewSettings();
 
         return (!isset($settings['show_verified_badge']) || $settings['show_verified_badge'] === 'yes') ? 'yes' : '';
