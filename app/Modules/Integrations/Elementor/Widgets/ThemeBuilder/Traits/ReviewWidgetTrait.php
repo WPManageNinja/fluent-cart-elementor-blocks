@@ -4,6 +4,8 @@ namespace FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\T
 
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support\ReviewSupport;
 use FluentCartElementorBlocks\App\Utils\Enqueuer\Enqueue;
+use FluentCart\App\App;
+use FluentCart\App\Vite;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -66,6 +68,57 @@ trait ReviewWidgetTrait
             FLUENTCART_ELEMENTOR_BLOCKS_VERSION,
             true
         );
+    }
+
+    /**
+     * Where the Verified Purchase switcher starts.
+     *
+     * The store has its own switch for the badge, and a widget control that
+     * always started on would quietly overrule it: a store that had turned
+     * badges off would find them back on every page carrying this widget.
+     * Reading the store's answer as the default keeps the control honest and
+     * still lets a single placement differ.
+     */
+    protected static function verifiedBadgeDefault(): string
+    {
+        if (!class_exists('FluentCart\\App\\Services\\ProductReviewService')
+            || !method_exists('FluentCart\\App\\Services\\ProductReviewService', 'getReviewSettings')) {
+            return 'yes';
+        }
+
+        $settings = (array) call_user_func(['FluentCart\\App\\Services\\ProductReviewService', 'getReviewSettings']);
+
+        return (!isset($settings['show_verified_badge']) || $settings['show_verified_badge'] === 'yes') ? 'yes' : '';
+    }
+
+    /**
+     * Swiper, ahead of any slider that might need it.
+     *
+     * Core loads it while drawing a slider, which is in time for a page but
+     * not for the editor: a section drawn in list view never loads it, so
+     * switching to slider view afterwards leaves the rows stacked with no
+     * script to build them.
+     *
+     * @return string the script handle to depend on
+     */
+    protected static function registerSliderAssets(): string
+    {
+        static $registered = false;
+        $handle = App::getInstance()->config->get('app.slug') . '-fluentcart-swiper-js';
+
+        if ($registered) {
+            return $handle;
+        }
+
+        $registered = true;
+
+        Vite::enqueueStaticScript($handle, 'public/lib/swiper/swiper-bundle.min.js', []);
+        Vite::enqueueStaticStyle(
+            App::getInstance()->config->get('app.slug') . '-fluentcart-swiper-css',
+            'public/lib/swiper/swiper-bundle.min.css'
+        );
+
+        return $handle;
     }
 
     /**
