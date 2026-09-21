@@ -42,8 +42,12 @@ class ProductReviewListWidget extends Widget_Base
     const VIEW_MODES = ['list', 'grid', 'slider'];
     const SORT_COLUMNS = ['created_at', 'rating'];
     const SORT_ORDERS = ['DESC', 'ASC'];
+    const FALLBACK_SORT = 'created_at-DESC';
     const PAGINATION_TYPES = ['numbers', 'fraction', 'bullets'];
     const ARROW_SIZES = ['sm', 'md', 'lg'];
+    const AUTOPLAY_MODES = ['no', 'yes', 'hover'];
+    const MIN_COLUMNS = 2;
+    const MAX_COLUMNS = 4;
     const DEFAULT_STAR_COLOR = '#f59e0b';
 
     /**
@@ -93,8 +97,23 @@ class ProductReviewListWidget extends Widget_Base
     public function get_style_depends()
     {
         AssetLoader::loadSingleProductAssets();
+        static::registerSliderAssets();
 
         return [];
+    }
+
+    /**
+     * A class method wins over the trait's, so the shared re-init handler is
+     * named here rather than inherited.
+     */
+    public function get_script_depends()
+    {
+        static::registerReviewEditorScript();
+
+        return [
+            'fluentcart-product-reviews-elementor',
+            static::registerSliderAssets(),
+        ];
     }
 
     protected function fieldLabels(): array
@@ -128,26 +147,31 @@ class ProductReviewListWidget extends Widget_Base
         $this->registerProductSourceControls();
 
         $this->add_control(
-            'per_page',
+            'min_rating',
             [
-                'label'       => esc_html__('Reviews per Page', 'fluent-cart-elementor-blocks'),
-                'description' => esc_html__('0 uses the store setting.', 'fluent-cart-elementor-blocks'),
-                'type'        => Controls_Manager::NUMBER,
-                'min'         => 0,
-                'max'         => 100,
-                'default'     => 0,
+                'label'       => esc_html__('Minimum rating', 'fluent-cart-elementor-blocks'),
+                'description' => esc_html__('Lower-rated reviews are left out of the list entirely, and the count and the pages follow.', 'fluent-cart-elementor-blocks'),
+                'type'        => Controls_Manager::SELECT,
+                'default'     => '0',
+                'options'     => [
+                    '0' => esc_html__('All ratings', 'fluent-cart-elementor-blocks'),
+                    '2' => esc_html__('2 stars and up', 'fluent-cart-elementor-blocks'),
+                    '3' => esc_html__('3 stars and up', 'fluent-cart-elementor-blocks'),
+                    '4' => esc_html__('4 stars and up', 'fluent-cart-elementor-blocks'),
+                    '5' => esc_html__('5 stars only', 'fluent-cart-elementor-blocks'),
+                ],
                 'separator'   => 'before',
             ]
         );
 
         $this->add_control(
-            'min_rating',
+            'content_max_words',
             [
-                'label'       => esc_html__('Minimum Rating', 'fluent-cart-elementor-blocks'),
-                'description' => esc_html__('Show only reviews at or above this rating. 0 shows them all.', 'fluent-cart-elementor-blocks'),
+                'label'       => esc_html__('Words shown', 'fluent-cart-elementor-blocks'),
+                'description' => esc_html__('Reviews show in full. Move the slider to cut longer ones down.', 'fluent-cart-elementor-blocks'),
                 'type'        => Controls_Manager::NUMBER,
                 'min'         => 0,
-                'max'         => 5,
+                'max'         => 500,
                 'default'     => 0,
             ]
         );
@@ -166,7 +190,7 @@ class ProductReviewListWidget extends Widget_Base
         $this->add_control(
             'view_mode',
             [
-                'label'   => esc_html__('View', 'fluent-cart-elementor-blocks'),
+                'label'   => esc_html__('View Mode', 'fluent-cart-elementor-blocks'),
                 'type'    => Controls_Manager::SELECT,
                 'default' => 'list',
                 'options' => [
@@ -182,8 +206,8 @@ class ProductReviewListWidget extends Widget_Base
             [
                 'label'     => esc_html__('Columns', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::NUMBER,
-                'min'       => 1,
-                'max'       => 6,
+                'min'       => self::MIN_COLUMNS,
+                'max'       => self::MAX_COLUMNS,
                 'default'   => 2,
                 'condition' => [
                     'view_mode' => ['grid', 'slider'],
@@ -194,7 +218,7 @@ class ProductReviewListWidget extends Widget_Base
         $this->add_control(
             'slider_arrows',
             [
-                'label'        => esc_html__('Arrows', 'fluent-cart-elementor-blocks'),
+                'label'        => esc_html__('Show arrows', 'fluent-cart-elementor-blocks'),
                 'type'         => Controls_Manager::SWITCHER,
                 'label_on'     => esc_html__('Show', 'fluent-cart-elementor-blocks'),
                 'label_off'    => esc_html__('Hide', 'fluent-cart-elementor-blocks'),
@@ -225,28 +249,31 @@ class ProductReviewListWidget extends Widget_Base
         $this->add_control(
             'slider_autoplay',
             [
-                'label'        => esc_html__('Autoplay', 'fluent-cart-elementor-blocks'),
-                'type'         => Controls_Manager::SWITCHER,
-                'label_on'     => esc_html__('Yes', 'fluent-cart-elementor-blocks'),
-                'label_off'    => esc_html__('No', 'fluent-cart-elementor-blocks'),
-                'return_value' => 'yes',
-                'default'      => '',
-                'condition'    => ['view_mode' => 'slider'],
+                'label'     => esc_html__('Autoplay', 'fluent-cart-elementor-blocks'),
+                'type'      => Controls_Manager::SELECT,
+                'default'   => 'no',
+                'options'   => [
+                    'no'    => esc_html__('Disabled', 'fluent-cart-elementor-blocks'),
+                    'yes'   => esc_html__('Always', 'fluent-cart-elementor-blocks'),
+                    'hover' => esc_html__('On Hover', 'fluent-cart-elementor-blocks'),
+                ],
+                'condition' => ['view_mode' => 'slider'],
             ]
         );
 
         $this->add_control(
             'slider_autoplay_delay',
             [
-                'label'     => esc_html__('Autoplay Delay (ms)', 'fluent-cart-elementor-blocks'),
-                'type'      => Controls_Manager::NUMBER,
-                'min'       => 1000,
-                'max'       => 30000,
-                'step'      => 500,
+                'label'       => esc_html__('Autoplay Delay (ms)', 'fluent-cart-elementor-blocks'),
+                'description' => esc_html__('Time between slides in milliseconds', 'fluent-cart-elementor-blocks'),
+                'type'        => Controls_Manager::NUMBER,
+                'min'       => 300,
+                'max'       => 10000,
+                'step'      => 100,
                 'default'   => 3000,
                 'condition' => [
                     'view_mode'       => 'slider',
-                    'slider_autoplay' => 'yes',
+                    'slider_autoplay' => ['yes', 'hover'],
                 ],
             ]
         );
@@ -254,7 +281,7 @@ class ProductReviewListWidget extends Widget_Base
         $this->add_control(
             'slider_infinite',
             [
-                'label'        => esc_html__('Loop', 'fluent-cart-elementor-blocks'),
+                'label'        => esc_html__('Infinite loop', 'fluent-cart-elementor-blocks'),
                 'type'         => Controls_Manager::SWITCHER,
                 'label_on'     => esc_html__('Yes', 'fluent-cart-elementor-blocks'),
                 'label_off'    => esc_html__('No', 'fluent-cart-elementor-blocks'),
@@ -315,28 +342,12 @@ class ProductReviewListWidget extends Widget_Base
         );
 
         $this->add_control(
-            'default_sort_by',
+            'default_sort',
             [
-                'label'   => esc_html__('Sort By', 'fluent-cart-elementor-blocks'),
+                'label'   => esc_html__('Default Sort', 'fluent-cart-elementor-blocks'),
                 'type'    => Controls_Manager::SELECT,
-                'default' => 'created_at',
-                'options' => [
-                    'created_at' => esc_html__('Date', 'fluent-cart-elementor-blocks'),
-                    'rating'     => esc_html__('Rating', 'fluent-cart-elementor-blocks'),
-                ],
-            ]
-        );
-
-        $this->add_control(
-            'default_sort_order',
-            [
-                'label'   => esc_html__('Order', 'fluent-cart-elementor-blocks'),
-                'type'    => Controls_Manager::SELECT,
-                'default' => 'DESC',
-                'options' => [
-                    'DESC' => esc_html__('Newest / Highest first', 'fluent-cart-elementor-blocks'),
-                    'ASC'  => esc_html__('Oldest / Lowest first', 'fluent-cart-elementor-blocks'),
-                ],
+                'default' => self::FALLBACK_SORT,
+                'options' => static::sortChoices(),
             ]
         );
 
@@ -401,19 +412,6 @@ class ProductReviewListWidget extends Widget_Base
         );
 
         $this->add_control(
-            'content_max_words',
-            [
-                'label'       => esc_html__('Trim Review Text', 'fluent-cart-elementor-blocks'),
-                'description' => esc_html__('Cut the review text to this many words. 0 shows all of it.', 'fluent-cart-elementor-blocks'),
-                'type'        => Controls_Manager::NUMBER,
-                'min'         => 0,
-                'max'         => 500,
-                'default'     => 0,
-                'condition'   => ['row_layout' => 'custom'],
-            ]
-        );
-
-        $this->add_control(
             'standard_fields_heading',
             [
                 'label'     => esc_html__('Show in each review', 'fluent-cart-elementor-blocks'),
@@ -437,7 +435,9 @@ class ProductReviewListWidget extends Widget_Base
                     'label_on'     => esc_html__('Show', 'fluent-cart-elementor-blocks'),
                     'label_off'    => esc_html__('Hide', 'fluent-cart-elementor-blocks'),
                     'return_value' => 'yes',
-                    'default'      => 'yes',
+                    // The badge has a store-wide switch of its own, so it
+                    // starts where the store stands rather than always on.
+                    'default'      => $key === 'show_verified' ? static::verifiedBadgeDefault() : 'yes',
                     'condition'    => ['row_layout' => 'standard'],
                 ]
             );
@@ -474,15 +474,27 @@ class ProductReviewListWidget extends Widget_Base
         $this->add_control(
             'pagination_type',
             [
-                'label'     => esc_html__('Style', 'fluent-cart-elementor-blocks'),
+                'label'     => esc_html__('Pagination Type', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::SELECT,
                 'default'   => 'numbers',
                 'options'   => [
                     'numbers'  => esc_html__('Numbers', 'fluent-cart-elementor-blocks'),
-                    'fraction' => esc_html__('Page X of Y', 'fluent-cart-elementor-blocks'),
+                    'fraction' => esc_html__('Fraction', 'fluent-cart-elementor-blocks'),
                     'bullets'  => esc_html__('Bullets', 'fluent-cart-elementor-blocks'),
                 ],
                 'condition' => ['show_pagination' => 'yes'],
+            ]
+        );
+
+        $this->add_control(
+            'per_page',
+            [
+                'label'       => esc_html__('Reviews Per Page', 'fluent-cart-elementor-blocks'),
+                'description' => esc_html__('0 uses the store setting.', 'fluent-cart-elementor-blocks'),
+                'type'        => Controls_Manager::NUMBER,
+                'min'         => 0,
+                'max'         => 100,
+                'default'     => 0,
             ]
         );
 
@@ -662,6 +674,96 @@ class ProductReviewListWidget extends Widget_Base
         return $this->block('fluent-cart/product-review-list', $attributes, $children);
     }
 
+
+    /**
+     * The sorts this widget offers.
+     *
+     * The widget's own list, not core's: the four the storefront ships with,
+     * written here in this plugin's words so the panel does not depend on a
+     * core class existing or on how core happens to spell them.
+     *
+     * Still run through the storefront's sort filter, because the renderer
+     * runs the dropdown through the same one. A store or Pro that adds a sort
+     * — Most Helpful arrives this way — would otherwise be offering the
+     * shopper an order the widget has no way to open on.
+     *
+     * @return array<string, string>
+     */
+    public static function sortChoices(): array
+    {
+        $choices = [
+            'created_at-DESC' => esc_html__('Newest', 'fluent-cart-elementor-blocks'),
+            'created_at-ASC'  => esc_html__('Oldest', 'fluent-cart-elementor-blocks'),
+            'rating-DESC'     => esc_html__('Highest Rating', 'fluent-cart-elementor-blocks'),
+            'rating-ASC'      => esc_html__('Lowest Rating', 'fluent-cart-elementor-blocks'),
+        ];
+
+        $filtered = apply_filters('fluent_cart/review/sort_options', $choices);
+
+        if (!is_array($filtered) || !$filtered) {
+            return $choices;
+        }
+
+        return array_map('strval', $filtered);
+    }
+
+    /**
+     * The chosen sort as the column and order the list block asks for.
+     *
+     * A sort key is 'column-ORDER', and the order is the tail, so a column
+     * carrying a dash of its own still splits correctly. Widgets saved before
+     * the two selects became one keep working from what they stored.
+     *
+     * @return array{0: string, 1: string}
+     */
+    protected function defaultSort(array $settings): array
+    {
+        $key = (string) ($settings['default_sort'] ?? '');
+
+        if ($key === '' || !array_key_exists($key, static::sortChoices())) {
+            $legacyBy = $this->pick($settings, 'default_sort_by', self::SORT_COLUMNS, '');
+            $legacyOrder = $this->pick($settings, 'default_sort_order', self::SORT_ORDERS, '');
+
+            if ($legacyBy && $legacyOrder) {
+                return [$legacyBy, $legacyOrder];
+            }
+
+            $key = self::FALLBACK_SORT;
+        }
+
+        return static::splitSort($key);
+    }
+
+    /**
+     * A sort key as the column and order the renderer asks for.
+     *
+     * The order is the tail, so a column carrying a dash of its own still
+     * splits correctly. Shared with the all-in-one widget, which offers the
+     * same list of sorts from one control.
+     *
+     * @return array{0: string, 1: string}
+     */
+    public static function splitSort(string $key): array
+    {
+        if ($key === '' || !array_key_exists($key, static::sortChoices())) {
+            $key = self::FALLBACK_SORT;
+        }
+
+        $cut = strrpos($key, '-');
+
+        if ($cut === false) {
+            return ['created_at', 'DESC'];
+        }
+
+        $column = substr($key, 0, $cut);
+        $order = strtoupper(substr($key, $cut + 1));
+
+        return [
+            $column !== '' ? $column : 'created_at',
+            in_array($order, self::SORT_ORDERS, true) ? $order : 'DESC',
+        ];
+    }
+
     /**
      * The list block's own attributes, shared by both layouts.
      *
@@ -670,6 +772,8 @@ class ProductReviewListWidget extends Widget_Base
      */
     protected function listAttributes($productId, array $settings): array
     {
+        list($sortBy, $sortOrder) = $this->defaultSort($settings);
+
         return [
             // The widget has already resolved the product, including the
             // editor's preview fallback, so the block is told which one
@@ -678,11 +782,11 @@ class ProductReviewListWidget extends Widget_Base
             'query_type'       => 'custom',
             'product_id'       => (int) $productId,
             'viewMode'         => $this->pick($settings, 'view_mode', self::VIEW_MODES, 'list'),
-            'gridColumns'      => max(1, min(6, absint($settings['grid_columns'] ?? 2))),
+            'gridColumns'      => max(self::MIN_COLUMNS, min(self::MAX_COLUMNS, absint($settings['grid_columns'] ?? 2))),
             'sliderSettings'   => $this->sliderSettings($settings),
             'showSortControls' => $this->isOn($settings, 'show_sorting'),
-            'defaultSortBy'    => $this->pick($settings, 'default_sort_by', self::SORT_COLUMNS, 'created_at'),
-            'defaultSortOrder' => $this->pick($settings, 'default_sort_order', self::SORT_ORDERS, 'DESC'),
+            'defaultSortBy'    => $sortBy,
+            'defaultSortOrder' => $sortOrder,
             'perPage'          => max(0, min(100, absint($settings['per_page'] ?? 0))),
         ];
     }
@@ -716,6 +820,7 @@ class ProductReviewListWidget extends Widget_Base
             'showFilterChips'   => $this->isOn($settings, 'show_filter'),
             'starColor'         => sanitize_hex_color((string) ($settings['star_color'] ?? '')) ?: self::DEFAULT_STAR_COLOR,
             'minRating'         => max(0, min(5, absint($settings['min_rating'] ?? 0))),
+            'maxWords'          => max(0, min(500, absint($settings['content_max_words'] ?? 0))),
             'paginationType'    => $this->pick($settings, 'pagination_type', self::PAGINATION_TYPES, 'numbers'),
         ];
     }
@@ -776,8 +881,8 @@ class ProductReviewListWidget extends Widget_Base
     protected function sliderSettings(array $settings): array
     {
         return [
-            'autoplay'      => $this->isOn($settings, 'slider_autoplay') ? 'yes' : 'no',
-            'autoplayDelay' => max(1000, min(30000, absint($settings['slider_autoplay_delay'] ?? 3000))),
+            'autoplay'      => $this->pick($settings, 'slider_autoplay', self::AUTOPLAY_MODES, 'no'),
+            'autoplayDelay' => max(300, min(10000, absint($settings['slider_autoplay_delay'] ?? 3000))),
             'arrows'        => $this->isOn($settings, 'slider_arrows') ? 'yes' : 'no',
             'arrowsSize'    => $this->pick($settings, 'slider_arrows_size', self::ARROW_SIZES, 'md'),
             'infinite'      => $this->isOn($settings, 'slider_infinite') ? 'yes' : 'no',
