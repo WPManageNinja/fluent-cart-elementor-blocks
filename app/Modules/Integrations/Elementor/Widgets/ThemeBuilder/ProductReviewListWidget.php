@@ -156,9 +156,6 @@ class ProductReviewListWidget extends Widget_Base
                 'min'         => 0,
                 'max'         => 500,
                 'default'     => 0,
-                // Only a composed row carries a Review Content block of its
-                // own; core's storefront row prints the review in full.
-                'condition'   => ['row_layout' => 'custom'],
             ]
         );
 
