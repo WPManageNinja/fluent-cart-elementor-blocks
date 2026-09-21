@@ -38,7 +38,7 @@ class ProductReviewsWidget extends Widget_Base
     const ARROW_SIZES = ['sm', 'md', 'lg'];
     const AUTOPLAY_MODES = ['no', 'yes', 'hover'];
     const PAGINATION_TYPES = ['numbers', 'fraction', 'bullets'];
-    const CONTAINERS = ['drawer', 'modal', 'link'];
+    const CONTAINERS = ['drawer', 'modal'];
     const LAYOUTS = ['inline', 'steps'];
 
     public function get_name()
@@ -154,7 +154,6 @@ class ProductReviewsWidget extends Widget_Base
                 'options'     => [
                     'drawer' => esc_html__('Drawer (slides in from the side)', 'fluent-cart-elementor-blocks'),
                     'modal'  => esc_html__('Modal (centered on the screen)', 'fluent-cart-elementor-blocks'),
-                    'link'   => esc_html__('Link (open another page)', 'fluent-cart-elementor-blocks'),
                 ],
                 'description' => esc_html__('Where the form appears when the button is clicked.', 'fluent-cart-elementor-blocks'),
             ]
@@ -171,19 +170,6 @@ class ProductReviewsWidget extends Widget_Base
                     'steps'  => esc_html__('Steps (one at a time)', 'fluent-cart-elementor-blocks'),
                 ],
                 'description' => esc_html__('Steps walks the reviewer through rating, details and photos. Inline shows every field at once.', 'fluent-cart-elementor-blocks'),
-                'condition'   => ['container!' => 'link'],
-            ]
-        );
-
-        $this->add_control(
-            'link_url',
-            [
-                'label'       => esc_html__('Link URL', 'fluent-cart-elementor-blocks'),
-                'type'        => Controls_Manager::URL,
-                'options'     => ['is_external', 'nofollow'],
-                'placeholder' => esc_html__('https://example.com/write-a-review/', 'fluent-cart-elementor-blocks'),
-                'description' => esc_html__('Where the button sends the visitor. Without one the button is not rendered.', 'fluent-cart-elementor-blocks'),
-                'condition'   => ['container' => 'link'],
             ]
         );
 
@@ -214,7 +200,6 @@ class ProductReviewsWidget extends Widget_Base
                 'type'        => Controls_Manager::TEXT,
                 'placeholder' => esc_html__('Edit your review', 'fluent-cart-elementor-blocks'),
                 'description' => esc_html__('Shown when the visitor already has a review for this product', 'fluent-cart-elementor-blocks'),
-                'condition'   => ['container!' => 'link'],
             ]
         );
 
@@ -225,7 +210,6 @@ class ProductReviewsWidget extends Widget_Base
                 'type'        => Controls_Manager::TEXT,
                 'placeholder' => esc_html__('Log in to Review', 'fluent-cart-elementor-blocks'),
                 'description' => esc_html__('Shown when a visitor must log in before reviewing', 'fluent-cart-elementor-blocks'),
-                'condition'   => ['container!' => 'link'],
             ]
         );
 
@@ -587,7 +571,6 @@ class ProductReviewsWidget extends Widget_Base
      */
     protected function rendererOptions(array $settings): array
     {
-        $link = is_array($settings['link_url'] ?? null) ? $settings['link_url'] : [];
         list($sortBy, $sortOrder) = ProductReviewListWidget::splitSort((string) ($settings['default_sort'] ?? ''));
 
         return [
@@ -616,8 +599,6 @@ class ProductReviewsWidget extends Widget_Base
             ],
             'container'         => $this->pick($settings, 'container', self::CONTAINERS, 'drawer'),
             'layout'            => $this->pick($settings, 'layout', self::LAYOUTS, 'inline'),
-            'linkUrl'           => esc_url_raw((string) ($link['url'] ?? '')),
-            'linkTarget'        => !empty($link['is_external']) ? 'blank' : 'self',
             'ctaAddText'        => sanitize_text_field((string) ($settings['add_review_button_text'] ?? '')),
             'ctaEditText'       => sanitize_text_field((string) ($settings['edit_review_button_text'] ?? '')),
             'ctaLoginText'      => sanitize_text_field((string) ($settings['login_review_button_text'] ?? '')),
