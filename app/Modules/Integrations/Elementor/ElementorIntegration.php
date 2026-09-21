@@ -51,15 +51,19 @@ use FluentCartElementorBlocks\App\Utils\Enqueuer\Enqueue;
 class ElementorIntegration
 {
     /**
-     * The widgets that draw a review section of their own. Used to decide
-     * whether core's auto-appended section would be a second copy.
+     * The widgets that stand in for core's whole auto-appended review section,
+     * and so make its copy a duplicate.
+     *
+     * Only two qualify. The all-in-one draws the section outright, and the list
+     * draws its body — the part a second copy would visibly repeat. A lone
+     * Review Summary, Review Form or Write a Review Button does not replace
+     * anything: suppressing core for one of those would take the review list
+     * off the page and leave the visitor with less than they had, which is a
+     * worse outcome than a repeated summary.
      */
-    const REVIEW_WIDGETS = [
+    const SECTION_REPLACING_WIDGETS = [
         'fluentcart_product_reviews',
         'fluentcart_product_review_list',
-        'fluentcart_product_review_summary',
-        'fluentcart_product_review_form',
-        'fluentcart_write_a_review_button',
     ];
 
     public function register()
@@ -606,6 +610,12 @@ class ElementorIntegration
      * widget, in which case core's copy would already be out before anything
      * could know a second one was coming.
      *
+     * It fires only for a widget that actually stands in for the section — see
+     * SECTION_REPLACING_WIDGETS — and only when that widget draws the product
+     * whose page this is. Removing the section for a lone summary, or for a
+     * list pointed at a different product, would leave the page with fewer
+     * reviews than before rather than fewer copies of them.
+     *
      * Not done through fluent_cart/single_product_page/show_reviews, though
      * that filter exists and would be the obvious lever: it is the store's
      * visibility policy, which the widgets themselves consult through
@@ -691,7 +701,10 @@ class ElementorIntegration
 
             $type = isset($element['widgetType']) ? $element['widgetType'] : '';
 
-            if ($type !== '' && in_array($type, self::REVIEW_WIDGETS, true)) {
+            if ($type !== ''
+                && in_array($type, self::SECTION_REPLACING_WIDGETS, true)
+                && $this->widgetDrawsCurrentProduct($element)
+            ) {
                 return true;
             }
 
@@ -701,6 +714,42 @@ class ElementorIntegration
         }
 
         return false;
+    }
+
+    /**
+     * Whether this widget draws the product whose page is being rendered.
+     *
+     * A widget pointed at some other product is showing that product's reviews,
+     * not this one's, so it replaces nothing here. Without this check a Review
+     * List for last season's jacket, sitting in a product template, would take
+     * the review section off every other product on the store.
+     *
+     * Anything that is not an explicit custom pick draws whatever product is in
+     * context, which on this request is the current one.
+     *
+     * @param array $element the widget's saved element data
+     */
+    protected function widgetDrawsCurrentProduct(array $element): bool
+    {
+        $settings = isset($element['settings']) && is_array($element['settings'])
+            ? $element['settings']
+            : [];
+
+        $source = isset($settings['source']) ? $settings['source'] : 'default';
+
+        if ($source !== 'custom') {
+            return true;
+        }
+
+        $productId = isset($settings['product_id']) ? absint($settings['product_id']) : 0;
+
+        // A custom source with nothing chosen falls back to the current
+        // product in the widget itself, so it replaces this section too.
+        if (!$productId) {
+            return true;
+        }
+
+        return $productId === (int) \get_the_ID();
     }
 
     /**

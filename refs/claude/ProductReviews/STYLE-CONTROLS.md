@@ -66,7 +66,11 @@ and the three stylesheet constraints behind the selectors.
 
 Core hangs its own copy of this section on `the_content`, through `fluent_cart/product/after_product_content`. A page carrying both the Product Content widget and any review widget would therefore show the section twice.
 
-`ElementorIntegration::preventDuplicateProductReviews()` handles it on `template_redirect`: it scans the documents about to render the page for any widget in `ElementorIntegration::REVIEW_WIDGETS`, and if it finds one, removes core's listener from that hook — and only core's, found by instance in the hook's callback table, so third-party listeners survive.
+`ElementorIntegration::preventDuplicateProductReviews()` handles it on `template_redirect`: it scans the documents about to render the page and, finding a widget that stands in for the whole section, removes core's listener from that hook — and only core's, found by instance in the hook's callback table, so third-party listeners survive.
+
+**Only two widgets count**, listed in `ElementorIntegration::SECTION_REPLACING_WIDGETS`: the all-in-one, which draws the section outright, and the Review List, which draws its body. A lone Review Summary, Review Form or Write a Review Button replaces nothing, and suppressing core for one of those would take the review list off the page — leaving the visitor with less than they had, rather than fewer copies.
+
+**And only when the widget draws this product.** `widgetDrawsCurrentProduct()` reads the saved `source` and `product_id`: a widget pointed at another product shows that product's reviews and replaces nothing here. Without it, a Review List for last season's jacket sitting in a product template would strip the review section from every other product in the store. Anything that is not an explicit custom pick draws whatever is in context, which on this request is the current product.
 
 Two decisions worth keeping:
 
