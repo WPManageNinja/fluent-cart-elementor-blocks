@@ -41,6 +41,7 @@ use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ThemeBu
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ThemeBuilder\WriteAReviewButtonWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ThemeBuilder\ProductReviewFormWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ThemeBuilder\ProductReviewListWidget;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ThemeBuilder\ProductReviewsWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Documents\FluentCartProduct;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Documents\FluentCartProductPost;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Conditions\FluentCartCondition;
@@ -49,6 +50,18 @@ use FluentCartElementorBlocks\App\Utils\Enqueuer\Enqueue;
 
 class ElementorIntegration
 {
+    /**
+     * The widgets that draw a review section of their own. Used to decide
+     * whether core's auto-appended section would be a second copy.
+     */
+    const REVIEW_WIDGETS = [
+        'fluentcart_product_reviews',
+        'fluentcart_product_review_list',
+        'fluentcart_product_review_summary',
+        'fluentcart_product_review_form',
+        'fluentcart_write_a_review_button',
+    ];
+
     public function register()
     {
         if (!defined('ELEMENTOR_VERSION')) {
@@ -111,6 +124,9 @@ class ElementorIntegration
 
         // Disable FluentCart core's auto single product rendering when a Theme Builder template is active
         \add_filter('fluent_cart/disable_auto_single_product_page', [$this, 'maybeDisableAutoSingleProduct']);
+
+        // One review section per page, whichever way the page was built.
+        \add_action('template_redirect', [$this, 'preventDuplicateProductReviews'], 20);
     }
 
     public function registerCategories($elements_manager)
@@ -155,6 +171,7 @@ class ElementorIntegration
         $widgets_manager->register(new WriteAReviewButtonWidget());
         $widgets_manager->register(new ProductReviewFormWidget());
         $widgets_manager->register(new ProductReviewListWidget());
+        $widgets_manager->register(new ProductReviewsWidget());
     }
 
     public function registerControls($controls_manager)
@@ -567,6 +584,159 @@ class ElementorIntegration
         unset($post_types['fluent-products']);
 
         return $post_types;
+    }
+
+    /**
+     * Stop core appending its own review section to a product page that an
+     * Elementor review widget is already drawing.
+     *
+     * Core hangs the section on the_content, through
+     * fluent_cart/product/after_product_content. An Elementor product template
+     * usually never runs the_content, which is why reviews are missing from
+     * such a page to begin with — but the Product Content widget does run it,
+     * and a page carrying that widget and a review widget would show the
+     * section twice.
+     *
+     * Deciding here rather than when a widget renders is what makes it
+     * order-independent: the Product Content widget may sit above the review
+     * widget, in which case core's copy would already be out before anything
+     * could know a second one was coming.
+     *
+     * Not done through fluent_cart/single_product_page/show_reviews, though
+     * that filter exists and would be the obvious lever: it is the store's
+     * visibility policy, which the widgets themselves consult through
+     * ReviewSupport. Turning it off to suppress core's copy would turn the
+     * widgets off with it.
+     */
+    public function preventDuplicateProductReviews()
+    {
+        if (!\is_singular('fluent-products')) {
+            return;
+        }
+
+        if (!$this->currentDocumentsDrawReviews()) {
+            return;
+        }
+
+        $this->unhookCoreProductReviews();
+    }
+
+    /**
+     * Whether any Elementor document about to render this product page carries
+     * a review widget — a Theme Builder template claiming the single location,
+     * or the product's own Elementor content.
+     */
+    protected function currentDocumentsDrawReviews(): bool
+    {
+        foreach ($this->documentsForCurrentRequest() as $document) {
+            if ($this->documentHasReviewWidget($document)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @return array<int, \Elementor\Core\Base\Document>
+     */
+    protected function documentsForCurrentRequest(): array
+    {
+        $documents = [];
+
+        if (class_exists('\ElementorPro\Modules\ThemeBuilder\Module')) {
+            $module = \ElementorPro\Modules\ThemeBuilder\Module::instance();
+            $documents = array_values((array) $module->get_conditions_manager()->get_documents_for_location('single'));
+        }
+
+        // The product itself, when it was built with Elementor rather than
+        // through a template.
+        $own = \Elementor\Plugin::$instance->documents->get(\get_the_ID());
+
+        if ($own && $own->is_built_with_elementor()) {
+            $documents[] = $own;
+        }
+
+        return $documents;
+    }
+
+    /**
+     * Walk a document's saved elements looking for one of our review widgets.
+     *
+     * Reads the stored element data rather than rendering anything: this runs
+     * on template_redirect, before the document is built, and the data is the
+     * post meta Elementor has already loaded.
+     *
+     * @param \Elementor\Core\Base\Document $document
+     */
+    protected function documentHasReviewWidget($document): bool
+    {
+        if (!$document || !method_exists($document, 'get_elements_data')) {
+            return false;
+        }
+
+        return $this->elementsContainReviewWidget((array) $document->get_elements_data());
+    }
+
+    protected function elementsContainReviewWidget(array $elements): bool
+    {
+        foreach ($elements as $element) {
+            if (!is_array($element)) {
+                continue;
+            }
+
+            $type = isset($element['widgetType']) ? $element['widgetType'] : '';
+
+            if ($type !== '' && in_array($type, self::REVIEW_WIDGETS, true)) {
+                return true;
+            }
+
+            if (!empty($element['elements']) && $this->elementsContainReviewWidget((array) $element['elements'])) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Remove core's own listener from fluent_cart/product/after_product_content
+     * and leave every other listener on it alone.
+     *
+     * The callback is a method on a TemplateActions instance this plugin never
+     * held, so remove_action() cannot name it. Finding it in the hook's own
+     * callback table is the surgical way: remove_all_actions() would take any
+     * third-party listener with it, and those have nothing to do with reviews.
+     */
+    protected function unhookCoreProductReviews()
+    {
+        global $wp_filter;
+
+        $hook = 'fluent_cart/product/after_product_content';
+
+        if (empty($wp_filter[$hook])) {
+            return;
+        }
+
+        foreach ($wp_filter[$hook]->callbacks as $priority => $callbacks) {
+            foreach ($callbacks as $callback) {
+                $fn = isset($callback['function']) ? $callback['function'] : null;
+
+                if (!is_array($fn) || count($fn) !== 2) {
+                    continue;
+                }
+
+                if (!is_object($fn[0]) || $fn[1] !== 'renderProductReviews') {
+                    continue;
+                }
+
+                if (!($fn[0] instanceof \FluentCart\App\Modules\Templating\TemplateActions)) {
+                    continue;
+                }
+
+                \remove_action($hook, $fn, $priority);
+            }
+        }
     }
 
     /**
