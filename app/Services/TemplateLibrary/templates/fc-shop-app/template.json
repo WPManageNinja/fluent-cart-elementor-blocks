@@ -23,7 +23,14 @@
                         "enable_taxonomy_product_categories": "yes",
                         "enable_taxonomy_product_brands": "yes",
                         "enable_price_range_filter": "yes",
-                        "price_range_label": "Price"
+                        "price_range_label": "Price",
+                        "card_elements": [
+                            { "_id": "ce01", "element_type": "image" },
+                            { "_id": "ce02", "element_type": "title" },
+                            { "_id": "ce03", "element_type": "rating" },
+                            { "_id": "ce04", "element_type": "price" },
+                            { "_id": "ce05", "element_type": "button" }
+                        ]
                     },
                     "elements": []
                 }
