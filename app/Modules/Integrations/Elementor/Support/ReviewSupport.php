@@ -31,14 +31,37 @@ if (!defined('ABSPATH')) {
 class ReviewSupport
 {
     /**
-     * The core classes the review widgets render through. All of them, not a
-     * sample: a partial backport that carried the renderer but not the
-     * service would otherwise pass the gate and fatal on first render.
+     * The core API the review widgets render through: every class, and on each
+     * of them every method one of the six widgets actually calls.
+     *
+     * Classes alone are not the contract. A fork or a partial backport can
+     * carry ProductReviewRenderer without renderWriteReviewCta(), or an
+     * AssetLoader without the review form's own bundle, and a class-only gate
+     * would wave that through and fatal on first render — which is the exact
+     * failure this gate exists to prevent.
+     *
+     * Keep this in step with the widgets: a new core call belongs here.
      */
-    const REQUIRED_CLASSES = [
-        'FluentCart\\App\\Services\\Renderer\\ProductReviewRenderer',
-        'FluentCart\\App\\Services\\ProductReviewService',
-        'FluentCart\\Api\\ModuleSettings',
+    const REQUIRED_API = [
+        'FluentCart\\Api\\ModuleSettings' => [
+            'isActive',
+        ],
+        'FluentCart\\App\\Services\\ProductReviewService' => [
+            'getProductRatingSummary',
+        ],
+        'FluentCart\\App\\Services\\Renderer\\ProductReviewRenderer' => [
+            'render',
+            'renderForm',
+            'renderSummarySection',
+            'renderWriteReviewCta',
+        ],
+        'FluentCart\\App\\Services\\Renderer\\ProductCardRender' => [
+            'renderStarRatingBlock',
+        ],
+        'FluentCart\\App\\Modules\\Templating\\AssetLoader' => [
+            'loadSingleProductAssets',
+            'loadReviewSubmissionFormAssets',
+        ],
     ];
 
     /**
@@ -55,9 +78,15 @@ class ReviewSupport
             return $supported;
         }
 
-        foreach (self::REQUIRED_CLASSES as $class) {
+        foreach (self::REQUIRED_API as $class => $methods) {
             if (!class_exists($class)) {
                 return $supported = false;
+            }
+
+            foreach ($methods as $method) {
+                if (!method_exists($class, $method)) {
+                    return $supported = false;
+                }
             }
         }
 
