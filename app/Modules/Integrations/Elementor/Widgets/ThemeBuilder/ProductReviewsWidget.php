@@ -38,6 +38,9 @@ class ProductReviewsWidget extends Widget_Base
     const ARROW_SIZES = ['sm', 'md', 'lg'];
     const AUTOPLAY_MODES = ['no', 'yes', 'hover'];
     const PAGINATION_TYPES = ['numbers', 'fraction', 'bullets'];
+    // The slider's own indicator, which is a different thing from the pager
+    // above: these move between loaded slides, that one loads more reviews.
+    const PAGINATION_STYLES = ['bullets', 'fraction', 'progressbar', 'segmented'];
     const CONTAINERS = ['drawer', 'modal'];
     const LAYOUTS = ['inline', 'steps'];
 
@@ -309,6 +312,38 @@ class ProductReviewsWidget extends Widget_Base
         );
 
         $this->add_control(
+            'slider_pagination',
+            [
+                'label'        => esc_html__('Show Pagination', 'fluent-cart-elementor-blocks'),
+                'type'         => Controls_Manager::SWITCHER,
+                'label_on'     => esc_html__('Show', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('Hide', 'fluent-cart-elementor-blocks'),
+                'return_value' => 'yes',
+                'default'      => 'yes',
+                'condition'    => ['view_mode' => 'slider'],
+            ]
+        );
+
+        $this->add_control(
+            'slider_pagination_type',
+            [
+                'label'     => esc_html__('Pagination Type', 'fluent-cart-elementor-blocks'),
+                'type'      => Controls_Manager::SELECT,
+                'default'   => 'bullets',
+                'options'   => [
+                    'bullets'     => esc_html__('Dots', 'fluent-cart-elementor-blocks'),
+                    'fraction'    => esc_html__('Fraction', 'fluent-cart-elementor-blocks'),
+                    'progressbar' => esc_html__('Progress Bar', 'fluent-cart-elementor-blocks'),
+                    'segmented'   => esc_html__('Segmented', 'fluent-cart-elementor-blocks'),
+                ],
+                'condition' => [
+                    'view_mode'         => 'slider',
+                    'slider_pagination' => 'yes',
+                ],
+            ]
+        );
+
+        $this->add_control(
             'slider_autoplay',
             [
                 'label'     => esc_html__('Autoplay', 'fluent-cart-elementor-blocks'),
@@ -459,6 +494,7 @@ class ProductReviewsWidget extends Widget_Base
             [
                 'label' => esc_html__('Pagination', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_CONTENT,
+                'condition' => ['view_mode' => ['list', 'grid']],
             ]
         );
 
@@ -583,7 +619,9 @@ class ProductReviewsWidget extends Widget_Base
             'showViewReply'     => $this->isOn($settings, 'show_view_reply'),
             'defaultSortBy'     => $sortBy,
             'defaultSortOrder'  => $sortOrder,
-            'perPage'           => max(0, min(100, absint($settings['per_page'] ?? 0))),
+            'perPage'           => $this->pick($settings, 'view_mode', self::VIEW_MODES, 'list') === 'slider'
+                ? 0
+                : max(0, min(100, absint($settings['per_page'] ?? 0))),
             'minRating'         => max(0, min(5, absint($settings['min_rating'] ?? 0))),
             'maxWords'          => max(0, min(500, absint($settings['content_max_words'] ?? 0))),
             'paginationType'    => $this->pick($settings, 'pagination_type', self::PAGINATION_TYPES, 'numbers'),
@@ -596,6 +634,8 @@ class ProductReviewsWidget extends Widget_Base
                 'arrowsSize'    => $this->pick($settings, 'slider_arrows_size', self::ARROW_SIZES, 'md'),
                 // Off by default, unlike the switchers above it.
                 'infinite'      => $this->isOn($settings, 'slider_infinite', false) ? 'yes' : 'no',
+                'pagination'    => $this->isOn($settings, 'slider_pagination') ? 'yes' : 'no',
+                'paginationType'=> $this->pick($settings, 'slider_pagination_type', self::PAGINATION_STYLES, 'bullets'),
             ],
             'container'         => $this->pick($settings, 'container', self::CONTAINERS, 'drawer'),
             'layout'            => $this->pick($settings, 'layout', self::LAYOUTS, 'inline'),
