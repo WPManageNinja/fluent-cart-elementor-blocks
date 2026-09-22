@@ -44,6 +44,9 @@ class ProductReviewListWidget extends Widget_Base
     const SORT_ORDERS = ['DESC', 'ASC'];
     const FALLBACK_SORT = 'created_at-DESC';
     const PAGINATION_TYPES = ['numbers', 'fraction', 'bullets'];
+    // The slider's own indicator, which is a different thing from the pager
+    // above: these move between loaded slides, that one loads more reviews.
+    const PAGINATION_STYLES = ['bullets', 'fraction', 'progressbar', 'segmented'];
     const ARROW_SIZES = ['sm', 'md', 'lg'];
     const AUTOPLAY_MODES = ['no', 'yes', 'hover'];
     const MIN_COLUMNS = 2;
@@ -242,6 +245,38 @@ class ProductReviewListWidget extends Widget_Base
                 'condition' => [
                     'view_mode'      => 'slider',
                     'slider_arrows'  => 'yes',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'slider_pagination',
+            [
+                'label'        => esc_html__('Show Pagination', 'fluent-cart-elementor-blocks'),
+                'type'         => Controls_Manager::SWITCHER,
+                'label_on'     => esc_html__('Show', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('Hide', 'fluent-cart-elementor-blocks'),
+                'return_value' => 'yes',
+                'default'      => 'yes',
+                'condition'    => ['view_mode' => 'slider'],
+            ]
+        );
+
+        $this->add_control(
+            'slider_pagination_type',
+            [
+                'label'     => esc_html__('Pagination Type', 'fluent-cart-elementor-blocks'),
+                'type'      => Controls_Manager::SELECT,
+                'default'   => 'bullets',
+                'options'   => [
+                    'bullets'    => esc_html__('Dots', 'fluent-cart-elementor-blocks'),
+                    'fraction'   => esc_html__('Fraction', 'fluent-cart-elementor-blocks'),
+                    'progressbar'=> esc_html__('Progress Bar', 'fluent-cart-elementor-blocks'),
+                    'segmented'  => esc_html__('Segmented', 'fluent-cart-elementor-blocks'),
+                ],
+                'condition' => [
+                    'view_mode'         => 'slider',
+                    'slider_pagination' => 'yes',
                 ],
             ]
         );
@@ -451,6 +486,7 @@ class ProductReviewListWidget extends Widget_Base
             [
                 'label' => esc_html__('Pagination', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_CONTENT,
+                'condition' => ['view_mode' => ['list', 'grid']],
             ]
         );
 
@@ -482,7 +518,10 @@ class ProductReviewListWidget extends Widget_Base
                     'fraction' => esc_html__('Fraction', 'fluent-cart-elementor-blocks'),
                     'bullets'  => esc_html__('Bullets', 'fluent-cart-elementor-blocks'),
                 ],
-                'condition' => ['show_pagination' => 'yes'],
+                'condition' => [
+                    'show_pagination' => 'yes',
+                    'view_mode'       => ['list', 'grid'],
+                ],
             ]
         );
 
@@ -495,6 +534,7 @@ class ProductReviewListWidget extends Widget_Base
                 'min'         => 0,
                 'max'         => 100,
                 'default'     => 0,
+                'condition'   => ['view_mode' => ['list', 'grid']],
             ]
         );
 
@@ -520,6 +560,7 @@ class ProductReviewListWidget extends Widget_Base
                 ],
                 'condition' => [
                     'show_pagination' => 'yes',
+                    'view_mode'       => ['list', 'grid'],
                     // Alignment rides on the pager block's own attribute.
                     'row_layout'      => 'custom',
                 ],
@@ -532,7 +573,10 @@ class ProductReviewListWidget extends Widget_Base
                 'type'            => Controls_Manager::RAW_HTML,
                 'raw'             => esc_html__('The standard layout paginates as soon as there is a second page, and FluentCart offers no way to turn that off. Pick Choose fields to control it.', 'fluent-cart-elementor-blocks'),
                 'content_classes' => 'elementor-descriptor',
-                'condition'       => ['row_layout' => 'standard'],
+                'condition'       => [
+                    'row_layout' => 'standard',
+                    'view_mode'  => ['list', 'grid'],
+                ],
             ]
         );
 
@@ -787,7 +831,9 @@ class ProductReviewListWidget extends Widget_Base
             'showSortControls' => $this->isOn($settings, 'show_sorting'),
             'defaultSortBy'    => $sortBy,
             'defaultSortOrder' => $sortOrder,
-            'perPage'          => max(0, min(100, absint($settings['per_page'] ?? 0))),
+            'perPage'          => $this->pick($settings, 'view_mode', self::VIEW_MODES, 'list') === 'slider'
+                ? 0
+                : max(0, min(100, absint($settings['per_page'] ?? 0))),
         ];
     }
 
@@ -886,6 +932,8 @@ class ProductReviewListWidget extends Widget_Base
             'arrows'        => $this->isOn($settings, 'slider_arrows') ? 'yes' : 'no',
             'arrowsSize'    => $this->pick($settings, 'slider_arrows_size', self::ARROW_SIZES, 'md'),
             'infinite'      => $this->isOn($settings, 'slider_infinite') ? 'yes' : 'no',
+            'pagination'    => $this->isOn($settings, 'slider_pagination') ? 'yes' : 'no',
+            'paginationType'=> $this->pick($settings, 'slider_pagination_type', self::PAGINATION_STYLES, 'bullets'),
         ];
     }
 
