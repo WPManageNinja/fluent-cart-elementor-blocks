@@ -36,6 +36,7 @@ class ProductReviewsWidget extends Widget_Base
     const MAX_COLUMNS = ProductReviewListWidget::MAX_COLUMNS;
     const VIEW_MODES = ['list', 'grid', 'slider'];
     const ARROW_SIZES = ['sm', 'md', 'lg'];
+    const ARROW_POSITIONS = ['overlap', 'outside', 'bottom'];
     const AUTOPLAY_MODES = ['no', 'yes', 'hover'];
     const PAGINATION_TYPES = ['numbers', 'fraction', 'bullets'];
     // The slider's own indicator, which is a different thing from the pager
@@ -308,6 +309,25 @@ class ProductReviewsWidget extends Widget_Base
                     'lg' => esc_html__('Large', 'fluent-cart-elementor-blocks'),
                 ],
                 'condition' => ['view_mode' => 'slider', 'slider_arrows' => 'yes'],
+            ]
+        );
+
+        $this->add_control(
+            'slider_arrows_position',
+            [
+                'label'       => esc_html__('Arrow Placement', 'fluent-cart-elementor-blocks'),
+                'description' => esc_html__('On the reviews saves space. Beside them keeps every review clear. Below them suits a narrow column, where side arrows have nowhere to go.', 'fluent-cart-elementor-blocks'),
+                'type'        => Controls_Manager::SELECT,
+                'default'     => 'overlap',
+                'options'     => [
+                    'overlap' => esc_html__('On the reviews', 'fluent-cart-elementor-blocks'),
+                    'outside' => esc_html__('Beside the reviews', 'fluent-cart-elementor-blocks'),
+                    'bottom'  => esc_html__('Below the reviews', 'fluent-cart-elementor-blocks'),
+                ],
+                'condition'   => [
+                    'view_mode'     => 'slider',
+                    'slider_arrows' => 'yes',
+                ],
             ]
         );
 
@@ -632,6 +652,7 @@ class ProductReviewsWidget extends Widget_Base
                 'autoplayDelay' => max(300, min(10000, absint($settings['slider_autoplay_delay'] ?? 3000))),
                 'arrows'        => $this->isOn($settings, 'slider_arrows') ? 'yes' : 'no',
                 'arrowsSize'    => $this->pick($settings, 'slider_arrows_size', self::ARROW_SIZES, 'md'),
+            'arrowsPosition'=> $this->pick($settings, 'slider_arrows_position', self::ARROW_POSITIONS, 'overlap'),
                 // Off by default, unlike the switchers above it.
                 'infinite'      => $this->isOn($settings, 'slider_infinite', false) ? 'yes' : 'no',
                 'pagination'    => $this->isOn($settings, 'slider_pagination') ? 'yes' : 'no',

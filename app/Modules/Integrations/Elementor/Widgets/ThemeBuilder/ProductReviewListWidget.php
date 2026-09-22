@@ -48,6 +48,7 @@ class ProductReviewListWidget extends Widget_Base
     // above: these move between loaded slides, that one loads more reviews.
     const PAGINATION_STYLES = ['bullets', 'fraction', 'progressbar', 'segmented'];
     const ARROW_SIZES = ['sm', 'md', 'lg'];
+    const ARROW_POSITIONS = ['overlap', 'outside', 'bottom'];
     const AUTOPLAY_MODES = ['no', 'yes', 'hover'];
     const MIN_COLUMNS = 2;
     const MAX_COLUMNS = 4;
@@ -245,6 +246,25 @@ class ProductReviewListWidget extends Widget_Base
                 'condition' => [
                     'view_mode'      => 'slider',
                     'slider_arrows'  => 'yes',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'slider_arrows_position',
+            [
+                'label'       => esc_html__('Arrow Placement', 'fluent-cart-elementor-blocks'),
+                'description' => esc_html__('On the reviews saves space. Beside them keeps every review clear. Below them suits a narrow column, where side arrows have nowhere to go.', 'fluent-cart-elementor-blocks'),
+                'type'        => Controls_Manager::SELECT,
+                'default'     => 'overlap',
+                'options'     => [
+                    'overlap' => esc_html__('On the reviews', 'fluent-cart-elementor-blocks'),
+                    'outside' => esc_html__('Beside the reviews', 'fluent-cart-elementor-blocks'),
+                    'bottom'  => esc_html__('Below the reviews', 'fluent-cart-elementor-blocks'),
+                ],
+                'condition'   => [
+                    'view_mode'     => 'slider',
+                    'slider_arrows' => 'yes',
                 ],
             ]
         );
@@ -931,6 +951,7 @@ class ProductReviewListWidget extends Widget_Base
             'autoplayDelay' => max(300, min(10000, absint($settings['slider_autoplay_delay'] ?? 3000))),
             'arrows'        => $this->isOn($settings, 'slider_arrows') ? 'yes' : 'no',
             'arrowsSize'    => $this->pick($settings, 'slider_arrows_size', self::ARROW_SIZES, 'md'),
+            'arrowsPosition'=> $this->pick($settings, 'slider_arrows_position', self::ARROW_POSITIONS, 'overlap'),
             'infinite'      => $this->isOn($settings, 'slider_infinite') ? 'yes' : 'no',
             'pagination'    => $this->isOn($settings, 'slider_pagination') ? 'yes' : 'no',
             'paginationType'=> $this->pick($settings, 'slider_pagination_type', self::PAGINATION_STYLES, 'bullets'),
