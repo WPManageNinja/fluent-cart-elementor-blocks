@@ -86,11 +86,14 @@ Yes. Required CSS and JavaScript assets are enqueued automatically when widgets 
 == Changelog ==
 
 = 1.1.0 =
-- Adds six Product Review widgets: Product Reviews (the whole section), Product Review List, Review Summary, Review Form, Write a Review Button and Product Rating. Each mirrors its FluentCart block, so a page built in Elementor and a page built in the editor draw the same markup.
-- Adds field-by-field control of the review row: reorder or remove the avatar, reviewer name, verified badge, variation, stars, date, title, text, photos, helpful votes and store reply, with list, grid and slider views, star filter chips, sorting and pagination.
-- Adds reviews to the bundled Single Product template, between the product info and the related products.
-- Adds attachment settings to the review widgets: how many a review shows before the rest go behind a + counter, the tile width and height, and a full-width option that gives each attachment its own proportions.
-- Adds a placement choice for the review slider's arrows: on the reviews, beside them, or below them.
+- Adds six Product Review widgets: Product Reviews, Product Review List, Review Summary, Review Form, Write a Review Button and Product Rating.
+- Adds field-by-field control of the review row: reorder or remove any field.
+- Adds list, grid and slider views for the review list.
+- Adds star filter chips, sorting and pagination.
+- Adds reviews to the bundled Single Product template.
+- Adds attachment settings: how many to show, tile width and height, and full width.
+- Adds a + counter for the attachments a limit leaves out, on the last one or beside them.
+- Adds arrow placement for the review slider: on, beside or below the reviews.
 
 = 1.0.3 (August 20, 2026) =
 - Adds Template Library: 8 professionally designed store page templates (Shop, Single Product, Product Category, Cart, Checkout, Thank You, Customer Dashboard, Campaign Landing) seeded automatically into Elementor's Insert Template → My Templates modal with preview thumbnails.
