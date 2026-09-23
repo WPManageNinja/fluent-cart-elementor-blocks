@@ -93,7 +93,11 @@ Yes. Required CSS and JavaScript assets are enqueued automatically when widgets 
 - Adds reviews to the bundled Single Product template.
 - Adds attachment settings: how many to show, tile width and height, and full width.
 - Adds a + counter for the attachments a limit leaves out, on the last one or beside them.
+- Adds slider pagination for the review list: dots, fraction, progress bar or segmented.
 - Adds arrow placement for the review slider: on, beside or below the reviews.
+- Adds Rating to the shop card elements, and to the bundled Shop template.
+- Changes A seeded template is never overwritten on update. Delete the library item to get the newer layout.
+- Fixes Checkout full-width columns stack on mobile.
 
 = 1.0.3 (August 20, 2026) =
 - Adds Template Library: 8 professionally designed store page templates (Shop, Single Product, Product Category, Cart, Checkout, Thank You, Customer Dashboard, Campaign Landing) seeded automatically into Elementor's Insert Template → My Templates modal with preview thumbnails.
