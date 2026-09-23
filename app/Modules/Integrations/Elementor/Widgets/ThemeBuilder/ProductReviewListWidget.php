@@ -229,11 +229,14 @@ class ProductReviewListWidget extends Widget_Base
         $this->add_control(
             'media_width',
             [
-                'label'     => esc_html__('Attachment Width (px)', 'fluent-cart-elementor-blocks'),
-                'type'      => Controls_Manager::NUMBER,
-                'min'       => 40,
-                'max'       => 200,
-                'default'   => 72,
+                'label'       => esc_html__('Attachment Width (px)', 'fluent-cart-elementor-blocks'),
+                'description' => esc_html__('0 leaves the width to the theme.', 'fluent-cart-elementor-blocks'),
+                'type'        => Controls_Manager::NUMBER,
+                'min'         => 0,
+                'max'         => 200,
+                // 0 for the same reason as the height: a filled-in default is
+                // indistinguishable from a chosen one.
+                'default'     => 0,
                 // Full width is the width; a pixel one beside it would be a
                 // setting with nothing to change.
                 'condition' => ['media_full_width!' => 'yes'],
@@ -244,11 +247,17 @@ class ProductReviewListWidget extends Widget_Base
             'media_height',
             [
                 'label'       => esc_html__('Attachment Height (px)', 'fluent-cart-elementor-blocks'),
-                'description' => esc_html__('At full width, 0 gives each attachment its own proportions, uncropped. Any other height crops it to a band of that depth.', 'fluent-cart-elementor-blocks'),
+                'description' => esc_html__('0 leaves the height to the theme, and at full width gives each attachment its own proportions, uncropped. Any other height crops it to a band of that depth.', 'fluent-cart-elementor-blocks'),
                 'type'        => Controls_Manager::NUMBER,
                 'min'         => 0,
                 'max'         => 600,
-                'default'     => 72,
+                // 0, not 72. Elementor fills a control's default into the
+                // settings whether or not anyone touched it, so a default of
+                // 72 is a height that was always asked for — and full width
+                // would crop every attachment to a 72px band with no way to
+                // say otherwise. 0 is the same 72px at a fixed size, because
+                // that is what the stylesheet falls back to.
+                'default'     => 0,
             ]
         );
 
