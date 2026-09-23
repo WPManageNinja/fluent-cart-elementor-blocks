@@ -180,6 +180,78 @@ class ProductReviewListWidget extends Widget_Base
             ]
         );
 
+        $this->add_control(
+            'media_visible',
+            [
+                'label'       => esc_html__('Attachments Shown', 'fluent-cart-elementor-blocks'),
+                'description' => esc_html__('How many photos and videos a review shows. The rest go behind a + tile that opens them in the lightbox. 0 shows all of them.', 'fluent-cart-elementor-blocks'),
+                'type'        => Controls_Manager::NUMBER,
+                'min'         => 0,
+                // What a review may actually hold. Offering a limit past it
+                // would be a number that never comes into play — the store's
+                // own upload cap decides how many attachments there can be.
+                'max'         => self::maxAttachmentsShown(),
+                'default'     => 0,
+                'separator'   => 'before',
+            ]
+        );
+
+        $this->add_control(
+            'media_more',
+            [
+                'label'       => esc_html__('The + Counter', 'fluent-cart-elementor-blocks'),
+                'description' => esc_html__('Counts the attachments the limit leaves out and opens them in the lightbox. Hidden, they are simply not shown.', 'fluent-cart-elementor-blocks'),
+                'type'        => Controls_Manager::SELECT,
+                'default'     => 'overlay',
+                'options'     => [
+                    'overlay' => esc_html__('On the last attachment', 'fluent-cart-elementor-blocks'),
+                    'tile'    => esc_html__('Beside the attachments', 'fluent-cart-elementor-blocks'),
+                    'none'    => esc_html__('Hidden', 'fluent-cart-elementor-blocks'),
+                ],
+                // With no limit there is no overflow for it to stand for.
+                'condition'   => ['media_visible!' => 0],
+            ]
+        );
+
+        $this->add_control(
+            'media_full_width',
+            [
+                'label'        => esc_html__('Full Width Attachments', 'fluent-cart-elementor-blocks'),
+                'description'  => esc_html__('Each attachment spans the whole review, one to a line. The height still applies.', 'fluent-cart-elementor-blocks'),
+                'type'         => Controls_Manager::SWITCHER,
+                'label_on'     => esc_html__('Yes', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('No', 'fluent-cart-elementor-blocks'),
+                'return_value' => 'yes',
+                'default'      => '',
+            ]
+        );
+
+        $this->add_control(
+            'media_width',
+            [
+                'label'     => esc_html__('Attachment Width (px)', 'fluent-cart-elementor-blocks'),
+                'type'      => Controls_Manager::NUMBER,
+                'min'       => 40,
+                'max'       => 200,
+                'default'   => 72,
+                // Full width is the width; a pixel one beside it would be a
+                // setting with nothing to change.
+                'condition' => ['media_full_width!' => 'yes'],
+            ]
+        );
+
+        $this->add_control(
+            'media_height',
+            [
+                'label'       => esc_html__('Attachment Height (px)', 'fluent-cart-elementor-blocks'),
+                'description' => esc_html__('At full width, 0 gives each attachment its own proportions, uncropped. Any other height crops it to a band of that depth.', 'fluent-cart-elementor-blocks'),
+                'type'        => Controls_Manager::NUMBER,
+                'min'         => 0,
+                'max'         => 600,
+                'default'     => 72,
+            ]
+        );
+
         $this->end_controls_section();
 
         // ── Layout ────────────────────────────────────────
@@ -888,7 +960,17 @@ class ProductReviewListWidget extends Widget_Base
             'minRating'         => max(0, min(5, absint($settings['min_rating'] ?? 0))),
             'maxWords'          => max(0, min(500, absint($settings['content_max_words'] ?? 0))),
             'paginationType'    => $this->pick($settings, 'pagination_type', self::PAGINATION_TYPES, 'numbers'),
-        ];
+        ] + $this->mediaOptions($settings);
+    }
+
+    /**
+     * The attachment settings, in the shape core's renderer reads them.
+     *
+     * @param array $settings
+     */
+    protected function mediaOptions(array $settings): array
+    {
+        return $this->reviewMediaOptions($settings, $this->isOn($settings, 'media_full_width'));
     }
 
     /**
@@ -925,6 +1007,20 @@ class ProductReviewListWidget extends Widget_Base
 
             if ($field === 'content' && $maxWords > 0) {
                 $attrs['maxWords'] = $maxWords;
+            }
+
+            // The Review Photos block's own attribute names — the composed row
+            // reads these, the fixed row reads mediaOptions(). Same settings,
+            // two spellings, because core names them differently on a block
+            // than on the renderer.
+            if ($field === 'photos') {
+                $media = $this->mediaOptions($settings);
+
+                $attrs['visibleCount']   = $media['mediaVisible'];
+                $attrs['mediaWidth']     = $media['mediaWidth'];
+                $attrs['mediaHeight']    = $media['mediaHeight'];
+                $attrs['mediaFullWidth'] = $media['mediaFullWidth'];
+                $attrs['mediaMore']      = $media['mediaMore'];
             }
 
             $fields[] = $this->block(self::FIELD_BLOCKS[$field], $attrs);
