@@ -96,7 +96,7 @@ Yes. Required CSS and JavaScript assets are enqueued automatically when widgets 
 - Adds slider pagination for the review list: dots, fraction, progress bar or segmented.
 - Adds arrow placement for the review slider: on, beside or below the reviews.
 - Adds Rating to the shop card elements, and to the bundled Shop template.
-- Changes A seeded template is never overwritten on update. Delete the library item to get the newer layout.
+- Adds reviews to the bundled Single Product template.
 - Fixes Checkout full-width columns stack on mobile.
 
 = 1.0.3 (August 20, 2026) =
