@@ -4,7 +4,7 @@ Tags: fluentcart, elementor, ecommerce, checkout, cart, shop
 Requires at least: 6.0
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.0.3
+Stable tag: 1.1.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Elementor Blocks for FluentCart lets you build checkout flows, cart interactions, and product layouts visually in Elementor while using FluentCart’s native commerce logic and assets.
@@ -89,6 +89,8 @@ Yes. Required CSS and JavaScript assets are enqueued automatically when widgets 
 - Adds six Product Review widgets: Product Reviews (the whole section), Product Review List, Review Summary, Review Form, Write a Review Button and Product Rating. Each mirrors its FluentCart block, so a page built in Elementor and a page built in the editor draw the same markup.
 - Adds field-by-field control of the review row: reorder or remove the avatar, reviewer name, verified badge, variation, stars, date, title, text, photos, helpful votes and store reply, with list, grid and slider views, star filter chips, sorting and pagination.
 - Adds reviews to the bundled Single Product template, between the product info and the related products.
+- Adds attachment settings to the review widgets: how many a review shows before the rest go behind a + counter, the tile width and height, and a full-width option that gives each attachment its own proportions.
+- Adds a placement choice for the review slider's arrows: on the reviews, beside them, or below them.
 
 = 1.0.3 (August 20, 2026) =
 - Adds Template Library: 8 professionally designed store page templates (Shop, Single Product, Product Category, Cart, Checkout, Thank You, Customer Dashboard, Campaign Landing) seeded automatically into Elementor's Insert Template → My Templates modal with preview thumbnails.
