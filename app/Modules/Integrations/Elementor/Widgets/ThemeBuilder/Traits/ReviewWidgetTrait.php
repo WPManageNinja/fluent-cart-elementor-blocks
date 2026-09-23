@@ -126,11 +126,6 @@ trait ReviewWidgetTrait
      * attribute and a shortcode attribute, so a widget cannot arrive at a
      * size, a limit or a placement the other two could not.
      *
-     * Every call is guarded. This add-on ships separately from FluentCart, and
-     * against a core that predates these helpers an unguarded call is a fatal
-     * on every render — rather than a setting that quietly does nothing, which
-     * is what an older core should give.
-     *
      * @param array $settings
      * @param bool  $fullWidth already read by the widget, whose switcher
      *                         default differs from the other's.
@@ -138,37 +133,12 @@ trait ReviewWidgetTrait
     protected function reviewMediaOptions(array $settings, bool $fullWidth): array
     {
         return [
-            'mediaVisible'   => self::boundedMediaValue('mediaVisibleCount', $settings['media_visible'] ?? 0),
-            'mediaWidth'     => self::boundedMediaValue('mediaTileSize', $settings['media_width'] ?? 0),
-            'mediaHeight'    => self::boundedMediaValue('mediaTileSize', $settings['media_height'] ?? 0),
+            'mediaVisible'   => ProductReviewRenderer::mediaVisibleCount($settings['media_visible'] ?? 0),
+            'mediaWidth'     => ProductReviewRenderer::mediaTileSize($settings['media_width'] ?? 0),
+            'mediaHeight'    => ProductReviewRenderer::mediaTileSize($settings['media_height'] ?? 0),
             'mediaFullWidth' => $fullWidth,
-            'mediaMore'      => method_exists(ReviewThreadMarkup::class, 'moreTilePlacement')
-                ? ReviewThreadMarkup::moreTilePlacement($settings['media_more'] ?? 'overlay')
-                : 'overlay',
+            'mediaMore'      => ReviewThreadMarkup::moreTilePlacement($settings['media_more'] ?? 'overlay'),
         ];
-    }
-
-    /**
-     * 0 from an older core, which is "leave it to the stylesheet" for a size
-     * and "show them all" for a limit — the same as the setting untouched.
-     *
-     * @param mixed $value
-     */
-    protected static function boundedMediaValue(string $method, $value): int
-    {
-        return method_exists(ProductReviewRenderer::class, $method)
-            ? (int) ProductReviewRenderer::{$method}($value)
-            : 0;
-    }
-
-    /**
-     * The highest limit worth offering: what a review may actually hold.
-     */
-    protected static function maxAttachmentsShown(): int
-    {
-        return method_exists(ProductReviewRenderer::class, 'maxPhotosPerReview')
-            ? ProductReviewRenderer::maxPhotosPerReview()
-            : 5;
     }
 
     protected function renderReviewsUnavailable($postId = 0): bool

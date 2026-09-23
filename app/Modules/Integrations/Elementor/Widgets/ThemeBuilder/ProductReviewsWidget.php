@@ -267,7 +267,7 @@ class ProductReviewsWidget extends Widget_Base
                 // What a review may actually hold. Offering a limit past it
                 // would be a number that never comes into play — the store's
                 // own upload cap decides how many attachments there can be.
-                'max'         => self::maxAttachmentsShown(),
+                'max'         => ProductReviewRenderer::maxPhotosPerReview(),
                 'default'     => 0,
                 'separator'   => 'before',
             ]
