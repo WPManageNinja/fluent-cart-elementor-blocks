@@ -3,6 +3,8 @@
 namespace FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ThemeBuilder\Traits;
 
 use FluentCart\App\Services\ProductReviewService;
+use FluentCart\App\Services\Renderer\ProductReviewRenderer;
+use FluentCart\App\Services\Renderer\ReviewThreadMarkup;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support\ReviewSupport;
 use FluentCartElementorBlocks\App\Utils\Enqueuer\Enqueue;
 use FluentCart\App\App;
@@ -116,6 +118,59 @@ trait ReviewWidgetTrait
      * @param int $postId 0 to skip the per-product question.
      * @return bool true when a reason was found (the caller should return).
      */
+
+    /**
+     * The attachment settings, in the shape core's renderer reads them.
+     *
+     * Bounded by core rather than here: the same helpers bound a block
+     * attribute and a shortcode attribute, so a widget cannot arrive at a
+     * size, a limit or a placement the other two could not.
+     *
+     * Every call is guarded. This add-on ships separately from FluentCart, and
+     * against a core that predates these helpers an unguarded call is a fatal
+     * on every render — rather than a setting that quietly does nothing, which
+     * is what an older core should give.
+     *
+     * @param array $settings
+     * @param bool  $fullWidth already read by the widget, whose switcher
+     *                         default differs from the other's.
+     */
+    protected function reviewMediaOptions(array $settings, bool $fullWidth): array
+    {
+        return [
+            'mediaVisible'   => self::boundedMediaValue('mediaVisibleCount', $settings['media_visible'] ?? 0),
+            'mediaWidth'     => self::boundedMediaValue('mediaTileSize', $settings['media_width'] ?? 0),
+            'mediaHeight'    => self::boundedMediaValue('mediaTileSize', $settings['media_height'] ?? 0),
+            'mediaFullWidth' => $fullWidth,
+            'mediaMore'      => method_exists(ReviewThreadMarkup::class, 'moreTilePlacement')
+                ? ReviewThreadMarkup::moreTilePlacement($settings['media_more'] ?? 'overlay')
+                : 'overlay',
+        ];
+    }
+
+    /**
+     * 0 from an older core, which is "leave it to the stylesheet" for a size
+     * and "show them all" for a limit — the same as the setting untouched.
+     *
+     * @param mixed $value
+     */
+    protected static function boundedMediaValue(string $method, $value): int
+    {
+        return method_exists(ProductReviewRenderer::class, $method)
+            ? (int) ProductReviewRenderer::{$method}($value)
+            : 0;
+    }
+
+    /**
+     * The highest limit worth offering: what a review may actually hold.
+     */
+    protected static function maxAttachmentsShown(): int
+    {
+        return method_exists(ProductReviewRenderer::class, 'maxPhotosPerReview')
+            ? ProductReviewRenderer::maxPhotosPerReview()
+            : 5;
+    }
+
     protected function renderReviewsUnavailable($postId = 0): bool
     {
         $reason = ReviewSupport::unavailableReason($postId);
