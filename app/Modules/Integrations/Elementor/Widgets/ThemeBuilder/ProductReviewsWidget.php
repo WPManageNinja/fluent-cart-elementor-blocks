@@ -80,23 +80,19 @@ class ProductReviewsWidget extends Widget_Base
         AssetLoader::loadSingleProductAssets();
         static::registerSliderAssets();
 
-        $styles = [];
-
-        // A preset builds the section from core blocks — columns, column,
-        // group — and those are laid out by WordPress's own block stylesheet,
-        // not by ours. WordPress loads it when it finds blocks in post_content;
-        // an Elementor page keeps its content in Elementor's storage, so it
-        // finds none and skips the file. The blocks are rendered all the same,
-        // and without it the summary column and the review list stack instead
-        // of sitting side by side.
+        // Unconditionally, and not because it is always needed.
         //
-        // Asked for only when a preset is in play. A widget built from its own
-        // controls draws no core blocks and has no use for it.
-        if (ReviewLayoutPresets::exists((string) ($this->get_settings_for_display('layout_preset') ?? ''))) {
-            $styles[] = 'wp-block-library';
-        }
-
-        return $styles;
+        // Elementor calls this while collecting a widget's assets, before any
+        // instance exists: every way of reading the settings from here — both
+        // get_settings_for_display() and get_settings() — runs Elementor's
+        // sanitiser over a null and throws. There is no way to ask which layout
+        // is in play at the moment the question is asked.
+        //
+        // So the answer is the safe one. A stylesheet that arrives when it was
+        // not needed costs one cached core file on a page that already draws a
+        // review section; one that is missing when it was needed collapses the
+        // summary and the list into a column of single letters.
+        return ['wp-block-library'];
     }
 
     /**
