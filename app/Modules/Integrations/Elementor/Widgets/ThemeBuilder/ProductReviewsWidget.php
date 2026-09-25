@@ -842,7 +842,7 @@ class ProductReviewsWidget extends Widget_Base
             'show_sorting'       => 'showSortControls',
             'show_reviewer_name' => 'showReviewerName',
             'show_review_date'   => 'showReviewDate',
-            'show_verified_badge'=> 'showVerifiedBadge',
+            'show_verified'      => 'showVerifiedBadge',
             'show_view_reply'    => 'showViewReply',
             'per_page'           => 'perPage',
             'min_rating'         => 'minRating',
@@ -858,9 +858,34 @@ class ProductReviewsWidget extends Widget_Base
             'login_review_button_text'=> 'ctaLoginText',
         ];
 
+        $defaults = [
+            'show_summary'       => 'yes',
+            'show_filter'        => 'yes',
+            'show_sorting'       => 'yes',
+            'show_reviewer_name' => 'yes',
+            'show_review_date'   => 'yes',
+            'show_verified'      => static::verifiedBadgeDefault(),
+            'show_view_reply'    => 'yes',
+            'default_sort'       => ProductReviewListWidget::FALLBACK_SORT,
+            'per_page'           => 0,
+            'min_rating'         => 0,
+            'photos_only'        => '',
+            'content_max_words'  => 0,
+            'pagination_type'    => 'numbers',
+            'view_mode'          => 'list',
+            'grid_columns'       => 2,
+            'container'          => 'drawer',
+            'layout'             => 'inline',
+            'add_review_button_text'   => '',
+            'edit_review_button_text'  => '',
+            'login_review_button_text' => '',
+        ];
+
         $options = [];
         foreach ($fields as $rawKey => $optionKey) {
-            if (array_key_exists($rawKey, $raw) && array_key_exists($optionKey, $resolved)) {
+            if (array_key_exists($rawKey, $raw)
+                && array_key_exists($optionKey, $resolved)
+                && (!array_key_exists($rawKey, $defaults) || (string) $raw[$rawKey] !== (string) $defaults[$rawKey])) {
                 $options[$optionKey] = $resolved[$optionKey];
             }
         }
@@ -881,8 +906,20 @@ class ProductReviewsWidget extends Widget_Base
             'slider_pagination_type'=> 'paginationType',
         ];
 
+        $sliderDefaults = [
+            'slider_autoplay'        => 'no',
+            'slider_autoplay_delay'  => 3000,
+            'slider_arrows'          => 'yes',
+            'slider_arrows_size'     => 'md',
+            'slider_arrows_position' => 'overlap',
+            'slider_infinite'        => '',
+            'slider_pagination'      => 'yes',
+            'slider_pagination_type' => 'bullets',
+        ];
+
         foreach ($sliderFields as $rawKey => $optionKey) {
-            if (array_key_exists($rawKey, $raw)) {
+            if (array_key_exists($rawKey, $raw)
+                && (string) $raw[$rawKey] !== (string) $sliderDefaults[$rawKey]) {
                 $options['sliderSettings'][$optionKey] = $resolved['sliderSettings'][$optionKey];
             }
         }
