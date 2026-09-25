@@ -45,6 +45,10 @@ class ReviewLayoutPresets
             'showSortControls' => (bool) Arr::get($header, 'sorting', false),
             'showReviewDate' => (bool) Arr::get($item, 'show_date', true),
             'showReviewerName' => (bool) Arr::get($item, 'show_reviewer_name', true),
+            // Gutenberg's row template includes the verified badge unless a
+            // preset explicitly turns it off. Do not fall back to the store
+            // setting here or the two builders can disagree.
+            'showVerifiedBadge' => (bool) Arr::get($item, 'show_badge', true),
             'viewMode' => (string) Arr::get($list, 'view_mode', 'list'),
             // Preserve the shared contract for list presets, whose column
             // value is intentionally 1. ProductReviewRenderer applies its
@@ -95,9 +99,26 @@ class ReviewLayoutPresets
             $options['showVariation'] = (bool) $showVariation;
         }
 
-        $showBadge = Arr::get($item, 'show_badge', null);
-        if ($showBadge !== null) {
-            $options['showVerifiedBadge'] = (bool) $showBadge;
+        // How the row is arranged. Forwarded rather than interpreted: core's
+        // ReviewListRenderer builds the same two arrangements the Gutenberg
+        // template does, so the widget and the block agree by construction.
+        foreach ([
+            'photos_first' => 'photosFirst',
+            'rating_first' => 'ratingFirst',
+            'badge_last'   => 'badgeLast',
+            'show_meta'    => 'showMeta',
+        ] as $key => $option) {
+            $value = Arr::get($item, $key, null);
+            if ($value !== null) {
+                $options[$option] = (bool) $value;
+            }
+        }
+
+        // The card class the preset asks for. Core whitelists it on the way
+        // in, so an unknown name becomes nothing rather than markup.
+        $itemClass = Arr::get($item, 'class', '');
+        if ($itemClass !== '') {
+            $options['itemClass'] = (string) $itemClass;
         }
 
         $media = (array) Arr::get($item, 'media', []);
@@ -108,6 +129,17 @@ class ReviewLayoutPresets
 
         if (Arr::get($media, 'full_width', false)) {
             $options['mediaFullWidth'] = true;
+        }
+
+        // Pro, and gated in core rather than here: ProductReviewService::
+        // isPhotoStylingAllowed() refuses both on a site without Pro, so a
+        // widget saved against a lapsed subscription flattens on its own.
+        if (Arr::get($media, 'flush', false)) {
+            $options['mediaFlush'] = true;
+        }
+
+        if (Arr::get($media, 'backdrop', false)) {
+            $options['mediaBackdrop'] = true;
         }
 
         return $options;
