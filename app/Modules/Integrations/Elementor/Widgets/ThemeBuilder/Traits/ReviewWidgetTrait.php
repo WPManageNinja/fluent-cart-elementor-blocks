@@ -5,6 +5,7 @@ namespace FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\T
 use FluentCart\App\Services\ProductReviewService;
 use FluentCart\App\Services\Renderer\ProductReviewRenderer;
 use FluentCart\App\Services\Renderer\ReviewThreadMarkup;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support\ReviewLayoutPresets;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support\ReviewSupport;
 use FluentCartElementorBlocks\App\Utils\Enqueuer\Enqueue;
 use FluentCart\App\App;
@@ -143,6 +144,27 @@ trait ReviewWidgetTrait
      * looks like a feature the plugin does not have; one labelled Pro is an
      * invitation.
      */
+    /**
+     * The Layout Preset control.
+     *
+     * Written by the panel, never read at render: ReviewLayoutPresets applies
+     * the settings it names and then stops being involved, so every value stays
+     * editable and nothing here can claim an arrangement the page will not draw.
+     */
+    protected function addReviewLayoutPresetControl(): void
+    {
+        $this->add_control(
+            'layout_preset',
+            [
+                'label'       => esc_html__('Layout Preset', 'fluent-cart-elementor-blocks'),
+                'description' => esc_html__('Sets the controls below to a starting arrangement. Everything stays editable afterwards.', 'fluent-cart-elementor-blocks'),
+                'type'        => \Elementor\Controls_Manager::SELECT,
+                'default'     => '',
+                'options'     => ReviewLayoutPresets::options(),
+            ]
+        );
+    }
+
     protected function reviewViewModeOptions(): array
     {
         $pro = App::isProActive();

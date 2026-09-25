@@ -47,6 +47,7 @@ use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Documents\Fluen
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Conditions\FluentCartCondition;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Conditions\FluentCartArchiveCondition;
 use FluentCartElementorBlocks\App\Utils\Enqueuer\Enqueue;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support\ReviewLayoutPresets;
 
 class ElementorIntegration
 {
@@ -307,6 +308,25 @@ class ElementorIntegration
                 'unknownProduct'  => \__('Unknown Product', 'fluent-cart-elementor-blocks'),
             ],
         ]);
+
+        Enqueue::script(
+            'fluent-cart-elementor-review-presets',
+            'elementor/review-layout-preset.js',
+            ['elementor-editor', 'jquery'],
+            FLUENTCART_VERSION,
+            true
+        );
+
+        // What the Layout Preset control writes. The widget names are handed
+        // over too, so the script only binds on the panels that have the
+        // control rather than on every widget Elementor opens.
+        \wp_localize_script(
+            'fluent-cart-elementor-review-presets',
+            'fceReviewLayoutPresets',
+            ReviewLayoutPresets::forEditor() + [
+                'widgets' => [ProductReviewsWidget::NAME, ProductReviewListWidget::NAME],
+            ]
+        );
 
         // Data for the Short Codes toolbar dropdown (Order Receipt Message).
         \wp_localize_script('fluent-cart-elementor-editor', 'fceReceiptShortCodes', [

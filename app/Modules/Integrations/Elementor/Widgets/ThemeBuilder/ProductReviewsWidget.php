@@ -48,9 +48,14 @@ class ProductReviewsWidget extends Widget_Base
     const CONTAINERS = ['drawer', 'modal'];
     const LAYOUTS = ['inline', 'steps'];
 
+    // Named here so anything that has to address this widget by name — the
+    // panel script that binds the Layout Preset control, for one — reads it
+    // from the widget rather than repeating the string and drifting.
+    const NAME = 'fluentcart_product_reviews';
+
     public function get_name()
     {
-        return 'fluentcart_product_reviews';
+        return static::NAME;
     }
 
     public function get_title()
@@ -353,6 +358,8 @@ class ProductReviewsWidget extends Widget_Base
                 'default'     => 0,
             ]
         );
+
+        $this->addReviewLayoutPresetControl();
 
         $this->add_control(
             'view_mode',

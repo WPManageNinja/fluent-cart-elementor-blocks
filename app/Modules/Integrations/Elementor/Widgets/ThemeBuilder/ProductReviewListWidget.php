@@ -74,9 +74,14 @@ class ProductReviewListWidget extends Widget_Base
         'reply'           => 'fluent-cart/review-item-reply',
     ];
 
+    // Named here so anything that has to address this widget by name — the
+    // panel script that binds the Layout Preset control, for one — reads it
+    // from the widget rather than repeating the string and drifting.
+    const NAME = 'fluentcart_product_review_list';
+
     public function get_name()
     {
-        return 'fluentcart_product_review_list';
+        return static::NAME;
     }
 
     public function get_title()
@@ -285,6 +290,8 @@ class ProductReviewListWidget extends Widget_Base
                 'tab'   => Controls_Manager::TAB_CONTENT,
             ]
         );
+
+        $this->addReviewLayoutPresetControl();
 
         $this->add_control(
             'view_mode',
