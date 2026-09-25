@@ -834,7 +834,16 @@ class ProductReviewsWidget extends Widget_Base
     protected function explicitReviewOptions(array $settings): array
     {
         $raw = (array) $this->get_data('settings');
-        $resolved = $this->rendererOptions($settings);
+        // Resolved over the raw values, not the display ones. A preset
+        // switches the layout controls off and Elementor blanks a control it
+        // has switched off, so $settings carries an empty string where the
+        // merchant saved a number -- and reading the value from there
+        // preserved the blank rather than the choice, turning a saved page
+        // length of seven into nought, which is "ask the store" and not what
+        // anyone set. $raw holds only what was actually saved, so laying it
+        // over the display settings resolves each preserved key from the
+        // merchant's own value.
+        $resolved = $this->rendererOptions(array_merge($settings, $raw));
 
         $fields = [
             'show_summary'       => 'showSummary',
