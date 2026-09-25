@@ -42,7 +42,6 @@
 }
 
 .fct-reviews-layout-preset--photo-grid .fct-review-media-gallery {
-    order: -1;
     width: calc(100% + 32px);
     margin: -16px -16px 14px;
 }
@@ -133,7 +132,13 @@
     border-radius: 8px;
 }
 
-/* Testimonials: quote first, then the signed-off author and rating. */
+/* Testimonials: quote first, then the signed-off author and rating.
+ *
+ * Laid out in that order by the renderer rather than by `order` here.
+ * LayoutPresets puts the byline after the words for this preset, so the card
+ * reads the same way it looks -- which `order` could not promise: it moves the
+ * eye without moving the markup, so a screen reader and the tab key still met
+ * the byline first, before the quote it belongs to. */
 .fct-reviews-layout-preset--testimonials .fct-review-item {
     display: flex;
     flex-direction: column;
@@ -153,29 +158,24 @@
 }
 
 .fct-reviews-layout-preset--testimonials .fct-review-item-title {
-    order: 1;
     margin-top: 10px;
     font-weight: 600;
 }
 
 .fct-reviews-layout-preset--testimonials .fct-review-item-content {
-    order: 2;
     max-width: 34rem;
 }
 
 .fct-reviews-layout-preset--testimonials .fct-review-readmore {
-    order: 3;
     align-self: center;
     margin: 8px auto 0;
 }
 
 .fct-reviews-layout-preset--testimonials .fct-review-votes {
-    order: 3;
     margin-top: 10px;
 }
 
 .fct-reviews-layout-preset--testimonials .fct-review-item-header {
-    order: 4;
     justify-content: center;
     margin-top: 18px;
 }
