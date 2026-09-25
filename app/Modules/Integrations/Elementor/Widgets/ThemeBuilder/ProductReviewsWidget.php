@@ -737,11 +737,12 @@ class ProductReviewsWidget extends Widget_Base
             // owns its markup and styling; core still owns review data,
             // pagination, frontend behavior and Pro enforcement.
             $presetOptions = ReviewLayoutPresets::rendererOptions($preset);
+            $manualOptions = $this->explicitReviewOptions($settings);
 
             ob_start();
             (new ProductReviewRenderer(
                 $product->ID,
-                array_merge($this->rendererOptions($settings), $presetOptions)
+                array_merge($this->rendererOptions($settings), $presetOptions, $manualOptions)
             ))->render();
             $content = ob_get_clean();
 
@@ -819,6 +820,74 @@ class ProductReviewsWidget extends Widget_Base
             // key — which would turn full width on for every one of them.
             $this->isOn($settings, 'media_full_width', false)
         );
+    }
+
+    /**
+     * Return only review settings that were explicitly saved on the widget.
+     *
+     * Elementor's display settings include control defaults. Merging all of
+     * them after a preset would make every default override the preset. The
+     * raw element settings, however, contain only values the merchant saved,
+     * which lets a fallback layout keep its deliberate edits when Pro becomes
+     * available without turning untouched controls into overrides.
+     */
+    protected function explicitReviewOptions(array $settings): array
+    {
+        $raw = (array) $this->get_data('settings');
+        $resolved = $this->rendererOptions($settings);
+
+        $fields = [
+            'show_summary'       => 'showSummary',
+            'show_filter'        => 'showFilterChips',
+            'show_sorting'       => 'showSortControls',
+            'show_reviewer_name' => 'showReviewerName',
+            'show_review_date'   => 'showReviewDate',
+            'show_verified_badge'=> 'showVerifiedBadge',
+            'show_view_reply'    => 'showViewReply',
+            'per_page'           => 'perPage',
+            'min_rating'         => 'minRating',
+            'photos_only'        => 'hasMedia',
+            'content_max_words'  => 'maxWords',
+            'pagination_type'    => 'paginationType',
+            'view_mode'          => 'viewMode',
+            'grid_columns'       => 'gridColumns',
+            'container'          => 'container',
+            'layout'             => 'layout',
+            'add_review_button_text'  => 'ctaAddText',
+            'edit_review_button_text' => 'ctaEditText',
+            'login_review_button_text'=> 'ctaLoginText',
+        ];
+
+        $options = [];
+        foreach ($fields as $rawKey => $optionKey) {
+            if (array_key_exists($rawKey, $raw) && array_key_exists($optionKey, $resolved)) {
+                $options[$optionKey] = $resolved[$optionKey];
+            }
+        }
+
+        if (array_key_exists('default_sort', $raw)) {
+            $options['defaultSortBy'] = $resolved['defaultSortBy'];
+            $options['defaultSortOrder'] = $resolved['defaultSortOrder'];
+        }
+
+        $sliderFields = [
+            'slider_autoplay'       => 'autoplay',
+            'slider_autoplay_delay' => 'autoplayDelay',
+            'slider_arrows'         => 'arrows',
+            'slider_arrows_size'    => 'arrowsSize',
+            'slider_arrows_position'=> 'arrowsPosition',
+            'slider_infinite'       => 'infinite',
+            'slider_pagination'     => 'pagination',
+            'slider_pagination_type'=> 'paginationType',
+        ];
+
+        foreach ($sliderFields as $rawKey => $optionKey) {
+            if (array_key_exists($rawKey, $raw)) {
+                $options['sliderSettings'][$optionKey] = $resolved['sliderSettings'][$optionKey];
+            }
+        }
+
+        return $options;
     }
 
     /**

@@ -196,10 +196,9 @@ trait ReviewWidgetTrait
      *
      * It says what happens now and what happens later, because both surprise
      * people. Now, the layout is not applied and the controls below decide the
-     * section, which is why they stay visible for these values. Later, when
-     * Pro arrives, the preset takes over and replaces whatever was set with
-     * those controls -- silently, on a site that was working, unless the
-     * merchant was told to expect it.
+     * section, which is why they stay visible for these values. After Pro is
+     * activated, the preset supplies defaults while explicitly saved settings
+     * remain in charge.
      */
     protected function addReviewLayoutPresetProNotice(): void
     {
@@ -223,7 +222,7 @@ trait ReviewWidgetTrait
             'layout_preset_pro_notice',
             [
                 'type'            => \Elementor\Controls_Manager::RAW_HTML,
-                'raw'             => esc_html__('This layout needs FluentCart Pro. Until then the controls below decide the section, and activating Pro will replace what you set there with the layout.', 'fluent-cart-elementor-blocks'),
+                'raw'             => esc_html__('This layout needs FluentCart Pro. Until then the controls below decide the section. After Pro is activated, the preset supplies its layout while your explicitly saved settings are preserved.', 'fluent-cart-elementor-blocks'),
                 'content_classes' => 'elementor-panel-alert elementor-panel-alert-warning',
                 'condition'       => ['layout_preset' => $locked],
             ]
