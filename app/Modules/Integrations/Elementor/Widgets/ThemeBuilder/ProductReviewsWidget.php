@@ -80,7 +80,23 @@ class ProductReviewsWidget extends Widget_Base
         AssetLoader::loadSingleProductAssets();
         static::registerSliderAssets();
 
-        return [];
+        $styles = [];
+
+        // A preset builds the section from core blocks — columns, column,
+        // group — and those are laid out by WordPress's own block stylesheet,
+        // not by ours. WordPress loads it when it finds blocks in post_content;
+        // an Elementor page keeps its content in Elementor's storage, so it
+        // finds none and skips the file. The blocks are rendered all the same,
+        // and without it the summary column and the review list stack instead
+        // of sitting side by side.
+        //
+        // Asked for only when a preset is in play. A widget built from its own
+        // controls draws no core blocks and has no use for it.
+        if (ReviewLayoutPresets::exists((string) ($this->get_settings_for_display('layout_preset') ?? ''))) {
+            $styles[] = 'wp-block-library';
+        }
+
+        return $styles;
     }
 
     /**
