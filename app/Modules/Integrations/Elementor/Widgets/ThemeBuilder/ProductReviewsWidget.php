@@ -34,7 +34,10 @@ class ProductReviewsWidget extends Widget_Base
 
     const MIN_COLUMNS = ProductReviewListWidget::MIN_COLUMNS;
     const MAX_COLUMNS = ProductReviewListWidget::MAX_COLUMNS;
-    const VIEW_MODES = ['list', 'grid', 'slider'];
+    // Borrowed rather than repeated, the way MIN_COLUMNS above it is: the two
+    // widgets draw the same list through the same renderer, and a second copy
+    // of this list is a second place every change has to be remembered.
+    const VIEW_MODES = ProductReviewListWidget::VIEW_MODES;
     const ARROW_SIZES = ['sm', 'md', 'lg'];
     const ARROW_POSITIONS = ['overlap', 'outside', 'bottom'];
     const AUTOPLAY_MODES = ['no', 'yes', 'hover'];
@@ -246,6 +249,19 @@ class ProductReviewsWidget extends Widget_Base
         );
 
         $this->add_control(
+            'photos_only',
+            [
+                'label'        => esc_html__('Reviews with attachments only', 'fluent-cart-elementor-blocks'),
+                'description'  => esc_html__('Leaves out reviews that carry no photograph, and the count and the pages follow. What the photo layouts are built on.', 'fluent-cart-elementor-blocks'),
+                'type'         => \Elementor\Controls_Manager::SWITCHER,
+                'label_on'     => esc_html__('Yes', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('No', 'fluent-cart-elementor-blocks'),
+                'return_value' => 'yes',
+                'default'      => '',
+            ]
+        );
+
+        $this->add_control(
             'content_max_words',
             [
                 'label'       => esc_html__('Words shown', 'fluent-cart-elementor-blocks'),
@@ -344,14 +360,12 @@ class ProductReviewsWidget extends Widget_Base
                 'label'     => esc_html__('View Mode', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::SELECT,
                 'default'   => 'list',
-                'options'   => [
-                    'list'   => esc_html__('List', 'fluent-cart-elementor-blocks'),
-                    'grid'   => esc_html__('Grid', 'fluent-cart-elementor-blocks'),
-                    'slider' => esc_html__('Slider', 'fluent-cart-elementor-blocks'),
-                ],
+                'options'   => $this->reviewViewModeOptions(),
                 'separator' => 'before',
             ]
         );
+
+        $this->addReviewViewModeProNotice();
 
         $this->add_control(
             'grid_columns',
@@ -724,6 +738,9 @@ class ProductReviewsWidget extends Widget_Base
                 ? 0
                 : max(0, min(100, absint($settings['per_page'] ?? 0))),
             'minRating'         => max(0, min(5, absint($settings['min_rating'] ?? 0))),
+            // Explicitly false: isOn() answers true for an absent key, and a
+            // widget saved before this control existed has none.
+            'hasMedia'          => $this->isOn($settings, 'photos_only', false),
             'maxWords'          => max(0, min(500, absint($settings['content_max_words'] ?? 0))),
             'paginationType'    => $this->pick($settings, 'pagination_type', self::PAGINATION_TYPES, 'numbers'),
             'viewMode'          => $this->pick($settings, 'view_mode', self::VIEW_MODES, 'list'),
