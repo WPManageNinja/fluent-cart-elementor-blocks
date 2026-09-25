@@ -185,6 +185,49 @@ trait ReviewWidgetTrait
                 'options'     => ReviewLayoutPresets::options(),
             ]
         );
+
+        $this->addReviewLayoutPresetProNotice();
+    }
+
+    /**
+     * The warning under Layout Preset, shown only once a locked layout is
+     * picked -- the same way the View Mode notice works, and for the same
+     * reason: standing small print becomes furniture.
+     *
+     * It says what happens now and what happens later, because both surprise
+     * people. Now, the layout is not applied and the controls below decide the
+     * section, which is why they stay visible for these values. Later, when
+     * Pro arrives, the preset takes over and replaces whatever was set with
+     * those controls -- silently, on a site that was working, unless the
+     * merchant was told to expect it.
+     */
+    protected function addReviewLayoutPresetProNotice(): void
+    {
+        if (App::isProActive()) {
+            return;
+        }
+
+        $locked = [];
+
+        foreach (ReviewLayoutPresets::inertPresets() as $preset) {
+            if ($preset !== '') {
+                $locked[] = $preset;
+            }
+        }
+
+        if (!$locked) {
+            return;
+        }
+
+        $this->add_control(
+            'layout_preset_pro_notice',
+            [
+                'type'            => \Elementor\Controls_Manager::RAW_HTML,
+                'raw'             => esc_html__('This layout needs FluentCart Pro. Until then the controls below decide the section, and activating Pro will replace what you set there with the layout.', 'fluent-cart-elementor-blocks'),
+                'content_classes' => 'elementor-panel-alert elementor-panel-alert-warning',
+                'condition'       => ['layout_preset' => $locked],
+            ]
+        );
     }
 
     protected function reviewViewModeOptions(): array

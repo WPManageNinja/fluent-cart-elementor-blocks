@@ -68,11 +68,19 @@ class ReviewLayoutPresets
             'hasMedia' => (bool) Arr::get($list, 'has_media', false),
             'defaultSortBy' => (string) Arr::get($sort, 'by', 'created_at'),
             'defaultSortOrder' => (string) Arr::get($sort, 'order', 'DESC'),
+            // Every key the preset states, not just the ones that switch a
+            // feature on. Arrow size and position and the autoplay delay were
+            // left out, so a preset asking for small arrows clear of the track
+            // got medium ones over the cards, and a testimonial set to turn
+            // every five seconds turned every three.
             'sliderSettings' => [
                 'arrows' => Arr::get($slider, 'arrows') ? 'yes' : 'no',
+                'arrowsSize' => (string) Arr::get($slider, 'arrows_size', 'md'),
+                'arrowsPosition' => (string) Arr::get($slider, 'arrows_position', 'overlap'),
                 'pagination' => Arr::get($slider, 'pagination') ? 'yes' : 'no',
                 'paginationType' => (string) Arr::get($slider, 'pagination_type', 'bullets'),
                 'autoplay' => Arr::get($slider, 'autoplay') ? 'yes' : 'no',
+                'autoplayDelay' => (int) Arr::get($slider, 'autoplay_delay', 3000),
                 'infinite' => Arr::get($slider, 'infinite') ? 'yes' : 'no',
             ],
         ];
@@ -176,16 +184,6 @@ class ReviewLayoutPresets
         }
 
         return $options;
-    }
-
-    /**
-     * What the picker says about the layout in hand, for the panel's hint.
-     */
-    public static function help(string $preset): string
-    {
-        $all = LayoutPresets::all();
-
-        return isset($all[$preset]) ? (string) Arr::get($all[$preset], 'help', '') : '';
     }
 
     /**
