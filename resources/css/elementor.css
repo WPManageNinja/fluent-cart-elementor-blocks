@@ -32,10 +32,6 @@
     overflow: hidden;
 }
 
-.fct-reviews-layout-preset--testimonials .fct-review-item {
-    text-align: center;
-}
-
 /* Photo Grid: the image is the card's lead, with the review copy below it. */
 .fct-reviews-layout-preset--photo-grid .fct-review-item {
     overflow: hidden;
@@ -97,57 +93,20 @@
     border-radius: 8px;
 }
 
-/* Testimonials: quote first, then the signed-off author and rating.
+/* Testimonials needs no rules here.
  *
- * Laid out in that order by the renderer rather than by `order` here.
- * LayoutPresets puts the byline after the words for this preset, so the card
- * reads the same way it looks -- which `order` could not promise: it moves the
- * eye without moving the markup, so a screen reader and the tab key still met
- * the byline first, before the quote it belongs to. */
-.fct-reviews-layout-preset--testimonials .fct-review-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 220px;
-    padding: 28px;
-}
-
-.fct-reviews-layout-preset--testimonials .fct-review-item::before {
-    content: '\201C';
-    display: block;
-    color: #dbeafe;
-    font-size: 64px;
-    line-height: .7;
-    font-family: Georgia, serif;
-}
-
-.fct-reviews-layout-preset--testimonials .fct-review-item-title {
-    margin-top: 10px;
-    font-weight: 600;
-}
-
-.fct-reviews-layout-preset--testimonials .fct-review-item-content {
-    max-width: 34rem;
-}
-
-.fct-reviews-layout-preset--testimonials .fct-review-readmore {
-    align-self: center;
-    margin: 8px auto 0;
-}
-
-.fct-reviews-layout-preset--testimonials .fct-review-votes {
-    margin-top: 10px;
-}
-
-.fct-reviews-layout-preset--testimonials .fct-review-item-header {
-    justify-content: center;
-    margin-top: 18px;
-}
-
-.fct-reviews-layout-preset--testimonials .fct-review-item-header-left {
-    justify-content: center;
-}
+ * The card is drawn by reviews.scss, which this widget already loads: core
+ * styles any card carrying fct-review-testimonial, and the preset asks for that
+ * class. It centres the card, makes room at the top and draws the quotation
+ * mark -- the same card the block editor builds, because it is the same
+ * stylesheet.
+ *
+ * This file used to draw the quotation mark as well, and the two landed on one
+ * pseudo-element at equal specificity, so the later file won property by
+ * property. Core's colour and size lost to this one's while core's opacity
+ * stayed, leaving a mark that was both smaller and washed out, and core's room
+ * at the top lost to a padding that did not leave any.
+ * ------------------------------------------------------------------------ */
 
 /* These presets omit the review footer in the core template. Pro's vote
  * enhancer falls back to the card when no footer slot exists, so suppress
