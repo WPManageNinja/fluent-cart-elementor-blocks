@@ -13,6 +13,7 @@ const inputs = [
     'resources/elementor/product-select-control.js',
     'resources/elementor/popup-integration.js',
     'resources/elementor/single-product-sync.js',
+    'resources/elementor/review-layout-preset.js',
 ];
 
 let viteConfig;

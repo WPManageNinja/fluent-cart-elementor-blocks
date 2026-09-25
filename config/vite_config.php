@@ -23,6 +23,12 @@
         'src' => 'resources/elementor/product-variation-select-control.js',
         'isEntry' => true
     ],
+    'resources/elementor/review-layout-preset.js' => [
+        'file' => 'review-layout-preset.js',
+        'name' => 'review-layout-preset',
+        'src' => 'resources/elementor/review-layout-preset.js',
+        'isEntry' => true
+    ],
     'resources/elementor/single-product-sync.js' => [
         'file' => 'single-product-sync.js',
         'name' => 'single-product-sync',
