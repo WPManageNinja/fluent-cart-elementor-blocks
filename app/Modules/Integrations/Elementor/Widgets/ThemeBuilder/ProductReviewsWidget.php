@@ -752,6 +752,15 @@ class ProductReviewsWidget extends Widget_Base
             ]) as $block) {
                 $content .= render_block($block);
             }
+
+            // Marks a preset rendered outside the block editor, which is what
+            // core's stylesheet keys the column rules to. The blocks are laid
+            // out by WordPress's own stylesheet, and WordPress only loads that
+            // when it finds blocks in post_content — never true here, where the
+            // blocks come from a template rather than the post. The class makes
+            // the section carry its own layout instead of depending on a file
+            // that may or may not have been enqueued.
+            $content = '<div class="fct-reviews-preset">' . $content . '</div>';
         } else {
             ob_start();
             (new ProductReviewRenderer($product->ID, $this->rendererOptions($settings)))->render();
