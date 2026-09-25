@@ -963,7 +963,7 @@ class ProductReviewListWidget extends Widget_Base
         return [
             'showReviewerName'  => $this->isOn($settings, 'show_reviewer_name'),
             'showReviewDate'    => $this->isOn($settings, 'show_review_date'),
-            'showVerifiedBadge' => $this->isOn($settings, 'show_verified'),
+            'showVerifiedBadge' => $this->showVerifiedBadge($settings),
             'showViewReply'     => $this->isOn($settings, 'show_view_reply'),
             'showFilterChips'   => $this->isOn($settings, 'show_filter'),
             'starColor'         => sanitize_hex_color((string) ($settings['star_color'] ?? '')) ?: self::DEFAULT_STAR_COLOR,
