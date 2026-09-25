@@ -64,34 +64,18 @@
  * at the bottom. One card, two descriptions, and only one of them right.
  * ------------------------------------------------------------------------ */
 
-/* Photo Strip: the slider is a band of lightbox tiles, with no duplicate
- * review metadata competing with the photographs. */
-.fct-reviews-layout-preset--photo-strip .fct-review-item {
-    padding: 0;
-    border: 0;
-    box-shadow: none;
-    background: transparent;
-}
-
-.fct-reviews-layout-preset--photo-strip .fct-review-item-header,
-.fct-reviews-layout-preset--photo-strip .fct-review-item-title,
-.fct-reviews-layout-preset--photo-strip .fct-review-item-content,
-.fct-reviews-layout-preset--photo-strip .fct-review-view-replies {
-    display: none;
-}
-
-.fct-reviews-layout-preset--photo-strip .fct-review-media-gallery {
-    width: 100%;
-    margin: 0;
-}
-
-.fct-reviews-layout-preset--photo-strip .fct-review-media-thumb {
-    width: 100%;
-    aspect-ratio: 1 / 1;
-    object-fit: cover;
-    border: 0;
-    border-radius: 8px;
-}
+/* Photo Strip needs no rules here.
+ *
+ * The card is drawn by reviews.scss, which this widget already loads: core
+ * styles any card carrying fct-review-photo-only, and the preset asks for that
+ * class. It takes the padding off the card and lets the flush gallery fill it.
+ *
+ * This file restated that and went further, and the extras were the mismatch:
+ * it cropped every tile to a square with object-fit, which cuts the ends off a
+ * landscape product shot, rounded the tile instead of the gallery, and stripped
+ * the card's frame and background. It also hid the header, title, content and
+ * reply button, none of which this preset renders in the first place.
+ * ------------------------------------------------------------------------ */
 
 /* Testimonials needs no rules here.
  *
