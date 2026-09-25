@@ -70,14 +70,26 @@ trait ReviewWidgetTrait
      * The store has its own switch for the badge, and a widget control that
      * always started on would quietly overrule it: a store that had turned
      * badges off would find them back on every page carrying this widget.
-     * Reading the store's answer as the default keeps the control honest and
-     * still lets a single placement differ.
+     * Reading the store's answer as the default keeps the control honest. The
+     * renderer also treats the store setting as a hard upper bound, matching
+     * Gutenberg when a saved widget setting tries to override it.
      */
     protected static function verifiedBadgeDefault(): string
     {
         $settings = (array) ProductReviewService::getReviewSettings();
 
         return (!isset($settings['show_verified_badge']) || $settings['show_verified_badge'] === 'yes') ? 'yes' : '';
+    }
+
+    /**
+     * The store-wide switch is authoritative; a widget can only turn the
+     * badge off when the store allows it, never turn it back on after the
+     * merchant disabled it globally.
+     */
+    protected function showVerifiedBadge(array $settings): bool
+    {
+        return static::verifiedBadgeDefault() === 'yes'
+            && $this->isOn($settings, 'show_verified');
     }
 
     /**
