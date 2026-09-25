@@ -6,8 +6,10 @@ use Elementor\Controls_Manager;
 use Elementor\Widget_Base;
 use FluentCart\App\Modules\Templating\AssetLoader;
 use FluentCart\App\Services\Renderer\ProductReviewRenderer;
+use FluentCart\App\Services\Reviews\LayoutPresets;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ReviewStyleControls;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ThemeBuilder\Traits\ReviewWidgetTrait;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support\ReviewLayoutPresets;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -105,6 +107,8 @@ class ProductReviewsWidget extends Widget_Base
             ]
         );
 
+        $this->addReviewLayoutPresetControl();
+
         $this->registerProductSourceControls();
 
         $this->add_control(
@@ -126,6 +130,10 @@ class ProductReviewsWidget extends Widget_Base
             [
                 'label' => esc_html__('Rating Summary', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_CONTENT,
+                // A preset builds the section from its own blocks, so the
+                // controls that arrange it by hand have nothing to say
+                // while one is chosen.
+                'condition' => ['layout_preset' => ''],
             ]
         );
 
@@ -149,6 +157,10 @@ class ProductReviewsWidget extends Widget_Base
             [
                 'label' => esc_html__('Write a Review Button', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_CONTENT,
+                // A preset builds the section from its own blocks, so the
+                // controls that arrange it by hand have nothing to say
+                // while one is chosen.
+                'condition' => ['layout_preset' => ''],
             ]
         );
 
@@ -228,6 +240,10 @@ class ProductReviewsWidget extends Widget_Base
             [
                 'label' => esc_html__('Review List', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_CONTENT,
+                // A preset builds the section from its own blocks, so the
+                // controls that arrange it by hand have nothing to say
+                // while one is chosen.
+                'condition' => ['layout_preset' => ''],
             ]
         );
 
@@ -565,6 +581,10 @@ class ProductReviewsWidget extends Widget_Base
             [
                 'label' => esc_html__('Header', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_CONTENT,
+                // A preset builds the section from its own blocks, so the
+                // controls that arrange it by hand have nothing to say
+                // while one is chosen.
+                'condition' => ['layout_preset' => ''],
             ]
         );
 
@@ -609,7 +629,7 @@ class ProductReviewsWidget extends Widget_Base
             [
                 'label' => esc_html__('Pagination', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_CONTENT,
-                'condition' => ['view_mode' => ['list', 'grid']],
+                'condition' => ['view_mode' => ['list', 'grid'], 'layout_preset' => ''],
             ]
         );
 
@@ -698,9 +718,33 @@ class ProductReviewsWidget extends Widget_Base
 
         AssetLoader::loadSingleProductAssets();
 
-        ob_start();
-        (new ProductReviewRenderer($product->ID, $this->rendererOptions($settings)))->render();
-        $content = ob_get_clean();
+        $preset = (string) ($settings['layout_preset'] ?? '');
+
+        if (ReviewLayoutPresets::exists($preset)) {
+            // The layout's own blocks, the same ones the block editor builds
+            // from this preset. Rendered rather than approximated, so every
+            // field block, every filter and everything PRO appends to a review
+            // behaves exactly as it does on a block-built page — and the Pro
+            // gate applies without being restated, because the view mode is
+            // resolved where it always was.
+            //
+            // The template says how the section is arranged, never which
+            // product it is for; the widget has already resolved that,
+            // including the editor's preview fallback, so it tells the list
+            // rather than leaving it to a context the canvas may not have.
+            $content = '';
+
+            foreach (LayoutPresets::parsedBlocks($preset, [
+                'query_type' => 'custom',
+                'product_id' => (int) $product->ID,
+            ]) as $block) {
+                $content .= render_block($block);
+            }
+        } else {
+            ob_start();
+            (new ProductReviewRenderer($product->ID, $this->rendererOptions($settings)))->render();
+            $content = ob_get_clean();
+        }
 
         if (trim($content) === '') {
             $this->renderPlaceholder(
