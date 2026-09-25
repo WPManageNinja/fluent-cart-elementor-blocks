@@ -1,4 +1,13 @@
 <?php return [
+    'resources/css/elementor.css' => [
+        'file' => 'assets/elementor-BvZwpxMJ.css',
+        'src' => 'resources/css/elementor.css',
+        'isEntry' => true,
+        'name' => 'elementor',
+        'names' => [
+            'elementor.css'
+        ]
+    ],
     'resources/elementor/popup-integration.js' => [
         'file' => 'popup-integration.js',
         'name' => 'popup-integration',
@@ -9,6 +18,12 @@
         'file' => 'product-carousel-elementor.js',
         'name' => 'product-carousel-elementor',
         'src' => 'resources/elementor/product-carousel-elementor.js',
+        'isEntry' => true
+    ],
+    'resources/elementor/product-reviews-elementor.js' => [
+        'file' => 'product-reviews-elementor.js',
+        'name' => 'product-reviews-elementor',
+        'src' => 'resources/elementor/product-reviews-elementor.js',
         'isEntry' => true
     ],
     'resources/elementor/product-select-control.js' => [

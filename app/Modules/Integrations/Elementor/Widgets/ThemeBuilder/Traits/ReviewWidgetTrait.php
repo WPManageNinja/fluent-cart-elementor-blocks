@@ -67,20 +67,9 @@ trait ReviewWidgetTrait
 
     protected static function registerReviewPresetStyles(): void
     {
-        static $registered = false;
-
-        if ($registered) {
-            return;
-        }
-
-        $registered = true;
-
-        Enqueue::style(
-            'fluentcart-product-reviews-elementor',
-            'css/elementor.css',
-            [],
-            FLUENTCART_ELEMENTOR_BLOCKS_VERSION
-        );
+        // Shared with the editor preview, which is a separate document and has
+        // no widget to ask. ReviewSupport owns the single registration.
+        ReviewSupport::enqueuePresetStyles();
     }
 
     /**
