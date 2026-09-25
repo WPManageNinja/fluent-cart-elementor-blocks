@@ -44,6 +44,14 @@ class ReviewLayoutPresets
             'showFilterChips' => (bool) Arr::get($header, 'filters', false),
             'showSortControls' => (bool) Arr::get($header, 'sorting', false),
             'showReviewDate' => (bool) Arr::get($item, 'show_date', true),
+            // Every preset that draws a footer draws the store's reply in it:
+            // LayoutPresets::row() puts the reply beside the votes in the one
+            // footer group it builds, so there is no preset where this is off
+            // and a footer still appears. Stated rather than left to the
+            // widget, because a preset switches the layout controls off and
+            // Elementor blanks a control it has switched off -- so the widget
+            // answers no to every flag the preset does not answer for it.
+            'showViewReply' => true,
             'showReviewerName' => (bool) Arr::get($item, 'show_reviewer_name', true),
             // Gutenberg's row template includes the verified badge unless a
             // preset explicitly turns it off. Do not fall back to the store
