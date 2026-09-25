@@ -5,6 +5,7 @@ namespace FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\T
 use FluentCart\App\Services\ProductReviewService;
 use FluentCart\App\Services\Renderer\ProductReviewRenderer;
 use FluentCart\App\Services\Renderer\ReviewThreadMarkup;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support\ReviewLayoutPresets;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support\ReviewSupport;
 use FluentCartElementorBlocks\App\Utils\Enqueuer\Enqueue;
 use FluentCart\App\App;
@@ -143,6 +144,30 @@ trait ReviewWidgetTrait
      * looks like a feature the plugin does not have; one labelled Pro is an
      * invitation.
      */
+    /**
+     * The Layout Preset control.
+     *
+     * Choosing one builds the section from that layout's blocks — the same
+     * blocks the block editor would build, so the two agree by construction
+     * rather than by being kept in step. The controls below it describe the
+     * arrangement a merchant builds by hand, so they show only for Custom;
+     * with a preset chosen they would be describing something they do not
+     * decide.
+     */
+    protected function addReviewLayoutPresetControl(): void
+    {
+        $this->add_control(
+            'layout_preset',
+            [
+                'label'       => esc_html__('Layout Preset', 'fluent-cart-elementor-blocks'),
+                'description' => esc_html__('Builds the section from a ready-made layout. Choose Custom to arrange it with the controls below.', 'fluent-cart-elementor-blocks'),
+                'type'        => \Elementor\Controls_Manager::SELECT,
+                'default'     => '',
+                'options'     => ReviewLayoutPresets::options(),
+            ]
+        );
+    }
+
     protected function reviewViewModeOptions(): array
     {
         $pro = App::isProActive();
