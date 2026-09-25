@@ -11,6 +11,12 @@
         'src' => 'resources/elementor/product-carousel-elementor.js',
         'isEntry' => true
     ],
+    'resources/elementor/product-reviews-elementor.js' => [
+        'file' => 'product-reviews-elementor.js',
+        'name' => 'product-reviews-elementor',
+        'src' => 'resources/elementor/product-reviews-elementor.js',
+        'isEntry' => true
+    ],
     'resources/elementor/product-select-control.js' => [
         'file' => 'product-select-control.js',
         'name' => 'product-select-control',

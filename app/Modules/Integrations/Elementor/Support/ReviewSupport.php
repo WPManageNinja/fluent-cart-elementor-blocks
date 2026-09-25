@@ -2,6 +2,8 @@
 
 namespace FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support;
 
+use FluentCartElementorBlocks\App\Utils\Enqueuer\Enqueue;
+
 if (!defined('ABSPATH')) {
     exit;
 }
@@ -9,6 +11,37 @@ if (!defined('ABSPATH')) {
 /** Product Reviews module and product visibility checks for Elementor widgets. */
 class ReviewSupport
 {
+    /**
+     * The stylesheet the review layout presets are drawn with.
+     *
+     * Here rather than on the widget trait because two documents need it and
+     * only one of them is a widget. The front end gets it through
+     * get_style_depends(); the Elementor editor preview is a separate document
+     * that never asks a widget what it depends on, so the integration enqueues
+     * it there directly. Registered once either way.
+     */
+    public static function enqueuePresetStyles(): void
+    {
+        static $enqueued = false;
+
+        if ($enqueued) {
+            return;
+        }
+
+        $enqueued = true;
+
+        // staticStyle, not style: resources/css is copied to assets/css
+        // verbatim by viteStaticCopy, so there is no manifest entry to look up.
+        // getEnqueuePath() serves it from the dev server or from assets/
+        // depending on the mode, which is what both documents need.
+        Enqueue::staticStyle(
+            'fluentcart-product-reviews-elementor',
+            'css/elementor.css',
+            [],
+            FLUENTCART_ELEMENTOR_BLOCKS_VERSION
+        );
+    }
+
     /** Has the store switched the Product Reviews module on? */
     public static function isModuleActive(): bool
     {

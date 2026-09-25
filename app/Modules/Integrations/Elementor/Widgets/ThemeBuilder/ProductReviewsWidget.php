@@ -8,6 +8,7 @@ use FluentCart\App\Modules\Templating\AssetLoader;
 use FluentCart\App\Services\Renderer\ProductReviewRenderer;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ReviewStyleControls;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ThemeBuilder\Traits\ReviewWidgetTrait;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support\ReviewLayoutPresets;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -76,9 +77,22 @@ class ProductReviewsWidget extends Widget_Base
     public function get_style_depends()
     {
         AssetLoader::loadSingleProductAssets();
+        static::registerReviewPresetStyles();
         static::registerSliderAssets();
 
-        return [];
+        // Unconditionally, and not because it is always needed.
+        //
+        // Elementor calls this while collecting a widget's assets, before any
+        // instance exists: every way of reading the settings from here — both
+        // get_settings_for_display() and get_settings() — runs Elementor's
+        // sanitiser over a null and throws. There is no way to ask which layout
+        // is in play at the moment the question is asked.
+        //
+        // So the answer is the safe one. A stylesheet that arrives when it was
+        // not needed costs one cached core file on a page that already draws a
+        // review section; one that is missing when it was needed collapses the
+        // summary and the list into a column of single letters.
+        return ['wp-block-library'];
     }
 
     /**
@@ -105,6 +119,8 @@ class ProductReviewsWidget extends Widget_Base
             ]
         );
 
+        $this->addReviewLayoutPresetControl();
+
         $this->registerProductSourceControls();
 
         $this->add_control(
@@ -126,6 +142,10 @@ class ProductReviewsWidget extends Widget_Base
             [
                 'label' => esc_html__('Rating Summary', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_CONTENT,
+                // A preset builds the section from its own blocks, so the
+                // controls that arrange it by hand have nothing to say
+                // while one is chosen.
+                'condition' => ['layout_preset' => ReviewLayoutPresets::inertPresets()],
             ]
         );
 
@@ -149,6 +169,10 @@ class ProductReviewsWidget extends Widget_Base
             [
                 'label' => esc_html__('Write a Review Button', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_CONTENT,
+                // A preset builds the section from its own blocks, so the
+                // controls that arrange it by hand have nothing to say
+                // while one is chosen.
+                'condition' => ['layout_preset' => ReviewLayoutPresets::inertPresets()],
             ]
         );
 
@@ -228,6 +252,10 @@ class ProductReviewsWidget extends Widget_Base
             [
                 'label' => esc_html__('Review List', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_CONTENT,
+                // A preset builds the section from its own blocks, so the
+                // controls that arrange it by hand have nothing to say
+                // while one is chosen.
+                'condition' => ['layout_preset' => ReviewLayoutPresets::inertPresets()],
             ]
         );
 
@@ -565,6 +593,10 @@ class ProductReviewsWidget extends Widget_Base
             [
                 'label' => esc_html__('Header', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_CONTENT,
+                // A preset builds the section from its own blocks, so the
+                // controls that arrange it by hand have nothing to say
+                // while one is chosen.
+                'condition' => ['layout_preset' => ReviewLayoutPresets::inertPresets()],
             ]
         );
 
@@ -609,7 +641,7 @@ class ProductReviewsWidget extends Widget_Base
             [
                 'label' => esc_html__('Pagination', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_CONTENT,
-                'condition' => ['view_mode' => ['list', 'grid']],
+                'condition' => ['view_mode' => ['list', 'grid'], 'layout_preset' => ReviewLayoutPresets::inertPresets()],
             ]
         );
 
@@ -698,9 +730,28 @@ class ProductReviewsWidget extends Widget_Base
 
         AssetLoader::loadSingleProductAssets();
 
-        ob_start();
-        (new ProductReviewRenderer($product->ID, $this->rendererOptions($settings)))->render();
-        $content = ob_get_clean();
+        $preset = (string) ($settings['layout_preset'] ?? '');
+
+        if (ReviewLayoutPresets::exists($preset)) {
+            // Presets are semantic settings, not Gutenberg blocks. Elementor
+            // owns its markup and styling; core still owns review data,
+            // pagination, frontend behavior and Pro enforcement.
+            $presetOptions = ReviewLayoutPresets::rendererOptions($preset);
+
+            ob_start();
+            (new ProductReviewRenderer(
+                $product->ID,
+                array_merge($this->rendererOptions($settings), $presetOptions)
+            ))->render();
+            $content = ob_get_clean();
+
+            $content = '<div class="fct-reviews-layout-preset fct-reviews-layout-preset--'
+                . esc_attr(sanitize_html_class($preset)) . '">' . $content . '</div>';
+        } else {
+            ob_start();
+            (new ProductReviewRenderer($product->ID, $this->rendererOptions($settings)))->render();
+            $content = ob_get_clean();
+        }
 
         if (trim($content) === '') {
             $this->renderPlaceholder(
@@ -730,7 +781,7 @@ class ProductReviewsWidget extends Widget_Base
             'showSortControls'  => $this->isOn($settings, 'show_sorting'),
             'showReviewerName'  => $this->isOn($settings, 'show_reviewer_name'),
             'showReviewDate'    => $this->isOn($settings, 'show_review_date'),
-            'showVerifiedBadge' => $this->isOn($settings, 'show_verified'),
+            'showVerifiedBadge' => $this->showVerifiedBadge($settings),
             'showViewReply'     => $this->isOn($settings, 'show_view_reply'),
             'defaultSortBy'     => $sortBy,
             'defaultSortOrder'  => $sortOrder,

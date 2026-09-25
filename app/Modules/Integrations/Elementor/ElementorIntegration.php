@@ -10,6 +10,7 @@ use FluentCart\Framework\Support\Arr;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Controls\ProductSelectControl;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Controls\ProductVariationSelectControl;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Renderers\ElementorShopAppRenderer;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support\ReviewSupport;
 use FluentCartElementorBlocks\App\Services\Badges\BadgeRenderer;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\AddToCartWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\BuyNowWidget;
@@ -447,6 +448,26 @@ class ElementorIntegration
             [],
             FLUENTCART_ELEMENTOR_BLOCKS_VERSION
         );
+
+        // The review layout presets' own stylesheet.
+        //
+        // The front end gets it from ProductReviewsWidget::get_style_depends().
+        // The editor preview is a separate document and Elementor never asks a
+        // widget what it depends on while building it, so without this the
+        // canvas draws every preset unstyled while the published page draws it
+        // correctly.
+        ReviewSupport::enqueuePresetStyles();
+
+        // WordPress's own block stylesheet, for the review layout presets.
+        //
+        // A preset builds the section from core blocks, and WordPress loads the
+        // file that lays them out only when it finds blocks in post_content. It
+        // finds none on an Elementor page either way, but the front end is
+        // covered by the widget declaring it through get_style_depends(); the
+        // editor preview is a separate document that never asks a widget what
+        // it depends on, so without this the canvas stacks the summary and the
+        // list while the published page shows them side by side.
+        wp_enqueue_style('wp-block-library');
     }
 
     public function maybeEnqueueAdvancedVariation($widget)
