@@ -8,6 +8,7 @@ use FluentCart\App\Modules\Templating\AssetLoader;
 use FluentCart\App\Services\Renderer\ProductReviewRenderer;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ReviewStyleControls;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ThemeBuilder\Traits\ReviewWidgetTrait;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support\ReviewLayoutPresets;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -34,7 +35,10 @@ class ProductReviewsWidget extends Widget_Base
 
     const MIN_COLUMNS = ProductReviewListWidget::MIN_COLUMNS;
     const MAX_COLUMNS = ProductReviewListWidget::MAX_COLUMNS;
-    const VIEW_MODES = ['list', 'grid', 'slider'];
+    // Borrowed rather than repeated, the way MIN_COLUMNS above it is: the two
+    // widgets draw the same list through the same renderer, and a second copy
+    // of this list is a second place every change has to be remembered.
+    const VIEW_MODES = ProductReviewListWidget::VIEW_MODES;
     const ARROW_SIZES = ['sm', 'md', 'lg'];
     const ARROW_POSITIONS = ['overlap', 'outside', 'bottom'];
     const AUTOPLAY_MODES = ['no', 'yes', 'hover'];
@@ -73,9 +77,22 @@ class ProductReviewsWidget extends Widget_Base
     public function get_style_depends()
     {
         AssetLoader::loadSingleProductAssets();
+        static::registerReviewPresetStyles();
         static::registerSliderAssets();
 
-        return [];
+        // Unconditionally, and not because it is always needed.
+        //
+        // Elementor calls this while collecting a widget's assets, before any
+        // instance exists: every way of reading the settings from here — both
+        // get_settings_for_display() and get_settings() — runs Elementor's
+        // sanitiser over a null and throws. There is no way to ask which layout
+        // is in play at the moment the question is asked.
+        //
+        // So the answer is the safe one. A stylesheet that arrives when it was
+        // not needed costs one cached core file on a page that already draws a
+        // review section; one that is missing when it was needed collapses the
+        // summary and the list into a column of single letters.
+        return ['wp-block-library'];
     }
 
     /**
@@ -102,6 +119,8 @@ class ProductReviewsWidget extends Widget_Base
             ]
         );
 
+        $this->addReviewLayoutPresetControl();
+
         $this->registerProductSourceControls();
 
         $this->add_control(
@@ -123,6 +142,10 @@ class ProductReviewsWidget extends Widget_Base
             [
                 'label' => esc_html__('Rating Summary', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_CONTENT,
+                // A preset builds the section from its own blocks, so the
+                // controls that arrange it by hand have nothing to say
+                // while one is chosen.
+                'condition' => ['layout_preset' => ReviewLayoutPresets::inertPresets()],
             ]
         );
 
@@ -146,6 +169,10 @@ class ProductReviewsWidget extends Widget_Base
             [
                 'label' => esc_html__('Write a Review Button', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_CONTENT,
+                // A preset builds the section from its own blocks, so the
+                // controls that arrange it by hand have nothing to say
+                // while one is chosen.
+                'condition' => ['layout_preset' => ReviewLayoutPresets::inertPresets()],
             ]
         );
 
@@ -225,6 +252,10 @@ class ProductReviewsWidget extends Widget_Base
             [
                 'label' => esc_html__('Review List', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_CONTENT,
+                // A preset builds the section from its own blocks, so the
+                // controls that arrange it by hand have nothing to say
+                // while one is chosen.
+                'condition' => ['layout_preset' => ReviewLayoutPresets::inertPresets()],
             ]
         );
 
@@ -242,6 +273,19 @@ class ProductReviewsWidget extends Widget_Base
                     '4' => esc_html__('4 stars and up', 'fluent-cart-elementor-blocks'),
                     '5' => esc_html__('5 stars only', 'fluent-cart-elementor-blocks'),
                 ],
+            ]
+        );
+
+        $this->add_control(
+            'photos_only',
+            [
+                'label'        => esc_html__('Reviews with attachments only', 'fluent-cart-elementor-blocks'),
+                'description'  => esc_html__('Leaves out reviews that carry no photograph, and the count and the pages follow. What the photo layouts are built on.', 'fluent-cart-elementor-blocks'),
+                'type'         => \Elementor\Controls_Manager::SWITCHER,
+                'label_on'     => esc_html__('Yes', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('No', 'fluent-cart-elementor-blocks'),
+                'return_value' => 'yes',
+                'default'      => '',
             ]
         );
 
@@ -344,14 +388,12 @@ class ProductReviewsWidget extends Widget_Base
                 'label'     => esc_html__('View Mode', 'fluent-cart-elementor-blocks'),
                 'type'      => Controls_Manager::SELECT,
                 'default'   => 'list',
-                'options'   => [
-                    'list'   => esc_html__('List', 'fluent-cart-elementor-blocks'),
-                    'grid'   => esc_html__('Grid', 'fluent-cart-elementor-blocks'),
-                    'slider' => esc_html__('Slider', 'fluent-cart-elementor-blocks'),
-                ],
+                'options'   => $this->reviewViewModeOptions(),
                 'separator' => 'before',
             ]
         );
+
+        $this->addReviewViewModeProNotice();
 
         $this->add_control(
             'grid_columns',
@@ -551,6 +593,10 @@ class ProductReviewsWidget extends Widget_Base
             [
                 'label' => esc_html__('Header', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_CONTENT,
+                // A preset builds the section from its own blocks, so the
+                // controls that arrange it by hand have nothing to say
+                // while one is chosen.
+                'condition' => ['layout_preset' => ReviewLayoutPresets::inertPresets()],
             ]
         );
 
@@ -595,7 +641,7 @@ class ProductReviewsWidget extends Widget_Base
             [
                 'label' => esc_html__('Pagination', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_CONTENT,
-                'condition' => ['view_mode' => ['list', 'grid']],
+                'condition' => ['view_mode' => ['list', 'grid'], 'layout_preset' => ReviewLayoutPresets::inertPresets()],
             ]
         );
 
@@ -684,9 +730,28 @@ class ProductReviewsWidget extends Widget_Base
 
         AssetLoader::loadSingleProductAssets();
 
-        ob_start();
-        (new ProductReviewRenderer($product->ID, $this->rendererOptions($settings)))->render();
-        $content = ob_get_clean();
+        $preset = (string) ($settings['layout_preset'] ?? '');
+
+        if (ReviewLayoutPresets::exists($preset)) {
+            // Presets are semantic settings, not Gutenberg blocks. Elementor
+            // owns its markup and styling; core still owns review data,
+            // pagination, frontend behavior and Pro enforcement.
+            $presetOptions = ReviewLayoutPresets::rendererOptions($preset);
+
+            ob_start();
+            (new ProductReviewRenderer(
+                $product->ID,
+                array_merge($this->rendererOptions($settings), $presetOptions)
+            ))->render();
+            $content = ob_get_clean();
+
+            $content = '<div class="fct-reviews-layout-preset fct-reviews-layout-preset--'
+                . esc_attr(sanitize_html_class($preset)) . '">' . $content . '</div>';
+        } else {
+            ob_start();
+            (new ProductReviewRenderer($product->ID, $this->rendererOptions($settings)))->render();
+            $content = ob_get_clean();
+        }
 
         if (trim($content) === '') {
             $this->renderPlaceholder(
@@ -724,6 +789,9 @@ class ProductReviewsWidget extends Widget_Base
                 ? 0
                 : max(0, min(100, absint($settings['per_page'] ?? 0))),
             'minRating'         => max(0, min(5, absint($settings['min_rating'] ?? 0))),
+            // Explicitly false: isOn() answers true for an absent key, and a
+            // widget saved before this control existed has none.
+            'hasMedia'          => $this->isOn($settings, 'photos_only', false),
             'maxWords'          => max(0, min(500, absint($settings['content_max_words'] ?? 0))),
             'paginationType'    => $this->pick($settings, 'pagination_type', self::PAGINATION_TYPES, 'numbers'),
             'viewMode'          => $this->pick($settings, 'view_mode', self::VIEW_MODES, 'list'),

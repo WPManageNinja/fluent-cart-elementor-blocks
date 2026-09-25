@@ -5,6 +5,7 @@ namespace FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\T
 use FluentCart\App\Services\ProductReviewService;
 use FluentCart\App\Services\Renderer\ProductReviewRenderer;
 use FluentCart\App\Services\Renderer\ReviewThreadMarkup;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support\ReviewLayoutPresets;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support\ReviewSupport;
 use FluentCartElementorBlocks\App\Utils\Enqueuer\Enqueue;
 use FluentCart\App\App;
@@ -62,6 +63,13 @@ trait ReviewWidgetTrait
             FLUENTCART_ELEMENTOR_BLOCKS_VERSION,
             true
         );
+    }
+
+    protected static function registerReviewPresetStyles(): void
+    {
+        // Shared with the editor preview, which is a separate document and has
+        // no widget to ask. ReviewSupport owns the single registration.
+        ReviewSupport::enqueuePresetStyles();
     }
 
     /**
@@ -142,6 +150,82 @@ trait ReviewWidgetTrait
      * @param bool  $fullWidth already read by the widget, whose switcher
      *                         default differs from the other's.
      */
+    /**
+     * The View Mode choices, marked for what this site may actually draw.
+     *
+     * Grid and slider belong to Pro, and core decides that for real in
+     * ProductReviewService::resolveViewMode() — every path this widget renders
+     * through goes past it, so a locked mode already comes out as a list. What
+     * was missing was the panel saying so: a merchant picked Grid, nothing
+     * changed on the page, and nothing explained why.
+     *
+     * The options are marked rather than removed. A choice that disappears
+     * looks like a feature the plugin does not have; one labelled Pro is an
+     * invitation.
+     */
+    /**
+     * The Layout Preset control.
+     *
+     * Choosing one builds the section from that layout's blocks — the same
+     * blocks the block editor would build, so the two agree by construction
+     * rather than by being kept in step. The controls below it describe the
+     * arrangement a merchant builds by hand, so they show only for Custom;
+     * with a preset chosen they would be describing something they do not
+     * decide.
+     */
+    protected function addReviewLayoutPresetControl(): void
+    {
+        $this->add_control(
+            'layout_preset',
+            [
+                'label'       => esc_html__('Layout Preset', 'fluent-cart-elementor-blocks'),
+                'description' => esc_html__('Builds the section from a ready-made layout. Choose Custom to arrange it with the controls below.', 'fluent-cart-elementor-blocks'),
+                'type'        => \Elementor\Controls_Manager::SELECT,
+                'default'     => '',
+                'options'     => ReviewLayoutPresets::options(),
+            ]
+        );
+    }
+
+    protected function reviewViewModeOptions(): array
+    {
+        $pro = App::isProActive();
+
+        return [
+            'list'   => esc_html__('List', 'fluent-cart-elementor-blocks'),
+            'grid'   => $pro
+                ? esc_html__('Grid', 'fluent-cart-elementor-blocks')
+                : esc_html__('Grid (Pro)', 'fluent-cart-elementor-blocks'),
+            'slider' => $pro
+                ? esc_html__('Slider', 'fluent-cart-elementor-blocks')
+                : esc_html__('Slider (Pro)', 'fluent-cart-elementor-blocks'),
+        ];
+    }
+
+    /**
+     * The warning under View Mode, shown only once a locked mode is picked.
+     *
+     * Conditional rather than standing: a line of small print that is always
+     * there is read once and then becomes furniture, while one that appears on
+     * the choice it concerns is read every time.
+     */
+    protected function addReviewViewModeProNotice(): void
+    {
+        if (App::isProActive()) {
+            return;
+        }
+
+        $this->add_control(
+            'view_mode_pro_notice',
+            [
+                'type'            => \Elementor\Controls_Manager::RAW_HTML,
+                'raw'             => esc_html__('Grid and Slider need FluentCart Pro. Without it this list renders as a single column.', 'fluent-cart-elementor-blocks'),
+                'content_classes' => 'elementor-panel-alert elementor-panel-alert-warning',
+                'condition'       => ['view_mode' => ['grid', 'slider']],
+            ]
+        );
+    }
+
     protected function reviewMediaOptions(array $settings, bool $fullWidth): array
     {
         return [

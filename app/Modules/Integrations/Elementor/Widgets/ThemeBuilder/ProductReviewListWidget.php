@@ -170,6 +170,19 @@ class ProductReviewListWidget extends Widget_Base
         );
 
         $this->add_control(
+            'photos_only',
+            [
+                'label'        => esc_html__('Reviews with attachments only', 'fluent-cart-elementor-blocks'),
+                'description'  => esc_html__('Leaves out reviews that carry no photograph, and the count and the pages follow. What the photo layouts are built on.', 'fluent-cart-elementor-blocks'),
+                'type'         => \Elementor\Controls_Manager::SWITCHER,
+                'label_on'     => esc_html__('Yes', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('No', 'fluent-cart-elementor-blocks'),
+                'return_value' => 'yes',
+                'default'      => '',
+            ]
+        );
+
+        $this->add_control(
             'content_max_words',
             [
                 'label'       => esc_html__('Words shown', 'fluent-cart-elementor-blocks'),
@@ -279,13 +292,11 @@ class ProductReviewListWidget extends Widget_Base
                 'label'   => esc_html__('View Mode', 'fluent-cart-elementor-blocks'),
                 'type'    => Controls_Manager::SELECT,
                 'default' => 'list',
-                'options' => [
-                    'list'   => esc_html__('List', 'fluent-cart-elementor-blocks'),
-                    'grid'   => esc_html__('Grid', 'fluent-cart-elementor-blocks'),
-                    'slider' => esc_html__('Slider', 'fluent-cart-elementor-blocks'),
-                ],
+                'options' => $this->reviewViewModeOptions(),
             ]
         );
+
+        $this->addReviewViewModeProNotice();
 
         $this->add_control(
             'grid_columns',
@@ -930,6 +941,14 @@ class ProductReviewListWidget extends Widget_Base
             'viewMode'         => $this->pick($settings, 'view_mode', self::VIEW_MODES, 'list'),
             'gridColumns'      => max(self::MIN_COLUMNS, min(self::MAX_COLUMNS, absint($settings['grid_columns'] ?? 2))),
             'sliderSettings'   => $this->sliderSettings($settings),
+            // Which reviews there are, not how a row draws them — so it belongs
+            // here rather than with the standard row's presentation options,
+            // which a composed layout returns empty. Filtering is the same
+            // question whichever way the row is built.
+            //
+            // Explicitly false: isOn() answers true for an absent key, and a
+            // widget saved before this control existed has none.
+            'hasMedia'         => $this->isOn($settings, 'photos_only', false),
             'showSortControls' => $this->isOn($settings, 'show_sorting'),
             'defaultSortBy'    => $sortBy,
             'defaultSortOrder' => $sortOrder,
