@@ -786,7 +786,7 @@ class ProductReviewsWidget extends Widget_Base
             'showSortControls'  => $this->isOn($settings, 'show_sorting'),
             'showReviewerName'  => $this->isOn($settings, 'show_reviewer_name'),
             'showReviewDate'    => $this->isOn($settings, 'show_review_date'),
-            'showVerifiedBadge' => $this->isOn($settings, 'show_verified'),
+            'showVerifiedBadge' => $this->showVerifiedBadge($settings),
             'showViewReply'     => $this->isOn($settings, 'show_view_reply'),
             'defaultSortBy'     => $sortBy,
             'defaultSortOrder'  => $sortOrder,
