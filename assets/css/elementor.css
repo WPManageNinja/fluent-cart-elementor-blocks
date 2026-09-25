@@ -1,0 +1,11 @@
+/* FluentCart Elementor Blocks — layout overrides */
+
+/* Single-column checkout: spacing between summary/notes and form fields */
+.fce-checkout-single-column .fct_checkout_form {
+    margin-top: 24px;
+}
+
+/* Single-column checkout: reset core section top margin on submit wrapper */
+.fce-checkout-single-column .fct_checkout_form_submit .fct_checkout_form_section {
+    margin-top: 0;
+}
