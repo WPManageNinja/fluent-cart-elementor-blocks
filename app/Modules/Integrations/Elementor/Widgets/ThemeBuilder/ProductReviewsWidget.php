@@ -145,7 +145,7 @@ class ProductReviewsWidget extends Widget_Base
                 // A preset builds the section from its own blocks, so the
                 // controls that arrange it by hand have nothing to say
                 // while one is chosen.
-                'condition' => ['layout_preset' => ''],
+                'condition' => ['layout_preset' => ReviewLayoutPresets::inertPresets()],
             ]
         );
 
@@ -172,7 +172,7 @@ class ProductReviewsWidget extends Widget_Base
                 // A preset builds the section from its own blocks, so the
                 // controls that arrange it by hand have nothing to say
                 // while one is chosen.
-                'condition' => ['layout_preset' => ''],
+                'condition' => ['layout_preset' => ReviewLayoutPresets::inertPresets()],
             ]
         );
 
@@ -255,7 +255,7 @@ class ProductReviewsWidget extends Widget_Base
                 // A preset builds the section from its own blocks, so the
                 // controls that arrange it by hand have nothing to say
                 // while one is chosen.
-                'condition' => ['layout_preset' => ''],
+                'condition' => ['layout_preset' => ReviewLayoutPresets::inertPresets()],
             ]
         );
 
@@ -596,7 +596,7 @@ class ProductReviewsWidget extends Widget_Base
                 // A preset builds the section from its own blocks, so the
                 // controls that arrange it by hand have nothing to say
                 // while one is chosen.
-                'condition' => ['layout_preset' => ''],
+                'condition' => ['layout_preset' => ReviewLayoutPresets::inertPresets()],
             ]
         );
 
@@ -641,7 +641,7 @@ class ProductReviewsWidget extends Widget_Base
             [
                 'label' => esc_html__('Pagination', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_CONTENT,
-                'condition' => ['view_mode' => ['list', 'grid'], 'layout_preset' => ''],
+                'condition' => ['view_mode' => ['list', 'grid'], 'layout_preset' => ReviewLayoutPresets::inertPresets()],
             ]
         );
 

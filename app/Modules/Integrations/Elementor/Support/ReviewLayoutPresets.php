@@ -181,6 +181,36 @@ class ReviewLayoutPresets
     }
 
     /**
+     * The values of the layout control that leave the widget's own settings in
+     * charge, so the panel can show those settings for exactly those values.
+     *
+     * Custom is the obvious one. The rest are the Pro layouts on a site
+     * without Pro: exists() refuses them at render, so the widget falls back
+     * to its own controls -- and a panel that hid those controls merely
+     * because something was chosen left a merchant looking at a layout they
+     * had not configured, with no way to reach the settings that produced it.
+     *
+     * Derived from exists() rather than from a second reading of the Pro flag.
+     * The panel and the renderer then cannot disagree about which layouts are
+     * real: whatever exists() refuses is, by construction, a value that shows
+     * the controls.
+     *
+     * @return array<int, string>
+     */
+    public static function inertPresets(): array
+    {
+        $inert = [''];
+
+        foreach (array_keys(LayoutPresets::all()) as $id) {
+            if (!static::exists((string) $id)) {
+                $inert[] = (string) $id;
+            }
+        }
+
+        return $inert;
+    }
+
+    /**
      * Whether a preset by that name exists. A widget saved against a layout
      * that has since been renamed or removed falls back to its own controls
      * rather than rendering nothing.
