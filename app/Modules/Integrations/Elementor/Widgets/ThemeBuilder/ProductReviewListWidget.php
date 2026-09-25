@@ -948,6 +948,14 @@ class ProductReviewListWidget extends Widget_Base
             'viewMode'         => $this->pick($settings, 'view_mode', self::VIEW_MODES, 'list'),
             'gridColumns'      => max(self::MIN_COLUMNS, min(self::MAX_COLUMNS, absint($settings['grid_columns'] ?? 2))),
             'sliderSettings'   => $this->sliderSettings($settings),
+            // Which reviews there are, not how a row draws them — so it belongs
+            // here rather than with the standard row's presentation options,
+            // which a composed layout returns empty. Filtering is the same
+            // question whichever way the row is built.
+            //
+            // Explicitly false: isOn() answers true for an absent key, and a
+            // widget saved before this control existed has none.
+            'hasMedia'         => $this->isOn($settings, 'photos_only', false),
             'showSortControls' => $this->isOn($settings, 'show_sorting'),
             'defaultSortBy'    => $sortBy,
             'defaultSortOrder' => $sortOrder,
@@ -986,9 +994,6 @@ class ProductReviewListWidget extends Widget_Base
             'showFilterChips'   => $this->isOn($settings, 'show_filter'),
             'starColor'         => sanitize_hex_color((string) ($settings['star_color'] ?? '')) ?: self::DEFAULT_STAR_COLOR,
             'minRating'         => max(0, min(5, absint($settings['min_rating'] ?? 0))),
-            // Explicitly false: isOn() answers true for an absent key, and a
-            // widget saved before this control existed has none.
-            'hasMedia'         => $this->isOn($settings, 'photos_only', false),
             'maxWords'          => max(0, min(500, absint($settings['content_max_words'] ?? 0))),
             'paginationType'    => $this->pick($settings, 'pagination_type', self::PAGINATION_TYPES, 'numbers'),
         ] + $this->mediaOptions($settings);

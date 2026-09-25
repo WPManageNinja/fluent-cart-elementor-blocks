@@ -1,0 +1,127 @@
+/* FluentCart Elementor Blocks — Product Carousel loading skeleton.
+   Editor-preview only (enqueued via elementor/preview/enqueue_styles). Mirrors
+   the Gutenberg Product Carousel block's loading skeleton. All rules are scoped
+   under .fluent-cart-carousel-skeleton and the keyframes are prefixed, so nothing
+   leaks into other widgets. */
+
+.fluent-cart-carousel-skeleton .fluent-cart-empty {
+    padding: 20px 0;
+}
+
+.fluent-cart-carousel-skeleton .fct-loading-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 24px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #6b7280;
+}
+
+.fluent-cart-carousel-skeleton .fct-loading-header span {
+    animation: fct-skel-fade 1.5s ease-in-out infinite;
+}
+
+.fluent-cart-carousel-skeleton .fct-loading-spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #e5e7eb;
+    border-top-color: #111827;
+    border-radius: 50%;
+    animation: fct-skel-spin 0.8s linear infinite;
+}
+
+@keyframes fct-skel-spin {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes fct-skel-fade {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+}
+
+@keyframes fct-skel-shimmer {
+    0% { background-position: -600px 0; }
+    100% { background-position: 600px 0; }
+}
+
+@keyframes fct-skel-cardin {
+    from { opacity: 0; transform: translateY(12px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.fluent-cart-carousel-skeleton .skeleton {
+    background: linear-gradient(90deg, #f0f0f0 0px, #e8e8e8 40px, #f0f0f0 80px);
+    background-size: 600px;
+    animation: fct-skel-shimmer 1.5s infinite linear;
+}
+
+.fluent-cart-carousel-skeleton .dummy-grid {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 16px;
+    width: 100%;
+    overflow: hidden;
+}
+
+.fluent-cart-carousel-skeleton .dummy-card {
+    flex: 0 0 calc((100% - (var(--fct-slides-per-view, 3) - 1) * 16px) / var(--fct-slides-per-view, 3));
+    max-width: calc((100% - (var(--fct-slides-per-view, 3) - 1) * 16px) / var(--fct-slides-per-view, 3));
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #fff;
+    box-sizing: border-box;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    animation: fct-skel-cardin 0.5s ease-out forwards;
+    animation-delay: calc(var(--card-index, 0) * 0.1s);
+}
+
+.fluent-cart-carousel-skeleton .dummy-image {
+    width: 100%;
+    min-height: 180px;
+    border-radius: 0;
+}
+
+.fluent-cart-carousel-skeleton .dummy-content {
+    padding: 16px 16px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+}
+
+.fluent-cart-carousel-skeleton .dummy-title {
+    width: 50%;
+    height: 14px;
+    border-radius: 4px;
+}
+
+.fluent-cart-carousel-skeleton .dummy-excerpt {
+    width: 40%;
+    height: 12px;
+    border-radius: 4px;
+}
+
+.fluent-cart-carousel-skeleton .dummy-price {
+    width: 30%;
+    height: 14px;
+    border-radius: 4px;
+    margin-top: 2px;
+}
+
+.fluent-cart-carousel-skeleton .dummy-btn-wrap {
+    padding: 0 16px 16px;
+    margin-top: auto;
+}
+
+.fluent-cart-carousel-skeleton .dummy-btn {
+    width: 100%;
+    height: 44px;
+    border-radius: 6px;
+    background: #e5e7eb;
+}
