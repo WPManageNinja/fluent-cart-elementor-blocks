@@ -9,3 +9,188 @@
 .fce-checkout-single-column .fct_checkout_form_submit .fct_checkout_form_section {
     margin-top: 0;
 }
+
+/* Review presets are rendered by the Elementor widget, so their semantic
+ * classes live here rather than in core's Gutenberg block stylesheet. */
+.fct-reviews-layout-preset--summary-top .fct-reviews-layout {
+    display: flex;
+    flex-direction: column;
+}
+
+.fct-reviews-layout-preset--summary-top .fct-reviews-layout-left {
+    position: static;
+    width: 100%;
+}
+
+.fct-reviews-layout-preset--minimal .fct-review-item,
+.fct-reviews-layout-preset--compact .fct-review-item {
+    box-shadow: none;
+}
+
+.fct-reviews-layout-preset--photo-wall .fct-review-item,
+.fct-reviews-layout-preset--photo-grid .fct-review-item {
+    overflow: hidden;
+}
+
+.fct-reviews-layout-preset--testimonials .fct-review-item {
+    text-align: center;
+}
+
+/* Photo Grid: the image is the card's lead, with the review copy below it. */
+.fct-reviews-layout-preset--photo-grid .fct-review-item {
+    overflow: hidden;
+}
+
+.fct-reviews-layout-preset--photo-grid .fct-review-media-gallery {
+    order: -1;
+    width: calc(100% + 32px);
+    margin: -16px -16px 14px;
+}
+
+.fct-reviews-layout-preset--photo-grid .fct-review-media-thumb {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border: 0;
+    border-radius: 0;
+}
+
+/* Photo Wall: one photo fills each card and the review identity sits over a
+ * readable gradient at the bottom, as in the photo-first reference layout. */
+.fct-reviews-layout-preset--photo-wall .fct-review-item {
+    position: relative;
+    min-height: 300px;
+    justify-content: flex-end;
+    overflow: hidden;
+    color: #fff;
+}
+
+.fct-reviews-layout-preset--photo-wall .fct-review-item::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: linear-gradient(to top, rgba(17, 24, 39, .82), rgba(17, 24, 39, 0) 68%);
+}
+
+.fct-reviews-layout-preset--photo-wall .fct-review-item > * {
+    position: relative;
+    z-index: 2;
+}
+
+.fct-reviews-layout-preset--photo-wall .fct-review-media-gallery {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    margin: 0;
+    display: block;
+}
+
+.fct-reviews-layout-preset--photo-wall .fct-review-media-thumb {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border: 0;
+    border-radius: 0;
+}
+
+.fct-reviews-layout-preset--photo-wall .fct-review-media-thumb ~ .fct-review-media-thumb,
+.fct-reviews-layout-preset--photo-wall .fct-review-media-tile ~ .fct-review-media-tile {
+    display: none;
+}
+
+.fct-reviews-layout-preset--photo-wall .fct-review-item-header {
+    margin-top: auto;
+}
+
+/* Photo Strip: the slider is a band of lightbox tiles, with no duplicate
+ * review metadata competing with the photographs. */
+.fct-reviews-layout-preset--photo-strip .fct-review-item {
+    padding: 0;
+    border: 0;
+    box-shadow: none;
+    background: transparent;
+}
+
+.fct-reviews-layout-preset--photo-strip .fct-review-item-header,
+.fct-reviews-layout-preset--photo-strip .fct-review-item-title,
+.fct-reviews-layout-preset--photo-strip .fct-review-item-content,
+.fct-reviews-layout-preset--photo-strip .fct-review-view-replies {
+    display: none;
+}
+
+.fct-reviews-layout-preset--photo-strip .fct-review-media-gallery {
+    width: 100%;
+    margin: 0;
+}
+
+.fct-reviews-layout-preset--photo-strip .fct-review-media-thumb {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border: 0;
+    border-radius: 8px;
+}
+
+/* Testimonials: quote first, then the signed-off author and rating. */
+.fct-reviews-layout-preset--testimonials .fct-review-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 220px;
+    padding: 28px;
+}
+
+.fct-reviews-layout-preset--testimonials .fct-review-item::before {
+    content: '\201C';
+    display: block;
+    color: #dbeafe;
+    font-size: 64px;
+    line-height: .7;
+    font-family: Georgia, serif;
+}
+
+.fct-reviews-layout-preset--testimonials .fct-review-item-title {
+    order: 1;
+    margin-top: 10px;
+    font-weight: 600;
+}
+
+.fct-reviews-layout-preset--testimonials .fct-review-item-content {
+    order: 2;
+    max-width: 34rem;
+}
+
+.fct-reviews-layout-preset--testimonials .fct-review-readmore {
+    order: 3;
+    align-self: center;
+    margin: 8px auto 0;
+}
+
+.fct-reviews-layout-preset--testimonials .fct-review-votes {
+    order: 3;
+    margin-top: 10px;
+}
+
+.fct-reviews-layout-preset--testimonials .fct-review-item-header {
+    order: 4;
+    justify-content: center;
+    margin-top: 18px;
+}
+
+.fct-reviews-layout-preset--testimonials .fct-review-item-header-left {
+    justify-content: center;
+}
+
+/* These presets omit the review footer in the core template. Pro's vote
+ * enhancer falls back to the card when no footer slot exists, so suppress
+ * that fallback and keep Elementor identical to the core layout. */
+.fct-reviews-layout-preset--photo-wall .fct-review-votes,
+.fct-reviews-layout-preset--photo-strip .fct-review-votes,
+.fct-reviews-layout-preset--minimal .fct-review-votes,
+.fct-reviews-layout-preset--compact .fct-review-votes,
+.fct-reviews-layout-preset--testimonials .fct-review-votes {
+    display: none;
+}

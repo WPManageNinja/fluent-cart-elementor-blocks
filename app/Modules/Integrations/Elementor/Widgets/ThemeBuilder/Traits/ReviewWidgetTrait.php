@@ -65,6 +65,24 @@ trait ReviewWidgetTrait
         );
     }
 
+    protected static function registerReviewPresetStyles(): void
+    {
+        static $registered = false;
+
+        if ($registered) {
+            return;
+        }
+
+        $registered = true;
+
+        Enqueue::style(
+            'fluentcart-product-reviews-elementor',
+            'css/elementor.css',
+            [],
+            FLUENTCART_ELEMENTOR_BLOCKS_VERSION
+        );
+    }
+
     /**
      * Where the Verified Purchase switcher starts.
      *

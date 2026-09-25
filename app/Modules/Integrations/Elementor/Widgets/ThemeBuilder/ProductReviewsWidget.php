@@ -6,7 +6,6 @@ use Elementor\Controls_Manager;
 use Elementor\Widget_Base;
 use FluentCart\App\Modules\Templating\AssetLoader;
 use FluentCart\App\Services\Renderer\ProductReviewRenderer;
-use FluentCart\App\Services\Reviews\LayoutPresets;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ReviewStyleControls;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ThemeBuilder\Traits\ReviewWidgetTrait;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support\ReviewLayoutPresets;
@@ -78,6 +77,7 @@ class ProductReviewsWidget extends Widget_Base
     public function get_style_depends()
     {
         AssetLoader::loadSingleProductAssets();
+        static::registerReviewPresetStyles();
         static::registerSliderAssets();
 
         // Unconditionally, and not because it is always needed.
@@ -733,34 +733,20 @@ class ProductReviewsWidget extends Widget_Base
         $preset = (string) ($settings['layout_preset'] ?? '');
 
         if (ReviewLayoutPresets::exists($preset)) {
-            // The layout's own blocks, the same ones the block editor builds
-            // from this preset. Rendered rather than approximated, so every
-            // field block, every filter and everything PRO appends to a review
-            // behaves exactly as it does on a block-built page — and the Pro
-            // gate applies without being restated, because the view mode is
-            // resolved where it always was.
-            //
-            // The template says how the section is arranged, never which
-            // product it is for; the widget has already resolved that,
-            // including the editor's preview fallback, so it tells the list
-            // rather than leaving it to a context the canvas may not have.
-            $content = '';
+            // Presets are semantic settings, not Gutenberg blocks. Elementor
+            // owns its markup and styling; core still owns review data,
+            // pagination, frontend behavior and Pro enforcement.
+            $presetOptions = ReviewLayoutPresets::rendererOptions($preset);
 
-            foreach (LayoutPresets::parsedBlocks($preset, [
-                'query_type' => 'custom',
-                'product_id' => (int) $product->ID,
-            ]) as $block) {
-                $content .= render_block($block);
-            }
+            ob_start();
+            (new ProductReviewRenderer(
+                $product->ID,
+                array_merge($this->rendererOptions($settings), $presetOptions)
+            ))->render();
+            $content = ob_get_clean();
 
-            // Marks a preset rendered outside the block editor, which is what
-            // core's stylesheet keys the column rules to. The blocks are laid
-            // out by WordPress's own stylesheet, and WordPress only loads that
-            // when it finds blocks in post_content — never true here, where the
-            // blocks come from a template rather than the post. The class makes
-            // the section carry its own layout instead of depending on a file
-            // that may or may not have been enqueued.
-            $content = '<div class="fct-reviews-preset">' . $content . '</div>';
+            $content = '<div class="fct-reviews-layout-preset fct-reviews-layout-preset--'
+                . esc_attr(sanitize_html_class($preset)) . '">' . $content . '</div>';
         } else {
             ob_start();
             (new ProductReviewRenderer($product->ID, $this->rendererOptions($settings)))->render();
