@@ -54,54 +54,19 @@
     border-radius: 0;
 }
 
-/* Photo Wall: one photo fills each card and the review identity sits over a
- * readable gradient at the bottom, as in the photo-first reference layout. */
-.fct-reviews-layout-preset--photo-wall .fct-review-item {
-    position: relative;
-    min-height: 300px;
-    justify-content: flex-end;
-    overflow: hidden;
-    color: #fff;
-}
-
-.fct-reviews-layout-preset--photo-wall .fct-review-item::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    pointer-events: none;
-    background: linear-gradient(to top, rgba(17, 24, 39, .82), rgba(17, 24, 39, 0) 68%);
-}
-
-.fct-reviews-layout-preset--photo-wall .fct-review-item > * {
-    position: relative;
-    z-index: 2;
-}
-
-.fct-reviews-layout-preset--photo-wall .fct-review-media-gallery {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    margin: 0;
-    display: block;
-}
-
-.fct-reviews-layout-preset--photo-wall .fct-review-media-thumb {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border: 0;
-    border-radius: 0;
-}
-
-.fct-reviews-layout-preset--photo-wall .fct-review-media-thumb ~ .fct-review-media-thumb,
-.fct-reviews-layout-preset--photo-wall .fct-review-media-tile ~ .fct-review-media-tile {
-    display: none;
-}
-
-.fct-reviews-layout-preset--photo-wall .fct-review-item-header {
-    margin-top: auto;
-}
+/* Photo Wall needs no rules here.
+ *
+ * The card is drawn by reviews.scss, which this widget already loads: core
+ * styles any card holding a backdrop gallery, and the preset asks for one. It
+ * makes the photograph the card, lays the scrim over it and settles the words
+ * at the foot -- the same card the block editor builds, because it is the same
+ * stylesheet.
+ *
+ * This file used to restate all of that, and the copy drifted: it pushed the
+ * byline down with margin-top:auto, which ate the free space above it and left
+ * the stars stranded at the top of the card while core kept them with the name
+ * at the bottom. One card, two descriptions, and only one of them right.
+ * ------------------------------------------------------------------------ */
 
 /* Photo Strip: the slider is a band of lightbox tiles, with no duplicate
  * review metadata competing with the photographs. */
