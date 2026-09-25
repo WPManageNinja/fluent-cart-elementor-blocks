@@ -13,13 +13,13 @@ const inputs = [
     'resources/elementor/product-select-control.js',
     'resources/elementor/popup-integration.js',
     'resources/elementor/single-product-sync.js',
-    // The review layout presets: the script that re-binds core's containers
-    // after the editor swaps a widget's markup, and the stylesheet the presets
-    // are drawn with. Both are enqueued through the Vite enqueuer, which
-    // resolves them from the manifest in production -- an entry missing here
-    // is not a missing file on the page, it is a fatal in getProductionFilePath().
+    // The review layout presets' script, which re-binds core's containers after
+    // the editor swaps a widget's markup. Built rather than copied: only
+    // resources/css and resources/js are static-copied, not resources/elementor.
+    // A manifest entry missing here is not a missing file on the page -- it is a
+    // fatal in getProductionFilePath(), which indexes the empty string it gets
+    // back from getFileFromManifest().
     'resources/elementor/product-reviews-elementor.js',
-    'resources/css/elementor.css',
 ];
 
 let viteConfig;

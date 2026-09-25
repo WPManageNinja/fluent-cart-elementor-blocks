@@ -30,7 +30,11 @@ class ReviewSupport
 
         $enqueued = true;
 
-        Enqueue::style(
+        // staticStyle, not style: resources/css is copied to assets/css
+        // verbatim by viteStaticCopy, so there is no manifest entry to look up.
+        // getEnqueuePath() serves it from the dev server or from assets/
+        // depending on the mode, which is what both documents need.
+        Enqueue::staticStyle(
             'fluentcart-product-reviews-elementor',
             'css/elementor.css',
             [],

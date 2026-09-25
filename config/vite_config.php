@@ -1,13 +1,4 @@
 <?php return [
-    'resources/css/elementor.css' => [
-        'file' => 'assets/elementor-BvZwpxMJ.css',
-        'src' => 'resources/css/elementor.css',
-        'isEntry' => true,
-        'name' => 'elementor',
-        'names' => [
-            'elementor.css'
-        ]
-    ],
     'resources/elementor/popup-integration.js' => [
         'file' => 'popup-integration.js',
         'name' => 'popup-integration',
