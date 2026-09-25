@@ -10,6 +10,7 @@ use FluentCart\Framework\Support\Arr;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Controls\ProductSelectControl;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Controls\ProductVariationSelectControl;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Renderers\ElementorShopAppRenderer;
+use FluentCart\App\Modules\Templating\AssetLoader;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support\ReviewSupport;
 use FluentCartElementorBlocks\App\Services\Badges\BadgeRenderer;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\AddToCartWidget;
@@ -448,6 +449,18 @@ class ElementorIntegration
             [],
             FLUENTCART_ELEMENTOR_BLOCKS_VERSION
         );
+
+        // Core's storefront review styles, which draw the section itself: the
+        // summary in its 320px column beside the list, the grid and slider
+        // arrangements, the card. A widget asks for these through
+        // get_style_depends(), and the editor preview is a separate document
+        // that never asks -- so without this the canvas stacked the summary
+        // above a single column of full-width rows while the published page
+        // laid them out side by side.
+        //
+        // Before the preset stylesheet, so the file that adds to core's card
+        // still comes after it.
+        AssetLoader::loadSingleProductAssets();
 
         // The review layout presets' own stylesheet.
         //
