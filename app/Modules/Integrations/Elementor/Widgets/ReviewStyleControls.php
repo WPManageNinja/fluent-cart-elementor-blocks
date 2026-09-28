@@ -49,13 +49,26 @@ class ReviewStyleControls
      *        section, which is list only, so offering it a grid gap control
      *        would be offering a control that can never do anything.
      */
-    public static function registerReviewStyleControls($widget, bool $hasViewModes = true)
+    /**
+     * @param mixed $widget
+     * @param bool $hasViewModes
+     * @param string $starColorDefault the widget's own Star Color default, or
+     *                                 '' for a widget that has no such
+     *                                 setting. Only the list widget does: it
+     *                                 colours the stars through a custom
+     *                                 property on the container, which the two
+     *                                 selector-based colours below then
+     *                                 override. Passed rather than always
+     *                                 registered, so the all-in-one widget
+     *                                 does not grow a setting it never had.
+     */
+    public static function registerReviewStyleControls($widget, bool $hasViewModes = true, string $starColorDefault = '')
     {
         self::registerListSection($widget, $hasViewModes);
         self::registerHeaderSection($widget);
         self::registerCardSection($widget);
         self::registerReviewerSection($widget);
-        self::registerRatingSection($widget);
+        self::registerRatingSection($widget, $starColorDefault);
         self::registerContentSection($widget);
         self::registerActionsSection($widget);
         self::registerPaginationSection($widget);
@@ -499,7 +512,7 @@ class ReviewStyleControls
 
     // ── Rating ────────────────────────────────────────────
 
-    protected static function registerRatingSection($widget)
+    protected static function registerRatingSection($widget, string $starColorDefault = '')
     {
         $widget->start_controls_section(
             'review_stars_style_section',
@@ -528,11 +541,23 @@ class ReviewStyleControls
             ]
         );
 
+        if ($starColorDefault !== '') {
+            $widget->add_control(
+                'star_color',
+                [
+                    'label'       => esc_html__('Star Color', 'fluent-cart-elementor-blocks'),
+                    'description' => esc_html__('Colours every star in the list, filled and empty alike, through the list\'s own custom property.', 'fluent-cart-elementor-blocks'),
+                    'type'        => Controls_Manager::COLOR,
+                    'default'     => $starColorDefault,
+                ]
+            );
+        }
+
         $widget->add_control(
             'review_star_color',
             [
                 'label'       => esc_html__('Filled Star Color', 'fluent-cart-elementor-blocks'),
-                'description' => esc_html__('Overrides the Star Color set in the Content tab.', 'fluent-cart-elementor-blocks'),
+                'description' => esc_html__('Overrides Star Color, for the filled stars only.', 'fluent-cart-elementor-blocks'),
                 'type'        => Controls_Manager::COLOR,
                 'selectors'   => [
                     // The SVG fills with currentColor, so colour is the lever.
