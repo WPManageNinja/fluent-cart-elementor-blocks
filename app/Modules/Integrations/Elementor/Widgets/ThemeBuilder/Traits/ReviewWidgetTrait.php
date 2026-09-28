@@ -188,6 +188,7 @@ trait ReviewWidgetTrait
                 'type'        => \Elementor\Controls_Manager::SELECT,
                 'default'     => '',
                 'options'     => ReviewLayoutPresets::options(),
+                'classes'     => static::reviewLayoutPresetProClasses(),
             ]
         );
 
@@ -195,21 +196,40 @@ trait ReviewWidgetTrait
     }
 
     /**
-     * The warning under Layout Preset, shown only once a locked layout is
-     * picked -- the same way the View Mode notice works, and for the same
-     * reason: standing small print becomes furniture.
+     * The layouts this site cannot draw, named for the panel guard.
      *
-     * It says what happens now and what happens later, because both surprise
-     * people. Now, the layout is not applied at all and the section is
-     * whatever the controls below say. After Pro is activated, the layout
-     * supplies what those controls have not been told.
+     * Same two marks the View Mode control carries, and for the same reason:
+     * a layout that can be chosen but not drawn is a choice that appears to
+     * do nothing. exists() decides which those are, so the panel and the
+     * renderer cannot come to different conclusions.
+     *
+     * Empty with Pro, which leaves every layout selectable.
      */
-    protected function addReviewLayoutPresetProNotice(): void
+    protected static function reviewLayoutPresetProClasses(): string
     {
-        if (App::isProActive()) {
-            return;
+        $locked = static::lockedReviewPresets();
+
+        if (!$locked) {
+            return '';
         }
 
+        $classes = ['fct-control-pro-options'];
+
+        foreach ($locked as $preset) {
+            $classes[] = 'fct-pro-option-' . $preset;
+        }
+
+        return implode(' ', $classes);
+    }
+
+    /**
+     * The layout names inertPresets() refuses, without the empty one: Custom
+     * is not a locked layout, it is the absence of one.
+     *
+     * @return array<int, string>
+     */
+    protected static function lockedReviewPresets(): array
+    {
         $locked = [];
 
         foreach (ReviewLayoutPresets::inertPresets() as $preset) {
@@ -218,7 +238,24 @@ trait ReviewWidgetTrait
             }
         }
 
-        if (!$locked) {
+        return $locked;
+    }
+
+    /**
+     * The note under Layout Preset.
+     *
+     * It used to wait for a locked layout to be picked. Those cannot be
+     * picked now, so there is no such moment, and it stands with them as the
+     * only thing saying why most of the list is greyed.
+     *
+     * It says what happens now and what happens later, because both surprise
+     * people. Now, no layout is applied at all and the section is whatever
+     * the controls below say. After Pro is activated, a layout supplies what
+     * those controls have not been told.
+     */
+    protected function addReviewLayoutPresetProNotice(): void
+    {
+        if (App::isProActive() || !static::lockedReviewPresets()) {
             return;
         }
 
@@ -226,9 +263,8 @@ trait ReviewWidgetTrait
             'layout_preset_pro_notice',
             [
                 'type'            => \Elementor\Controls_Manager::RAW_HTML,
-                'raw'             => esc_html__('This layout needs FluentCart Pro. Until then the section is whatever the controls below say. After Pro is activated, the layout supplies what you have not set yourself.', 'fluent-cart-elementor-blocks'),
+                'raw'             => esc_html__('The greyed layouts need FluentCart Pro. Until then the section is whatever the controls below say. After Pro is activated, the layout you choose supplies what you have not set yourself.', 'fluent-cart-elementor-blocks'),
                 'content_classes' => 'elementor-panel-alert elementor-panel-alert-warning',
-                'condition'       => ['layout_preset' => $locked],
             ]
         );
     }
