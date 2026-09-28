@@ -71,12 +71,27 @@
     grid-template-columns: repeat(2, 1fr);
 }
 
-/* Off-screen rather than display:none, which would take them out of the tab
-   order and out of the group a screen reader announces. */
-.fct-el-preset-input {
+/* Taken out of sight, not out of the document: display:none or
+   visibility:hidden would drop them from the tab order and from the group a
+   screen reader announces, which is the whole reason they are radios.
+
+   Clipped rather than made transparent. opacity is a property the panel's own
+   stylesheet sets on inputs, and at a specificity this cannot beat with a
+   single class - the circles showed through. Clipping is not a property
+   anything else here touches, and the element selector puts this above a
+   two-class rule besides. */
+.fct-el-preset-field input.fct-el-preset-input {
+    -webkit-appearance: none;
+    appearance: none;
+    border: 0;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
     height: 1px;
-    opacity: 0;
+    margin: 0;
+    overflow: hidden;
+    padding: 0;
     position: absolute;
+    white-space: nowrap;
     width: 1px;
 }
 
@@ -94,13 +109,13 @@
     border-color: #c2cbd2;
 }
 
-.fct-el-preset-input:checked + .fct-el-preset-card {
+.fct-el-preset-field input.fct-el-preset-input:checked + .fct-el-preset-card {
     border-color: #495157;
     box-shadow: inset 0 0 0 1px #495157;
 }
 
 /* The input is invisible, so its focus has to show on the card instead. */
-.fct-el-preset-input:focus-visible + .fct-el-preset-card {
+.fct-el-preset-field input.fct-el-preset-input:focus-visible + .fct-el-preset-card {
     outline: 2px solid #3b5bdb;
     outline-offset: 1px;
 }
