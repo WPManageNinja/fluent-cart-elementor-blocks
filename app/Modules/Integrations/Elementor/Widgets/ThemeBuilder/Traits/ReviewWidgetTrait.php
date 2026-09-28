@@ -5,7 +5,12 @@ namespace FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\T
 use FluentCart\App\Services\ProductReviewService;
 use FluentCart\App\Services\Renderer\ProductReviewRenderer;
 use FluentCart\App\Services\Renderer\ReviewThreadMarkup;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Controls\ReviewLayoutPresetControl;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ThemeBuilder\ProductReviewListWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support\ReviewLayoutPresets;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support\ReviewLayoutThumbnails;
+use FluentCart\App\Services\Reviews\LayoutPresets;
+use FluentCart\Framework\Support\Arr;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support\ReviewSupport;
 use FluentCartElementorBlocks\App\Utils\Enqueuer\Enqueue;
 use FluentCart\App\App;
@@ -180,15 +185,30 @@ trait ReviewWidgetTrait
      */
     protected function addReviewLayoutPresetControl(): void
     {
+        // A rule and a word before the grid. The product above it and the
+        // layout below it are two different questions - which reviews, and
+        // what shape - and eleven cards arriving straight under a product
+        // picker read as part of the same one.
+        $this->add_control(
+            'layout_heading',
+            [
+                'label'     => esc_html__('Layout', 'fluent-cart-elementor-blocks'),
+                'type'      => \Elementor\Controls_Manager::HEADING,
+                'separator' => 'before',
+            ]
+        );
+
         $this->add_control(
             'layout_preset',
             [
                 'label'       => esc_html__('Layout Preset', 'fluent-cart-elementor-blocks'),
-                'description' => esc_html__('Builds the section from a ready-made layout. The controls below stay yours — anything you set there overrides the layout. Choose Custom to start from nothing.', 'fluent-cart-elementor-blocks'),
-                'type'        => \Elementor\Controls_Manager::SELECT,
+                'description' => esc_html__('Builds the section from these settings. Anything you have set is replaced.', 'fluent-cart-elementor-blocks'),
+                'type'        => ReviewLayoutPresetControl::TYPE,
                 'default'     => '',
-                'options'     => ReviewLayoutPresets::options(),
-                'classes'     => static::reviewLayoutPresetProClasses(),
+                'layouts'     => static::reviewLayoutCards(),
+                'categories'  => static::reviewLayoutCategories(),
+                'tuningKeys'  => ReviewLayoutPresets::tuningControls(),
+                'tuningDefaults' => static::reviewTuningDefaults(),
             ]
         );
 
@@ -196,30 +216,177 @@ trait ReviewWidgetTrait
     }
 
     /**
-     * The layouts this site cannot draw, named for the panel guard.
+     * One card per layout, in the shape the picker's template reads.
      *
-     * Same two marks the View Mode control carries, and for the same reason:
-     * a layout that can be chosen but not drawn is a choice that appears to
-     * do nothing. exists() decides which those are, so the panel and the
-     * renderer cannot come to different conclusions.
+     * Everything but the drawing comes from core's declaration, so a layout
+     * renamed or moved between free and Pro is right here without being
+     * touched. `locked` is exists() asking the same question the renderer
+     * asks, so a card that cannot be chosen is exactly a layout that would
+     * not have drawn.
      *
-     * Empty with Pro, which leaves every layout selectable.
+     * @return array<int, array<string, mixed>>
      */
-    protected static function reviewLayoutPresetProClasses(): string
+    protected static function reviewLayoutCards(): array
     {
-        $locked = static::lockedReviewPresets();
+        $cards = [[
+            'value'    => '',
+            'label'    => esc_html__('Custom layout', 'fluent-cart-elementor-blocks'),
+            'help'     => esc_html__('Custom layout. Choose a preset to replace it with a starter layout.', 'fluent-cart-elementor-blocks'),
+            'category' => 'custom',
+            'locked'   => false,
+            // No drawing: the picker gives Custom a line of its own above the
+            // grid rather than a card, there being no shape to draw.
+            'thumb'    => '',
+            // Nothing to write and nothing to match: Custom is what the
+            // picker says when no layout's settings are the ones in force.
+            'settings' => [],
+            'tuning'   => [],
+        ]];
 
-        if (!$locked) {
-            return '';
+        foreach (LayoutPresets::all() as $id => $preset) {
+            $id = (string) $id;
+
+            $cards[] = [
+                'value'    => $id,
+                'label'    => (string) Arr::get($preset, 'label', $id),
+                'help'     => (string) Arr::get($preset, 'help', ''),
+                'category' => (string) Arr::get($preset, 'category', 'list'),
+                'locked'   => !ReviewLayoutPresets::exists($id),
+                'thumb'    => ReviewLayoutThumbnails::svg($id),
+                // What this layout is, as settings. The picker writes these
+                // when it is chosen and reads them back to work out which
+                // layout the widget is currently in - the same set doing both
+                // jobs, so the two can never disagree about what Card Grid
+                // means. Tuning is left out of it on purpose: it travels with
+                // the merchant, not with the layout.
+                'settings' => static::layoutIdentitySettings($id),
+                // What this layout would tune to, kept apart from what it is.
+                // Choosing a layout applies these too - but only where the
+                // merchant had left the outgoing layout's tuning alone. The
+                // block editor draws the same distinction in tunedAttributes():
+                // a value that still matches the layout being left is that
+                // layout's opinion, not the merchant's, and has no claim on
+                // the next one.
+                'tuning'   => static::layoutTuningSettings($id),
+            ];
         }
 
-        $classes = ['fct-control-pro-options'];
+        return $cards;
+    }
 
-        foreach ($locked as $preset) {
-            $classes[] = 'fct-pro-option-' . $preset;
+    /**
+     * A layout's settings, without the tuning ones.
+     *
+     * The block editor draws the same line: its matcher ignores six
+     * attributes, and applying a layout carries those six across rather than
+     * resetting them. So a merchant who sets four to a row still has Card
+     * Grid, and still has four to a row after switching to Masonry.
+     *
+     * @param string $preset
+     * @return array<string, mixed>
+     */
+    protected static function layoutIdentitySettings(string $preset): array
+    {
+        $settings = ReviewLayoutPresets::controlSettings($preset);
+
+        foreach (ReviewLayoutPresets::tuningControls() as $tuning) {
+            unset($settings[$tuning]);
         }
 
-        return implode(' ', $classes);
+        return $settings;
+    }
+
+    /**
+     * What each tuning control holds when nobody has touched it.
+     *
+     * The picker needs these to tell a value someone chose from one that has
+     * simply always been there. Leaving a layout, the layout's own tuning
+     * answers that question; leaving Custom there is no layout to ask, and
+     * without these every untouched default would travel to the next layout
+     * as though it had been asked for - a merchant picking Photo Strip would
+     * get numbered pages because the control had always said numbered.
+     *
+     * The block editor asks a block for its registered default at exactly
+     * this point, in tunedAttributes(). Elementor cannot be asked the same
+     * way here, the control being registered before the ones it names, so
+     * the list is written out - and reviewTuningDefaultsMatchControls() in
+     * the test below keeps it honest.
+     *
+     * @return array<string, mixed>
+     */
+    protected static function reviewTuningDefaults(): array
+    {
+        return [
+            'grid_columns'           => 2,
+            'per_page'               => 0,
+            'pagination_type'        => 'numbers',
+            'default_sort'           => ProductReviewListWidget::FALLBACK_SORT,
+            'slider_autoplay'        => 'no',
+            'slider_autoplay_delay'  => 3000,
+            'slider_arrows'          => 'yes',
+            'slider_arrows_size'     => 'md',
+            'slider_arrows_position' => 'overlap',
+            'slider_infinite'        => '',
+            'slider_pagination'      => 'yes',
+            'slider_pagination_type' => 'bullets',
+        ];
+    }
+
+    /**
+     * The tuning settings a layout would set, on their own.
+     *
+     * @param string $preset
+     * @return array<string, mixed>
+     */
+    protected static function layoutTuningSettings(string $preset): array
+    {
+        $settings = ReviewLayoutPresets::controlSettings($preset);
+        $tuning = [];
+
+        foreach (ReviewLayoutPresets::tuningControls() as $key) {
+            if (array_key_exists($key, $settings)) {
+                $tuning[$key] = $settings[$key];
+            }
+        }
+
+        return $tuning;
+    }
+
+    /**
+     * The tabs above the grid: All first, then whichever categories the
+     * layouts actually use, so removing the last photo layout removes the
+     * Photo tab rather than leaving an empty one.
+     *
+     * @return array<int, array<string, string>>
+     */
+    protected static function reviewLayoutCategories(): array
+    {
+        $labels = [
+            'list'     => esc_html__('List', 'fluent-cart-elementor-blocks'),
+            'grid'     => esc_html__('Grid', 'fluent-cart-elementor-blocks'),
+            'carousel' => esc_html__('Carousel', 'fluent-cart-elementor-blocks'),
+            'photo'    => esc_html__('Photo', 'fluent-cart-elementor-blocks'),
+        ];
+
+        $categories = [[
+            'value' => 'all',
+            'label' => esc_html__('All layouts', 'fluent-cart-elementor-blocks'),
+        ]];
+
+        $seen = [];
+
+        foreach (LayoutPresets::all() as $preset) {
+            $category = (string) Arr::get($preset, 'category', 'list');
+
+            if (isset($seen[$category]) || !isset($labels[$category])) {
+                continue;
+            }
+
+            $seen[$category] = true;
+            $categories[] = ['value' => $category, 'label' => $labels[$category]];
+        }
+
+        return $categories;
     }
 
     /**

@@ -162,28 +162,200 @@ class ReviewLayoutPresets
     }
 
     /**
-     * The panel's dropdown.
+     * Which layout a set of widget settings actually is, or '' for none.
      *
-     * 'Custom' first and selected by default: a widget that has never had a
-     * preset applied has not chosen one, and naming a layout it did not build
-     * would be a claim about settings nobody set. Custom is also where the
-     * individual layout controls live — with a preset chosen they would be
-     * describing an arrangement they do not decide.
+     * The same question the picker answers in the panel, answered the same
+     * way and from the same data, because two answers would be two layouts.
+     * Tuning is left out of it: four to a row is still Card Grid.
+     *
+     * @param array $settings
+     * @return string
      */
-    public static function options(): array
+    public static function detect(array $settings): string
     {
-        $pro = App::isProActive();
-        $options = ['' => esc_html__('Custom', 'fluent-cart-elementor-blocks')];
+        foreach (array_keys(LayoutPresets::all()) as $id) {
+            $id = (string) $id;
 
-        foreach (LayoutPresets::all() as $id => $preset) {
-            $label = (string) Arr::get($preset, 'label', $id);
-            $options[$id] = (Arr::get($preset, 'pro', false) && !$pro)
-                /* translators: %s - layout name */
-                ? sprintf(esc_html__('%s (Pro)', 'fluent-cart-elementor-blocks'), $label)
-                : $label;
+            if (!static::exists($id)) {
+                continue;
+            }
+
+            $want = static::controlSettings($id);
+
+            foreach (static::tuningControls() as $tuning) {
+                unset($want[$tuning]);
+            }
+
+            $matches = true;
+
+            foreach ($want as $key => $value) {
+                if ((string) (isset($settings[$key]) ? $settings[$key] : '') !== (string) $value) {
+                    $matches = false;
+                    break;
+                }
+            }
+
+            if ($matches) {
+                return $id;
+            }
         }
 
-        return $options;
+        return '';
+    }
+
+    /**
+     * The settings the six tuning controls hold.
+     *
+     * The block editor keeps the same list and keeps it for the same reason:
+     * how many to a row, how many to a page, which arrows and which order are
+     * a merchant's tuning of a layout, not the layout itself. Choosing a new
+     * one carries them across rather than putting them back to that layout's
+     * idea of them, and a layout tuned this way is still that layout.
+     *
+     * @return array<int, string>
+     */
+    public static function tuningControls(): array
+    {
+        return [
+            'grid_columns',
+            'per_page',
+            'pagination_type',
+            'default_sort',
+            'slider_autoplay',
+            'slider_autoplay_delay',
+            'slider_arrows',
+            'slider_arrows_size',
+            'slider_arrows_position',
+            'slider_infinite',
+            'slider_pagination',
+            'slider_pagination_type',
+        ];
+    }
+
+    /**
+     * A layout, as a complete set of widget settings.
+     *
+     * Complete, not only what the layout mentions: choosing one has to put
+     * back what the last one changed, the way the block editor rebuilds the
+     * whole row from a template rather than patching the row it finds. A
+     * layout that says nothing about the avatar means a card with an avatar,
+     * not a card keeping whatever the previous layout did with it.
+     *
+     * @param string $preset
+     * @return array<string, mixed>
+     */
+    public static function controlSettings(string $preset): array
+    {
+        $options = static::exists($preset) ? static::rendererOptions($preset) : [];
+
+        $settings = [];
+
+        foreach (static::controlMap() as $option => $control) {
+            $value = array_key_exists($option, $options)
+                ? $options[$option]
+                : static::rendererDefault($option);
+
+            $settings[$control] = is_bool($value) ? ($value ? 'yes' : '') : $value;
+        }
+
+        list($sortBy, $sortOrder) = [
+            (string) (isset($options['defaultSortBy']) ? $options['defaultSortBy'] : 'created_at'),
+            (string) (isset($options['defaultSortOrder']) ? $options['defaultSortOrder'] : 'DESC'),
+        ];
+        $settings['default_sort'] = $sortBy . '-' . $sortOrder;
+
+        $slider = isset($options['sliderSettings']) ? (array) $options['sliderSettings'] : [];
+
+        foreach (static::sliderControlMap() as $key => $control) {
+            if (array_key_exists($key, $slider)) {
+                $settings[$control] = $slider[$key];
+            }
+        }
+
+        return $settings;
+    }
+
+    /**
+     * Renderer option to widget control, for everything that is one of each.
+     *
+     * @return array<string, string>
+     */
+    protected static function controlMap(): array
+    {
+        return [
+            'showSummary'       => 'show_summary',
+            'summaryMode'       => 'summary_mode',
+            'showCount'         => 'show_count',
+            'showFilterChips'   => 'show_filter',
+            'showSortControls'  => 'show_sorting',
+            'showReviewerName'  => 'show_reviewer_name',
+            'showReviewDate'    => 'show_review_date',
+            'showVerifiedBadge' => 'show_verified',
+            'showViewReply'     => 'show_view_reply',
+            'showAvatar'        => 'show_avatar',
+            'showTitle'         => 'show_title',
+            'showContent'       => 'show_content',
+            'showVariation'     => 'show_variation',
+            'showPhotos'        => 'show_photos',
+            'showFooter'        => 'show_footer',
+            'showMeta'          => 'show_meta',
+            'photosFirst'       => 'photos_first',
+            'ratingFirst'       => 'rating_first',
+            'badgeLast'         => 'badge_last',
+            'itemClass'         => 'item_class',
+            'viewMode'          => 'view_mode',
+            'hasMedia'          => 'photos_only',
+            'mediaVisible'      => 'media_visible',
+            'mediaFullWidth'    => 'media_full_width',
+            'mediaFlush'        => 'media_flush',
+            'mediaBackdrop'     => 'media_backdrop',
+            'gridColumns'       => 'grid_columns',
+            'perPage'           => 'per_page',
+            'paginationType'    => 'pagination_type',
+        ];
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    protected static function sliderControlMap(): array
+    {
+        return [
+            'autoplay'       => 'slider_autoplay',
+            'autoplayDelay'  => 'slider_autoplay_delay',
+            'arrows'         => 'slider_arrows',
+            'arrowsSize'     => 'slider_arrows_size',
+            'arrowsPosition' => 'slider_arrows_position',
+            'infinite'       => 'slider_infinite',
+            'pagination'     => 'slider_pagination',
+            'paginationType' => 'slider_pagination_type',
+        ];
+    }
+
+    /**
+     * What a section looks like when no layout has said otherwise.
+     *
+     * @param string $option
+     * @return mixed
+     */
+    protected static function rendererDefault(string $option)
+    {
+        $defaults = [
+            'showSummary' => true, 'summaryMode' => 'side', 'showCount' => true,
+            'showFilterChips' => true, 'showSortControls' => true,
+            'showReviewerName' => true, 'showReviewDate' => true,
+            'showVerifiedBadge' => true, 'showViewReply' => true,
+            'showAvatar' => true, 'showTitle' => true, 'showContent' => true,
+            'showVariation' => true, 'showFooter' => true, 'showMeta' => true,
+            'showPhotos' => true,
+            'photosFirst' => false, 'ratingFirst' => false, 'badgeLast' => false,
+            'itemClass' => '', 'viewMode' => 'list', 'hasMedia' => false,
+            'mediaVisible' => 0, 'mediaFullWidth' => false,
+            'mediaFlush' => false, 'mediaBackdrop' => false,
+            'gridColumns' => 2, 'perPage' => 0, 'paginationType' => 'numbers',
+        ];
+
+        return array_key_exists($option, $defaults) ? $defaults[$option] : '';
     }
 
     /**

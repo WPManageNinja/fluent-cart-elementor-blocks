@@ -35,6 +35,12 @@
         'src' => 'resources/elementor/product-variation-select-control.js',
         'isEntry' => true
     ],
+    'resources/elementor/review-layout-picker.js' => [
+        'file' => 'review-layout-picker.js',
+        'name' => 'review-layout-picker',
+        'src' => 'resources/elementor/review-layout-picker.js',
+        'isEntry' => true
+    ],
     'resources/elementor/single-product-sync.js' => [
         'file' => 'single-product-sync.js',
         'name' => 'single-product-sync',

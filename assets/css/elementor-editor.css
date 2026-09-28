@@ -37,3 +37,174 @@
 .elementor-control.fct-control-pro-only .elementor-control-title {
     opacity: 0.7;
 }
+
+/* ── The review layout picker ────────────────────────────────────────────
+   A grid of cards over radio inputs (see ReviewLayoutPresetControl). The
+   inputs are hidden from sight but not from the accessibility tree or the
+   tab order: the card is their label, so the browser keeps doing the
+   choosing, the arrow keys and the focus. */
+/* The label goes on its own line above everything, the way the block editor
+   puts it. label_block wraps the row; this is what makes the title take the
+   whole of the first line rather than only as much as its text. */
+.fct-el-preset-field > .elementor-control-title {
+    width: 100%;
+}
+
+.fct-el-preset-field .elementor-control-input-wrapper {
+    width: 100%;
+}
+
+.fct-el-preset-field .fct-el-preset-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin: 8px 0 10px;
+}
+
+.fct-el-preset-tab {
+    background: none;
+    border: 0;
+    border-radius: 3px;
+    color: #a4afb7;
+    cursor: pointer;
+    font-size: 11px;
+    padding: 3px 8px;
+}
+
+.fct-el-preset-tab.is-active {
+    background: #495157;
+    color: #fff;
+}
+
+.fct-el-preset-grid {
+    display: grid;
+    gap: 8px;
+    grid-template-columns: repeat(2, 1fr);
+}
+
+/* Taken out of sight, not out of the document: display:none or
+   visibility:hidden would drop them from the tab order and from the group a
+   screen reader announces, which is the whole reason they are radios.
+
+   Clipped rather than made transparent. opacity is a property the panel's own
+   stylesheet sets on inputs, and at a specificity this cannot beat with a
+   single class - the circles showed through. Clipping is not a property
+   anything else here touches, and the element selector puts this above a
+   two-class rule besides. */
+.fct-el-preset-field input.fct-el-preset-input {
+    -webkit-appearance: none;
+    appearance: none;
+    border: 0;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    height: 1px;
+    margin: 0;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+}
+
+.fct-el-preset-card {
+    border: 1px solid #e6e9ec;
+    border-radius: 4px;
+    cursor: pointer;
+    display: block;
+    padding: 6px;
+    position: relative;
+    transition: border-color 0.15s ease;
+}
+
+.fct-el-preset-card:hover {
+    border-color: #c2cbd2;
+}
+
+.fct-el-preset-field input.fct-el-preset-input:checked + .fct-el-preset-card {
+    border-color: #495157;
+    box-shadow: inset 0 0 0 1px #495157;
+}
+
+/* The input is invisible, so its focus has to show on the card instead. */
+.fct-el-preset-field input.fct-el-preset-input:focus-visible + .fct-el-preset-card {
+    outline: 2px solid #3b5bdb;
+    outline-offset: 1px;
+}
+
+.fct-el-preset-card.is-locked {
+    cursor: not-allowed;
+    opacity: 0.55;
+}
+
+.fct-el-preset-thumb {
+    display: block;
+}
+
+.fct-el-preset-thumb .fct-review-preset-icon {
+    display: block;
+    height: auto;
+    width: 100%;
+}
+
+.fct-el-preset-name {
+    color: #495157;
+    display: block;
+    font-size: 11px;
+    margin-top: 5px;
+}
+
+.fct-el-preset-pro {
+    background: #eaf0ff;
+    border-radius: 3px;
+    color: #3b5bdb;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    padding: 1px 4px;
+    position: absolute;
+    right: 5px;
+    text-transform: uppercase;
+    top: 5px;
+}
+
+.fct-el-preset-help {
+    color: #a4afb7;
+    font-size: 11px;
+    line-height: 1.5;
+    margin-top: 8px;
+}
+
+/* Custom: a line across the top, not a twelfth card. It is the absence of a
+   layout, so there is no shape to draw — the block editor's picker says the
+   same thing the same way. */
+.fct-el-preset-item--custom {
+    display: block;
+    margin-bottom: 8px;
+    width: 100%;
+}
+
+/* A status line, not a control: it reports that the settings match no
+   layout. Nothing to hover, nothing to focus, nothing to click. */
+.fct-el-preset-custom {
+    background: #fbfbfc;
+    border: 1px solid #e6e9ec;
+    border-radius: 4px;
+    color: #a4afb7;
+    display: block;
+    font-size: 12px;
+    padding: 10px 12px;
+}
+
+.fct-el-preset-custom-mark {
+    color: transparent;
+    margin-right: 6px;
+}
+
+.fct-el-preset-custom.is-current {
+    border-color: #495157;
+    color: #495157;
+}
+
+.fct-el-preset-custom.is-current .fct-el-preset-custom-mark {
+    color: #3b5bdb;
+}
