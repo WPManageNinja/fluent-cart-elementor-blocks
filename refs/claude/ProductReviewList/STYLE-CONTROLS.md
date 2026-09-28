@@ -121,7 +121,7 @@ Slider settings are read whatever the view mode, so switching to slider and back
 | `row_layout` | SELECT standard/custom | `standard` | Standard draws core's own row; custom composes it field by field |
 | `row_fields` | REPEATER of `field` | all eleven, in storefront order | Order is display order. Remove a row to hide that field. Shown when `row_layout=custom` |
 | `show_reviewer_name` / `show_review_date` / `show_verified` / `show_view_reply` | SWITCHER | `yes` | Shown when `row_layout=standard`; reach the renderer through its options filter |
-| `star_color` | COLOR | `#f59e0b` | Applied to the `rating` field block |
+| ~~`star_color`~~ | COLOR | `#f59e0b` | **Moved to the Style tab**, into the Stars section, beside Filled and Empty Star Color. It is a colour, and the Style tab already held two others for the same stars — one of which described itself as overriding this one, two tabs away. Still resolved the same way and still reaching the renderer as the list's own `--fct-star-color`. |
 | `content_max_words` | NUMBER 0–500 | `0` | Applied to the `content` field block as `maxWords`; 0 omits the attribute |
 
 Field values → blocks: `avatar`, `author_name`, `verified_badge`, `variation_title`, `rating`, `date`, `title`, `content`, `photos`, `votes`, `reply` → `fluent-cart/review-item-<kebab>`.
@@ -137,10 +137,17 @@ Guards: an unknown field value is skipped, and a field listed twice renders once
 
 ---
 
-## Style Controls — `ReviewStyleControls::registerReviewStyleControls($widget, $hasViewModes = true)`
+## Style Controls — `ReviewStyleControls::registerReviewStyleControls($widget, $hasViewModes = true, $starColorDefault = '')`
 
 Shared with the other review-section widget so the two cannot drift, the same
 reason `BadgeControls` exists. Eight sections:
+
+`$starColorDefault` is how this widget gets its `star_color` into the Stars
+section without the all-in-one gaining one it never had: pass a default and the
+control is registered, pass nothing and it is not. The parameter has to reach
+`registerRatingSection()`, which draws that section — left in the wrapper it is
+undefined where it is tested, and an undefined variable is not `''`, so both
+widgets got the control.
 
 | Section | Controls | Key selectors |
 |---|---|---|

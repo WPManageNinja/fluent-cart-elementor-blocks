@@ -61,11 +61,19 @@ The renderer calls `shouldRenderReviews()` itself and emits nothing when the pro
 |---|---|---|---|
 | `source` | SELECT | `default` | From `ProductWidgetTrait` |
 | `product_id` | ProductSelectControl | `''` | Shown when `source=custom` |
-| `star_color` | COLOR | `#f59e0b` | Mirrors the block's `starColor`. Re-sanitised with `sanitize_hex_color()`; an emptied control falls back to core's default rather than leaving stars unstyled |
 
 ---
 
 ## Style Controls — `registerSummaryStyleControls($widget, $selector = '{{WRAPPER}} .fct-reviews-summary')`
+
+`star_color` lives here rather than under Content, where it used to be:
+it is a colour, and the Style tab is the one question colour answers.
+Registered in `summary_style_section`; the control is otherwise unchanged,
+name included, so a widget with a colour saved keeps it.
+
+| Control ID | Type | Default | Notes |
+|---|---|---|---|
+| `star_color` | COLOR | `#f59e0b` | Mirrors the block's `starColor`. Re-sanitised with `sanitize_hex_color()`; an emptied control falls back to core's default rather than leaving stars unstyled |
 
 | Control ID | Type | Selector |
 |---|---|---|

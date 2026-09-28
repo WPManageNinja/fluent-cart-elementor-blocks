@@ -27,12 +27,30 @@ No options, deliberately: the renderer's own defaults are what the emptied block
 
 ## Content Controls
 
-| Control ID | Type | Default | Notes |
-|---|---|---|---|
-| `source` / `product_id` | from `ProductWidgetTrait` | `default` | |
-| `composition_note` | RAW_HTML | — | Points at the four granular widgets |
+Nine sections. The widget once had none of these — the note below records why,
+and why that stopped being true.
 
-**No display controls, deliberately.** Every choice this section offers already lives either in core's review settings or in one of the other widgets. Duplicating them here would give a merchant two places to set the same thing and no way to tell which won.
+| Section | What it answers | Controls |
+|---|---|---|
+| Content | which product, and which layout | `source` / `product_id`, the layout picker, `composition_note` |
+| Rating Summary | whether it shows, and where | `show_summary`, `summary_mode` |
+| Write a Review Button | the CTA and the form behind it | `container`, `layout`, the three button texts |
+| Review List | which reviews, and their shape | `min_rating`, `photos_only`, `content_max_words`, `view_mode`, `grid_columns` |
+| Review Card | what a review shows, and in what order | the ten `show_*` toggles, `photos_first`, `rating_first`, `badge_last`, hidden `item_class` |
+| Attachments | the photographs inside a card | `media_visible`, `media_more`, `media_full_width`, `media_backdrop`, `media_flush`, `media_width`, `media_height` |
+| Slider | the eight `slider_*` settings | shown only for `view_mode = slider`, the section carrying that condition for all of them |
+| Header | count, chips, sorting | `show_count`, `show_filter`, `show_sorting`, `default_sort` |
+| Pagination | how pages are drawn | `pagination_type`, `per_page` |
+
+**This used to say "no display controls, deliberately"**, on the grounds that
+every choice already lived in core's settings or another widget. That held while
+a layout was a name consulted at render. It stopped holding when a layout became
+a set of settings written onto the widget: a layout can only write settings that
+exist, and twelve of these had no control, which is why Photo Strip could not be
+reproduced by hand. See §10 of `dev-docs/product-reviews/plan.md`.
+
+The layout picker is `ReviewLayoutPresetControl`. Choosing a layout writes these
+settings; nothing reads the layout's name at render.
 
 ---
 

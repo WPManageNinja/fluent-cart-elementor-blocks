@@ -35,11 +35,19 @@ The only difference from the Write a Review Button widget is one renderer option
 |---|---|---|---|
 | `source` / `product_id` | from `ProductWidgetTrait` | `default` | |
 | `layout` | SELECT | `inline` | `inline` shows every field at once; `steps` asks one question per screen, which suits a dedicated review page |
-| `star_color` | COLOR | `#f59e0b` | Re-sanitised with `sanitize_hex_color()`, falling back to core's default |
 
 ---
 
 ## Style Controls — `registerFormStyleControls($widget, $selector = '{{WRAPPER}} .fct-review-form')`
+
+`star_color` lives here rather than under Content, where it used to be:
+it is a colour, and the Style tab is the one question colour answers.
+Registered in `form_style_section`; the control is otherwise unchanged,
+name included, so a widget with a colour saved keeps it.
+
+| Control ID | Type | Default | Notes |
+|---|---|---|---|
+| `star_color` | COLOR | `#f59e0b` | Re-sanitised with `sanitize_hex_color()`, falling back to core's default |
 
 | Control ID | Type | Selector |
 |---|---|---|

@@ -1,7 +1,11 @@
 # Product Reviews for Elementor — implementation plan
 
-Status: **R0–R8 implemented on `feat/review-widgets`, blocked on core release before merge**.
-Written 2026-09-18, implemented the same day.
+Status: **shipped. R0–R8 merged into `develop`, along with the layout work
+below.** Written 2026-09-18 and implemented the same day; the layout model was
+rebuilt on 2026-09-28 and this plan updated with it.
+
+Core has shipped reviews, which §6 records as the blocker. PRs #84–#87 are
+merged.
 
 | PR | Scope | State |
 |---|---|---|
@@ -16,8 +20,12 @@ Written 2026-09-18, implemented the same day.
 | R8 | Per-widget docs, reference guide, changelog | done |
 
 Style panels for the List and the all-in-one landed after the first pass
-(`ReviewStyleControls`, eight sections, shared by both). Still open: the slider
-question in §9, and the merge itself, which waits on core shipping reviews.
+(`ReviewStyleControls`, eight sections, shared by both).
+
+§10 describes what changed after that, and it is the part to read first: a
+layout is no longer a name consulted at render but a set of settings written
+onto the widget, which is how the block editor has always worked and is what
+made the two builders agree.
 
 Brings FluentCart's product review and rating feature to the Elementor addon:
 widgets in the panel, and reviews actually rendering inside Theme Builder
@@ -293,12 +301,91 @@ handle is in `get_style_depends()`; `mce_*` filters need priority 11.
 
 ## 9. Open questions
 
-1. **Does the Review List need the slider?** Swiper is 150kb and Elementor users
-   often reach for a native carousel container. Shipping list and grid first,
-   slider in a follow-up, is defensible.
+1. ~~**Does the Review List need the slider?**~~ **Answered: yes, shipped.**
+   Slider is a view mode on both list-bearing widgets and a Pro one, and the
+   Carousel, Photo Strip and Testimonials layouts are built on it. Its eight
+   settings live in their own panel section, shown only for a slider.
 2. **Item-level reviews.** Core supports reviewing a specific variation
    (`item_id`). Whether the widgets expose that, or always show product-level
-   reviews, needs a product decision.
+   reviews, needs a product decision. Still open.
 3. **Divi parity.** `fluent-cart-divi-modules` has no review modules either.
-   Whatever block-tree approach lands here ports directly, since the rendering
-   is server-side.
+   Whatever approach lands here ports directly, since the rendering is
+   server-side. Still open, and cheaper than it was: a layout is now a map of
+   settings any builder can write (§10), not a block tree.
+
+## 10. Layouts: applied, not consulted
+
+Added 2026-09-28. This replaced the model the sections above describe.
+
+### What it was, and why it had to change
+
+Choosing a layout stored its name, and the name was read again on every render,
+where `ReviewLayoutPresets::rendererOptions()` was merged over the widget's own
+settings and `explicitReviewOptions()` tried to work out which of the merchant's
+settings should win. Who won depended on how that argument was scored, and the
+scoring could not tell a setting left alone from one deliberately set to the
+same value. Ask for two columns under a layout that wants six and nothing
+happened; the picker went on naming a layout after the view mode had been
+changed out from under it.
+
+### What it is
+
+The block editor has never worked that way. `applyPreset()` builds the row from
+the layout's blocks, lays the merchant's tuning back on, replaces the row — and
+then nothing reads the layout's name again. `presetForBlocks()` works out what a
+section *is* by reading the blocks back.
+
+So Elementor does the same with settings in place of blocks:
+
+- **Choosing** a layout writes `ReviewLayoutPresets::controlSettings($id)` onto
+  the widget, through `$e.run('document/elements/settings', …)`, and is done
+  with. The renderer is handed the settings and nothing else.
+- **Naming** it is derived. `ReviewLayoutPresets::detect($settings)` in PHP and
+  `layoutInForce()` in the picker compare the settings against each layout's
+  and answer with the one that matches, or Custom. The wrapper CSS class comes
+  from `detect()` too, so a layout's stylesheet cannot outlive the layout.
+- **Custom** is that answer, not a choice. It is a status line above the grid,
+  the way `presetForBlocks()` reports `custom`. A merchant leaves a layout by
+  changing a setting.
+
+### Tuning
+
+Twelve settings are excluded from both halves, mirroring `TUNING_ATTRIBUTES`:
+`grid_columns`, `per_page`, `pagination_type`, `default_sort` and the eight
+`slider_*` settings. They belong to the merchant, travel from one layout to the
+next, and changing one leaves the layout's name alone. Choosing a layout applies
+its tuning only where the merchant had left the outgoing layout's tuning alone —
+`tunedAttributes()` draws the same line.
+
+### What that forced
+
+Twelve settings had no control and so could only ever arrive from a layout: the
+avatar, title, text, variation, footer and meta line, the three orderings within
+a card, the summary's placement, the review count, and the card's own class
+(hidden — it is a class name, not a choice). A layout that writes settings can
+only write settings that exist, so they are controls now.
+
+`explicitReviewOptions()` and its two tables of defaults went with all this —
+109 lines whose whole job was refereeing an argument that no longer happens.
+
+### The picker
+
+`ReviewLayoutPresetControl`, a custom control registered on
+`elementor/controls/register` like the two that already existed. The cards are
+`<label>`s over real radio inputs, so the browser supplies arrow-key movement,
+the group's announcement to a screen reader, the focus ring and a `disabled`
+that genuinely disables. `review-layout-picker.js` does only what a radio group
+cannot: check the card matching the settings, filter by category, and write a
+layout when one is chosen.
+
+Drawings come from `ReviewLayoutThumbnails`, a port of core's `PresetThumb.jsx`.
+That is a second copy of eleven pictures, kept deliberately rather than moving
+them into core; if the two ever disagree, core's is right.
+
+### Pro
+
+Nothing here changes what is gated. Core has three review gates —
+`resolveViewMode()`, `isPhotoStylingAllowed()`, `isMultipleRepliesAllowed()` —
+and the first two have panel controls, which `pro-feature-guard.js` shows and
+disables rather than hides. `exists()` remains the single authority on which
+layouts are real, so the picker and the renderer cannot disagree.
