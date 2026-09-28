@@ -20,6 +20,12 @@ const inputs = [
     // fatal in getProductionFilePath(), which indexes the empty string it gets
     // back from getFileFromManifest().
     'resources/elementor/product-reviews-elementor.js',
+    // Disables the panel controls a widget marks as needing Pro. Same reason
+    // as the line above: built, not copied, so it needs its manifest entry.
+    'resources/elementor/pro-feature-guard.js',
+    // The review layout picker's control view. Built, not copied, so it needs
+    // its manifest entry like the two above.
+    'resources/elementor/review-layout-picker.js',
 ];
 
 let viteConfig;

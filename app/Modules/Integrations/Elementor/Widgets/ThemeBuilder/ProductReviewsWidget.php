@@ -39,6 +39,9 @@ class ProductReviewsWidget extends Widget_Base
     // widgets draw the same list through the same renderer, and a second copy
     // of this list is a second place every change has to be remembered.
     const VIEW_MODES = ProductReviewListWidget::VIEW_MODES;
+
+    /** Where the rating summary goes, as ProductReviewRenderer names them. */
+    const SUMMARY_MODES = ['side', 'top', 'cta'];
     const ARROW_SIZES = ['sm', 'md', 'lg'];
     const ARROW_POSITIONS = ['overlap', 'outside', 'bottom'];
     const AUTOPLAY_MODES = ['no', 'yes', 'hover'];
@@ -119,9 +122,13 @@ class ProductReviewsWidget extends Widget_Base
             ]
         );
 
-        $this->addReviewLayoutPresetControl();
-
+        // The product first. It is what the section is about, and the
+        // layout picker below draws the reviews of whichever one is named
+        // here - a picker that comes first is showing eleven arrangements of
+        // nothing in particular.
         $this->registerProductSourceControls();
+
+        $this->addReviewLayoutPresetControl();
 
         $this->add_control(
             'composition_note',
@@ -142,10 +149,6 @@ class ProductReviewsWidget extends Widget_Base
             [
                 'label' => esc_html__('Rating Summary', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_CONTENT,
-                // A preset builds the section from its own blocks, so the
-                // controls that arrange it by hand have nothing to say
-                // while one is chosen.
-                'condition' => ['layout_preset' => ReviewLayoutPresets::inertPresets()],
             ]
         );
 
@@ -161,6 +164,21 @@ class ProductReviewsWidget extends Widget_Base
             ]
         );
 
+        $this->add_control(
+            'summary_mode',
+            [
+                'label'     => esc_html__('Placement', 'fluent-cart-elementor-blocks'),
+                'type'      => Controls_Manager::SELECT,
+                'default'   => 'side',
+                'options'   => [
+                    'side' => esc_html__('Beside the reviews', 'fluent-cart-elementor-blocks'),
+                    'top'  => esc_html__('Across the top', 'fluent-cart-elementor-blocks'),
+                    'cta'  => esc_html__('Only the Write a Review button', 'fluent-cart-elementor-blocks'),
+                ],
+                'condition' => ['show_summary' => 'yes'],
+            ]
+        );
+
         $this->end_controls_section();
 
         // ── The call to action and the form behind it ─────
@@ -169,10 +187,6 @@ class ProductReviewsWidget extends Widget_Base
             [
                 'label' => esc_html__('Write a Review Button', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_CONTENT,
-                // A preset builds the section from its own blocks, so the
-                // controls that arrange it by hand have nothing to say
-                // while one is chosen.
-                'condition' => ['layout_preset' => ReviewLayoutPresets::inertPresets()],
             ]
         );
 
@@ -252,10 +266,6 @@ class ProductReviewsWidget extends Widget_Base
             [
                 'label' => esc_html__('Review List', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_CONTENT,
-                // A preset builds the section from its own blocks, so the
-                // controls that arrange it by hand have nothing to say
-                // while one is chosen.
-                'condition' => ['layout_preset' => ReviewLayoutPresets::inertPresets()],
             ]
         );
 
@@ -298,6 +308,262 @@ class ProductReviewsWidget extends Widget_Base
                 'min'         => 0,
                 'max'         => 500,
                 'default'     => 0,
+            ]
+        );
+
+        $this->add_control(
+            'view_mode',
+            [
+                'label'     => esc_html__('View Mode', 'fluent-cart-elementor-blocks'),
+                'type'      => Controls_Manager::SELECT,
+                'default'   => 'list',
+                'options'   => $this->reviewViewModeOptions(),
+                'separator' => 'before',
+                'classes'   => $this->reviewViewModeProClasses(),
+            ]
+        );
+
+        $this->addReviewViewModeProNotice();
+
+        $this->add_control(
+            'grid_columns',
+            [
+                'label'     => esc_html__('Columns', 'fluent-cart-elementor-blocks'),
+                'type'      => Controls_Manager::NUMBER,
+                'min'       => self::MIN_COLUMNS,
+                'max'       => self::MAX_COLUMNS,
+                'default'   => 2,
+                'condition' => ['view_mode' => ['grid', 'slider']],
+            ]
+        );
+
+        $this->end_controls_section();
+
+        $this->start_controls_section(
+            'card_content_section',
+            [
+                'label' => esc_html__('Review Card', 'fluent-cart-elementor-blocks'),
+                'tab'   => Controls_Manager::TAB_CONTENT,
+            ]
+        );
+
+        $this->add_control(
+            'row_fields_heading',
+            [
+                'label'     => esc_html__('Show in each review', 'fluent-cart-elementor-blocks'),
+                'type'      => Controls_Manager::HEADING,
+                'separator' => 'before',
+            ]
+        );
+
+        $this->add_control(
+            'show_reviewer_name',
+            [
+                'label'        => esc_html__('Reviewer Name', 'fluent-cart-elementor-blocks'),
+                'type'         => Controls_Manager::SWITCHER,
+                'label_on'     => esc_html__('Show', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('Hide', 'fluent-cart-elementor-blocks'),
+                'return_value' => 'yes',
+                'default'      => 'yes',
+            ]
+        );
+
+        $this->add_control(
+            'show_review_date',
+            [
+                'label'        => esc_html__('Review Date', 'fluent-cart-elementor-blocks'),
+                'type'         => Controls_Manager::SWITCHER,
+                'label_on'     => esc_html__('Show', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('Hide', 'fluent-cart-elementor-blocks'),
+                'return_value' => 'yes',
+                'default'      => 'yes',
+            ]
+        );
+
+        $this->add_control(
+            'show_verified',
+            [
+                'label'        => esc_html__('Verified Purchase Badge', 'fluent-cart-elementor-blocks'),
+                'type'         => Controls_Manager::SWITCHER,
+                'label_on'     => esc_html__('Show', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('Hide', 'fluent-cart-elementor-blocks'),
+                'return_value' => 'yes',
+                // Yes, not the store's setting. Every layout says yes here,
+                // for the reason core states where it builds them: a layout
+                // that read the store setting would make the two builders
+                // disagree about what Classic is. A widget defaulting to
+                // anything else would therefore read as Custom the moment it
+                // was inserted on a store with the badge switched off.
+                //
+                // The store still decides whether one is drawn:
+                // showVerifiedBadge() reads this and the store setting
+                // together, and a store that has turned the badge off draws
+                // none whatever this says.
+                'default'      => 'yes',
+            ]
+        );
+
+        $this->add_control(
+            'show_view_reply',
+            [
+                'label'        => esc_html__('Store Reply', 'fluent-cart-elementor-blocks'),
+                'type'         => Controls_Manager::SWITCHER,
+                'label_on'     => esc_html__('Show', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('Hide', 'fluent-cart-elementor-blocks'),
+                'return_value' => 'yes',
+                'default'      => 'yes',
+            ]
+        );
+
+
+        $this->add_control(
+            'show_avatar',
+            [
+                'label'        => esc_html__('Avatar', 'fluent-cart-elementor-blocks'),
+                'type'         => Controls_Manager::SWITCHER,
+                'label_on'     => esc_html__('Show', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('Hide', 'fluent-cart-elementor-blocks'),
+                'return_value' => 'yes',
+                'default'      => 'yes',
+            ]
+        );
+
+        $this->add_control(
+            'show_title',
+            [
+                'label'        => esc_html__('Review Title', 'fluent-cart-elementor-blocks'),
+                'type'         => Controls_Manager::SWITCHER,
+                'label_on'     => esc_html__('Show', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('Hide', 'fluent-cart-elementor-blocks'),
+                'return_value' => 'yes',
+                'default'      => 'yes',
+            ]
+        );
+
+        $this->add_control(
+            'show_content',
+            [
+                'label'        => esc_html__('Review Text', 'fluent-cart-elementor-blocks'),
+                'type'         => Controls_Manager::SWITCHER,
+                'label_on'     => esc_html__('Show', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('Hide', 'fluent-cart-elementor-blocks'),
+                'return_value' => 'yes',
+                'default'      => 'yes',
+            ]
+        );
+
+        $this->add_control(
+            'show_photos',
+            [
+                'label'        => esc_html__('Attachments', 'fluent-cart-elementor-blocks'),
+                'type'         => Controls_Manager::SWITCHER,
+                'label_on'     => esc_html__('Show', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('Hide', 'fluent-cart-elementor-blocks'),
+                'return_value' => 'yes',
+                'default'      => 'yes',
+            ]
+        );
+
+        $this->add_control(
+            'show_variation',
+            [
+                'label'        => esc_html__('Variation', 'fluent-cart-elementor-blocks'),
+                'type'         => Controls_Manager::SWITCHER,
+                'label_on'     => esc_html__('Show', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('Hide', 'fluent-cart-elementor-blocks'),
+                'return_value' => 'yes',
+                'default'      => 'yes',
+            ]
+        );
+
+        $this->add_control(
+            'show_footer',
+            [
+                'label'        => esc_html__('Footer (replies and votes)', 'fluent-cart-elementor-blocks'),
+                'type'         => Controls_Manager::SWITCHER,
+                'label_on'     => esc_html__('Show', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('Hide', 'fluent-cart-elementor-blocks'),
+                'return_value' => 'yes',
+                'default'      => 'yes',
+            ]
+        );
+
+        $this->add_control(
+            'show_meta',
+            [
+                'label'        => esc_html__('Meta Line', 'fluent-cart-elementor-blocks'),
+                'type'         => Controls_Manager::SWITCHER,
+                'label_on'     => esc_html__('Show', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('Hide', 'fluent-cart-elementor-blocks'),
+                'return_value' => 'yes',
+                'default'      => 'yes',
+            ]
+        );
+
+        $this->add_control(
+            'card_order_heading',
+            [
+                'label'     => esc_html__('Order within the card', 'fluent-cart-elementor-blocks'),
+                'type'      => Controls_Manager::HEADING,
+                'separator' => 'before',
+            ]
+        );
+
+        $this->add_control(
+            'photos_first',
+            [
+                'label'        => esc_html__('Attachments Above The Text', 'fluent-cart-elementor-blocks'),
+                'type'         => Controls_Manager::SWITCHER,
+                'label_on'     => esc_html__('Yes', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('No', 'fluent-cart-elementor-blocks'),
+                'return_value' => 'yes',
+                'default'      => '',
+            ]
+        );
+
+        $this->add_control(
+            'rating_first',
+            [
+                'label'        => esc_html__('Stars Above The Name', 'fluent-cart-elementor-blocks'),
+                'type'         => Controls_Manager::SWITCHER,
+                'label_on'     => esc_html__('Yes', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('No', 'fluent-cart-elementor-blocks'),
+                'return_value' => 'yes',
+                'default'      => '',
+            ]
+        );
+
+        $this->add_control(
+            'badge_last',
+            [
+                'label'        => esc_html__('Verified Badge After The Variation', 'fluent-cart-elementor-blocks'),
+                'type'         => Controls_Manager::SWITCHER,
+                'label_on'     => esc_html__('Yes', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('No', 'fluent-cart-elementor-blocks'),
+                'return_value' => 'yes',
+                'default'      => '',
+            ]
+        );
+
+        // Not shown. A layout writes it and the stylesheet reads it: it is
+        // the one part of a card's shape that is a class name rather than a
+        // choice, and asking a merchant to type one would be asking them to
+        // know the stylesheet.
+        $this->add_control(
+            'item_class',
+            [
+                'type'    => Controls_Manager::HIDDEN,
+                'default' => '',
+            ]
+        );
+
+        $this->end_controls_section();
+
+        $this->start_controls_section(
+            'media_content_section',
+            [
+                'label' => esc_html__('Attachments', 'fluent-cart-elementor-blocks'),
+                'tab'   => Controls_Manager::TAB_CONTENT,
             ]
         );
 
@@ -347,6 +613,8 @@ class ProductReviewsWidget extends Widget_Base
             ]
         );
 
+        $this->addReviewMediaStyleControls();
+
         $this->add_control(
             'media_width',
             [
@@ -382,28 +650,19 @@ class ProductReviewsWidget extends Widget_Base
             ]
         );
 
-        $this->add_control(
-            'view_mode',
-            [
-                'label'     => esc_html__('View Mode', 'fluent-cart-elementor-blocks'),
-                'type'      => Controls_Manager::SELECT,
-                'default'   => 'list',
-                'options'   => $this->reviewViewModeOptions(),
-                'separator' => 'before',
-            ]
-        );
+        $this->end_controls_section();
 
-        $this->addReviewViewModeProNotice();
-
-        $this->add_control(
-            'grid_columns',
+        $this->start_controls_section(
+            'slider_content_section',
             [
-                'label'     => esc_html__('Columns', 'fluent-cart-elementor-blocks'),
-                'type'      => Controls_Manager::NUMBER,
-                'min'       => self::MIN_COLUMNS,
-                'max'       => self::MAX_COLUMNS,
-                'default'   => 2,
-                'condition' => ['view_mode' => ['grid', 'slider']],
+                'label' => esc_html__('Slider', 'fluent-cart-elementor-blocks'),
+                'tab'   => Controls_Manager::TAB_CONTENT,
+                // Said once here rather than on each control inside. Elementor
+                // lays a section's args under every control registered in it
+                // (handle_control_position(), array_replace_recursive), so
+                // each one still carries this condition - and its own, the two
+                // being different keys, merge rather than replace.
+                'condition' => ['view_mode' => 'slider'],
             ]
         );
 
@@ -416,7 +675,6 @@ class ProductReviewsWidget extends Widget_Base
                 'label_off'    => esc_html__('Hide', 'fluent-cart-elementor-blocks'),
                 'return_value' => 'yes',
                 'default'      => 'yes',
-                'condition'    => ['view_mode' => 'slider'],
             ]
         );
 
@@ -431,7 +689,7 @@ class ProductReviewsWidget extends Widget_Base
                     'md' => esc_html__('Medium', 'fluent-cart-elementor-blocks'),
                     'lg' => esc_html__('Large', 'fluent-cart-elementor-blocks'),
                 ],
-                'condition' => ['view_mode' => 'slider', 'slider_arrows' => 'yes'],
+                'condition' => ['slider_arrows' => 'yes'],
             ]
         );
 
@@ -448,7 +706,6 @@ class ProductReviewsWidget extends Widget_Base
                     'bottom'  => esc_html__('Below the reviews', 'fluent-cart-elementor-blocks'),
                 ],
                 'condition'   => [
-                    'view_mode'     => 'slider',
                     'slider_arrows' => 'yes',
                 ],
             ]
@@ -463,7 +720,6 @@ class ProductReviewsWidget extends Widget_Base
                 'label_off'    => esc_html__('Hide', 'fluent-cart-elementor-blocks'),
                 'return_value' => 'yes',
                 'default'      => 'yes',
-                'condition'    => ['view_mode' => 'slider'],
             ]
         );
 
@@ -480,7 +736,6 @@ class ProductReviewsWidget extends Widget_Base
                     'segmented'   => esc_html__('Segmented', 'fluent-cart-elementor-blocks'),
                 ],
                 'condition' => [
-                    'view_mode'         => 'slider',
                     'slider_pagination' => 'yes',
                 ],
             ]
@@ -497,7 +752,6 @@ class ProductReviewsWidget extends Widget_Base
                     'yes'   => esc_html__('Always', 'fluent-cart-elementor-blocks'),
                     'hover' => esc_html__('On Hover', 'fluent-cart-elementor-blocks'),
                 ],
-                'condition' => ['view_mode' => 'slider'],
             ]
         );
 
@@ -511,7 +765,7 @@ class ProductReviewsWidget extends Widget_Base
                 'max'         => 10000,
                 'step'        => 100,
                 'default'     => 3000,
-                'condition'   => ['view_mode' => 'slider', 'slider_autoplay' => ['yes', 'hover']],
+                'condition'   => ['slider_autoplay' => ['yes', 'hover']],
             ]
         );
 
@@ -524,64 +778,6 @@ class ProductReviewsWidget extends Widget_Base
                 'label_off'    => esc_html__('No', 'fluent-cart-elementor-blocks'),
                 'return_value' => 'yes',
                 'default'      => '',
-                'condition'    => ['view_mode' => 'slider'],
-            ]
-        );
-
-        $this->add_control(
-            'row_fields_heading',
-            [
-                'label'     => esc_html__('Show in each review', 'fluent-cart-elementor-blocks'),
-                'type'      => Controls_Manager::HEADING,
-                'separator' => 'before',
-            ]
-        );
-
-        $this->add_control(
-            'show_reviewer_name',
-            [
-                'label'        => esc_html__('Reviewer Name', 'fluent-cart-elementor-blocks'),
-                'type'         => Controls_Manager::SWITCHER,
-                'label_on'     => esc_html__('Show', 'fluent-cart-elementor-blocks'),
-                'label_off'    => esc_html__('Hide', 'fluent-cart-elementor-blocks'),
-                'return_value' => 'yes',
-                'default'      => 'yes',
-            ]
-        );
-
-        $this->add_control(
-            'show_review_date',
-            [
-                'label'        => esc_html__('Review Date', 'fluent-cart-elementor-blocks'),
-                'type'         => Controls_Manager::SWITCHER,
-                'label_on'     => esc_html__('Show', 'fluent-cart-elementor-blocks'),
-                'label_off'    => esc_html__('Hide', 'fluent-cart-elementor-blocks'),
-                'return_value' => 'yes',
-                'default'      => 'yes',
-            ]
-        );
-
-        $this->add_control(
-            'show_verified',
-            [
-                'label'        => esc_html__('Verified Purchase Badge', 'fluent-cart-elementor-blocks'),
-                'type'         => Controls_Manager::SWITCHER,
-                'label_on'     => esc_html__('Show', 'fluent-cart-elementor-blocks'),
-                'label_off'    => esc_html__('Hide', 'fluent-cart-elementor-blocks'),
-                'return_value' => 'yes',
-                'default'      => static::verifiedBadgeDefault(),
-            ]
-        );
-
-        $this->add_control(
-            'show_view_reply',
-            [
-                'label'        => esc_html__('Store Reply', 'fluent-cart-elementor-blocks'),
-                'type'         => Controls_Manager::SWITCHER,
-                'label_on'     => esc_html__('Show', 'fluent-cart-elementor-blocks'),
-                'label_off'    => esc_html__('Hide', 'fluent-cart-elementor-blocks'),
-                'return_value' => 'yes',
-                'default'      => 'yes',
             ]
         );
 
@@ -593,10 +789,18 @@ class ProductReviewsWidget extends Widget_Base
             [
                 'label' => esc_html__('Header', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_CONTENT,
-                // A preset builds the section from its own blocks, so the
-                // controls that arrange it by hand have nothing to say
-                // while one is chosen.
-                'condition' => ['layout_preset' => ReviewLayoutPresets::inertPresets()],
+            ]
+        );
+
+        $this->add_control(
+            'show_count',
+            [
+                'label'        => esc_html__('Review Count', 'fluent-cart-elementor-blocks'),
+                'type'         => Controls_Manager::SWITCHER,
+                'label_on'     => esc_html__('Show', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('Hide', 'fluent-cart-elementor-blocks'),
+                'return_value' => 'yes',
+                'default'      => 'yes',
             ]
         );
 
@@ -641,7 +845,7 @@ class ProductReviewsWidget extends Widget_Base
             [
                 'label' => esc_html__('Pagination', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_CONTENT,
-                'condition' => ['view_mode' => ['list', 'grid'], 'layout_preset' => ReviewLayoutPresets::inertPresets()],
+                'condition' => ['view_mode' => ['list', 'grid']],
             ]
         );
 
@@ -730,28 +934,32 @@ class ProductReviewsWidget extends Widget_Base
 
         AssetLoader::loadSingleProductAssets();
 
-        $preset = (string) ($settings['layout_preset'] ?? '');
+        // The settings are the section. A layout is not consulted here at
+        // all: choosing one in the panel writes its settings onto the widget
+        // and is then done with, which is how the block editor has always
+        // worked - a layout builds a row out of blocks and the page renders
+        // the blocks, not the layout's name.
+        //
+        // What that buys is the thing a merchant kept running into: a
+        // setting they changed used to argue with a layout at render, and
+        // whether it won depended on how the argument was scored. There is
+        // no argument now. They changed a setting; the setting is what draws.
+        ob_start();
+        (new ProductReviewRenderer($product->ID, $this->rendererOptions($settings)))->render();
+        $content = ob_get_clean();
 
-        if (ReviewLayoutPresets::exists($preset)) {
-            // Presets are semantic settings, not Gutenberg blocks. Elementor
-            // owns its markup and styling; core still owns review data,
-            // pagination, frontend behavior and Pro enforcement.
-            $presetOptions = ReviewLayoutPresets::rendererOptions($preset);
-            $manualOptions = $this->explicitReviewOptions($settings);
+        // The layout's own stylesheet keys off this, so it has to say what
+        // the settings say rather than what was last chosen. Choose Summary
+        // on Top and then put the summary back beside the reviews and the
+        // class went on claiming summary-top, styling a layout that was no
+        // longer there - the panel called it Custom while the page did not.
+        //
+        // Asked of the settings, by the same rule the picker uses.
+        $preset = ReviewLayoutPresets::detect($settings);
 
-            ob_start();
-            (new ProductReviewRenderer(
-                $product->ID,
-                array_merge($this->rendererOptions($settings), $presetOptions, $manualOptions)
-            ))->render();
-            $content = ob_get_clean();
-
+        if ($preset !== '') {
             $content = '<div class="fct-reviews-layout-preset fct-reviews-layout-preset--'
                 . esc_attr(sanitize_html_class($preset)) . '">' . $content . '</div>';
-        } else {
-            ob_start();
-            (new ProductReviewRenderer($product->ID, $this->rendererOptions($settings)))->render();
-            $content = ob_get_clean();
         }
 
         if (trim($content) === '') {
@@ -781,6 +989,22 @@ class ProductReviewsWidget extends Widget_Base
             'showFilterChips'   => $this->isOn($settings, 'show_filter'),
             'showSortControls'  => $this->isOn($settings, 'show_sorting'),
             'showReviewerName'  => $this->isOn($settings, 'show_reviewer_name'),
+            // The shape of the card. These used to reach the renderer only
+            // from a layout, which is why changing one meant abandoning the
+            // layout: there was no control to change.
+            'summaryMode'       => $this->pick($settings, 'summary_mode', self::SUMMARY_MODES, 'side'),
+            'showCount'         => $this->isOn($settings, 'show_count'),
+            'showAvatar'        => $this->isOn($settings, 'show_avatar'),
+            'showTitle'         => $this->isOn($settings, 'show_title'),
+            'showContent'       => $this->isOn($settings, 'show_content'),
+            'showVariation'     => $this->isOn($settings, 'show_variation'),
+            'showPhotos'        => $this->isOn($settings, 'show_photos'),
+            'showFooter'        => $this->isOn($settings, 'show_footer'),
+            'showMeta'          => $this->isOn($settings, 'show_meta'),
+            'photosFirst'       => $this->isOn($settings, 'photos_first', false),
+            'ratingFirst'       => $this->isOn($settings, 'rating_first', false),
+            'badgeLast'         => $this->isOn($settings, 'badge_last', false),
+            'itemClass'         => sanitize_html_class((string) ($settings['item_class'] ?? '')),
             'showReviewDate'    => $this->isOn($settings, 'show_review_date'),
             'showVerifiedBadge' => $this->showVerifiedBadge($settings),
             'showViewReply'     => $this->isOn($settings, 'show_view_reply'),
@@ -820,120 +1044,6 @@ class ProductReviewsWidget extends Widget_Base
             // key — which would turn full width on for every one of them.
             $this->isOn($settings, 'media_full_width', false)
         );
-    }
-
-    /**
-     * Return only review settings that were explicitly saved on the widget.
-     *
-     * Elementor's display settings include control defaults. Merging all of
-     * them after a preset would make every default override the preset. The
-     * raw element settings, however, contain only values the merchant saved,
-     * which lets a fallback layout keep its deliberate edits when Pro becomes
-     * available without turning untouched controls into overrides.
-     */
-    protected function explicitReviewOptions(array $settings): array
-    {
-        $raw = (array) $this->get_data('settings');
-        // Resolved over the raw values, not the display ones. A preset
-        // switches the layout controls off and Elementor blanks a control it
-        // has switched off, so $settings carries an empty string where the
-        // merchant saved a number -- and reading the value from there
-        // preserved the blank rather than the choice, turning a saved page
-        // length of seven into nought, which is "ask the store" and not what
-        // anyone set. $raw holds only what was actually saved, so laying it
-        // over the display settings resolves each preserved key from the
-        // merchant's own value.
-        $resolved = $this->rendererOptions(array_merge($settings, $raw));
-
-        $fields = [
-            'show_summary'       => 'showSummary',
-            'show_filter'        => 'showFilterChips',
-            'show_sorting'       => 'showSortControls',
-            'show_reviewer_name' => 'showReviewerName',
-            'show_review_date'   => 'showReviewDate',
-            'show_verified'      => 'showVerifiedBadge',
-            'show_view_reply'    => 'showViewReply',
-            'per_page'           => 'perPage',
-            'min_rating'         => 'minRating',
-            'photos_only'        => 'hasMedia',
-            'content_max_words'  => 'maxWords',
-            'pagination_type'    => 'paginationType',
-            'view_mode'          => 'viewMode',
-            'grid_columns'       => 'gridColumns',
-            'container'          => 'container',
-            'layout'             => 'layout',
-            'add_review_button_text'  => 'ctaAddText',
-            'edit_review_button_text' => 'ctaEditText',
-            'login_review_button_text'=> 'ctaLoginText',
-        ];
-
-        $defaults = [
-            'show_summary'       => 'yes',
-            'show_filter'        => 'yes',
-            'show_sorting'       => 'yes',
-            'show_reviewer_name' => 'yes',
-            'show_review_date'   => 'yes',
-            'show_verified'      => static::verifiedBadgeDefault(),
-            'show_view_reply'    => 'yes',
-            'default_sort'       => ProductReviewListWidget::FALLBACK_SORT,
-            'per_page'           => 0,
-            'min_rating'         => 0,
-            'photos_only'        => '',
-            'content_max_words'  => 0,
-            'pagination_type'    => 'numbers',
-            'view_mode'          => 'list',
-            'grid_columns'       => 2,
-            'container'          => 'drawer',
-            'layout'             => 'inline',
-            'add_review_button_text'   => '',
-            'edit_review_button_text'  => '',
-            'login_review_button_text' => '',
-        ];
-
-        $options = [];
-        foreach ($fields as $rawKey => $optionKey) {
-            if (array_key_exists($rawKey, $raw)
-                && array_key_exists($optionKey, $resolved)
-                && (!array_key_exists($rawKey, $defaults) || (string) $raw[$rawKey] !== (string) $defaults[$rawKey])) {
-                $options[$optionKey] = $resolved[$optionKey];
-            }
-        }
-
-        if (array_key_exists('default_sort', $raw)) {
-            $options['defaultSortBy'] = $resolved['defaultSortBy'];
-            $options['defaultSortOrder'] = $resolved['defaultSortOrder'];
-        }
-
-        $sliderFields = [
-            'slider_autoplay'       => 'autoplay',
-            'slider_autoplay_delay' => 'autoplayDelay',
-            'slider_arrows'         => 'arrows',
-            'slider_arrows_size'    => 'arrowsSize',
-            'slider_arrows_position'=> 'arrowsPosition',
-            'slider_infinite'       => 'infinite',
-            'slider_pagination'     => 'pagination',
-            'slider_pagination_type'=> 'paginationType',
-        ];
-
-        $sliderDefaults = [
-            'slider_autoplay'        => 'no',
-            'slider_autoplay_delay'  => 3000,
-            'slider_arrows'          => 'yes',
-            'slider_arrows_size'     => 'md',
-            'slider_arrows_position' => 'overlap',
-            'slider_infinite'        => '',
-            'slider_pagination'      => 'yes',
-            'slider_pagination_type' => 'bullets',
-        ];
-
-        foreach ($sliderFields as $rawKey => $optionKey) {
-            if (array_key_exists($rawKey, $raw)
-                && (string) $raw[$rawKey] !== (string) $sliderDefaults[$rawKey]) {
-                $options['sliderSettings'][$optionKey] = $resolved['sliderSettings'][$optionKey];
-            }
-        }
-
-        return $options;
     }
 
     /**
