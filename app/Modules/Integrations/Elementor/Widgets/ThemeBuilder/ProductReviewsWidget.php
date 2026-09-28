@@ -312,89 +312,6 @@ class ProductReviewsWidget extends Widget_Base
         );
 
         $this->add_control(
-            'media_visible',
-            [
-                'label'       => esc_html__('Attachments Shown', 'fluent-cart-elementor-blocks'),
-                'description' => esc_html__('How many attachments a review shows. The rest go behind a + that opens them in the lightbox. 0 shows all of them.', 'fluent-cart-elementor-blocks'),
-                'type'        => Controls_Manager::NUMBER,
-                'min'         => 0,
-                // What a review may actually hold. Offering a limit past it
-                // would be a number that never comes into play — the store's
-                // own upload cap decides how many attachments there can be.
-                'max'         => ProductReviewRenderer::maxPhotosPerReview(),
-                'default'     => 0,
-                'separator'   => 'before',
-            ]
-        );
-
-        $this->add_control(
-            'media_more',
-            [
-                'label'       => esc_html__('The + Counter', 'fluent-cart-elementor-blocks'),
-                'description' => esc_html__('Counts the attachments the limit leaves out and opens them in the lightbox. Hidden, they are simply not shown.', 'fluent-cart-elementor-blocks'),
-                'type'        => Controls_Manager::SELECT,
-                'default'     => 'overlay',
-                'options'     => [
-                    'overlay' => esc_html__('On the last attachment', 'fluent-cart-elementor-blocks'),
-                    'tile'    => esc_html__('Beside the attachments', 'fluent-cart-elementor-blocks'),
-                    'none'    => esc_html__('Hidden', 'fluent-cart-elementor-blocks'),
-                ],
-                // With no limit there is no overflow for it to stand for.
-                'condition'   => ['media_visible!' => 0],
-            ]
-        );
-
-        $this->add_control(
-            'media_full_width',
-            [
-                'label'        => esc_html__('Full Width Attachments', 'fluent-cart-elementor-blocks'),
-                'description'  => esc_html__('Each attachment spans the whole review, one to a line. The height still applies.', 'fluent-cart-elementor-blocks'),
-                'type'         => Controls_Manager::SWITCHER,
-                'label_on'     => esc_html__('Yes', 'fluent-cart-elementor-blocks'),
-                'label_off'    => esc_html__('No', 'fluent-cart-elementor-blocks'),
-                'return_value' => 'yes',
-                'default'      => '',
-            ]
-        );
-
-        $this->addReviewMediaStyleControls();
-
-        $this->add_control(
-            'media_width',
-            [
-                'label'       => esc_html__('Attachment Width (px)', 'fluent-cart-elementor-blocks'),
-                'description' => esc_html__('0 leaves the width to the theme.', 'fluent-cart-elementor-blocks'),
-                'type'        => Controls_Manager::NUMBER,
-                'min'         => 0,
-                'max'         => 200,
-                // 0 for the same reason as the height: a filled-in default is
-                // indistinguishable from a chosen one.
-                'default'     => 0,
-                // Full width is the width; a pixel one beside it would be a
-                // setting with nothing to change.
-                'condition' => ['media_full_width!' => 'yes'],
-            ]
-        );
-
-        $this->add_control(
-            'media_height',
-            [
-                'label'       => esc_html__('Attachment Height (px)', 'fluent-cart-elementor-blocks'),
-                'description' => esc_html__('0 leaves the height to the theme, and at full width gives each attachment its own proportions, uncropped. Any other height crops it to a band of that depth.', 'fluent-cart-elementor-blocks'),
-                'type'        => Controls_Manager::NUMBER,
-                'min'         => 0,
-                'max'         => 600,
-                // 0, not 72. Elementor fills a control's default into the
-                // settings whether or not anyone touched it, so a default of
-                // 72 is a height that was always asked for — and full width
-                // would crop every attachment to a 72px band with no way to
-                // say otherwise. 0 is the same 72px at a fixed size, because
-                // that is what the stylesheet falls back to.
-                'default'     => 0,
-            ]
-        );
-
-        $this->add_control(
             'view_mode',
             [
                 'label'     => esc_html__('View Mode', 'fluent-cart-elementor-blocks'),
@@ -420,124 +337,13 @@ class ProductReviewsWidget extends Widget_Base
             ]
         );
 
-        $this->add_control(
-            'slider_arrows',
-            [
-                'label'        => esc_html__('Show arrows', 'fluent-cart-elementor-blocks'),
-                'type'         => Controls_Manager::SWITCHER,
-                'label_on'     => esc_html__('Show', 'fluent-cart-elementor-blocks'),
-                'label_off'    => esc_html__('Hide', 'fluent-cart-elementor-blocks'),
-                'return_value' => 'yes',
-                'default'      => 'yes',
-                'condition'    => ['view_mode' => 'slider'],
-            ]
-        );
+        $this->end_controls_section();
 
-        $this->add_control(
-            'slider_arrows_size',
+        $this->start_controls_section(
+            'card_content_section',
             [
-                'label'     => esc_html__('Arrow Size', 'fluent-cart-elementor-blocks'),
-                'type'      => Controls_Manager::SELECT,
-                'default'   => 'md',
-                'options'   => [
-                    'sm' => esc_html__('Small', 'fluent-cart-elementor-blocks'),
-                    'md' => esc_html__('Medium', 'fluent-cart-elementor-blocks'),
-                    'lg' => esc_html__('Large', 'fluent-cart-elementor-blocks'),
-                ],
-                'condition' => ['view_mode' => 'slider', 'slider_arrows' => 'yes'],
-            ]
-        );
-
-        $this->add_control(
-            'slider_arrows_position',
-            [
-                'label'       => esc_html__('Arrow Placement', 'fluent-cart-elementor-blocks'),
-                'description' => esc_html__('On the reviews saves space. Beside them keeps every review clear. Below them suits a narrow column, where side arrows have nowhere to go.', 'fluent-cart-elementor-blocks'),
-                'type'        => Controls_Manager::SELECT,
-                'default'     => 'overlap',
-                'options'     => [
-                    'overlap' => esc_html__('On the reviews', 'fluent-cart-elementor-blocks'),
-                    'outside' => esc_html__('Beside the reviews', 'fluent-cart-elementor-blocks'),
-                    'bottom'  => esc_html__('Below the reviews', 'fluent-cart-elementor-blocks'),
-                ],
-                'condition'   => [
-                    'view_mode'     => 'slider',
-                    'slider_arrows' => 'yes',
-                ],
-            ]
-        );
-
-        $this->add_control(
-            'slider_pagination',
-            [
-                'label'        => esc_html__('Show Pagination', 'fluent-cart-elementor-blocks'),
-                'type'         => Controls_Manager::SWITCHER,
-                'label_on'     => esc_html__('Show', 'fluent-cart-elementor-blocks'),
-                'label_off'    => esc_html__('Hide', 'fluent-cart-elementor-blocks'),
-                'return_value' => 'yes',
-                'default'      => 'yes',
-                'condition'    => ['view_mode' => 'slider'],
-            ]
-        );
-
-        $this->add_control(
-            'slider_pagination_type',
-            [
-                'label'     => esc_html__('Pagination Type', 'fluent-cart-elementor-blocks'),
-                'type'      => Controls_Manager::SELECT,
-                'default'   => 'bullets',
-                'options'   => [
-                    'bullets'     => esc_html__('Dots', 'fluent-cart-elementor-blocks'),
-                    'fraction'    => esc_html__('Fraction', 'fluent-cart-elementor-blocks'),
-                    'progressbar' => esc_html__('Progress Bar', 'fluent-cart-elementor-blocks'),
-                    'segmented'   => esc_html__('Segmented', 'fluent-cart-elementor-blocks'),
-                ],
-                'condition' => [
-                    'view_mode'         => 'slider',
-                    'slider_pagination' => 'yes',
-                ],
-            ]
-        );
-
-        $this->add_control(
-            'slider_autoplay',
-            [
-                'label'     => esc_html__('Autoplay', 'fluent-cart-elementor-blocks'),
-                'type'      => Controls_Manager::SELECT,
-                'default'   => 'no',
-                'options'   => [
-                    'no'    => esc_html__('Disabled', 'fluent-cart-elementor-blocks'),
-                    'yes'   => esc_html__('Always', 'fluent-cart-elementor-blocks'),
-                    'hover' => esc_html__('On Hover', 'fluent-cart-elementor-blocks'),
-                ],
-                'condition' => ['view_mode' => 'slider'],
-            ]
-        );
-
-        $this->add_control(
-            'slider_autoplay_delay',
-            [
-                'label'       => esc_html__('Autoplay Delay (ms)', 'fluent-cart-elementor-blocks'),
-                'description' => esc_html__('Time between slides in milliseconds', 'fluent-cart-elementor-blocks'),
-                'type'        => Controls_Manager::NUMBER,
-                'min'         => 300,
-                'max'         => 10000,
-                'step'        => 100,
-                'default'     => 3000,
-                'condition'   => ['view_mode' => 'slider', 'slider_autoplay' => ['yes', 'hover']],
-            ]
-        );
-
-        $this->add_control(
-            'slider_infinite',
-            [
-                'label'        => esc_html__('Infinite loop', 'fluent-cart-elementor-blocks'),
-                'type'         => Controls_Manager::SWITCHER,
-                'label_on'     => esc_html__('Yes', 'fluent-cart-elementor-blocks'),
-                'label_off'    => esc_html__('No', 'fluent-cart-elementor-blocks'),
-                'return_value' => 'yes',
-                'default'      => '',
-                'condition'    => ['view_mode' => 'slider'],
+                'label' => esc_html__('Review Card', 'fluent-cart-elementor-blocks'),
+                'tab'   => Controls_Manager::TAB_CONTENT,
             ]
         );
 
@@ -748,6 +554,230 @@ class ProductReviewsWidget extends Widget_Base
             [
                 'type'    => Controls_Manager::HIDDEN,
                 'default' => '',
+            ]
+        );
+
+        $this->end_controls_section();
+
+        $this->start_controls_section(
+            'media_content_section',
+            [
+                'label' => esc_html__('Attachments', 'fluent-cart-elementor-blocks'),
+                'tab'   => Controls_Manager::TAB_CONTENT,
+            ]
+        );
+
+        $this->add_control(
+            'media_visible',
+            [
+                'label'       => esc_html__('Attachments Shown', 'fluent-cart-elementor-blocks'),
+                'description' => esc_html__('How many attachments a review shows. The rest go behind a + that opens them in the lightbox. 0 shows all of them.', 'fluent-cart-elementor-blocks'),
+                'type'        => Controls_Manager::NUMBER,
+                'min'         => 0,
+                // What a review may actually hold. Offering a limit past it
+                // would be a number that never comes into play — the store's
+                // own upload cap decides how many attachments there can be.
+                'max'         => ProductReviewRenderer::maxPhotosPerReview(),
+                'default'     => 0,
+                'separator'   => 'before',
+            ]
+        );
+
+        $this->add_control(
+            'media_more',
+            [
+                'label'       => esc_html__('The + Counter', 'fluent-cart-elementor-blocks'),
+                'description' => esc_html__('Counts the attachments the limit leaves out and opens them in the lightbox. Hidden, they are simply not shown.', 'fluent-cart-elementor-blocks'),
+                'type'        => Controls_Manager::SELECT,
+                'default'     => 'overlay',
+                'options'     => [
+                    'overlay' => esc_html__('On the last attachment', 'fluent-cart-elementor-blocks'),
+                    'tile'    => esc_html__('Beside the attachments', 'fluent-cart-elementor-blocks'),
+                    'none'    => esc_html__('Hidden', 'fluent-cart-elementor-blocks'),
+                ],
+                // With no limit there is no overflow for it to stand for.
+                'condition'   => ['media_visible!' => 0],
+            ]
+        );
+
+        $this->add_control(
+            'media_full_width',
+            [
+                'label'        => esc_html__('Full Width Attachments', 'fluent-cart-elementor-blocks'),
+                'description'  => esc_html__('Each attachment spans the whole review, one to a line. The height still applies.', 'fluent-cart-elementor-blocks'),
+                'type'         => Controls_Manager::SWITCHER,
+                'label_on'     => esc_html__('Yes', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('No', 'fluent-cart-elementor-blocks'),
+                'return_value' => 'yes',
+                'default'      => '',
+            ]
+        );
+
+        $this->addReviewMediaStyleControls();
+
+        $this->add_control(
+            'media_width',
+            [
+                'label'       => esc_html__('Attachment Width (px)', 'fluent-cart-elementor-blocks'),
+                'description' => esc_html__('0 leaves the width to the theme.', 'fluent-cart-elementor-blocks'),
+                'type'        => Controls_Manager::NUMBER,
+                'min'         => 0,
+                'max'         => 200,
+                // 0 for the same reason as the height: a filled-in default is
+                // indistinguishable from a chosen one.
+                'default'     => 0,
+                // Full width is the width; a pixel one beside it would be a
+                // setting with nothing to change.
+                'condition' => ['media_full_width!' => 'yes'],
+            ]
+        );
+
+        $this->add_control(
+            'media_height',
+            [
+                'label'       => esc_html__('Attachment Height (px)', 'fluent-cart-elementor-blocks'),
+                'description' => esc_html__('0 leaves the height to the theme, and at full width gives each attachment its own proportions, uncropped. Any other height crops it to a band of that depth.', 'fluent-cart-elementor-blocks'),
+                'type'        => Controls_Manager::NUMBER,
+                'min'         => 0,
+                'max'         => 600,
+                // 0, not 72. Elementor fills a control's default into the
+                // settings whether or not anyone touched it, so a default of
+                // 72 is a height that was always asked for — and full width
+                // would crop every attachment to a 72px band with no way to
+                // say otherwise. 0 is the same 72px at a fixed size, because
+                // that is what the stylesheet falls back to.
+                'default'     => 0,
+            ]
+        );
+
+        $this->end_controls_section();
+
+        $this->start_controls_section(
+            'slider_content_section',
+            [
+                'label' => esc_html__('Slider', 'fluent-cart-elementor-blocks'),
+                'tab'   => Controls_Manager::TAB_CONTENT,
+                // Said once here rather than on each control inside. Elementor
+                // lays a section's args under every control registered in it
+                // (handle_control_position(), array_replace_recursive), so
+                // each one still carries this condition - and its own, the two
+                // being different keys, merge rather than replace.
+                'condition' => ['view_mode' => 'slider'],
+            ]
+        );
+
+        $this->add_control(
+            'slider_arrows',
+            [
+                'label'        => esc_html__('Show arrows', 'fluent-cart-elementor-blocks'),
+                'type'         => Controls_Manager::SWITCHER,
+                'label_on'     => esc_html__('Show', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('Hide', 'fluent-cart-elementor-blocks'),
+                'return_value' => 'yes',
+                'default'      => 'yes',
+            ]
+        );
+
+        $this->add_control(
+            'slider_arrows_size',
+            [
+                'label'     => esc_html__('Arrow Size', 'fluent-cart-elementor-blocks'),
+                'type'      => Controls_Manager::SELECT,
+                'default'   => 'md',
+                'options'   => [
+                    'sm' => esc_html__('Small', 'fluent-cart-elementor-blocks'),
+                    'md' => esc_html__('Medium', 'fluent-cart-elementor-blocks'),
+                    'lg' => esc_html__('Large', 'fluent-cart-elementor-blocks'),
+                ],
+                'condition' => ['slider_arrows' => 'yes'],
+            ]
+        );
+
+        $this->add_control(
+            'slider_arrows_position',
+            [
+                'label'       => esc_html__('Arrow Placement', 'fluent-cart-elementor-blocks'),
+                'description' => esc_html__('On the reviews saves space. Beside them keeps every review clear. Below them suits a narrow column, where side arrows have nowhere to go.', 'fluent-cart-elementor-blocks'),
+                'type'        => Controls_Manager::SELECT,
+                'default'     => 'overlap',
+                'options'     => [
+                    'overlap' => esc_html__('On the reviews', 'fluent-cart-elementor-blocks'),
+                    'outside' => esc_html__('Beside the reviews', 'fluent-cart-elementor-blocks'),
+                    'bottom'  => esc_html__('Below the reviews', 'fluent-cart-elementor-blocks'),
+                ],
+                'condition'   => [
+                    'slider_arrows' => 'yes',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'slider_pagination',
+            [
+                'label'        => esc_html__('Show Pagination', 'fluent-cart-elementor-blocks'),
+                'type'         => Controls_Manager::SWITCHER,
+                'label_on'     => esc_html__('Show', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('Hide', 'fluent-cart-elementor-blocks'),
+                'return_value' => 'yes',
+                'default'      => 'yes',
+            ]
+        );
+
+        $this->add_control(
+            'slider_pagination_type',
+            [
+                'label'     => esc_html__('Pagination Type', 'fluent-cart-elementor-blocks'),
+                'type'      => Controls_Manager::SELECT,
+                'default'   => 'bullets',
+                'options'   => [
+                    'bullets'     => esc_html__('Dots', 'fluent-cart-elementor-blocks'),
+                    'fraction'    => esc_html__('Fraction', 'fluent-cart-elementor-blocks'),
+                    'progressbar' => esc_html__('Progress Bar', 'fluent-cart-elementor-blocks'),
+                    'segmented'   => esc_html__('Segmented', 'fluent-cart-elementor-blocks'),
+                ],
+                'condition' => [
+                    'slider_pagination' => 'yes',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'slider_autoplay',
+            [
+                'label'     => esc_html__('Autoplay', 'fluent-cart-elementor-blocks'),
+                'type'      => Controls_Manager::SELECT,
+                'default'   => 'no',
+                'options'   => [
+                    'no'    => esc_html__('Disabled', 'fluent-cart-elementor-blocks'),
+                    'yes'   => esc_html__('Always', 'fluent-cart-elementor-blocks'),
+                    'hover' => esc_html__('On Hover', 'fluent-cart-elementor-blocks'),
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'slider_autoplay_delay',
+            [
+                'label'       => esc_html__('Autoplay Delay (ms)', 'fluent-cart-elementor-blocks'),
+                'description' => esc_html__('Time between slides in milliseconds', 'fluent-cart-elementor-blocks'),
+                'type'        => Controls_Manager::NUMBER,
+                'min'         => 300,
+                'max'         => 10000,
+                'step'        => 100,
+                'default'     => 3000,
+                'condition'   => ['slider_autoplay' => ['yes', 'hover']],
+            ]
+        );
+
+        $this->add_control(
+            'slider_infinite',
+            [
+                'label'        => esc_html__('Infinite loop', 'fluent-cart-elementor-blocks'),
+                'type'         => Controls_Manager::SWITCHER,
+                'label_on'     => esc_html__('Yes', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('No', 'fluent-cart-elementor-blocks'),
+                'return_value' => 'yes',
+                'default'      => '',
             ]
         );
 
