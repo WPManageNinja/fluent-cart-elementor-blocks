@@ -550,16 +550,6 @@ class ProductReviewListWidget extends Widget_Base
         );
 
         $this->add_control(
-            'star_color',
-            [
-                'label'     => esc_html__('Star Color', 'fluent-cart-elementor-blocks'),
-                'type'      => Controls_Manager::COLOR,
-                'default'   => self::DEFAULT_STAR_COLOR,
-                'separator' => 'before',
-            ]
-        );
-
-        $this->add_control(
             'standard_fields_heading',
             [
                 'label'     => esc_html__('Show in each review', 'fluent-cart-elementor-blocks'),
@@ -697,7 +687,7 @@ class ProductReviewListWidget extends Widget_Base
 
         // Style — every section for the list, shared with the all-in-one
         // widget so the two cannot drift.
-        ReviewStyleControls::registerReviewStyleControls($this);
+        ReviewStyleControls::registerReviewStyleControls($this, true, self::DEFAULT_STAR_COLOR);
     }
 
     /**

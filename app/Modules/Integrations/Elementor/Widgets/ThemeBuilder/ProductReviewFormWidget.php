@@ -330,15 +330,6 @@ class ProductReviewFormWidget extends Widget_Base
             ]
         );
 
-        $this->add_control(
-            'star_color',
-            [
-                'label'   => esc_html__('Star Color', 'fluent-cart-elementor-blocks'),
-                'type'    => Controls_Manager::COLOR,
-                'default' => self::DEFAULT_STAR_COLOR,
-            ]
-        );
-
         $this->end_controls_section();
 
         $this->start_controls_section(
@@ -346,6 +337,15 @@ class ProductReviewFormWidget extends Widget_Base
             [
                 'label' => esc_html__('Form', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
+            ]
+        );
+
+        $this->add_control(
+            'star_color',
+            [
+                'label'   => esc_html__('Star Color', 'fluent-cart-elementor-blocks'),
+                'type'    => Controls_Manager::COLOR,
+                'default' => self::DEFAULT_STAR_COLOR,
             ]
         );
 

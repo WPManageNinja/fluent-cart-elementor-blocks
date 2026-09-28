@@ -215,17 +215,6 @@ class ProductReviewSummaryWidget extends Widget_Base
 
         $this->registerProductSourceControls();
 
-        $this->add_control(
-            'star_color',
-            [
-                'label'       => esc_html__('Star Color', 'fluent-cart-elementor-blocks'),
-                'description' => esc_html__('Colours the stars in the summary. Matches the Star Color setting on the Gutenberg block.', 'fluent-cart-elementor-blocks'),
-                'type'        => Controls_Manager::COLOR,
-                'default'     => self::DEFAULT_STAR_COLOR,
-                'separator'   => 'before',
-            ]
-        );
-
         $this->end_controls_section();
 
         $this->start_controls_section(
@@ -233,6 +222,16 @@ class ProductReviewSummaryWidget extends Widget_Base
             [
                 'label' => esc_html__('Summary', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
+            ]
+        );
+
+        $this->add_control(
+            'star_color',
+            [
+                'label'       => esc_html__('Star Color', 'fluent-cart-elementor-blocks'),
+                'description' => esc_html__('Colours the stars in the summary. Matches the Star Color setting on the Gutenberg block.', 'fluent-cart-elementor-blocks'),
+                'type'        => Controls_Manager::COLOR,
+                'default'     => self::DEFAULT_STAR_COLOR,
             ]
         );
 
