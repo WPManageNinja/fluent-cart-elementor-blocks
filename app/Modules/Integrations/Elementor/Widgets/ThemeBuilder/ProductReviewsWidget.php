@@ -122,9 +122,13 @@ class ProductReviewsWidget extends Widget_Base
             ]
         );
 
-        $this->addReviewLayoutPresetControl();
-
+        // The product first. It is what the section is about, and the
+        // layout picker below draws the reviews of whichever one is named
+        // here - a picker that comes first is showing eleven arrangements of
+        // nothing in particular.
         $this->registerProductSourceControls();
+
+        $this->addReviewLayoutPresetControl();
 
         $this->add_control(
             'composition_note',
