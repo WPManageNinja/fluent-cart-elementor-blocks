@@ -445,6 +445,9 @@ trait ReviewWidgetTrait
             'grid'   => $pro
                 ? esc_html__('Grid', 'fluent-cart-elementor-blocks')
                 : esc_html__('Grid (Pro)', 'fluent-cart-elementor-blocks'),
+            'masonry' => $pro
+                ? esc_html__('Masonry', 'fluent-cart-elementor-blocks')
+                : esc_html__('Masonry (Pro)', 'fluent-cart-elementor-blocks'),
             'slider' => $pro
                 ? esc_html__('Slider', 'fluent-cart-elementor-blocks')
                 : esc_html__('Slider (Pro)', 'fluent-cart-elementor-blocks'),
@@ -469,7 +472,7 @@ trait ReviewWidgetTrait
             return '';
         }
 
-        return 'fct-control-pro-options fct-pro-option-grid fct-pro-option-slider';
+        return 'fct-control-pro-options fct-pro-option-grid fct-pro-option-masonry fct-pro-option-slider';
     }
 
     /**

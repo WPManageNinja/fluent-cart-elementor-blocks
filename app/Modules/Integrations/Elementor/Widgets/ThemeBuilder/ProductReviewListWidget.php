@@ -40,7 +40,7 @@ class ProductReviewListWidget extends Widget_Base
 {
     use ReviewWidgetTrait;
 
-    const VIEW_MODES = ['list', 'grid', 'slider'];
+    const VIEW_MODES = ['list', 'grid', 'masonry', 'slider'];
     const SORT_COLUMNS = ['created_at', 'rating'];
     const SORT_ORDERS = ['DESC', 'ASC'];
     const FALLBACK_SORT = 'created_at-DESC';
@@ -52,7 +52,7 @@ class ProductReviewListWidget extends Widget_Base
     const ARROW_POSITIONS = ['overlap', 'outside', 'bottom'];
     const AUTOPLAY_MODES = ['no', 'yes', 'hover'];
     const MIN_COLUMNS = 2;
-    const MAX_COLUMNS = 4;
+    const MAX_COLUMNS = 6;
     const DEFAULT_STAR_COLOR = '#f59e0b';
 
     /**
@@ -310,7 +310,7 @@ class ProductReviewListWidget extends Widget_Base
                 'max'       => self::MAX_COLUMNS,
                 'default'   => 2,
                 'condition' => [
-                    'view_mode' => ['grid', 'slider'],
+                    'view_mode' => ['grid', 'masonry', 'slider'],
                 ],
             ]
         );
@@ -592,7 +592,7 @@ class ProductReviewListWidget extends Widget_Base
             [
                 'label' => esc_html__('Pagination', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_CONTENT,
-                'condition' => ['view_mode' => ['list', 'grid']],
+                'condition' => ['view_mode' => ['list', 'grid', 'masonry']],
             ]
         );
 
@@ -626,7 +626,7 @@ class ProductReviewListWidget extends Widget_Base
                 ],
                 'condition' => [
                     'show_pagination' => 'yes',
-                    'view_mode'       => ['list', 'grid'],
+                    'view_mode'       => ['list', 'grid', 'masonry'],
                 ],
             ]
         );
@@ -640,7 +640,7 @@ class ProductReviewListWidget extends Widget_Base
                 'min'         => 0,
                 'max'         => 100,
                 'default'     => 0,
-                'condition'   => ['view_mode' => ['list', 'grid']],
+                'condition'   => ['view_mode' => ['list', 'grid', 'masonry']],
             ]
         );
 
@@ -666,7 +666,7 @@ class ProductReviewListWidget extends Widget_Base
                 ],
                 'condition' => [
                     'show_pagination' => 'yes',
-                    'view_mode'       => ['list', 'grid'],
+                    'view_mode'       => ['list', 'grid', 'masonry'],
                     // Alignment rides on the pager block's own attribute.
                     'row_layout'      => 'custom',
                 ],
@@ -681,7 +681,7 @@ class ProductReviewListWidget extends Widget_Base
                 'content_classes' => 'elementor-descriptor',
                 'condition'       => [
                     'row_layout' => 'standard',
-                    'view_mode'  => ['list', 'grid'],
+                    'view_mode'  => ['list', 'grid', 'masonry'],
                 ],
             ]
         );
