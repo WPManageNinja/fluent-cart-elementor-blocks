@@ -51,6 +51,9 @@ class ReviewLayoutPresetControl extends Base_Data_Control
             // halves of the rule - what a layout writes, and what survives
             // choosing another - are read from one list.
             'tuningKeys'  => [],
+            // What those settings hold untouched, so a value nobody chose is
+            // not mistaken for one somebody did.
+            'tuningDefaults' => [],
         ]);
     }
 

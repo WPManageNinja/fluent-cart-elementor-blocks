@@ -194,6 +194,7 @@ trait ReviewWidgetTrait
                 'layouts'     => static::reviewLayoutCards(),
                 'categories'  => static::reviewLayoutCategories(),
                 'tuningKeys'  => ReviewLayoutPresets::tuningControls(),
+                'tuningDefaults' => static::reviewTuningDefaults(),
             ]
         );
 
@@ -279,6 +280,42 @@ trait ReviewWidgetTrait
         }
 
         return $settings;
+    }
+
+    /**
+     * What each tuning control holds when nobody has touched it.
+     *
+     * The picker needs these to tell a value someone chose from one that has
+     * simply always been there. Leaving a layout, the layout's own tuning
+     * answers that question; leaving Custom there is no layout to ask, and
+     * without these every untouched default would travel to the next layout
+     * as though it had been asked for - a merchant picking Photo Strip would
+     * get numbered pages because the control had always said numbered.
+     *
+     * The block editor asks a block for its registered default at exactly
+     * this point, in tunedAttributes(). Elementor cannot be asked the same
+     * way here, the control being registered before the ones it names, so
+     * the list is written out - and reviewTuningDefaultsMatchControls() in
+     * the test below keeps it honest.
+     *
+     * @return array<string, mixed>
+     */
+    protected static function reviewTuningDefaults(): array
+    {
+        return [
+            'grid_columns'           => 2,
+            'per_page'               => 0,
+            'pagination_type'        => 'numbers',
+            'default_sort'           => ProductReviewListWidget::FALLBACK_SORT,
+            'slider_autoplay'        => 'no',
+            'slider_autoplay_delay'  => 3000,
+            'slider_arrows'          => 'yes',
+            'slider_arrows_size'     => 'md',
+            'slider_arrows_position' => 'overlap',
+            'slider_infinite'        => '',
+            'slider_pagination'      => 'yes',
+            'slider_pagination_type' => 'bullets',
+        ];
     }
 
     /**

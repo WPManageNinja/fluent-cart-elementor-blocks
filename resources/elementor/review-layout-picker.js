@@ -151,7 +151,16 @@
                 }
 
                 var leaving = this.findLayout(this.layoutInForce());
-                var leavingTuning = (leaving && leaving.tuning) || {};
+
+                // The layout being left answers "was this chosen or has it
+                // always said that". Leaving Custom there is no layout to
+                // ask, so the controls' own defaults answer instead - which
+                // is the block editor falling back to a block's registered
+                // default when no preset matches.
+                var leavingTuning = (leaving && !_.isEmpty(leaving.tuning))
+                    ? leaving.tuning
+                    : (this.model.get('tuningDefaults') || {});
+
                 var carried = {};
 
                 _.each(this.model.get('tuningKeys') || [], function (key) {
