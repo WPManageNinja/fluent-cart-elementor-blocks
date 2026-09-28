@@ -380,6 +380,7 @@ class ProductReviewsWidget extends Widget_Base
                 'default'   => 'list',
                 'options'   => $this->reviewViewModeOptions(),
                 'separator' => 'before',
+                'classes'   => $this->reviewViewModeProClasses(),
             ]
         );
 

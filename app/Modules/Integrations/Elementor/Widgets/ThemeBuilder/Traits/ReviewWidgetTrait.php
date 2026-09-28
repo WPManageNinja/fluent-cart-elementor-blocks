@@ -249,11 +249,32 @@ trait ReviewWidgetTrait
     }
 
     /**
-     * The warning under View Mode, shown only once a locked mode is picked.
+     * The classes that tell the panel guard which options Pro draws.
      *
-     * Conditional rather than standing: a line of small print that is always
-     * there is read once and then becomes furniture, while one that appears on
-     * the choice it concerns is read every time.
+     * The value rides in the class name because Elementor's control arguments
+     * offer no other way through: `classes` is the one string that reaches
+     * the rendered control. The guard reads the values back off it and
+     * disables those options, so a merchant cannot choose a view this site
+     * will not draw - and does not choose one, watch the panel fill with
+     * slider settings, and then read that none of it applies.
+     *
+     * Empty with Pro, which leaves every option as it was.
+     */
+    protected function reviewViewModeProClasses(): string
+    {
+        if (App::isProActive()) {
+            return '';
+        }
+
+        return 'fct-control-pro-options fct-pro-option-grid fct-pro-option-slider';
+    }
+
+    /**
+     * The warning under View Mode.
+     *
+     * It used to wait for a locked mode to be picked. Now that those options
+     * are disabled there is no such moment, so it stands with them - it is
+     * the only thing saying why two of the three cannot be chosen.
      */
     protected function addReviewViewModeProNotice(): void
     {
@@ -267,7 +288,6 @@ trait ReviewWidgetTrait
                 'type'            => \Elementor\Controls_Manager::RAW_HTML,
                 'raw'             => esc_html__('Grid and Slider need FluentCart Pro. Without it this list renders as a single column.', 'fluent-cart-elementor-blocks'),
                 'content_classes' => 'elementor-panel-alert elementor-panel-alert-warning',
-                'condition'       => ['view_mode' => ['grid', 'slider']],
             ]
         );
     }

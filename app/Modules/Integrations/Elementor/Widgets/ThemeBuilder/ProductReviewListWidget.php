@@ -295,6 +295,7 @@ class ProductReviewListWidget extends Widget_Base
                 'type'    => Controls_Manager::SELECT,
                 'default' => 'list',
                 'options' => $this->reviewViewModeOptions(),
+                'classes' => $this->reviewViewModeProClasses(),
             ]
         );
 
