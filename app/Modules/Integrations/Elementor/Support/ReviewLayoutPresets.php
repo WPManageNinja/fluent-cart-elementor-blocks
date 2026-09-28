@@ -47,10 +47,10 @@ class ReviewLayoutPresets
             // Every preset that draws a footer draws the store's reply in it:
             // LayoutPresets::row() puts the reply beside the votes in the one
             // footer group it builds, so there is no preset where this is off
-            // and a footer still appears. Stated rather than left to the
-            // widget, because a preset switches the layout controls off and
-            // Elementor blanks a control it has switched off -- so the widget
-            // answers no to every flag the preset does not answer for it.
+            // and a footer still appears. Stated here rather than left to the
+            // widget: a preset answers for every flag it draws, and a merchant
+            // who wants this one off says so on the control, which is laid
+            // over this.
             'showViewReply' => true,
             'showReviewerName' => (bool) Arr::get($item, 'show_reviewer_name', true),
             // Gutenberg's row template includes the verified badge unless a
@@ -187,19 +187,17 @@ class ReviewLayoutPresets
     }
 
     /**
-     * The values of the layout control that leave the widget's own settings in
-     * charge, so the panel can show those settings for exactly those values.
+     * The values of the layout control that draw nothing of their own, so the
+     * section is entirely what the widget's controls say.
      *
      * Custom is the obvious one. The rest are the Pro layouts on a site
-     * without Pro: exists() refuses them at render, so the widget falls back
-     * to its own controls -- and a panel that hid those controls merely
-     * because something was chosen left a merchant looking at a layout they
-     * had not configured, with no way to reach the settings that produced it.
+     * without Pro: exists() refuses them at render, so nothing of the layout
+     * reaches the page. The panel says so where a merchant would otherwise be
+     * looking at a layout they picked and cannot see.
      *
      * Derived from exists() rather than from a second reading of the Pro flag.
      * The panel and the renderer then cannot disagree about which layouts are
-     * real: whatever exists() refuses is, by construction, a value that shows
-     * the controls.
+     * real: whatever exists() refuses is, by construction, one of these.
      *
      * @return array<int, string>
      */

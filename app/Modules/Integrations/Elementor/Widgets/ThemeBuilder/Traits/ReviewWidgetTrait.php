@@ -168,10 +168,15 @@ trait ReviewWidgetTrait
      *
      * Choosing one builds the section from that layout's blocks — the same
      * blocks the block editor would build, so the two agree by construction
-     * rather than by being kept in step. The controls below it describe the
-     * arrangement a merchant builds by hand, so they show only for Custom;
-     * with a preset chosen they would be describing something they do not
-     * decide.
+     * rather than by being kept in step.
+     *
+     * The controls below stay where they are, whichever layout is chosen. A
+     * preset is where a section starts, not the whole of what it may be: it
+     * supplies the settings a merchant has not spoken about, and anything
+     * they do set is theirs and stays theirs. Hiding those controls behind
+     * Custom meant that picking a layout to start from cost the merchant
+     * every setting they had, and that the only way to change one thing
+     * about a layout was to abandon it.
      */
     protected function addReviewLayoutPresetControl(): void
     {
@@ -179,7 +184,7 @@ trait ReviewWidgetTrait
             'layout_preset',
             [
                 'label'       => esc_html__('Layout Preset', 'fluent-cart-elementor-blocks'),
-                'description' => esc_html__('Builds the section from a ready-made layout. Choose Custom to arrange it with the controls below.', 'fluent-cart-elementor-blocks'),
+                'description' => esc_html__('Builds the section from a ready-made layout. The controls below stay yours — anything you set there overrides the layout. Choose Custom to start from nothing.', 'fluent-cart-elementor-blocks'),
                 'type'        => \Elementor\Controls_Manager::SELECT,
                 'default'     => '',
                 'options'     => ReviewLayoutPresets::options(),
@@ -195,10 +200,9 @@ trait ReviewWidgetTrait
      * reason: standing small print becomes furniture.
      *
      * It says what happens now and what happens later, because both surprise
-     * people. Now, the layout is not applied and the controls below decide the
-     * section, which is why they stay visible for these values. After Pro is
-     * activated, the preset supplies defaults while explicitly saved settings
-     * remain in charge.
+     * people. Now, the layout is not applied at all and the section is
+     * whatever the controls below say. After Pro is activated, the layout
+     * supplies what those controls have not been told.
      */
     protected function addReviewLayoutPresetProNotice(): void
     {
@@ -222,7 +226,7 @@ trait ReviewWidgetTrait
             'layout_preset_pro_notice',
             [
                 'type'            => \Elementor\Controls_Manager::RAW_HTML,
-                'raw'             => esc_html__('This layout needs FluentCart Pro. Until then the controls below decide the section. After Pro is activated, the preset supplies its layout while your explicitly saved settings are preserved.', 'fluent-cart-elementor-blocks'),
+                'raw'             => esc_html__('This layout needs FluentCart Pro. Until then the section is whatever the controls below say. After Pro is activated, the layout supplies what you have not set yourself.', 'fluent-cart-elementor-blocks'),
                 'content_classes' => 'elementor-panel-alert elementor-panel-alert-warning',
                 'condition'       => ['layout_preset' => $locked],
             ]

@@ -142,10 +142,6 @@ class ProductReviewsWidget extends Widget_Base
             [
                 'label' => esc_html__('Rating Summary', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_CONTENT,
-                // A preset builds the section from its own blocks, so the
-                // controls that arrange it by hand have nothing to say
-                // while one is chosen.
-                'condition' => ['layout_preset' => ReviewLayoutPresets::inertPresets()],
             ]
         );
 
@@ -169,10 +165,6 @@ class ProductReviewsWidget extends Widget_Base
             [
                 'label' => esc_html__('Write a Review Button', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_CONTENT,
-                // A preset builds the section from its own blocks, so the
-                // controls that arrange it by hand have nothing to say
-                // while one is chosen.
-                'condition' => ['layout_preset' => ReviewLayoutPresets::inertPresets()],
             ]
         );
 
@@ -252,10 +244,6 @@ class ProductReviewsWidget extends Widget_Base
             [
                 'label' => esc_html__('Review List', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_CONTENT,
-                // A preset builds the section from its own blocks, so the
-                // controls that arrange it by hand have nothing to say
-                // while one is chosen.
-                'condition' => ['layout_preset' => ReviewLayoutPresets::inertPresets()],
             ]
         );
 
@@ -593,10 +581,6 @@ class ProductReviewsWidget extends Widget_Base
             [
                 'label' => esc_html__('Header', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_CONTENT,
-                // A preset builds the section from its own blocks, so the
-                // controls that arrange it by hand have nothing to say
-                // while one is chosen.
-                'condition' => ['layout_preset' => ReviewLayoutPresets::inertPresets()],
             ]
         );
 
@@ -641,7 +625,7 @@ class ProductReviewsWidget extends Widget_Base
             [
                 'label' => esc_html__('Pagination', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_CONTENT,
-                'condition' => ['view_mode' => ['list', 'grid'], 'layout_preset' => ReviewLayoutPresets::inertPresets()],
+                'condition' => ['view_mode' => ['list', 'grid']],
             ]
         );
 
@@ -834,10 +818,11 @@ class ProductReviewsWidget extends Widget_Base
     protected function explicitReviewOptions(array $settings): array
     {
         $raw = (array) $this->get_data('settings');
-        // Resolved over the raw values, not the display ones. A preset
-        // switches the layout controls off and Elementor blanks a control it
-        // has switched off, so $settings carries an empty string where the
-        // merchant saved a number -- and reading the value from there
+        // Resolved over the raw values, not the display ones. Elementor
+        // blanks a control it has switched off, and these controls were
+        // switched off by a chosen preset until they stopped being -- so a
+        // widget saved in those months carries an empty string where its
+        // merchant saved a number, and reading from the display settings
         // preserved the blank rather than the choice, turning a saved page
         // length of seven into nought, which is "ask the store" and not what
         // anyone set. $raw holds only what was actually saved, so laying it
