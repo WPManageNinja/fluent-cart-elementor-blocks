@@ -188,7 +188,7 @@ trait ReviewWidgetTrait
             'layout_preset',
             [
                 'label'       => esc_html__('Layout Preset', 'fluent-cart-elementor-blocks'),
-                'description' => esc_html__('Builds the section from a ready-made layout. The controls below stay yours — anything you set there overrides the layout. Choose Custom to start from nothing.', 'fluent-cart-elementor-blocks'),
+                'description' => esc_html__('Builds the section from these settings. Anything you have set is replaced.', 'fluent-cart-elementor-blocks'),
                 'type'        => ReviewLayoutPresetControl::TYPE,
                 'default'     => '',
                 'layouts'     => static::reviewLayoutCards(),
@@ -215,7 +215,7 @@ trait ReviewWidgetTrait
         $cards = [[
             'value'    => '',
             'label'    => esc_html__('Custom layout', 'fluent-cart-elementor-blocks'),
-            'help'     => esc_html__('No layout. The section is whatever the controls below say.', 'fluent-cart-elementor-blocks'),
+            'help'     => esc_html__('Custom layout. Choose a preset to replace it with a starter layout.', 'fluent-cart-elementor-blocks'),
             'category' => 'custom',
             'locked'   => false,
             // No drawing: the picker gives Custom a line of its own above the
