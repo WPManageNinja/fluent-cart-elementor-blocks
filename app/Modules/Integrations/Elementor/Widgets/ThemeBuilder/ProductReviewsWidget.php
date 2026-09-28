@@ -582,7 +582,18 @@ class ProductReviewsWidget extends Widget_Base
                 'label_on'     => esc_html__('Show', 'fluent-cart-elementor-blocks'),
                 'label_off'    => esc_html__('Hide', 'fluent-cart-elementor-blocks'),
                 'return_value' => 'yes',
-                'default'      => static::verifiedBadgeDefault(),
+                // Yes, not the store's setting. Every layout says yes here,
+                // for the reason core states where it builds them: a layout
+                // that read the store setting would make the two builders
+                // disagree about what Classic is. A widget defaulting to
+                // anything else would therefore read as Custom the moment it
+                // was inserted on a store with the badge switched off.
+                //
+                // The store still decides whether one is drawn:
+                // showVerifiedBadge() reads this and the store setting
+                // together, and a store that has turned the badge off draws
+                // none whatever this says.
+                'default'      => 'yes',
             ]
         );
 
