@@ -295,6 +295,16 @@ class ElementorIntegration
             true
         );
 
+        // Disables the controls a widget has marked as needing Pro. The
+        // stylesheet dims them; only this takes them out of the tab order.
+        Enqueue::script(
+            'fluent-cart-elementor-pro-feature-guard',
+            'elementor/pro-feature-guard.js',
+            ['elementor-editor'],
+            FLUENTCART_VERSION,
+            true
+        );
+
         \wp_localize_script('fluent-cart-elementor-editor', 'fluentCartElementor', [
             'restUrl' => \trailingslashit($restInfo['url']),
             'nonce' => $restInfo['nonce'],

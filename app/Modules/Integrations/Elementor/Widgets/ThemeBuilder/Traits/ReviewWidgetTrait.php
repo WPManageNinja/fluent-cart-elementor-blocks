@@ -303,6 +303,7 @@ trait ReviewWidgetTrait
                 'return_value' => 'yes',
                 'default'      => '',
                 'condition'    => ['media_full_width' => 'yes'],
+                'classes'      => $pro ? '' : 'fct-control-pro-only',
             ]
         );
 
@@ -321,6 +322,7 @@ trait ReviewWidgetTrait
                 // Backdrop already gives the attachment the whole card. Flush
                 // on top of it is a setting with nothing left to change.
                 'condition'    => ['media_full_width' => 'yes', 'media_backdrop!' => 'yes'],
+                'classes'      => $pro ? '' : 'fct-control-pro-only',
             ]
         );
 
@@ -328,8 +330,13 @@ trait ReviewWidgetTrait
     }
 
     /**
-     * The warning under them, on the same terms as the View Mode one: only
-     * once a locked style is actually chosen.
+     * The note under them.
+     *
+     * The View Mode notice waits for the locked choice to be made, because it
+     * can be. These cannot: the controls are shown switched off and left that
+     * way, so a merchant would otherwise be looking at two settings that do
+     * nothing, with nothing saying why. It appears with them rather than
+     * standing on every panel -- Full Width is what brings all three out.
      */
     protected function addReviewMediaStyleProNotice(): void
     {
@@ -337,29 +344,23 @@ trait ReviewWidgetTrait
             return;
         }
 
-        $notice = esc_html__('This needs FluentCart Pro. Without it the attachment stays inside the card at its own size.', 'fluent-cart-elementor-blocks');
-
         $this->add_control(
-            'media_backdrop_pro_notice',
+            'media_style_pro_notice',
             [
                 'type'            => \Elementor\Controls_Manager::RAW_HTML,
-                'raw'             => $notice,
+                'raw'             => esc_html__('These two need FluentCart Pro. Without it an attachment stays inside the card at its own size.', 'fluent-cart-elementor-blocks'),
                 'content_classes' => 'elementor-panel-alert elementor-panel-alert-warning',
-                'condition'       => ['media_backdrop' => 'yes'],
-            ]
-        );
-
-        $this->add_control(
-            'media_flush_pro_notice',
-            [
-                'type'            => \Elementor\Controls_Manager::RAW_HTML,
-                'raw'             => $notice,
-                'content_classes' => 'elementor-panel-alert elementor-panel-alert-warning',
-                'condition'       => ['media_flush' => 'yes', 'media_backdrop!' => 'yes'],
+                'condition'       => ['media_full_width' => 'yes'],
             ]
         );
     }
 
+    /**
+     * The panel's attachment choices in the shape the renderer reads.
+     *
+     * @param array $settings the widget's settings
+     * @param bool $fullWidth whether attachments span the whole review
+     */
     protected function reviewMediaOptions(array $settings, bool $fullWidth): array
     {
         return [

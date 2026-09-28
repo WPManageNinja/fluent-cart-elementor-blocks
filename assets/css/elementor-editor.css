@@ -23,3 +23,17 @@
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+
+/* A control Pro draws and this site cannot (see ReviewWidgetTrait's
+   addReviewMediaStyleControls). Shown, so the setting is discoverable and its
+   description can be read, but not settable: storing a style that cannot draw
+   would leave the widget one licence away from silently changing the card.
+   The label carries "(Pro)" and a note sits under the pair. */
+.elementor-control.fct-control-pro-only .elementor-control-input-wrapper {
+    opacity: 0.45;
+    pointer-events: none;
+}
+
+.elementor-control.fct-control-pro-only .elementor-control-title {
+    opacity: 0.7;
+}

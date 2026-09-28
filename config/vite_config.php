@@ -5,6 +5,12 @@
         'src' => 'resources/elementor/popup-integration.js',
         'isEntry' => true
     ],
+    'resources/elementor/pro-feature-guard.js' => [
+        'file' => 'pro-feature-guard.js',
+        'name' => 'pro-feature-guard',
+        'src' => 'resources/elementor/pro-feature-guard.js',
+        'isEntry' => true
+    ],
     'resources/elementor/product-carousel-elementor.js' => [
         'file' => 'product-carousel-elementor.js',
         'name' => 'product-carousel-elementor',
