@@ -6,6 +6,7 @@ use FluentCart\App\Services\ProductReviewService;
 use FluentCart\App\Services\Renderer\ProductReviewRenderer;
 use FluentCart\App\Services\Renderer\ReviewThreadMarkup;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Controls\ReviewLayoutPresetControl;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ThemeBuilder\ProductReviewListWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support\ReviewLayoutPresets;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support\ReviewLayoutThumbnails;
 use FluentCart\App\Services\Reviews\LayoutPresets;
