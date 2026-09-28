@@ -162,31 +162,6 @@ class ReviewLayoutPresets
     }
 
     /**
-     * The panel's dropdown.
-     *
-     * 'Custom' first and selected by default: a widget that has never had a
-     * preset applied has not chosen one, and naming a layout it did not build
-     * would be a claim about settings nobody set. Custom is also where the
-     * individual layout controls live — with a preset chosen they would be
-     * describing an arrangement they do not decide.
-     */
-    public static function options(): array
-    {
-        $pro = App::isProActive();
-        $options = ['' => esc_html__('Custom', 'fluent-cart-elementor-blocks')];
-
-        foreach (LayoutPresets::all() as $id => $preset) {
-            $label = (string) Arr::get($preset, 'label', $id);
-            $options[$id] = (Arr::get($preset, 'pro', false) && !$pro)
-                /* translators: %s - layout name */
-                ? sprintf(esc_html__('%s (Pro)', 'fluent-cart-elementor-blocks'), $label)
-                : $label;
-        }
-
-        return $options;
-    }
-
-    /**
      * The settings the six tuning controls hold.
      *
      * The block editor keeps the same list and keeps it for the same reason:

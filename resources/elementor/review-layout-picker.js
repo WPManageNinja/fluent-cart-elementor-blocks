@@ -120,14 +120,55 @@
                     return;
                 }
 
+                var settings = _.extend({}, layout.settings, layout.tuning, this.tuningToCarry());
+
                 this.applying = true;
 
                 window.$e.run('document/elements/settings', {
                     container: container,
-                    settings: _.clone(layout.settings),
+                    settings: settings,
                 });
 
                 this.applying = false;
+            },
+
+            /**
+             * The tuning that belongs to the merchant rather than to the
+             * layout they are leaving.
+             *
+             * A value still equal to the outgoing layout's is that layout's
+             * opinion and stays behind; anything else was set by hand and
+             * comes along. Leaving no layout - Custom - means every tuning
+             * value was set by hand, so all of it comes along.
+             *
+             * The block editor decides this the same way, in tunedAttributes().
+             */
+            tuningToCarry: function () {
+                var settings = this.container && this.container.settings;
+
+                if (!settings) {
+                    return {};
+                }
+
+                var leaving = this.findLayout(this.layoutInForce());
+                var leavingTuning = (leaving && leaving.tuning) || {};
+                var carried = {};
+
+                _.each(this.model.get('tuningKeys') || [], function (key) {
+                    var has = settings.get(key);
+
+                    if (typeof has === 'undefined') {
+                        return;
+                    }
+
+                    if (_.has(leavingTuning, key) && String(has) === String(leavingTuning[key])) {
+                        return;
+                    }
+
+                    carried[key] = has;
+                });
+
+                return carried;
             },
 
             findLayout: function (value) {

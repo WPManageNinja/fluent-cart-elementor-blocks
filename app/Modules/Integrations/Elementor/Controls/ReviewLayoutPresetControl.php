@@ -46,6 +46,11 @@ class ReviewLayoutPresetControl extends Base_Data_Control
             // declaration core builds the layouts themselves from.
             'layouts'     => [],
             'categories'  => [],
+            // Which settings travel with the merchant rather than with the
+            // layout. Named here rather than known by the view, so the two
+            // halves of the rule - what a layout writes, and what survives
+            // choosing another - are read from one list.
+            'tuningKeys'  => [],
         ]);
     }
 
@@ -73,7 +78,7 @@ class ReviewLayoutPresetControl extends Base_Data_Control
             <div class="fct-el-preset-tabs">
                 <# _.each( data.categories, function( category ) { #>
                 <button type="button" class="fct-el-preset-tab" data-category="{{ category.value }}">
-                    {{{ category.label }}}
+                    {{ category.label }}
                 </button>
                 <# } ); #>
             </div>
@@ -99,7 +104,7 @@ class ReviewLayoutPresetControl extends Base_Data_Control
                        value="">
                 <label class="fct-el-preset-custom" for="fct-el-preset-{{ data._cid }}-custom">
                     <span class="fct-el-preset-custom-mark" aria-hidden="true">&#10003;</span>
-                    {{{ custom.label }}}
+                    {{ custom.label }}
                 </label>
             </div>
             <# } #>
@@ -118,7 +123,7 @@ class ReviewLayoutPresetControl extends Base_Data_Control
                            for="fct-el-preset-{{ data._cid }}-{{ layout.value }}"
                            title="{{ layout.help }}">
                         <span class="fct-el-preset-thumb">{{{ layout.thumb }}}</span>
-                        <span class="fct-el-preset-name">{{{ layout.label }}}</span>
+                        <span class="fct-el-preset-name">{{ layout.label }}</span>
                         <# if ( layout.locked ) { #>
                         <span class="fct-el-preset-pro"><?php echo esc_html__('Pro', 'fluent-cart-elementor-blocks'); ?></span>
                         <# } #>

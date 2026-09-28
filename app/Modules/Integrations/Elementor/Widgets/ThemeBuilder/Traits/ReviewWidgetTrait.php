@@ -193,6 +193,7 @@ trait ReviewWidgetTrait
                 'default'     => '',
                 'layouts'     => static::reviewLayoutCards(),
                 'categories'  => static::reviewLayoutCategories(),
+                'tuningKeys'  => ReviewLayoutPresets::tuningControls(),
             ]
         );
 
@@ -224,6 +225,7 @@ trait ReviewWidgetTrait
             // Nothing to write and nothing to match: Custom is what the
             // picker says when no layout's settings are the ones in force.
             'settings' => [],
+            'tuning'   => [],
         ]];
 
         foreach (LayoutPresets::all() as $id => $preset) {
@@ -243,6 +245,14 @@ trait ReviewWidgetTrait
                 // means. Tuning is left out of it on purpose: it travels with
                 // the merchant, not with the layout.
                 'settings' => static::layoutIdentitySettings($id),
+                // What this layout would tune to, kept apart from what it is.
+                // Choosing a layout applies these too - but only where the
+                // merchant had left the outgoing layout's tuning alone. The
+                // block editor draws the same distinction in tunedAttributes():
+                // a value that still matches the layout being left is that
+                // layout's opinion, not the merchant's, and has no claim on
+                // the next one.
+                'tuning'   => static::layoutTuningSettings($id),
             ];
         }
 
@@ -269,6 +279,26 @@ trait ReviewWidgetTrait
         }
 
         return $settings;
+    }
+
+    /**
+     * The tuning settings a layout would set, on their own.
+     *
+     * @param string $preset
+     * @return array<string, mixed>
+     */
+    protected static function layoutTuningSettings(string $preset): array
+    {
+        $settings = ReviewLayoutPresets::controlSettings($preset);
+        $tuning = [];
+
+        foreach (ReviewLayoutPresets::tuningControls() as $key) {
+            if (array_key_exists($key, $settings)) {
+                $tuning[$key] = $settings[$key];
+            }
+        }
+
+        return $tuning;
     }
 
     /**
