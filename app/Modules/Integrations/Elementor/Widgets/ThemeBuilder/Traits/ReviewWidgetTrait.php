@@ -218,7 +218,9 @@ trait ReviewWidgetTrait
             'help'     => esc_html__('No layout. The section is whatever the controls below say.', 'fluent-cart-elementor-blocks'),
             'category' => 'custom',
             'locked'   => false,
-            'thumb'    => ReviewLayoutThumbnails::svg(''),
+            // No drawing: the picker gives Custom a line of its own above the
+            // grid rather than a card, there being no shape to draw.
+            'thumb'    => '',
         ]];
 
         foreach (LayoutPresets::all() as $id => $preset) {

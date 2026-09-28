@@ -50,7 +50,12 @@
              * which is the one thing the base view cannot do for us.
              */
             applySavedValue: function () {
-                var value = this.getControlValue();
+                // Empty is a real value here - it is Custom - so an unset
+                // control and a control set to Custom must land in the same
+                // place. Without the coercion the selector below goes looking
+                // for [value="undefined"] and checks nothing at all, leaving
+                // the picker showing no choice when the answer is Custom.
+                var value = this.getControlValue() || '';
 
                 this.ui.inputs.prop('checked', false);
                 this.ui.inputs.filter('[value="' + value + '"]').prop('checked', true);
@@ -66,6 +71,8 @@
 
                 var layouts = this.model.get('layouts') || [];
                 var help = '';
+
+                value = value || '';
 
                 for (var i = 0; i < layouts.length; i++) {
                     if (layouts[i].value === value) {
@@ -92,6 +99,13 @@
 
                 this.ui.items.each(function () {
                     var item = $(this);
+
+                    // Custom is not in any category and is not filtered out of
+                    // one: it is the way back out of a layout, and hiding it
+                    // behind the All tab would hide the exit.
+                    if (item.hasClass('fct-el-preset-item--custom')) {
+                        return;
+                    }
 
                     item.toggle(category === 'all' || item.data('category') === category);
                 });

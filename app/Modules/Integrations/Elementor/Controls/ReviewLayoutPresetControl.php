@@ -67,8 +67,34 @@ class ReviewLayoutPresetControl extends Base_Data_Control
             </div>
             <# } #>
 
+            <#
+            // Custom is not one of the layouts and does not sit among them.
+            // It is the absence of one, which is why the block editor draws it
+            // as a line across the top rather than as a twelfth card - there
+            // is no shape to show a picture of. It stays a radio, because
+            // here, unlike there, it is a value a merchant chooses: the way
+            // back out of a layout.
+            var custom = _.find( data.layouts, function( layout ) {
+                return ! layout.value;
+            } );
+            #>
+            <# if ( custom ) { #>
+            <div class="fct-el-preset-item fct-el-preset-item--custom" data-category="all">
+                <input type="radio"
+                       class="fct-el-preset-input"
+                       id="fct-el-preset-{{ data._cid }}-custom"
+                       name="fct-el-preset-{{ data._cid }}"
+                       value="">
+                <label class="fct-el-preset-custom" for="fct-el-preset-{{ data._cid }}-custom">
+                    <span class="fct-el-preset-custom-mark" aria-hidden="true">&#10003;</span>
+                    {{{ custom.label }}}
+                </label>
+            </div>
+            <# } #>
+
             <div class="fct-el-preset-grid">
                 <# _.each( data.layouts, function( layout ) { #>
+                <# if ( ! layout.value ) { return; } #>
                 <div class="fct-el-preset-item" data-category="{{ layout.category }}">
                     <input type="radio"
                            class="fct-el-preset-input"

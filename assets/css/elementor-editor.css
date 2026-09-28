@@ -162,3 +162,44 @@
     line-height: 1.5;
     margin-top: 8px;
 }
+
+/* Custom: a line across the top, not a twelfth card. It is the absence of a
+   layout, so there is no shape to draw — the block editor's picker says the
+   same thing the same way. */
+.fct-el-preset-item--custom {
+    margin-bottom: 8px;
+}
+
+.fct-el-preset-custom {
+    background: #fbfbfc;
+    border: 1px solid #e6e9ec;
+    border-radius: 4px;
+    color: #a4afb7;
+    cursor: pointer;
+    display: block;
+    font-size: 12px;
+    padding: 10px 12px;
+}
+
+.fct-el-preset-custom:hover {
+    border-color: #c2cbd2;
+}
+
+.fct-el-preset-custom-mark {
+    color: transparent;
+    margin-right: 6px;
+}
+
+.fct-el-preset-field input.fct-el-preset-input:checked + .fct-el-preset-custom {
+    border-color: #495157;
+    color: #495157;
+}
+
+.fct-el-preset-field input.fct-el-preset-input:checked + .fct-el-preset-custom .fct-el-preset-custom-mark {
+    color: #3b5bdb;
+}
+
+.fct-el-preset-field input.fct-el-preset-input:focus-visible + .fct-el-preset-custom {
+    outline: 2px solid #3b5bdb;
+    outline-offset: 1px;
+}
