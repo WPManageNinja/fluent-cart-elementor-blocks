@@ -90,27 +90,29 @@ class ReviewLayoutPresetControl extends Base_Data_Control
             <# } #>
 
             <#
-            // Custom is not one of the layouts and does not sit among them.
-            // It is the absence of one, which is why the block editor draws it
-            // as a line across the top rather than as a twelfth card - there
-            // is no shape to show a picture of. It stays a radio, because
-            // here, unlike there, it is a value a merchant chooses: the way
-            // back out of a layout.
+            // Custom is not one of the layouts and is not chosen from among
+            // them. It is what the picker reports when the settings match no
+            // layout, the way presetForBlocks() reports it when the blocks
+            // match no template - a status, not a choice, and so a line of
+            // text rather than a radio.
+            //
+            // It was a radio, and could not be. Choosing it wrote an empty
+            // layout name and nothing else, and the name is not what anything
+            // reads: the settings still matched the layout just left, so the
+            // tick sprang back to it and its stylesheet stayed on the page.
+            // There is nothing for such a radio to write. A merchant leaves a
+            // layout by changing a setting, which is what makes this line
+            // appear.
             var custom = _.find( data.layouts, function( layout ) {
                 return ! layout.value;
             } );
             #>
             <# if ( custom ) { #>
             <div class="fct-el-preset-item fct-el-preset-item--custom" data-category="all">
-                <input type="radio"
-                       class="fct-el-preset-input"
-                       id="fct-el-preset-{{ data._cid }}-custom"
-                       name="fct-el-preset-{{ data._cid }}"
-                       value="">
-                <label class="fct-el-preset-custom" for="fct-el-preset-{{ data._cid }}-custom">
+                <div class="fct-el-preset-custom" aria-live="polite">
                     <span class="fct-el-preset-custom-mark" aria-hidden="true">&#10003;</span>
                     {{ custom.label }}
-                </label>
+                </div>
             </div>
             <# } #>
 

@@ -30,6 +30,7 @@
                 var ui = ControlBaseDataView.prototype.ui.apply(this, arguments);
 
                 ui.inputs = '.fct-el-preset-input';
+                ui.custom = '.fct-el-preset-custom';
                 ui.tabs = '.fct-el-preset-tab';
                 ui.items = '.fct-el-preset-item';
                 ui.help = '.fct-el-preset-help';
@@ -58,6 +59,12 @@
 
                 this.ui.inputs.prop('checked', false);
                 this.ui.inputs.filter('[value="' + value + '"]').prop('checked', true);
+
+                // No layout matches, so no card is ticked and the line above
+                // them is what says so.
+                if (this.ui.custom && this.ui.custom.length) {
+                    this.ui.custom.toggleClass('is-current', value === '');
+                }
 
                 this.showHelp(value);
             },
@@ -94,6 +101,10 @@
 
             /**
              * Choosing a layout writes it onto the widget.
+             *
+             * Only a layout can be chosen. Custom is a status line, not a
+             * radio: there is nothing for it to write, the settings being the
+             * only thing anything reads.
              *
              * The block editor builds the row out of the layout's blocks and
              * then forgets the layout; nothing reads its name when the page
