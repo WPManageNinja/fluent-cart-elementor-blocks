@@ -221,6 +221,9 @@ trait ReviewWidgetTrait
             // No drawing: the picker gives Custom a line of its own above the
             // grid rather than a card, there being no shape to draw.
             'thumb'    => '',
+            // Nothing to write and nothing to match: Custom is what the
+            // picker says when no layout's settings are the ones in force.
+            'settings' => [],
         ]];
 
         foreach (LayoutPresets::all() as $id => $preset) {
@@ -233,10 +236,39 @@ trait ReviewWidgetTrait
                 'category' => (string) Arr::get($preset, 'category', 'list'),
                 'locked'   => !ReviewLayoutPresets::exists($id),
                 'thumb'    => ReviewLayoutThumbnails::svg($id),
+                // What this layout is, as settings. The picker writes these
+                // when it is chosen and reads them back to work out which
+                // layout the widget is currently in - the same set doing both
+                // jobs, so the two can never disagree about what Card Grid
+                // means. Tuning is left out of it on purpose: it travels with
+                // the merchant, not with the layout.
+                'settings' => static::layoutIdentitySettings($id),
             ];
         }
 
         return $cards;
+    }
+
+    /**
+     * A layout's settings, without the tuning ones.
+     *
+     * The block editor draws the same line: its matcher ignores six
+     * attributes, and applying a layout carries those six across rather than
+     * resetting them. So a merchant who sets four to a row still has Card
+     * Grid, and still has four to a row after switching to Masonry.
+     *
+     * @param string $preset
+     * @return array<string, mixed>
+     */
+    protected static function layoutIdentitySettings(string $preset): array
+    {
+        $settings = ReviewLayoutPresets::controlSettings($preset);
+
+        foreach (ReviewLayoutPresets::tuningControls() as $tuning) {
+            unset($settings[$tuning]);
+        }
+
+        return $settings;
     }
 
     /**

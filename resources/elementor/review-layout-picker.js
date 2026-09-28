@@ -50,12 +50,11 @@
              * which is the one thing the base view cannot do for us.
              */
             applySavedValue: function () {
-                // Empty is a real value here - it is Custom - so an unset
-                // control and a control set to Custom must land in the same
-                // place. Without the coercion the selector below goes looking
-                // for [value="undefined"] and checks nothing at all, leaving
-                // the picker showing no choice when the answer is Custom.
-                var value = this.getControlValue() || '';
+                // What the settings are, not what the control remembers. Empty
+                // is a real answer here - it is Custom - so an unset control
+                // and a control set to Custom land in the same place, and the
+                // selector below never goes looking for [value="undefined"].
+                var value = this.layoutInForce();
 
                 this.ui.inputs.prop('checked', false);
                 this.ui.inputs.filter('[value="' + value + '"]').prop('checked', true);
@@ -87,7 +86,88 @@
             onBaseInputChange: function (event) {
                 ControlBaseDataView.prototype.onBaseInputChange.apply(this, arguments);
 
-                this.showHelp($(event.currentTarget).val());
+                var value = $(event.currentTarget).val() || '';
+
+                this.applyLayout(value);
+                this.showHelp(value);
+            },
+
+            /**
+             * Choosing a layout writes it onto the widget.
+             *
+             * The block editor builds the row out of the layout's blocks and
+             * then forgets the layout; nothing reads its name when the page
+             * renders. This is the same move in a builder with no blocks: the
+             * layout's settings become the widget's settings, and the section
+             * is drawn from those alone.
+             *
+             * Tuning is not written. How many to a row, how many to a page,
+             * which arrows and which order are the merchant's, and they
+             * follow them from one layout to the next - which is also why
+             * changing one leaves the layout's name alone, while changing
+             * anything else makes this a Custom layout.
+             */
+            applyLayout: function (value) {
+                var layout = this.findLayout(value);
+
+                if (!layout || !layout.settings || _.isEmpty(layout.settings)) {
+                    return;
+                }
+
+                var container = this.container;
+
+                if (!container || !window.$e) {
+                    return;
+                }
+
+                this.applying = true;
+
+                window.$e.run('document/elements/settings', {
+                    container: container,
+                    settings: _.clone(layout.settings),
+                });
+
+                this.applying = false;
+            },
+
+            findLayout: function (value) {
+                return _.find(this.model.get('layouts') || [], function (layout) {
+                    return (layout.value || '') === (value || '');
+                });
+            },
+
+            /**
+             * Which layout the widget's settings actually are.
+             *
+             * The saved name is a record of what was last applied, not a
+             * claim about what the settings say now - change the view mode
+             * and it is no longer Card Grid, whatever the name remembers.
+             * The block editor reads the blocks back for the same reason and
+             * answers `custom` when none of its layouts match them.
+             */
+            layoutInForce: function () {
+                var settings = this.container && this.container.settings;
+
+                if (!settings) {
+                    return this.getControlValue() || '';
+                }
+
+                var match = _.find(this.model.get('layouts') || [], function (layout) {
+                    if (!layout.value || _.isEmpty(layout.settings)) {
+                        return false;
+                    }
+
+                    return _.every(layout.settings, function (want, key) {
+                        var has = settings.get(key);
+
+                        // Elementor stores an untouched switcher as undefined
+                        // and an off one as '', and the two mean the same
+                        // thing to a renderer that reads them as booleans.
+                        return String(typeof has === 'undefined' ? '' : has) === String(want);
+                    });
+                });
+
+                return match ? match.value : '';
             },
 
             onTabClick: function (event) {
@@ -114,6 +194,26 @@
             onReady: function () {
                 // The first tab is "all", so the grid starts whole.
                 this.ui.tabs.first().addClass('is-active');
+
+                // Any other control changing can change the answer to "which
+                // layout is this". Switch the view mode and the section stops
+                // being Card Grid at that moment, not when the panel is next
+                // opened, so the picker listens to the whole widget rather
+                // than only to itself.
+                if (this.container && this.container.settings) {
+                    this.listenTo(this.container.settings, 'change', this.onWidgetSettingsChange);
+                }
+            },
+
+            onWidgetSettingsChange: function (model) {
+                // Not while this control is the one doing the writing: it has
+                // already checked the card the merchant clicked, and applying
+                // a layout changes a dozen settings one after another.
+                if (this.applying || (model && model.changed && 'layout_preset' in model.changed)) {
+                    return;
+                }
+
+                this.applySavedValue();
             },
         });
 
