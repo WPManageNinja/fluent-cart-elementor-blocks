@@ -185,6 +185,19 @@ trait ReviewWidgetTrait
      */
     protected function addReviewLayoutPresetControl(): void
     {
+        // A rule and a word before the grid. The product above it and the
+        // layout below it are two different questions - which reviews, and
+        // what shape - and eleven cards arriving straight under a product
+        // picker read as part of the same one.
+        $this->add_control(
+            'layout_heading',
+            [
+                'label'     => esc_html__('Layout', 'fluent-cart-elementor-blocks'),
+                'type'      => \Elementor\Controls_Manager::HEADING,
+                'separator' => 'before',
+            ]
+        );
+
         $this->add_control(
             'layout_preset',
             [

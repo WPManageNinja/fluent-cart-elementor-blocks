@@ -40,7 +40,9 @@ class ReviewLayoutPresetControl extends Base_Data_Control
     {
         return array_merge(parent::get_default_settings(), [
             'label_block' => true,
-            'separator'   => 'before',
+            // The Layout heading above draws the rule; a second one here
+            // would put two lines between the product and the cards.
+            'separator'   => 'none',
             // [{value, label, help, category, pro}], and 'categories' as
             // [{value, label}]. Both are built by the widget, from the same
             // declaration core builds the layouts themselves from.
