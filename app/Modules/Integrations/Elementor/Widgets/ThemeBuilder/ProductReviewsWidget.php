@@ -333,7 +333,7 @@ class ProductReviewsWidget extends Widget_Base
                 'min'       => self::MIN_COLUMNS,
                 'max'       => self::MAX_COLUMNS,
                 'default'   => 2,
-                'condition' => ['view_mode' => ['grid', 'slider']],
+                'condition' => ['view_mode' => ['grid', 'masonry', 'slider']],
             ]
         );
 
@@ -845,7 +845,7 @@ class ProductReviewsWidget extends Widget_Base
             [
                 'label' => esc_html__('Pagination', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_CONTENT,
-                'condition' => ['view_mode' => ['list', 'grid']],
+                'condition' => ['view_mode' => ['list', 'grid', 'masonry']],
             ]
         );
 
