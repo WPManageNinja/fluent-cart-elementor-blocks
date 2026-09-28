@@ -87,14 +87,18 @@ Yes. Required CSS and JavaScript assets are enqueued automatically when widgets 
 
 = 1.1.0 =
 - Adds six Product Review widgets: Product Reviews, Product Review List, Review Summary, Review Form, Write a Review Button and Product Rating.
+- Adds eleven ready-made review layouts, chosen from a grid of cards rather than a list of names: Classic, Minimal List, Compact, Card Grid, Masonry, Summary on Top, Photo Grid, Photo Wall, Photo Strip, Carousel and Testimonials.
+- Adds list, grid, masonry and slider views for the review list.
 - Adds field-by-field control of the review row: reorder or remove any field.
-- Adds list, grid and slider views for the review list.
+- Adds control over what a review card shows and in what order: avatar, title, text, attachments, variation, footer and meta line, and whether the attachments, stars or verified badge lead.
+- Adds placement for the rating summary: beside the reviews, across the top, or the Write a Review button alone.
 - Adds star filter chips, sorting and pagination.
-- Adds reviews to the bundled Single Product template.
 - Adds attachment settings: how many to show, tile width and height, and full width.
+- Adds two ways for a full-width attachment to take over a card: as the card's background, or flush to its top edge.
 - Adds a + counter for the attachments a limit leaves out, on the last one or beside them.
 - Adds slider pagination for the review list: dots, fraction, progress bar or segmented.
 - Adds arrow placement for the review slider: on, beside or below the reviews.
+- Adds Star Color, Filled Star Color and Empty Star Color to the Style tab.
 - Adds Rating to the shop card elements, and to the bundled Shop template.
 - Adds reviews to the bundled Single Product template.
 - Fixes Checkout full-width columns stack on mobile.
