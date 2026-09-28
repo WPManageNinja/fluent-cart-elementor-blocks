@@ -214,7 +214,7 @@ trait ReviewWidgetTrait
     {
         $cards = [[
             'value'    => '',
-            'label'    => esc_html__('Custom', 'fluent-cart-elementor-blocks'),
+            'label'    => esc_html__('Custom layout', 'fluent-cart-elementor-blocks'),
             'help'     => esc_html__('No layout. The section is whatever the controls below say.', 'fluent-cart-elementor-blocks'),
             'category' => 'custom',
             'locked'   => false,

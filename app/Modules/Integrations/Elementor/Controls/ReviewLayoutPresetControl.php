@@ -57,6 +57,18 @@ class ReviewLayoutPresetControl extends Base_Data_Control
             <label class="elementor-control-title">{{{ data.label }}}</label>
             <# } #>
 
+            <#
+            // Elementor's own wrapper, not a div of this control's own.
+            // .elementor-control-field is a flex row, so a label and whatever
+            // follows it sit side by side - which is right for a label and a
+            // select, and wrong for a label and a grid of cards. label_block
+            // gives that row wrap and gives this wrapper the full width of
+            // the panel, but only this wrapper: it is named in Elementor's
+            // stylesheet. Anything else put here shrinks to its contents and
+            // the grid runs off the side of the panel.
+            #>
+            <div class="elementor-control-input-wrapper">
+
             <# if ( data.categories && data.categories.length > 1 ) { #>
             <div class="fct-el-preset-tabs">
                 <# _.each( data.categories, function( category ) { #>
@@ -118,6 +130,8 @@ class ReviewLayoutPresetControl extends Base_Data_Control
             <# if ( data.layouts && data.layouts.length ) { #>
             <div class="fct-el-preset-help" aria-live="polite"></div>
             <# } #>
+
+            </div>
         </div>
 
         <# if ( data.description ) { #>

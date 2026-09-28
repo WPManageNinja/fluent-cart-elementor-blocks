@@ -43,6 +43,17 @@
    inputs are hidden from sight but not from the accessibility tree or the
    tab order: the card is their label, so the browser keeps doing the
    choosing, the arrow keys and the focus. */
+/* The label goes on its own line above everything, the way the block editor
+   puts it. label_block wraps the row; this is what makes the title take the
+   whole of the first line rather than only as much as its text. */
+.fct-el-preset-field > .elementor-control-title {
+    width: 100%;
+}
+
+.fct-el-preset-field .elementor-control-input-wrapper {
+    width: 100%;
+}
+
 .fct-el-preset-field .fct-el-preset-tabs {
     display: flex;
     flex-wrap: wrap;
@@ -167,7 +178,9 @@
    layout, so there is no shape to draw — the block editor's picker says the
    same thing the same way. */
 .fct-el-preset-item--custom {
+    display: block;
     margin-bottom: 8px;
+    width: 100%;
 }
 
 .fct-el-preset-custom {
