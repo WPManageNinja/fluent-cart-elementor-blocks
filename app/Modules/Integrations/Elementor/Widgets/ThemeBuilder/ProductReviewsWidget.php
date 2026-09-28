@@ -647,6 +647,18 @@ class ProductReviewsWidget extends Widget_Base
         );
 
         $this->add_control(
+            'show_photos',
+            [
+                'label'        => esc_html__('Attachments', 'fluent-cart-elementor-blocks'),
+                'type'         => Controls_Manager::SWITCHER,
+                'label_on'     => esc_html__('Show', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('Hide', 'fluent-cart-elementor-blocks'),
+                'return_value' => 'yes',
+                'default'      => 'yes',
+            ]
+        );
+
+        $this->add_control(
             'show_variation',
             [
                 'label'        => esc_html__('Variation', 'fluent-cart-elementor-blocks'),
@@ -906,12 +918,16 @@ class ProductReviewsWidget extends Widget_Base
         (new ProductReviewRenderer($product->ID, $this->rendererOptions($settings)))->render();
         $content = ob_get_clean();
 
-        // The layout's own stylesheet still keys off this. It is the last
-        // layout applied rather than a claim about the settings, which is
-        // the same thing a class left on a block by a template is.
-        $preset = (string) ($settings['layout_preset'] ?? '');
+        // The layout's own stylesheet keys off this, so it has to say what
+        // the settings say rather than what was last chosen. Choose Summary
+        // on Top and then put the summary back beside the reviews and the
+        // class went on claiming summary-top, styling a layout that was no
+        // longer there - the panel called it Custom while the page did not.
+        //
+        // Asked of the settings, by the same rule the picker uses.
+        $preset = ReviewLayoutPresets::detect($settings);
 
-        if (ReviewLayoutPresets::exists($preset)) {
+        if ($preset !== '') {
             $content = '<div class="fct-reviews-layout-preset fct-reviews-layout-preset--'
                 . esc_attr(sanitize_html_class($preset)) . '">' . $content . '</div>';
         }
@@ -952,6 +968,7 @@ class ProductReviewsWidget extends Widget_Base
             'showTitle'         => $this->isOn($settings, 'show_title'),
             'showContent'       => $this->isOn($settings, 'show_content'),
             'showVariation'     => $this->isOn($settings, 'show_variation'),
+            'showPhotos'        => $this->isOn($settings, 'show_photos'),
             'showFooter'        => $this->isOn($settings, 'show_footer'),
             'showMeta'          => $this->isOn($settings, 'show_meta'),
             'photosFirst'       => $this->isOn($settings, 'photos_first', false),

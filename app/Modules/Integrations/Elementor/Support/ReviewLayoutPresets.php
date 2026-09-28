@@ -162,6 +162,48 @@ class ReviewLayoutPresets
     }
 
     /**
+     * Which layout a set of widget settings actually is, or '' for none.
+     *
+     * The same question the picker answers in the panel, answered the same
+     * way and from the same data, because two answers would be two layouts.
+     * Tuning is left out of it: four to a row is still Card Grid.
+     *
+     * @param array $settings
+     * @return string
+     */
+    public static function detect(array $settings): string
+    {
+        foreach (array_keys(LayoutPresets::all()) as $id) {
+            $id = (string) $id;
+
+            if (!static::exists($id)) {
+                continue;
+            }
+
+            $want = static::controlSettings($id);
+
+            foreach (static::tuningControls() as $tuning) {
+                unset($want[$tuning]);
+            }
+
+            $matches = true;
+
+            foreach ($want as $key => $value) {
+                if ((string) (isset($settings[$key]) ? $settings[$key] : '') !== (string) $value) {
+                    $matches = false;
+                    break;
+                }
+            }
+
+            if ($matches) {
+                return $id;
+            }
+        }
+
+        return '';
+    }
+
+    /**
      * The settings the six tuning controls hold.
      *
      * The block editor keeps the same list and keeps it for the same reason:
@@ -254,6 +296,7 @@ class ReviewLayoutPresets
             'showTitle'         => 'show_title',
             'showContent'       => 'show_content',
             'showVariation'     => 'show_variation',
+            'showPhotos'        => 'show_photos',
             'showFooter'        => 'show_footer',
             'showMeta'          => 'show_meta',
             'photosFirst'       => 'photos_first',
@@ -304,6 +347,7 @@ class ReviewLayoutPresets
             'showVerifiedBadge' => true, 'showViewReply' => true,
             'showAvatar' => true, 'showTitle' => true, 'showContent' => true,
             'showVariation' => true, 'showFooter' => true, 'showMeta' => true,
+            'showPhotos' => true,
             'photosFirst' => false, 'ratingFirst' => false, 'badgeLast' => false,
             'itemClass' => '', 'viewMode' => 'list', 'hasMedia' => false,
             'mediaVisible' => 0, 'mediaFullWidth' => false,
