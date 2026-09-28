@@ -5,7 +5,11 @@ namespace FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\T
 use FluentCart\App\Services\ProductReviewService;
 use FluentCart\App\Services\Renderer\ProductReviewRenderer;
 use FluentCart\App\Services\Renderer\ReviewThreadMarkup;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Controls\ReviewLayoutPresetControl;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support\ReviewLayoutPresets;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support\ReviewLayoutThumbnails;
+use FluentCart\App\Services\Reviews\LayoutPresets;
+use FluentCart\Framework\Support\Arr;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support\ReviewSupport;
 use FluentCartElementorBlocks\App\Utils\Enqueuer\Enqueue;
 use FluentCart\App\App;
@@ -185,10 +189,10 @@ trait ReviewWidgetTrait
             [
                 'label'       => esc_html__('Layout Preset', 'fluent-cart-elementor-blocks'),
                 'description' => esc_html__('Builds the section from a ready-made layout. The controls below stay yours — anything you set there overrides the layout. Choose Custom to start from nothing.', 'fluent-cart-elementor-blocks'),
-                'type'        => \Elementor\Controls_Manager::SELECT,
+                'type'        => ReviewLayoutPresetControl::TYPE,
                 'default'     => '',
-                'options'     => ReviewLayoutPresets::options(),
-                'classes'     => static::reviewLayoutPresetProClasses(),
+                'layouts'     => static::reviewLayoutCards(),
+                'categories'  => static::reviewLayoutCategories(),
             ]
         );
 
@@ -196,30 +200,78 @@ trait ReviewWidgetTrait
     }
 
     /**
-     * The layouts this site cannot draw, named for the panel guard.
+     * One card per layout, in the shape the picker's template reads.
      *
-     * Same two marks the View Mode control carries, and for the same reason:
-     * a layout that can be chosen but not drawn is a choice that appears to
-     * do nothing. exists() decides which those are, so the panel and the
-     * renderer cannot come to different conclusions.
+     * Everything but the drawing comes from core's declaration, so a layout
+     * renamed or moved between free and Pro is right here without being
+     * touched. `locked` is exists() asking the same question the renderer
+     * asks, so a card that cannot be chosen is exactly a layout that would
+     * not have drawn.
      *
-     * Empty with Pro, which leaves every layout selectable.
+     * @return array<int, array<string, mixed>>
      */
-    protected static function reviewLayoutPresetProClasses(): string
+    protected static function reviewLayoutCards(): array
     {
-        $locked = static::lockedReviewPresets();
+        $cards = [[
+            'value'    => '',
+            'label'    => esc_html__('Custom', 'fluent-cart-elementor-blocks'),
+            'help'     => esc_html__('No layout. The section is whatever the controls below say.', 'fluent-cart-elementor-blocks'),
+            'category' => 'custom',
+            'locked'   => false,
+            'thumb'    => ReviewLayoutThumbnails::svg(''),
+        ]];
 
-        if (!$locked) {
-            return '';
+        foreach (LayoutPresets::all() as $id => $preset) {
+            $id = (string) $id;
+
+            $cards[] = [
+                'value'    => $id,
+                'label'    => (string) Arr::get($preset, 'label', $id),
+                'help'     => (string) Arr::get($preset, 'help', ''),
+                'category' => (string) Arr::get($preset, 'category', 'list'),
+                'locked'   => !ReviewLayoutPresets::exists($id),
+                'thumb'    => ReviewLayoutThumbnails::svg($id),
+            ];
         }
 
-        $classes = ['fct-control-pro-options'];
+        return $cards;
+    }
 
-        foreach ($locked as $preset) {
-            $classes[] = 'fct-pro-option-' . $preset;
+    /**
+     * The tabs above the grid: All first, then whichever categories the
+     * layouts actually use, so removing the last photo layout removes the
+     * Photo tab rather than leaving an empty one.
+     *
+     * @return array<int, array<string, string>>
+     */
+    protected static function reviewLayoutCategories(): array
+    {
+        $labels = [
+            'list'     => esc_html__('List', 'fluent-cart-elementor-blocks'),
+            'grid'     => esc_html__('Grid', 'fluent-cart-elementor-blocks'),
+            'carousel' => esc_html__('Carousel', 'fluent-cart-elementor-blocks'),
+            'photo'    => esc_html__('Photo', 'fluent-cart-elementor-blocks'),
+        ];
+
+        $categories = [[
+            'value' => 'all',
+            'label' => esc_html__('All layouts', 'fluent-cart-elementor-blocks'),
+        ]];
+
+        $seen = [];
+
+        foreach (LayoutPresets::all() as $preset) {
+            $category = (string) Arr::get($preset, 'category', 'list');
+
+            if (isset($seen[$category]) || !isset($labels[$category])) {
+                continue;
+            }
+
+            $seen[$category] = true;
+            $categories[] = ['value' => $category, 'label' => $labels[$category]];
         }
 
-        return implode(' ', $classes);
+        return $categories;
     }
 
     /**

@@ -9,6 +9,7 @@ use FluentCart\App\Services\Renderer\ProductCardRender;
 use FluentCart\Framework\Support\Arr;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Controls\ProductSelectControl;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Controls\ProductVariationSelectControl;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Controls\ReviewLayoutPresetControl;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Renderers\ElementorShopAppRenderer;
 use FluentCart\App\Modules\Templating\AssetLoader;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support\ReviewSupport;
@@ -164,6 +165,7 @@ class ElementorIntegration
     public function registerControls($controls_manager)
     {
         $controls_manager->register(new ProductVariationSelectControl());
+        $controls_manager->register(new ReviewLayoutPresetControl());
         $controls_manager->register(new ProductSelectControl());
     }
 
@@ -301,6 +303,14 @@ class ElementorIntegration
             'fluent-cart-elementor-pro-feature-guard',
             'elementor/pro-feature-guard.js',
             ['elementor-editor'],
+            FLUENTCART_VERSION,
+            true
+        );
+
+        Enqueue::script(
+            'fluent-cart-elementor-review-layout-picker',
+            'elementor/review-layout-picker.js',
+            ['elementor-editor', 'jquery'],
             FLUENTCART_VERSION,
             true
         );
