@@ -813,10 +813,18 @@ class ProductReviewsWidget extends Widget_Base
      * Return only review settings that were explicitly saved on the widget.
      *
      * Elementor's display settings include control defaults. Merging all of
-     * them after a preset would make every default override the preset. The
-     * raw element settings, however, contain only values the merchant saved,
-     * which lets a fallback layout keep its deliberate edits when Pro becomes
-     * available without turning untouched controls into overrides.
+     * them after a layout would make every default override it. The raw
+     * element settings do not: _elementor_data holds the keys a merchant
+     * touched and nothing else - a widget nobody has configured saves no
+     * settings at all - so a key being present is the whole of the question.
+     *
+     * It used to ask a second one: does the value differ from the control's
+     * default. That cannot tell "never touched" from "deliberately set to
+     * that value", and it got the wrong answer every time the two agreed.
+     * Ask for two columns where the control already shows two, or for the
+     * sorting a layout has already turned off, and the section was rendered
+     * as though nobody had asked. Presence is the signal; the value is only
+     * the answer.
      */
     protected function explicitReviewOptions(array $settings): array
     {
@@ -867,41 +875,9 @@ class ProductReviewsWidget extends Widget_Base
             'media_more'         => 'mediaMore',
         ];
 
-        $defaults = [
-            'show_summary'       => 'yes',
-            'show_filter'        => 'yes',
-            'show_sorting'       => 'yes',
-            'show_reviewer_name' => 'yes',
-            'show_review_date'   => 'yes',
-            'show_verified'      => static::verifiedBadgeDefault(),
-            'show_view_reply'    => 'yes',
-            'default_sort'       => ProductReviewListWidget::FALLBACK_SORT,
-            'per_page'           => 0,
-            'min_rating'         => 0,
-            'photos_only'        => '',
-            'content_max_words'  => 0,
-            'pagination_type'    => 'numbers',
-            'view_mode'          => 'list',
-            'grid_columns'       => 2,
-            'container'          => 'drawer',
-            'layout'             => 'inline',
-            'add_review_button_text'   => '',
-            'edit_review_button_text'  => '',
-            'login_review_button_text' => '',
-            'media_visible'      => 0,
-            'media_width'        => 0,
-            'media_height'       => 0,
-            'media_full_width'   => '',
-            'media_backdrop'     => '',
-            'media_flush'        => '',
-            'media_more'         => 'overlay',
-        ];
-
         $options = [];
         foreach ($fields as $rawKey => $optionKey) {
-            if (array_key_exists($rawKey, $raw)
-                && array_key_exists($optionKey, $resolved)
-                && (!array_key_exists($rawKey, $defaults) || (string) $raw[$rawKey] !== (string) $defaults[$rawKey])) {
+            if (array_key_exists($rawKey, $raw) && array_key_exists($optionKey, $resolved)) {
                 $options[$optionKey] = $resolved[$optionKey];
             }
         }
@@ -922,20 +898,8 @@ class ProductReviewsWidget extends Widget_Base
             'slider_pagination_type'=> 'paginationType',
         ];
 
-        $sliderDefaults = [
-            'slider_autoplay'        => 'no',
-            'slider_autoplay_delay'  => 3000,
-            'slider_arrows'          => 'yes',
-            'slider_arrows_size'     => 'md',
-            'slider_arrows_position' => 'overlap',
-            'slider_infinite'        => '',
-            'slider_pagination'      => 'yes',
-            'slider_pagination_type' => 'bullets',
-        ];
-
         foreach ($sliderFields as $rawKey => $optionKey) {
-            if (array_key_exists($rawKey, $raw)
-                && (string) $raw[$rawKey] !== (string) $sliderDefaults[$rawKey]) {
+            if (array_key_exists($rawKey, $raw)) {
                 $options['sliderSettings'][$optionKey] = $resolved['sliderSettings'][$optionKey];
             }
         }
