@@ -272,6 +272,94 @@ trait ReviewWidgetTrait
         );
     }
 
+    /**
+     * The two ways a full-width attachment can take over the card.
+     *
+     * Both belong under Full Width Attachments and neither means anything
+     * without it: a tile at its own size has no card edge to reach and nothing
+     * to sit behind. Backdrop and flush are alternatives rather than a pair,
+     * so flush stands down while backdrop is on -- the same shape the block
+     * editor's Attachments panel has, with the same words, so a merchant who
+     * has set this up in one builder recognises it in the other.
+     *
+     * Pro draws them. The gate is ReviewThreadMarkup's and stays there: these
+     * travel as intent, so a section configured before Pro arrives draws as
+     * configured the day it does, rather than needing to be set up twice.
+     */
+    protected function addReviewMediaStyleControls(): void
+    {
+        $pro = App::isProActive();
+
+        $this->add_control(
+            'media_backdrop',
+            [
+                'label'        => $pro
+                    ? esc_html__('Attachment As Card Background', 'fluent-cart-elementor-blocks')
+                    : esc_html__('Attachment As Card Background (Pro)', 'fluent-cart-elementor-blocks'),
+                'description'  => esc_html__('The first attachment fills the card and the rest of the review sits over it. A review with no attachment is unaffected, so a grid can mix photo cards and plain ones.', 'fluent-cart-elementor-blocks'),
+                'type'         => \Elementor\Controls_Manager::SWITCHER,
+                'label_on'     => esc_html__('Yes', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('No', 'fluent-cart-elementor-blocks'),
+                'return_value' => 'yes',
+                'default'      => '',
+                'condition'    => ['media_full_width' => 'yes'],
+            ]
+        );
+
+        $this->add_control(
+            'media_flush',
+            [
+                'label'        => $pro
+                    ? esc_html__('Flush To Card Edges', 'fluent-cart-elementor-blocks')
+                    : esc_html__('Flush To Card Edges (Pro)', 'fluent-cart-elementor-blocks'),
+                'description'  => esc_html__('The attachment becomes the top of the card: no padding around it, and one height for every card in the row. Applies when the attachments are the first thing in the review.', 'fluent-cart-elementor-blocks'),
+                'type'         => \Elementor\Controls_Manager::SWITCHER,
+                'label_on'     => esc_html__('Yes', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('No', 'fluent-cart-elementor-blocks'),
+                'return_value' => 'yes',
+                'default'      => '',
+                // Backdrop already gives the attachment the whole card. Flush
+                // on top of it is a setting with nothing left to change.
+                'condition'    => ['media_full_width' => 'yes', 'media_backdrop!' => 'yes'],
+            ]
+        );
+
+        $this->addReviewMediaStyleProNotice();
+    }
+
+    /**
+     * The warning under them, on the same terms as the View Mode one: only
+     * once a locked style is actually chosen.
+     */
+    protected function addReviewMediaStyleProNotice(): void
+    {
+        if (App::isProActive()) {
+            return;
+        }
+
+        $notice = esc_html__('This needs FluentCart Pro. Without it the attachment stays inside the card at its own size.', 'fluent-cart-elementor-blocks');
+
+        $this->add_control(
+            'media_backdrop_pro_notice',
+            [
+                'type'            => \Elementor\Controls_Manager::RAW_HTML,
+                'raw'             => $notice,
+                'content_classes' => 'elementor-panel-alert elementor-panel-alert-warning',
+                'condition'       => ['media_backdrop' => 'yes'],
+            ]
+        );
+
+        $this->add_control(
+            'media_flush_pro_notice',
+            [
+                'type'            => \Elementor\Controls_Manager::RAW_HTML,
+                'raw'             => $notice,
+                'content_classes' => 'elementor-panel-alert elementor-panel-alert-warning',
+                'condition'       => ['media_flush' => 'yes', 'media_backdrop!' => 'yes'],
+            ]
+        );
+    }
+
     protected function reviewMediaOptions(array $settings, bool $fullWidth): array
     {
         return [
@@ -279,8 +367,27 @@ trait ReviewWidgetTrait
             'mediaWidth'     => ProductReviewRenderer::mediaTileSize($settings['media_width'] ?? 0),
             'mediaHeight'    => ProductReviewRenderer::mediaTileSize($settings['media_height'] ?? 0),
             'mediaFullWidth' => $fullWidth,
+            // Only at full width, and backdrop before flush, so the options
+            // say what the panel shows rather than what an older save left
+            // behind when the merchant changed their mind.
+            'mediaBackdrop'  => $fullWidth && static::switchOn($settings, 'media_backdrop'),
+            'mediaFlush'     => $fullWidth
+                && !static::switchOn($settings, 'media_backdrop')
+                && static::switchOn($settings, 'media_flush'),
             'mediaMore'      => ReviewThreadMarkup::moreTilePlacement($settings['media_more'] ?? 'overlay'),
         ];
+    }
+
+    /**
+     * Whether a switcher is on.
+     *
+     * The trait's own, rather than the widgets' isOn(): those two do not agree
+     * on what an untouched control means, and these two controls default to
+     * off in both builders. Absent is off here, with no room for the question.
+     */
+    protected static function switchOn(array $settings, string $key): bool
+    {
+        return ($settings[$key] ?? '') === 'yes';
     }
 
     protected function renderReviewsUnavailable($postId = 0): bool

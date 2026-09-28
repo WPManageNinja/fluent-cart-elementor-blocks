@@ -335,6 +335,8 @@ class ProductReviewsWidget extends Widget_Base
             ]
         );
 
+        $this->addReviewMediaStyleControls();
+
         $this->add_control(
             'media_width',
             [
@@ -850,6 +852,18 @@ class ProductReviewsWidget extends Widget_Base
             'add_review_button_text'  => 'ctaAddText',
             'edit_review_button_text' => 'ctaEditText',
             'login_review_button_text'=> 'ctaLoginText',
+            // The attachment settings are a merchant's like any other. They
+            // were left out while a preset hid these controls, when there was
+            // no such thing as a merchant's attachment setting under a
+            // preset; now that the controls stay, leaving them out would make
+            // these the only ones a layout could overrule.
+            'media_visible'      => 'mediaVisible',
+            'media_width'        => 'mediaWidth',
+            'media_height'       => 'mediaHeight',
+            'media_full_width'   => 'mediaFullWidth',
+            'media_backdrop'     => 'mediaBackdrop',
+            'media_flush'        => 'mediaFlush',
+            'media_more'         => 'mediaMore',
         ];
 
         $defaults = [
@@ -873,6 +887,13 @@ class ProductReviewsWidget extends Widget_Base
             'add_review_button_text'   => '',
             'edit_review_button_text'  => '',
             'login_review_button_text' => '',
+            'media_visible'      => 0,
+            'media_width'        => 0,
+            'media_height'       => 0,
+            'media_full_width'   => '',
+            'media_backdrop'     => '',
+            'media_flush'        => '',
+            'media_more'         => 'overlay',
         ];
 
         $options = [];

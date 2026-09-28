@@ -240,6 +240,8 @@ class ProductReviewListWidget extends Widget_Base
             ]
         );
 
+        $this->addReviewMediaStyleControls();
+
         $this->add_control(
             'media_width',
             [
