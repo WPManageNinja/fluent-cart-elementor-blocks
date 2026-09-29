@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-25T04:14:59+00:00\n"
+"POT-Creation-Date: 2026-09-29T11:01:42+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: fluent-cart-elementor-blocks\n"
@@ -35,12 +35,16 @@ msgstr ""
 #: app/Modules/Integrations/Elementor/Conditions/FluentCartCondition.php:26
 #: app/Modules/Integrations/Elementor/Documents/FluentCartProduct.php:63
 #: app/Modules/Integrations/Elementor/Documents/FluentCartProductPost.php:55
-#: app/Modules/Integrations/Elementor/ElementorIntegration.php:120
+#: app/Modules/Integrations/Elementor/ElementorIntegration.php:123
 msgid "FluentCart"
 msgstr ""
 
 #: app/Modules/Integrations/Elementor/Conditions/FluentCartCondition.php:31
 msgid "All Products"
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Controls/ReviewLayoutPresetControl.php:135
+msgid "Pro"
 msgstr ""
 
 #: app/Modules/Integrations/Elementor/Documents/FluentCartProduct.php:33
@@ -74,28 +78,28 @@ msgid "FluentCart Product Posts"
 msgstr ""
 
 #. translators: %s: product name.
-#: app/Modules/Integrations/Elementor/ElementorIntegration.php:238
+#: app/Modules/Integrations/Elementor/ElementorIntegration.php:242
 #: app/Modules/Integrations/Elementor/Renderers/ElementorShopAppRenderer.php:256
 #, php-format
 msgid "%s product card"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/ElementorIntegration.php:305
+#: app/Modules/Integrations/Elementor/ElementorIntegration.php:351
 #: app/Modules/Integrations/Elementor/Widgets/ProductCarouselWidget.php:213
 msgid "Search for products..."
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/ElementorIntegration.php:306
+#: app/Modules/Integrations/Elementor/ElementorIntegration.php:352
 #: app/Modules/Integrations/Elementor/Widgets/AddToCartWidget.php:63
 #: app/Modules/Integrations/Elementor/Widgets/BuyNowWidget.php:63
 msgid "Search for a variation..."
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/ElementorIntegration.php:307
+#: app/Modules/Integrations/Elementor/ElementorIntegration.php:353
 msgid "Unknown Product"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/ElementorIntegration.php:313
+#: app/Modules/Integrations/Elementor/ElementorIntegration.php:359
 msgid "Short Codes"
 msgstr ""
 
@@ -255,22 +259,11 @@ msgstr ""
 msgid "Product list"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Support/ReviewLayoutPresets.php:37
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ProductWidgetTrait.php:29
-msgid "Custom"
-msgstr ""
-
-#. translators: %s - layout name
-#: app/Modules/Integrations/Elementor/Support/ReviewLayoutPresets.php:42
-#, php-format
-msgid "%s (Pro)"
-msgstr ""
-
-#: app/Modules/Integrations/Elementor/Support/ReviewSupport.php:47
+#: app/Modules/Integrations/Elementor/Support/ReviewSupport.php:80
 msgid "The Product Reviews module is switched off. Enable it in FluentCart → Settings → Modules."
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Support/ReviewSupport.php:54
+#: app/Modules/Integrations/Elementor/Support/ReviewSupport.php:87
 msgid "Reviews are turned off for this product."
 msgstr ""
 
@@ -294,7 +287,7 @@ msgstr ""
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewFormWidget.php:311
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:147
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewSummaryWidget.php:211
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:105
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:120
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductSkuWidget.php:93
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductStockWidget.php:132
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductTitleWidget.php:70
@@ -314,7 +307,7 @@ msgstr ""
 
 #: app/Modules/Integrations/Elementor/Widgets/AddToCartWidget.php:73
 #: app/Modules/Integrations/Elementor/Widgets/BuyNowWidget.php:70
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:198
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:224
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/WriteAReviewButtonWidget.php:254
 msgid "Button Text"
 msgstr ""
@@ -335,8 +328,8 @@ msgstr ""
 #: app/Modules/Integrations/Elementor/Widgets/ProductCardWidget.php:563
 #: app/Modules/Integrations/Elementor/Widgets/ProductCategoriesListWidget.php:367
 #: app/Modules/Integrations/Elementor/Widgets/ReceiptWidget.php:425
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:178
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:754
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:191
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:779
 #: app/Modules/Integrations/Elementor/Widgets/SearchBarWidget.php:233
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductBuySectionWidget.php:89
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductBuySectionWidget.php:234
@@ -368,16 +361,16 @@ msgstr ""
 #: app/Modules/Integrations/Elementor/Widgets/ProductCategoriesListWidget.php:302
 #: app/Modules/Integrations/Elementor/Widgets/ReceiptWidget.php:432
 #: app/Modules/Integrations/Elementor/Widgets/ReceiptWidget.php:463
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:183
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:214
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:274
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:456
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:491
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:601
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:689
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:759
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:793
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:824
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:196
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:227
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:287
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:469
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:504
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:626
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:714
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:784
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:818
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:849
 #: app/Modules/Integrations/Elementor/Widgets/SearchBarWidget.php:249
 #: app/Modules/Integrations/Elementor/Widgets/SearchBarWidget.php:341
 #: app/Modules/Integrations/Elementor/Widgets/SearchBarWidget.php:387
@@ -416,8 +409,8 @@ msgstr ""
 #: app/Modules/Integrations/Elementor/Widgets/ProductCardWidget.php:598
 #: app/Modules/Integrations/Elementor/Widgets/ProductCategoriesListWidget.php:332
 #: app/Modules/Integrations/Elementor/Widgets/ReceiptWidget.php:498
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:343
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:857
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:356
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:882
 #: app/Modules/Integrations/Elementor/Widgets/SearchBarWidget.php:187
 #: app/Modules/Integrations/Elementor/Widgets/SearchBarWidget.php:298
 #: app/Modules/Integrations/Elementor/Widgets/SearchBarWidget.php:414
@@ -448,7 +441,7 @@ msgstr ""
 #: app/Modules/Integrations/Elementor/Widgets/ProductCardWidget.php:610
 #: app/Modules/Integrations/Elementor/Widgets/ProductCategoriesListWidget.php:344
 #: app/Modules/Integrations/Elementor/Widgets/ReceiptWidget.php:510
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:355
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:368
 #: app/Modules/Integrations/Elementor/Widgets/SearchBarWidget.php:207
 #: app/Modules/Integrations/Elementor/Widgets/SearchBarWidget.php:310
 #: app/Modules/Integrations/Elementor/Widgets/SearchBarWidget.php:426
@@ -478,7 +471,7 @@ msgstr ""
 #: app/Modules/Integrations/Elementor/Widgets/ProductCardWidget.php:625
 #: app/Modules/Integrations/Elementor/Widgets/ProductCategoriesListWidget.php:399
 #: app/Modules/Integrations/Elementor/Widgets/ReceiptWidget.php:456
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:819
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:844
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductBuySectionWidget.php:122
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductBuySectionWidget.php:263
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewFormWidget.php:256
@@ -520,22 +513,30 @@ msgstr ""
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductInfoWidget.php:144
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductInfoWidget.php:156
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductInfoWidget.php:379
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:320
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:370
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:458
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:473
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:485
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:583
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:611
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:145
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:403
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:450
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:533
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:545
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:557
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:569
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:596
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:608
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:323
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:373
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:461
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:476
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:488
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:576
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:604
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:160
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:364
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:376
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:388
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:411
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:424
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:436
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:448
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:460
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:472
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:484
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:496
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:674
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:719
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:800
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:812
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:824
 msgid "Show"
 msgstr ""
 
@@ -549,22 +550,30 @@ msgstr ""
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductInfoWidget.php:145
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductInfoWidget.php:157
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductInfoWidget.php:380
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:321
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:371
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:459
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:474
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:486
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:584
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:612
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:146
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:404
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:451
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:534
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:546
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:558
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:570
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:597
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:609
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:324
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:374
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:462
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:477
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:489
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:577
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:605
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:161
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:365
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:377
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:389
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:412
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:425
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:437
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:449
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:461
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:473
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:485
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:497
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:675
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:720
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:801
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:813
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:825
 msgid "Hide"
 msgstr ""
 
@@ -631,11 +640,16 @@ msgstr ""
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductPackageDescriptionWidget.php:153
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:178
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:236
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:434
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:273
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:331
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:511
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:437
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:295
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:517
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:529
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:541
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:609
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:777
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductSkuWidget.php:105
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:527
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:544
 msgid "Yes"
 msgstr ""
 
@@ -678,11 +692,16 @@ msgstr ""
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductPackageDescriptionWidget.php:154
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:179
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:237
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:435
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:274
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:332
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:512
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:438
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:296
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:518
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:530
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:542
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:610
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:778
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductSkuWidget.php:106
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:528
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:545
 msgid "No"
 msgstr ""
 
@@ -842,7 +861,8 @@ msgid "General Settings"
 msgstr ""
 
 #: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:137
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:284
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:286
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:195
 msgid "Layout"
 msgstr ""
 
@@ -1035,13 +1055,13 @@ msgid "Focus"
 msgstr ""
 
 #: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:617
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:201
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:232
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:298
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:707
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:780
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:811
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:845
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:214
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:245
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:311
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:732
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:805
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:836
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:870
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/WriteAReviewButtonWidget.php:137
 msgid "Border Color"
 msgstr ""
@@ -1097,55 +1117,55 @@ msgid "Full Width"
 msgstr ""
 
 #: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:833
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:870
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:895
 #: app/Modules/Integrations/Elementor/Widgets/StoreLogoWidget.php:136
 #: app/Modules/Integrations/Elementor/Widgets/StoreLogoWidget.php:208
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductContentWidget.php:58
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductExcerptWidget.php:82
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductPriceWidget.php:88
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductRatingWidget.php:159
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:657
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:650
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductTitleWidget.php:100
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/WriteAReviewButtonWidget.php:182
 msgid "Alignment"
 msgstr ""
 
 #: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:836
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:874
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:899
 #: app/Modules/Integrations/Elementor/Widgets/StoreLogoWidget.php:212
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductContentWidget.php:61
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductExcerptWidget.php:85
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductGalleryWidget.php:62
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductPriceWidget.php:91
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductRatingWidget.php:163
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:662
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:655
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductTitleWidget.php:103
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/WriteAReviewButtonWidget.php:186
 msgid "Left"
 msgstr ""
 
 #: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:837
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:878
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:903
 #: app/Modules/Integrations/Elementor/Widgets/StoreLogoWidget.php:216
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductContentWidget.php:62
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductExcerptWidget.php:86
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductPriceWidget.php:92
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductRatingWidget.php:167
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:666
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:659
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductTitleWidget.php:104
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/WriteAReviewButtonWidget.php:190
 msgid "Center"
 msgstr ""
 
 #: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:838
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:882
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:907
 #: app/Modules/Integrations/Elementor/Widgets/StoreLogoWidget.php:220
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductContentWidget.php:63
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductExcerptWidget.php:87
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductGalleryWidget.php:63
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductPriceWidget.php:93
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductRatingWidget.php:171
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:670
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:663
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductTitleWidget.php:105
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/WriteAReviewButtonWidget.php:194
 msgid "Right"
@@ -1249,14 +1269,14 @@ msgstr ""
 #: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1261
 #: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1577
 #: app/Modules/Integrations/Elementor/Widgets/ReceiptWidget.php:199
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:574
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:599
 msgid "Title Typography"
 msgstr ""
 
 #: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1269
 #: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1585
 #: app/Modules/Integrations/Elementor/Widgets/ReceiptWidget.php:187
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:582
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:607
 msgid "Title Color"
 msgstr ""
 
@@ -1300,15 +1320,15 @@ msgstr ""
 #: app/Modules/Integrations/Elementor/Widgets/ProductCategoriesListWidget.php:313
 #: app/Modules/Integrations/Elementor/Widgets/ProductCategoriesListWidget.php:386
 #: app/Modules/Integrations/Elementor/Widgets/ProductCategoriesListWidget.php:418
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:192
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:223
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:287
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:326
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:465
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:698
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:771
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:802
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:836
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:205
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:236
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:300
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:339
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:478
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:723
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:796
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:827
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:861
 #: app/Modules/Integrations/Elementor/Widgets/ShopAppWidget.php:709
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewFormWidget.php:144
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewFormWidget.php:246
@@ -1427,7 +1447,7 @@ msgid "Show Icon"
 msgstr ""
 
 #: app/Modules/Integrations/Elementor/Widgets/CustomerDashboardButtonWidget.php:118
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:170
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:196
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/WriteAReviewButtonWidget.php:225
 msgid "Open In"
 msgstr ""
@@ -1769,8 +1789,8 @@ msgid "Space Between (px)"
 msgstr ""
 
 #: app/Modules/Integrations/Elementor/Widgets/ProductCarouselWidget.php:258
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:400
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:480
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:403
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:747
 msgid "Autoplay"
 msgstr ""
 
@@ -1787,62 +1807,62 @@ msgid "Show Arrows"
 msgstr ""
 
 #: app/Modules/Integrations/Elementor/Widgets/ProductCarouselWidget.php:309
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:331
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:414
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:334
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:684
 msgid "Arrow Size"
 msgstr ""
 
 #: app/Modules/Integrations/Elementor/Widgets/ProductCarouselWidget.php:313
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:335
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:418
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:338
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:688
 msgid "Small"
 msgstr ""
 
 #: app/Modules/Integrations/Elementor/Widgets/ProductCarouselWidget.php:314
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:336
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:419
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:339
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:689
 msgid "Medium"
 msgstr ""
 
 #: app/Modules/Integrations/Elementor/Widgets/ProductCarouselWidget.php:315
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:337
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:420
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:340
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:690
 msgid "Large"
 msgstr ""
 
 #: app/Modules/Integrations/Elementor/Widgets/ProductCarouselWidget.php:326
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:368
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:609
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:448
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:371
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:602
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:717
 msgid "Show Pagination"
 msgstr ""
 
 #: app/Modules/Integrations/Elementor/Widgets/ProductCarouselWidget.php:338
 #: app/Modules/Integrations/Elementor/Widgets/ShopAppWidget.php:132
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:381
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:626
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:461
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:639
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:384
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:619
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:729
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:855
 msgid "Pagination Type"
 msgstr ""
 
 #: app/Modules/Integrations/Elementor/Widgets/ProductCarouselWidget.php:342
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:385
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:465
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:388
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:733
 msgid "Dots"
 msgstr ""
 
 #: app/Modules/Integrations/Elementor/Widgets/ProductCarouselWidget.php:343
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:386
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:631
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:466
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:644
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:389
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:624
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:734
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:860
 msgid "Fraction"
 msgstr ""
 
 #: app/Modules/Integrations/Elementor/Widgets/ProductCarouselWidget.php:344
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:387
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:467
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:390
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:735
 msgid "Progress Bar"
 msgstr ""
 
@@ -1863,10 +1883,10 @@ msgid "Hover Background"
 msgstr ""
 
 #: app/Modules/Integrations/Elementor/Widgets/ProductCarouselWidget.php:483
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:723
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:748
 #: app/Modules/Integrations/Elementor/Widgets/ShopAppWidget.php:725
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:600
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:630
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:593
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:846
 msgid "Pagination"
 msgstr ""
 
@@ -1908,7 +1928,8 @@ msgstr ""
 
 #: app/Modules/Integrations/Elementor/Widgets/ProductCategoriesListWidget.php:109
 #: app/Modules/Integrations/Elementor/Widgets/ShopAppWidget.php:107
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:176
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:365
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:444
 msgid "List"
 msgstr ""
 
@@ -2102,151 +2123,163 @@ msgstr ""
 msgid "Shipping Address"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:71
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:241
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:84
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:267
 msgid "Review List"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:79
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:92
 msgid "Space Between Reviews"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:80
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:93
 msgid "Applies to the list view."
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:101
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:114
 msgid "Grid & Slider Gap"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:102
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:115
 msgid "Applies to the grid and slider views."
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:130
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:448
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:582
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:143
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:451
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:790
 msgid "Header"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:139
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:152
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductRatingWidget.php:139
 msgid "Review Count Typography"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:147
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:160
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductRatingWidget.php:148
 msgid "Review Count Color"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:158
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:171
 msgid "Filter Chips"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:209
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:788
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:222
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:813
 msgid "Active"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:244
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:257
 msgid "Chip Radius"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:257
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:483
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:606
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:270
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:486
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:822
 msgid "Sort Control"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:316
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:329
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:345
 msgid "Review Card"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:382
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:395
 msgid "Reviewer"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:390
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:403
 msgid "Avatar Size"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:403
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:416
 msgid "Avatar Radius"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:419
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:432
 msgid "Name Typography"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:428
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:441
 msgid "Name Color"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:439
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:452
 msgid "Verified Badge"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:474
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:487
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:130
 msgid "Variation Reviewed"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:507
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:520
 msgid "Stars"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:515
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:528
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductRatingWidget.php:107
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewFormWidget.php:195
 msgid "Star Size"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:534
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:548
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductRatingWidget.php:81
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewFormWidget.php:346
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewSummaryWidget.php:231
+msgid "Star Color"
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:549
+msgid "Colours every star in the list, filled and empty alike, through the list's own custom property."
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:559
 msgid "Filled Star Color"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:535
-msgid "Overrides the Star Color set in the Content tab."
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:560
+msgid "Overrides Star Color, for the filled stars only."
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:547
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:572
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductRatingWidget.php:95
 msgid "Empty Star Color"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:565
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:590
 msgid "Review Content"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:592
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:617
 msgid "Text Typography"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:611
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:636
 msgid "Date Typography"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:620
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:645
 msgid "Date Color"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:636
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:661
 msgid "Photos & Actions"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:644
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:669
 msgid "Photo Size"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:657
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:682
 msgid "Photo Radius"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:669
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:694
 msgid "Reply Button"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:739
+#: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:764
 msgid "Pagination styles are emitted with !important, because FluentCart sets the pager that way to survive themes that restyle every button."
 msgstr ""
 
@@ -2319,14 +2352,15 @@ msgid "Products Per Page"
 msgstr ""
 
 #: app/Modules/Integrations/Elementor/Widgets/ShopAppWidget.php:102
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:292
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:376
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:294
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:317
 msgid "View Mode"
 msgstr ""
 
 #: app/Modules/Integrations/Elementor/Widgets/ShopAppWidget.php:106
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/RelatedProductsWidget.php:131
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:178
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:366
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:446
 msgid "Grid"
 msgstr ""
 
@@ -2536,9 +2570,9 @@ msgstr ""
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductPriceWidget.php:123
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductRatingWidget.php:266
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewFormWidget.php:373
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:736
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewSummaryWidget.php:260
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:710
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:729
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewSummaryWidget.php:259
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:926
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductSkuWidget.php:147
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductStockWidget.php:161
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductTitleWidget.php:135
@@ -2692,13 +2726,6 @@ msgstr ""
 msgid "Product Rating"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductRatingWidget.php:81
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewFormWidget.php:336
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:555
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewSummaryWidget.php:221
-msgid "Star Color"
-msgstr ""
-
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductRatingWidget.php:123
 msgid "Star Spacing"
 msgstr ""
@@ -2748,30 +2775,30 @@ msgid "Star Picker"
 msgstr ""
 
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewFormWidget.php:321
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:184
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:210
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/WriteAReviewButtonWidget.php:240
 msgid "Field Layout"
 msgstr ""
 
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewFormWidget.php:325
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:188
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:214
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/WriteAReviewButtonWidget.php:244
 msgid "Inline (all fields at once)"
 msgstr ""
 
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewFormWidget.php:326
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:189
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:215
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/WriteAReviewButtonWidget.php:245
 msgid "Steps (one at a time)"
 msgstr ""
 
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewFormWidget.php:328
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:191
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:217
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/WriteAReviewButtonWidget.php:247
 msgid "Steps walks the reviewer through rating, details and photos. Inline shows every field at once."
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewFormWidget.php:347
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewFormWidget.php:338
 msgid "Form"
 msgstr ""
 
@@ -2784,18 +2811,19 @@ msgid "Product Review List"
 msgstr ""
 
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:127
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:422
 msgid "Avatar"
 msgstr ""
 
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:128
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:573
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:531
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:566
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:362
 msgid "Reviewer Name"
 msgstr ""
 
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:129
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:575
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:555
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:568
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:386
 msgid "Verified Purchase Badge"
 msgstr ""
 
@@ -2804,15 +2832,17 @@ msgid "Star Rating"
 msgstr ""
 
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:132
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:574
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:567
 msgid "Date"
 msgstr ""
 
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:133
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:434
 msgid "Review Title"
 msgstr ""
 
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:134
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:446
 msgid "Review Text"
 msgstr ""
 
@@ -2825,294 +2855,296 @@ msgid "Helpful Votes"
 msgstr ""
 
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:137
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:576
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:567
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:569
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:409
 msgid "Store Reply"
 msgstr ""
 
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:157
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:253
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:275
 msgid "Minimum rating"
 msgstr ""
 
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:158
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:254
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:276
 msgid "Lower-rated reviews are left out of the list entirely, and the count and the pages follow."
 msgstr ""
 
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:162
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:258
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:280
 msgid "All ratings"
 msgstr ""
 
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:163
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:259
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:281
 msgid "2 stars and up"
 msgstr ""
 
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:164
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:260
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:282
 msgid "3 stars and up"
 msgstr ""
 
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:165
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:261
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:283
 msgid "4 stars and up"
 msgstr ""
 
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:166
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:262
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:284
 msgid "5 stars only"
 msgstr ""
 
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:175
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:270
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:292
 msgid "Reviews with attachments only"
 msgstr ""
 
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:176
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:271
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:293
 msgid "Leaves out reviews that carry no photograph, and the count and the pages follow. What the photo layouts are built on."
 msgstr ""
 
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:188
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:283
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:305
 msgid "Words shown"
 msgstr ""
 
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:189
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:284
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:306
 msgid "Reviews show in full. Move the slider to cut longer ones down."
 msgstr ""
 
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:200
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:295
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:573
 msgid "Attachments Shown"
 msgstr ""
 
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:201
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:296
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:574
 msgid "How many attachments a review shows. The rest go behind a + that opens them in the lightbox. 0 shows all of them."
 msgstr ""
 
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:216
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:311
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:589
 msgid "The + Counter"
 msgstr ""
 
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:217
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:312
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:590
 msgid "Counts the attachments the limit leaves out and opens them in the lightbox. Hidden, they are simply not shown."
 msgstr ""
 
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:221
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:316
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:594
 msgid "On the last attachment"
 msgstr ""
 
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:222
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:317
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:595
 msgid "Beside the attachments"
 msgstr ""
 
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:223
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:318
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:596
 msgid "Hidden"
 msgstr ""
 
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:233
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:328
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:606
 msgid "Full Width Attachments"
 msgstr ""
 
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:234
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:329
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:607
 msgid "Each attachment spans the whole review, one to a line. The height still applies."
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:246
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:341
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:248
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:621
 msgid "Attachment Width (px)"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:247
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:342
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:249
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:622
 msgid "0 leaves the width to the theme."
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:263
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:358
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:265
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:638
 msgid "Attachment Height (px)"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:264
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:359
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:266
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:639
 msgid "0 leaves the height to the theme, and at full width gives each attachment its own proportions, uncropped. Any other height crops it to a band of that depth."
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:304
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:389
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:307
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:331
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/RelatedProductsWidget.php:141
 msgid "Columns"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:318
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:401
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:321
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:672
 msgid "Show arrows"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:349
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:429
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:352
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:699
 msgid "Arrow Placement"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:350
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:430
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:353
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:700
 msgid "On the reviews saves space. Beside them keeps every review clear. Below them suits a narrow column, where side arrows have nowhere to go."
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:354
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:434
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:357
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:704
 msgid "On the reviews"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:355
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:435
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:358
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:174
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:705
 msgid "Beside the reviews"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:356
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:436
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:359
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:706
 msgid "Below the reviews"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:388
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:468
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:391
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:736
 msgid "Segmented"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:404
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:484
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:407
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:751
 msgid "Disabled"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:405
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:485
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:408
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:752
 msgid "Always"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:406
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:486
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:409
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:753
 msgid "On Hover"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:415
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:495
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:418
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:761
 msgid "Autoplay Delay (ms)"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:416
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:496
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:419
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:762
 msgid "Time between slides in milliseconds"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:432
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:509
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:435
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:775
 msgid "Infinite loop"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:456
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:459
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:798
 msgid "Review Count"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:471
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:594
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:474
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:810
 msgid "Star Filter Chips"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:495
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:618
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:498
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:834
 msgid "Default Sort"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:508
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:511
 msgid "Review Row"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:516
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:519
 msgid "Review Layout"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:520
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:523
 msgid "Standard"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:521
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:524
 msgid "Choose fields"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:523
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:526
 msgid "Standard draws the row FluentCart draws everywhere else — avatar, name, stars and badge on one line. Choose fields lets you pick and order them, and stacks each on its own line."
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:532
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:535
 msgid "Field"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:542
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:545
 msgid "Fields"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:547
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:550
 msgid "Each row of the list shows these, in this order. Remove one to hide it."
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:565
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:522
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:558
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:353
 msgid "Show in each review"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:630
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:643
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:623
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:859
 msgid "Numbers"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:632
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:645
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:625
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:861
 msgid "Bullets"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:644
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:653
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:637
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:869
 msgid "Reviews Per Page"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:645
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:654
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:638
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:870
 msgid "0 uses the store setting."
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:687
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:680
 msgid "The standard layout paginates as soon as there is a second page, and FluentCart offers no way to turn that off. Pick Choose fields to control it."
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:769
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:762
 msgid "This product has no approved reviews yet."
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:852
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:845
 msgid "Newest"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:853
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:846
 msgid "Oldest"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:854
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:847
 msgid "Highest Rating"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:855
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:848
 msgid "Lowest Rating"
 msgstr ""
 
@@ -3160,108 +3192,158 @@ msgstr ""
 msgid "Bar Label Color"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewSummaryWidget.php:222
-msgid "Colours the stars in the summary. Matches the Star Color setting on the Gutenberg block."
-msgstr ""
-
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewSummaryWidget.php:234
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewSummaryWidget.php:223
 msgid "Summary"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewSummaryWidget.php:287
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewSummaryWidget.php:232
+msgid "Colours the stars in the summary. Matches the Star Color setting on the Gutenberg block."
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewSummaryWidget.php:286
 msgid "This product has no approved reviews yet, so the summary is empty."
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:60
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:62
 msgid "Product Reviews"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:118
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:137
 msgid "The whole review section in one widget: the rating summary, the Write a Review button and the list. To place those as separate pieces, use the Review Summary, Write a Review Button and Product Review List widgets instead."
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:131
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:143
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:670
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:150
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:158
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:886
 msgid "Rating Summary"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:158
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:682
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:170
+msgid "Placement"
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:175
+msgid "Across the top"
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:176
+msgid "Only the Write a Review button"
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:188
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:898
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/WriteAReviewButtonWidget.php:40
 msgid "Write a Review Button"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:174
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:200
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/WriteAReviewButtonWidget.php:229
 msgid "Drawer (slides in from the side)"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:175
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:201
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/WriteAReviewButtonWidget.php:230
 msgid "Modal (centered on the screen)"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:177
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:203
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/WriteAReviewButtonWidget.php:232
 msgid "Where the form appears when the button is clicked."
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:200
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:226
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/WriteAReviewButtonWidget.php:256
 msgid "The button says something different to a reviewer who has already written one, and to a visitor who has to log in first. Leave blank for the store defaults."
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:208
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:234
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/WriteAReviewButtonWidget.php:264
 msgid "New Review"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:210
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:236
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/WriteAReviewButtonWidget.php:266
 msgid "Write a Review"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:211
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:237
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/WriteAReviewButtonWidget.php:267
 msgid "Shown when the visitor has not reviewed this product yet"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:218
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:244
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/WriteAReviewButtonWidget.php:274
 msgid "Edit Review"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:220
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:246
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/WriteAReviewButtonWidget.php:276
 msgid "Edit your review"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:221
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:247
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/WriteAReviewButtonWidget.php:277
 msgid "Shown when the visitor already has a review for this product"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:228
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:254
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/WriteAReviewButtonWidget.php:284
 msgid "Logged Out"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:230
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:256
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/WriteAReviewButtonWidget.php:286
 msgid "Log in to Review"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:231
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:257
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/WriteAReviewButtonWidget.php:287
 msgid "Shown when a visitor must log in before reviewing"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:543
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:374
 msgid "Review Date"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:751
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:458
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:565
+msgid "Attachments"
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:470
+msgid "Variation"
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:482
+msgid "Footer (replies and votes)"
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:494
+msgid "Meta Line"
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:506
+msgid "Order within the card"
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:515
+msgid "Attachments Above The Text"
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:527
+msgid "Stars Above The Name"
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:539
+msgid "Verified Badge After The Variation"
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:658
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:452
+msgid "Slider"
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:967
 msgid "There is nothing to show for this product yet."
 msgstr ""
 
@@ -3333,28 +3415,88 @@ msgstr ""
 msgid "Current Product"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:162
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ProductWidgetTrait.php:29
+msgid "Custom"
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:204
 msgid "Layout Preset"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:163
-msgid "Builds the section from a ready-made layout. Choose Custom to arrange it with the controls below."
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:205
+msgid "Builds the section from these settings. Anything you have set is replaced."
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:179
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:233
+msgid "Custom layout"
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:234
+msgid "Custom layout. Choose a preset to replace it with a starter layout."
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:367
+msgid "Carousel"
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:368
+msgid "Photo"
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:373
+msgid "All layouts"
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:433
+msgid "The greyed layouts need FluentCart Pro. Until then the section is whatever the controls below say. After Pro is activated, the layout you choose supplies what you have not set yourself."
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:447
 msgid "Grid (Pro)"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:181
-msgid "Slider"
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:449
+msgid "Masonry"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:182
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:450
+msgid "Masonry (Pro)"
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:453
 msgid "Slider (Pro)"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:203
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:495
 msgid "Grid and Slider need FluentCart Pro. Without it this list renders as a single column."
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:523
+msgid "Attachment As Card Background"
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:524
+msgid "Attachment As Card Background (Pro)"
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:525
+msgid "The first attachment fills the card and the rest of the review sits over it. A review with no attachment is unaffected, so a grid can mix photo cards and plain ones."
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:540
+msgid "Flush To Card Edges"
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:541
+msgid "Flush To Card Edges (Pro)"
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:542
+msgid "The attachment becomes the top of the card: no padding around it, and one height for every card in the row. Applies when the attachments are the first thing in the review."
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:577
+msgid "These two need FluentCart Pro. Without it an attachment stays inside the card at its own size."
 msgstr ""
 
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/WriteAReviewButtonWidget.php:79
