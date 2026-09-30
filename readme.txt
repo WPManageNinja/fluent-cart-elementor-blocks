@@ -2,7 +2,7 @@
 Contributors: wpmanageninja
 Tags: fluentcart, elementor, ecommerce, checkout, cart, shop
 Requires at least: 6.0
-Tested up to: 7.0
+Tested up to: 7.1
 Requires PHP: 7.4
 Stable tag: 1.1.0
 License: GPLv2 or later
@@ -85,7 +85,7 @@ Yes. Required CSS and JavaScript assets are enqueued automatically when widgets 
 
 == Changelog ==
 
-= 1.1.0 (Sep 29, 2026) =
+= 1.1.0 (Sep 30, 2026) =
 - Adds six Product Review widgets: Product Reviews, Product Review List, Review Summary, Review Form, Write a Review Button and Product Rating.
 - Adds eleven ready-made review layouts, chosen from a grid of cards rather than a list of names: Classic, Minimal List, Compact, Card Grid, Masonry, Summary on Top, Photo Grid, Photo Wall, Photo Strip, Carousel and Testimonials.
 - Adds list, grid, masonry and slider views for the review list.

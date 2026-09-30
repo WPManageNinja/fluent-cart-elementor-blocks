@@ -8,6 +8,7 @@
     "build:zip": "npm run build && npm run i18n && npm run pack",
     "i18n": "wp i18n make-pot . language/fluent-cart-elementor-blocks.pot --domain=fluent-cart-elementor-blocks --exclude=resources,builds,node_modules,vendor,assets",
     "pack": "node resources/dev/zip.js",
+    "test": "wp eval-file tests/template-library-self-heal.php",
     "zip": "node resources/dev/zip.js"
   },
   "dependencies": {
