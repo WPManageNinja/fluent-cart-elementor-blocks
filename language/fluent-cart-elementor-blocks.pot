@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-29T11:01:42+00:00\n"
+"POT-Creation-Date: 2026-09-30T10:23:43+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: fluent-cart-elementor-blocks\n"
@@ -78,28 +78,28 @@ msgid "FluentCart Product Posts"
 msgstr ""
 
 #. translators: %s: product name.
-#: app/Modules/Integrations/Elementor/ElementorIntegration.php:242
+#: app/Modules/Integrations/Elementor/ElementorIntegration.php:253
 #: app/Modules/Integrations/Elementor/Renderers/ElementorShopAppRenderer.php:256
 #, php-format
 msgid "%s product card"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/ElementorIntegration.php:351
+#: app/Modules/Integrations/Elementor/ElementorIntegration.php:362
 #: app/Modules/Integrations/Elementor/Widgets/ProductCarouselWidget.php:213
 msgid "Search for products..."
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/ElementorIntegration.php:352
+#: app/Modules/Integrations/Elementor/ElementorIntegration.php:363
 #: app/Modules/Integrations/Elementor/Widgets/AddToCartWidget.php:63
 #: app/Modules/Integrations/Elementor/Widgets/BuyNowWidget.php:63
 msgid "Search for a variation..."
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/ElementorIntegration.php:353
+#: app/Modules/Integrations/Elementor/ElementorIntegration.php:364
 msgid "Unknown Product"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/ElementorIntegration.php:359
+#: app/Modules/Integrations/Elementor/ElementorIntegration.php:370
 msgid "Short Codes"
 msgstr ""
 
@@ -259,11 +259,11 @@ msgstr ""
 msgid "Product list"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Support/ReviewSupport.php:80
+#: app/Modules/Integrations/Elementor/Support/ReviewSupport.php:101
 msgid "The Product Reviews module is switched off. Enable it in FluentCart → Settings → Modules."
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Support/ReviewSupport.php:87
+#: app/Modules/Integrations/Elementor/Support/ReviewSupport.php:108
 msgid "Reviews are turned off for this product."
 msgstr ""
 

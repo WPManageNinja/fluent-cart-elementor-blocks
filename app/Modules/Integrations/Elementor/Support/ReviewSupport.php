@@ -42,10 +42,31 @@ class ReviewSupport
         );
     }
 
+    /**
+     * Does the installed FluentCart core carry the reviews feature at all?
+     *
+     * The review widgets build their control panels from core's review
+     * classes, which arrived in FluentCart 1.7.0. On an older core those
+     * classes are absent and registering the widgets would fatal inside
+     * Elementor's editor, taking the whole editor down — so they are not
+     * registered until core has caught up. One renderer class stands for
+     * the feature; the presets and the service came with it.
+     *
+     * Not the module switch: that says whether the merchant turned reviews
+     * on, and a widget already on a page must keep rendering (as nothing)
+     * when they turn it off, which needs the widget registered.
+     */
+    public static function coreHasReviews(): bool
+    {
+        return class_exists('\FluentCart\App\Services\Renderer\ProductReviewRenderer')
+            && class_exists('\FluentCart\App\Services\ProductReviewService')
+            && class_exists('\FluentCart\App\Services\Reviews\LayoutPresets');
+    }
+
     /** Has the store switched the Product Reviews module on? */
     public static function isModuleActive(): bool
     {
-        return \FluentCart\Api\ModuleSettings::isActive('reviews');
+        return self::coreHasReviews() && \FluentCart\Api\ModuleSettings::isActive('reviews');
     }
 
     /**
