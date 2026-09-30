@@ -104,6 +104,68 @@ class TemplateSeeder
      * @param string $slug
      * @return int|null post ID
      */
+    /**
+     * The library item this addon created for a slug, if it exists.
+     *
+     * @param string $slug
+     * @return int|null post ID
+     */
+    public static function ownItemId($slug)
+    {
+        return self::findOwnItem($slug);
+    }
+
+    /**
+     * The bundled version an item was seeded or last updated from.
+     *
+     * @param int $postId
+     * @return string '' when unknown
+     */
+    public static function installedVersion($postId)
+    {
+        return (string) get_post_meta($postId, self::META_VERSION, true);
+    }
+
+    /**
+     * Replace an item's content, page settings and version stamp with the
+     * bundled template's, keeping its post ID so anything inserting it by ID
+     * shows the new version. Only on request — a merchant's edits to the
+     * item are replaced, and the row action says so before the click.
+     *
+     * @param int $postId
+     * @param array $template Normalized template (see TemplateManifest).
+     * @return bool
+     */
+    public static function updateInPlace($postId, array $template)
+    {
+        if ((string) get_post_meta($postId, self::META_SLUG, true) !== (string) $template['slug']) {
+            return false;
+        }
+
+        $source = self::localSource();
+        if (!$source) {
+            return false;
+        }
+
+        $result = $source->update_item([
+            'id'      => (int) $postId,
+            'title'   => $template['title'],
+            'content' => $template['content'],
+        ]);
+
+        if (is_wp_error($result)) {
+            return false;
+        }
+
+        if (!self::persistPageSettings($postId, $template) || !self::stampOwnership($postId, $template)) {
+            return false;
+        }
+
+        self::applyCategory($postId, $template['category']);
+
+        return true;
+    }
+
     private static function findOwnItem($slug)
     {
         $ids = get_posts([

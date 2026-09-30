@@ -5,6 +5,7 @@
 // Seed the bundled page templates into Elementor's native library
 // (version-gated on admin_init; no-op until Elementor is active).
 (new \FluentCartElementorBlocks\App\Services\TemplateLibrary\TemplateLibrary())->register();
+(new \FluentCartElementorBlocks\App\Services\TemplateLibrary\TemplateLibraryNotice())->register();
 
 // Clear ShopApp Elementor widget transient cache when products change
 $shopAppCacheClear = function () {

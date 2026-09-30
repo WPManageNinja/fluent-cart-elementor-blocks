@@ -160,6 +160,129 @@ class TemplateLibrary
     }
 
     /**
+     * The bundled templates that are not in the library: deleted by the
+     * merchant, or never seeded. What the Saved Templates notice lists and
+     * what seedMissing() creates.
+     *
+     * @return array<int, array> normalized templates (see TemplateManifest)
+     */
+    public function missingTemplates()
+    {
+        if (!post_type_exists(TemplateSeeder::CPT)) {
+            return [];
+        }
+
+        $missing = [];
+        foreach (TemplateManifest::loadAll()['templates'] as $template) {
+            if (!TemplateSeeder::ownItemId($template['slug'])) {
+                $missing[] = $template;
+            }
+        }
+
+        return $missing;
+    }
+
+    /**
+     * Create the bundled templates that are not in the library, on request.
+     *
+     * Not on admin load: the seeder leaves a template a merchant deleted
+     * deleted, and its version gate stays satisfied, so a missing template
+     * comes back only when someone asks — the button on the Saved Templates
+     * screen. Only what is missing is created; a template that is present
+     * is not touched, whatever version it is.
+     *
+     * Under the same lock as the seeding pass, so a double click, or a pass
+     * already running, cannot create an item twice.
+     *
+     * @return array<int, string> titles of the templates created
+     */
+    public function seedMissing()
+    {
+        if (!current_user_can('edit_theme_options') || !$this->acquireLock()) {
+            return [];
+        }
+
+        $created = [];
+        try {
+            foreach ($this->missingTemplates() as $template) {
+                if (!$this->renewLock()) {
+                    break;
+                }
+                if (TemplateSeeder::seed($template) === 'created') {
+                    $created[] = $template['title'];
+                }
+            }
+        } finally {
+            $this->releaseLock();
+        }
+
+        return $created;
+    }
+
+    /**
+     * The seeded items whose bundled template is newer than the copy in the
+     * library. What the row action on the Saved Templates screen offers to
+     * update. An item with no version stamp is not offered: nothing is known
+     * about what it holds.
+     *
+     * @return array<int, array{template: array, post_id: int, installed: string}>
+     */
+    public function outdatedTemplates()
+    {
+        if (!post_type_exists(TemplateSeeder::CPT)) {
+            return [];
+        }
+
+        $outdated = [];
+        foreach (TemplateManifest::loadAll()['templates'] as $template) {
+            $postId = TemplateSeeder::ownItemId($template['slug']);
+            if (!$postId) {
+                continue;
+            }
+            $installed = TemplateSeeder::installedVersion($postId);
+            if ($installed !== '' && version_compare($template['version'], $installed, '>')) {
+                $outdated[] = ['template' => $template, 'post_id' => $postId, 'installed' => $installed];
+            }
+        }
+
+        return $outdated;
+    }
+
+    /**
+     * Replace one outdated item with the bundled template, on request.
+     *
+     * @param string $slug
+     * @return array{post_id: int, title: string, version: string}|null what was updated; null when nothing was
+     */
+    public function updateTemplate($slug)
+    {
+        if (!current_user_can('edit_theme_options') || !$this->acquireLock()) {
+            return null;
+        }
+
+        try {
+            foreach ($this->outdatedTemplates() as $entry) {
+                if ($entry['template']['slug'] !== $slug) {
+                    continue;
+                }
+                if (!TemplateSeeder::updateInPlace($entry['post_id'], $entry['template'])) {
+                    return null;
+                }
+
+                return [
+                    'post_id' => $entry['post_id'],
+                    'title'   => $entry['template']['title'],
+                    'version' => $entry['template']['version'],
+                ];
+            }
+        } finally {
+            $this->releaseLock();
+        }
+
+        return null;
+    }
+
+    /**
      * Whether this request still holds the seeding lock (its stored value is
      * unchanged). Returns false once another request reclaimed a stale lock from
      * us, so a slow / hung pass stops writing instead of racing the new owner.
