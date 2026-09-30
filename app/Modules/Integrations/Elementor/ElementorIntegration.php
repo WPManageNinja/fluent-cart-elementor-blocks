@@ -154,19 +154,30 @@ class ElementorIntegration
         $widgets_manager->register(new ProductContentWidget());
         $widgets_manager->register(new ProductInfoWidget());
         $widgets_manager->register(new RelatedProductsWidget());
-        $widgets_manager->register(new ProductRatingWidget());
-        $widgets_manager->register(new ProductReviewSummaryWidget());
-        $widgets_manager->register(new WriteAReviewButtonWidget());
-        $widgets_manager->register(new ProductReviewFormWidget());
-        $widgets_manager->register(new ProductReviewListWidget());
-        $widgets_manager->register(new ProductReviewsWidget());
+
+        // Only once core has the reviews feature (FluentCart 1.7.0): these
+        // widgets build their panels from core's review classes, and on an
+        // older core that would fatal in the editor — see
+        // ReviewSupport::coreHasReviews().
+        if (ReviewSupport::coreHasReviews()) {
+            $widgets_manager->register(new ProductRatingWidget());
+            $widgets_manager->register(new ProductReviewSummaryWidget());
+            $widgets_manager->register(new WriteAReviewButtonWidget());
+            $widgets_manager->register(new ProductReviewFormWidget());
+            $widgets_manager->register(new ProductReviewListWidget());
+            $widgets_manager->register(new ProductReviewsWidget());
+        }
     }
 
     public function registerControls($controls_manager)
     {
         $controls_manager->register(new ProductVariationSelectControl());
-        $controls_manager->register(new ReviewLayoutPresetControl());
         $controls_manager->register(new ProductSelectControl());
+
+        // The layout picker reads core's presets; same gate as the widgets.
+        if (ReviewSupport::coreHasReviews()) {
+            $controls_manager->register(new ReviewLayoutPresetControl());
+        }
     }
 
     /**
