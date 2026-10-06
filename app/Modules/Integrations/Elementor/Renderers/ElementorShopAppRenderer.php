@@ -36,7 +36,7 @@ class ElementorShopAppRenderer extends ShopAppRenderer
             // pagination can re-apply the Sale/Sold Out overlays. Only when a
             // badge is actually enabled.
             $badgeSettings = Arr::get($config, 'badge_settings', []);
-            $badgesActive  = Arr::get($badgeSettings, 'show_sale_badge') === 'yes'
+            $badgesActive = Arr::get($badgeSettings, 'show_sale_badge') === 'yes'
                 || Arr::get($badgeSettings, 'show_sold_out_badge') === 'yes';
             if ($badgesActive) {
                 set_transient('fc_el_badges_' . $this->clientId, $badgeSettings, 48 * HOUR_IN_SECONDS);
@@ -76,7 +76,7 @@ class ElementorShopAppRenderer extends ShopAppRenderer
         $wrapperInnerTypes = ['filter', 'product_grid'];
         $beforeWrapper = [];
         $insideWrapper = [];
-        $afterWrapper  = [];
+        $afterWrapper = [];
 
         foreach ($layoutTypes as $type) {
             if (in_array($type, $wrapperInnerTypes, true)) {
@@ -92,16 +92,17 @@ class ElementorShopAppRenderer extends ShopAppRenderer
         $filterRenderer = new \FluentCart\App\Services\Renderer\ProductFilterRender($this->filters);
 
         $wrapperAttributes = [
-            'class'                                  => 'fct-products-wrapper-inner mode-' . $this->viewMode . $isFullWidth,
-            'data-fluent-cart-product-wrapper-inner'  => '',
-            'data-per-page'                          => $this->per_page,
-            'data-order-type'                        => $this->order_type,
-            'data-live-filter'                       => $this->liveFilter,
-            'data-paginator'                         => $this->paginator,
-            'data-default-filters'                   => wp_json_encode($this->defaultFilters),
+            'class' => 'fct-products-wrapper-inner mode-' . $this->viewMode . $isFullWidth,
+            'data-fluent-cart-product-wrapper-inner' => '',
+            'data-per-page' => $this->per_page,
+            'data-order-type' => $this->order_type,
+            'data-live-filter' => $this->liveFilter,
+            'data-paginator' => $this->paginator,
+            'data-default-filters' => wp_json_encode($this->defaultFilters),
         ];
         ?>
-        <div class="fct-products-wrapper" data-fluent-cart-shop-app data-fluent-cart-product-wrapper role="main" aria-label="<?php esc_attr_e('Products', 'fluent-cart-elementor-blocks'); ?>">
+        <div class="fct-products-wrapper" data-fluent-cart-shop-app data-fluent-cart-product-wrapper role="main"
+            aria-label="<?php esc_attr_e('Products', 'fluent-cart-elementor-blocks'); ?>">
             <?php
             // Render before-wrapper sections (view_switcher, sort_by) in a shared container
             if (!empty($beforeWrapper)) {
@@ -117,19 +118,19 @@ class ElementorShopAppRenderer extends ShopAppRenderer
             }
 
             if (!empty($insideWrapper)) {
-            ?>
-            <div <?php RenderHelper::renderAtts($wrapperAttributes); ?>>
-                <?php
-                foreach ($insideWrapper as $type) {
-                    $this->renderLayoutSection($type, $filterRenderer);
-                }
                 ?>
-                
-                <div class="fluent-cart-product-loader loader-hidden" data-fluent-cart-product-loader>
-                    <div class="fluent-cart-product-spinner"></div>
+                <div <?php RenderHelper::renderAtts($wrapperAttributes); ?>>
+                    <?php
+                    foreach ($insideWrapper as $type) {
+                        $this->renderLayoutSection($type, $filterRenderer);
+                    }
+                    ?>
+
+                    <div class="fluent-cart-product-loader loader-hidden" data-fluent-cart-product-loader>
+                        <div class="fluent-cart-product-spinner"></div>
+                    </div>
                 </div>
-            </div>
-            <?php
+                <?php
             }
 
             // Render after-wrapper sections (paginator)
@@ -198,10 +199,8 @@ class ElementorShopAppRenderer extends ShopAppRenderer
     {
         ?>
         <div class="fct-products-container grid-columns-<?php echo esc_attr($this->productBoxGridSize); ?>"
-             data-fluent-cart-shop-app-product-list
-             role="list"
-             aria-label="<?php esc_attr_e('Product list', 'fluent-cart-elementor-blocks'); ?>"
-        >
+            data-fluent-cart-shop-app-product-list role="list"
+            aria-label="<?php esc_attr_e('Product list', 'fluent-cart-elementor-blocks'); ?>">
             <?php
             if ($this->products->count() !== 0) {
                 $this->renderProduct();
@@ -232,9 +231,10 @@ class ElementorShopAppRenderer extends ShopAppRenderer
 
     private function renderCardWithLayout(Product $product, $cursorAttr = '', $isFirst = false)
     {
-        $cardRender = new ProductCardRender($product, 
+        $cardRender = new ProductCardRender(
+            $product,
             [
-                'cursor' => $cursorAttr, 
+                'cursor' => $cursorAttr,
                 'price_format' => $this->priceFormat
             ]
         );
@@ -249,13 +249,14 @@ class ElementorShopAppRenderer extends ShopAppRenderer
             $providerAttr = 'data-template-provider="elementor" data-fluent-client-id="' . esc_attr($this->clientId) . '"';
         }
         ?>
-        <article data-fluent-cart-shop-app-single-product data-fct-product-card=""
-                 class="fct-product-card"
-                <?php echo $cursorData; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-                <?php echo $providerAttr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-                 aria-label="<?php echo esc_attr(sprintf(
-                         __('%s product card', 'fluent-cart-elementor-blocks'), $product->post_title));
-                 ?>">
+        <article data-fluent-cart-shop-app-single-product data-fct-product-card="" class="fct-product-card" <?php echo $cursorData; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+            <?php echo $providerAttr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+            aria-label="
+    <?php echo esc_attr(sprintf(
+                __('%s product card', 'fluent-cart-elementor-blocks'),
+                $product->post_title
+            ));
+            ?>">
             <?php static::renderCardElements($cardRender, $this->cardElements); ?>
         </article>
         <?php
@@ -281,6 +282,16 @@ class ElementorShopAppRenderer extends ShopAppRenderer
                     break;
                 case 'price':
                     $cardRender->renderPrices();
+                    break;
+                case 'rating':
+                    // Core gates this on the store's Show Rating In Shop
+                    // setting and on the product having reviews, so an
+                    // unrated product simply draws nothing. Guarded on the
+                    // method so a core without the review feature does not
+                    // fatal here.
+                    if (method_exists($cardRender, 'renderStarRating')) {
+                        $cardRender->renderStarRating();
+                    }
                     break;
                 case 'button':
                     $cardRender->showBuyButton();

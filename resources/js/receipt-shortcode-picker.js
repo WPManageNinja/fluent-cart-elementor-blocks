@@ -65,10 +65,12 @@
                 var el = this.getEl();
 
                 // The base config is shared by every panel WYSIWYG — only the
-                // Order Receipt widget gets the button.
+                // Order Receipt widget gets the button. Hide the button itself
+                // only: its parentNode is the toolbar group's body, which holds
+                // every row-1 button (Paragraph, Bold, Link, ...).
                 if (!editingReceiptWidget()) {
-                    if (el && el.parentNode) {
-                        el.parentNode.style.display = 'none';
+                    if (el) {
+                        el.style.display = 'none';
                     }
                     return;
                 }

@@ -24,6 +24,24 @@
             "isInner": false
         },
         {
+            "id": "a7b1c92",
+            "elType": "container",
+            "settings": {
+                "content_width": "boxed",
+                "padding": { "unit": "px", "top": "20", "right": "0", "bottom": "20", "left": "0", "isLinked": false }
+            },
+            "elements": [
+                {
+                    "id": "b8c2d03",
+                    "elType": "widget",
+                    "widgetType": "fluentcart_product_reviews",
+                    "settings": {},
+                    "elements": []
+                }
+            ],
+            "isInner": false
+        },
+        {
             "id": "e3c6a29",
             "elType": "container",
             "settings": {

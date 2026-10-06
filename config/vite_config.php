@@ -5,10 +5,22 @@
         'src' => 'resources/elementor/popup-integration.js',
         'isEntry' => true
     ],
+    'resources/elementor/pro-feature-guard.js' => [
+        'file' => 'pro-feature-guard.js',
+        'name' => 'pro-feature-guard',
+        'src' => 'resources/elementor/pro-feature-guard.js',
+        'isEntry' => true
+    ],
     'resources/elementor/product-carousel-elementor.js' => [
         'file' => 'product-carousel-elementor.js',
         'name' => 'product-carousel-elementor',
         'src' => 'resources/elementor/product-carousel-elementor.js',
+        'isEntry' => true
+    ],
+    'resources/elementor/product-reviews-elementor.js' => [
+        'file' => 'product-reviews-elementor.js',
+        'name' => 'product-reviews-elementor',
+        'src' => 'resources/elementor/product-reviews-elementor.js',
         'isEntry' => true
     ],
     'resources/elementor/product-select-control.js' => [
@@ -21,6 +33,12 @@
         'file' => 'product-variation-select-control.js',
         'name' => 'product-variation-select-control',
         'src' => 'resources/elementor/product-variation-select-control.js',
+        'isEntry' => true
+    ],
+    'resources/elementor/review-layout-picker.js' => [
+        'file' => 'review-layout-picker.js',
+        'name' => 'review-layout-picker',
+        'src' => 'resources/elementor/review-layout-picker.js',
         'isEntry' => true
     ],
     'resources/elementor/single-product-sync.js' => [

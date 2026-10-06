@@ -9,7 +9,10 @@ use FluentCart\App\Services\Renderer\ProductCardRender;
 use FluentCart\Framework\Support\Arr;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Controls\ProductSelectControl;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Controls\ProductVariationSelectControl;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Controls\ReviewLayoutPresetControl;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Renderers\ElementorShopAppRenderer;
+use FluentCart\App\Modules\Templating\AssetLoader;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support\ReviewSupport;
 use FluentCartElementorBlocks\App\Services\Badges\BadgeRenderer;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\AddToCartWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\BuyNowWidget;
@@ -36,6 +39,12 @@ use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ThemeBu
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ThemeBuilder\ProductSkuWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ThemeBuilder\ProductPackageDescriptionWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ThemeBuilder\RelatedProductsWidget;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ThemeBuilder\ProductRatingWidget;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ThemeBuilder\ProductReviewSummaryWidget;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ThemeBuilder\WriteAReviewButtonWidget;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ThemeBuilder\ProductReviewFormWidget;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ThemeBuilder\ProductReviewListWidget;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ThemeBuilder\ProductReviewsWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Documents\FluentCartProduct;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Documents\FluentCartProductPost;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Conditions\FluentCartCondition;
@@ -145,12 +154,30 @@ class ElementorIntegration
         $widgets_manager->register(new ProductContentWidget());
         $widgets_manager->register(new ProductInfoWidget());
         $widgets_manager->register(new RelatedProductsWidget());
+
+        // Only once core has the reviews feature (FluentCart 1.7.0): these
+        // widgets build their panels from core's review classes, and on an
+        // older core that would fatal in the editor — see
+        // ReviewSupport::coreHasReviews().
+        if (ReviewSupport::coreHasReviews()) {
+            $widgets_manager->register(new ProductRatingWidget());
+            $widgets_manager->register(new ProductReviewSummaryWidget());
+            $widgets_manager->register(new WriteAReviewButtonWidget());
+            $widgets_manager->register(new ProductReviewFormWidget());
+            $widgets_manager->register(new ProductReviewListWidget());
+            $widgets_manager->register(new ProductReviewsWidget());
+        }
     }
 
     public function registerControls($controls_manager)
     {
         $controls_manager->register(new ProductVariationSelectControl());
         $controls_manager->register(new ProductSelectControl());
+
+        // The layout picker reads core's presets; same gate as the widgets.
+        if (ReviewSupport::coreHasReviews()) {
+            $controls_manager->register(new ReviewLayoutPresetControl());
+        }
     }
 
     /**
@@ -237,16 +264,40 @@ class ElementorIntegration
         return ob_get_clean();
     }
 
+    /**
+     * A version that changes when the file does.
+     *
+     * Falls back to the plugin's version if the file cannot be read, which is
+     * the behaviour this replaces - never worse than it was.
+     *
+     * @param string $relativePath
+     * @return string
+     */
+    protected static function assetVersion(string $relativePath): string
+    {
+        // This file is four directories below the plugin's root; there is no
+        // path constant to ask, only a URL one.
+        $path = dirname(__FILE__, 5) . '/' . $relativePath;
+        $stamp = file_exists($path) ? filemtime($path) : false;
+
+        return $stamp ? (string) $stamp : FLUENTCART_ELEMENTOR_BLOCKS_VERSION;
+    }
+
     public function enqueueEditorScripts()
     {
         $svgIcon = '<svg width="300" height="300" viewBox="0 0 300 300" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="300" height="300" rx="30" fill="#00009F"/><path d="M136.561 205.944H47.1367L61.1704 173.491C65.2906 163.963 74.6784 157.795 85.0589 157.795H191.584L184.338 174.551C176.098 193.607 157.322 205.944 136.561 205.944Z" fill="white"/><path d="M210.643 142.439H84.8574L92.1035 125.683C100.344 106.627 119.12 94.2905 139.881 94.2905H248.565L234.531 126.743C230.411 136.271 221.023 142.439 210.643 142.439Z" fill="white"/></svg>';
         $svgBase64 = base64_encode($svgIcon);
 
+        // Versioned by the file rather than by the plugin. The panel's
+        // stylesheet changes between releases far more often than the version
+        // constant does, and a browser holding the previous copy does not
+        // render a stale panel - it renders an unstyled one, because the rules
+        // a new control needs are simply not in the file it kept.
         wp_enqueue_style(
             'fluent-cart-elementor-editor-css',
             FLUENTCART_ELEMENTOR_BLOCKS_URL . 'assets/css/elementor-editor.css',
             [],
-            FLUENTCART_ELEMENTOR_BLOCKS_VERSION
+            static::assetVersion('assets/css/elementor-editor.css')
         );
 
         wp_register_style('fluent-cart-elementor-editor-badge', false, [], FLUENTCART_VERSION);
@@ -276,6 +327,24 @@ class ElementorIntegration
         Enqueue::script(
             'fluent-cart-elementor-product-select',
             'elementor/product-select-control.js',
+            ['elementor-editor', 'jquery'],
+            FLUENTCART_VERSION,
+            true
+        );
+
+        // Disables the controls a widget has marked as needing Pro. The
+        // stylesheet dims them; only this takes them out of the tab order.
+        Enqueue::script(
+            'fluent-cart-elementor-pro-feature-guard',
+            'elementor/pro-feature-guard.js',
+            ['elementor-editor'],
+            FLUENTCART_VERSION,
+            true
+        );
+
+        Enqueue::script(
+            'fluent-cart-elementor-review-layout-picker',
+            'elementor/review-layout-picker.js',
             ['elementor-editor', 'jquery'],
             FLUENTCART_VERSION,
             true
@@ -435,6 +504,38 @@ class ElementorIntegration
             [],
             FLUENTCART_ELEMENTOR_BLOCKS_VERSION
         );
+
+        // Core's storefront review styles, which draw the section itself: the
+        // summary in its 320px column beside the list, the grid and slider
+        // arrangements, the card. A widget asks for these through
+        // get_style_depends(), and the editor preview is a separate document
+        // that never asks -- so without this the canvas stacked the summary
+        // above a single column of full-width rows while the published page
+        // laid them out side by side.
+        //
+        // Before the preset stylesheet, so the file that adds to core's card
+        // still comes after it.
+        AssetLoader::loadSingleProductAssets();
+
+        // The review layout presets' own stylesheet.
+        //
+        // The front end gets it from ProductReviewsWidget::get_style_depends().
+        // The editor preview is a separate document and Elementor never asks a
+        // widget what it depends on while building it, so without this the
+        // canvas draws every preset unstyled while the published page draws it
+        // correctly.
+        ReviewSupport::enqueuePresetStyles();
+
+        // WordPress's own block stylesheet, for the review layout presets.
+        //
+        // A preset builds the section from core blocks, and WordPress loads the
+        // file that lays them out only when it finds blocks in post_content. It
+        // finds none on an Elementor page either way, but the front end is
+        // covered by the widget declaring it through get_style_depends(); the
+        // editor preview is a separate document that never asks a widget what
+        // it depends on, so without this the canvas stacks the summary and the
+        // list while the published page shows them side by side.
+        wp_enqueue_style('wp-block-library');
     }
 
     public function maybeEnqueueAdvancedVariation($widget)
