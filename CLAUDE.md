@@ -1,5 +1,9 @@
 # Claude Code Instructions — FluentCart Elementor Blocks
 
+## Code Comments
+
+When writing or editing code, follow `.claude/skills/fluentcart-code-comments/SKILL.md`: comment only a non-obvious why, in one to three lines.
+
 ## How This Plugin Works
 
 This is a **companion/add-on plugin** for [FluentCart](https://fluentcart.com). It adds Elementor page builder widgets so users can drag-and-drop FluentCart elements (shop grids, product cards, carousels, checkout, mini cart, etc.) into their pages.
