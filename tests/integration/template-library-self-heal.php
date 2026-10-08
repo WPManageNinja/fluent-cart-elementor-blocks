@@ -7,12 +7,12 @@
  * lists the missing ones and, on a click, seedMissing() creates those and
  * only those — a present template is not touched, and nothing duplicates.
  *
- * Usage:  wp eval-file tests/template-library-self-heal.php
+ * Usage:  bash tests/bin/run-all.sh integration
  * Runs against the live library: it seeds (idempotently), deletes one
  * seeded item, and adds it back. It touches only items this addon created.
  */
 if (!defined('ABSPATH')) {
-    fwrite(STDERR, "Run via: wp eval-file tests/template-library-self-heal.php\n");
+    fwrite(STDERR, "Run via: bash tests/bin/run-all.sh integration\n");
     exit(1);
 }
 

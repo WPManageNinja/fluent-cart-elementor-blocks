@@ -371,14 +371,14 @@ class ShopAppWidget extends Widget_Base
             $this->add_control(
                 'show_empty_taxonomy_' . $key,
                 [
-                    'label'        => esc_html__('Show empty', 'fluent-cart'),
+                    'label'        => esc_html__('Show empty', 'fluent-cart-elementor-blocks'),
                     'type'         => Controls_Manager::SWITCHER,
-                    'label_on'     => esc_html__('Yes', 'fluent-cart'),
-                    'label_off'    => esc_html__('No', 'fluent-cart'),
+                    'label_on'     => esc_html__('Yes', 'fluent-cart-elementor-blocks'),
+                    'label_off'    => esc_html__('No', 'fluent-cart-elementor-blocks'),
                     'return_value' => 'yes',
                     'default'      => '',
                     /* translators: %1$s: taxonomy name (e.g. "categories", "brands") */
-                    'description'  => sprintf(esc_html__('Display %1$s even if they have no products.', 'fluent-cart'), $taxonomyName),
+                    'description'  => sprintf(esc_html__('Display %1$s even if they have no products.', 'fluent-cart-elementor-blocks'), $taxonomyName),
                     'condition'    => [
                         'enable_filter'           => 'yes',
                         'enable_taxonomy_' . $key => 'yes',
