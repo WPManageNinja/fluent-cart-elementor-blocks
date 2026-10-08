@@ -8,6 +8,7 @@ class FceTest
     private $name;
     private $checks = 0;
     private $failures = 0;
+    private $skipped = 0;
 
     public function __construct(string $name)
     {
@@ -35,11 +36,30 @@ class FceTest
             : $label . ' (expected ' . var_export($expected, true) . ', got ' . var_export($actual, true) . ')');
     }
 
+    /**
+     * Record a check that cannot run here, with the reason.
+     *
+     * Not a pass and not a failure: some assertions need a context WP-CLI does
+     * not provide, and silently dropping them would hide the gap while failing
+     * them would train everyone to ignore a red gate.
+     */
+    public function skip(string $label, string $why): void
+    {
+        $this->skipped++;
+        echo "  SKIP {$label} — {$why}\n";
+    }
+
     /** Prints the summary and exits non-zero on any failure, so the runner records FAIL. */
     public function finish(): void
     {
         $passed = $this->checks - $this->failures;
-        echo "[{$this->name}] {$passed}/{$this->checks} passed\n";
+        $summary = "[{$this->name}] {$passed}/{$this->checks} passed";
+
+        if ($this->skipped) {
+            $summary .= ", {$this->skipped} skipped";
+        }
+
+        echo $summary . "\n";
 
         if ($this->failures) {
             exit(1);

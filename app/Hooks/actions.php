@@ -2,6 +2,9 @@
 
 (new \FluentCartElementorBlocks\App\Modules\Integrations\Elementor\ElementorIntegration())->register();
 
+// MCP builder tools, registered onto FluentCart's server when core MCP is on.
+(new \FluentCartElementorBlocks\App\Modules\MCP\MCPInit())->init();
+
 // Seed the bundled page templates into Elementor's native library
 // (version-gated on admin_init; no-op until Elementor is active).
 (new \FluentCartElementorBlocks\App\Services\TemplateLibrary\TemplateLibrary())->register();
