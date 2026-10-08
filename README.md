@@ -133,6 +133,10 @@ Yes. Required CSS and JavaScript assets are enqueued automatically when widgets 
 - Automatic asset loading
 - Full FluentCart compatibility
 
+## Testing
+
+Run `npm test` before calling a change done. See [TESTING.md](TESTING.md) for the tiers and how to add a test.
+
 ## Support
 
 For issues, questions, or contributions, please visit the [GitHub repository](https://github.com/WPManageNinja/fluent-cart-elementor-blocks).
