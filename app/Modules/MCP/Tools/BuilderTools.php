@@ -8,6 +8,8 @@ use FluentCart\App\Modules\MCP\Support\MCPHelper;
 use FluentCart\App\Modules\MCP\Support\PermissionGate;
 use FluentCartElementorBlocks\App\Modules\MCP\Support\ProductTemplate;
 use FluentCartElementorBlocks\App\Modules\MCP\Support\StorefrontRecipes;
+use FluentCartElementorBlocks\App\Modules\MCP\Support\StyleConflicts;
+use FluentCartElementorBlocks\App\Modules\MCP\Support\StyleHooks;
 use FluentCartElementorBlocks\App\Modules\MCP\Support\WidgetSchemaReader;
 use FluentCart\Framework\Support\Arr;
 
@@ -60,7 +62,7 @@ class BuilderTools
 
             'fluent-cart/get-builder-widget-schema' => [
                 'label'       => __('Get Builder Widget Schema', 'fluent-cart-elementor-blocks'),
-                'description' => __('The settings a FluentCart widget accepts — keys, types, defaults and valid options — read live from the widget itself. Call this before place-builder-widget so settings are correct rather than guessed. Content controls by default; pass include:["style"] for design controls too.', 'fluent-cart-elementor-blocks'),
+                'description' => __('The settings a FluentCart widget accepts — keys, types, defaults and valid options — read live from the widget itself, plus the CSS selectors it actually renders. Call this before place-builder-widget so settings are correct rather than guessed, and before writing any CSS for it: style_hooks lists the real class names and flags the buttons that inherit the theme\'s colours instead of yours. Content controls by default; pass include:["style"] for design controls too.', 'fluent-cart-elementor-blocks'),
                 'input_schema' => [
                     'type'       => 'object',
                     'properties' => [
@@ -72,6 +74,10 @@ class BuilderTools
                             'type'        => 'array',
                             'items'       => ['type' => 'string', 'enum' => ['style', 'advanced']],
                             'description' => 'Also return design controls.',
+                        ],
+                        'style_hooks' => [
+                            'type'        => 'boolean',
+                            'description' => 'The CSS selectors this widget renders. Default true. Pass false to skip the render when you only need settings.',
                         ],
                     ],
                     'required' => ['widget'],
@@ -226,6 +232,11 @@ class BuilderTools
                     'type'       => 'object',
                     'properties' => [
                         'title'            => ['type' => 'string', 'description' => 'Template name. Defaults to "Single Product".'],
+                        'layout'           => [
+                            'type'        => 'string',
+                            'enum'        => ['individual', 'composite'],
+                            'description' => 'individual (default): separate widgets for gallery, title, price, excerpt, buy section — each styled independently with Elementor. composite: one fluentcart_product_info widget whose summary rows are reordered through its own summary_sections setting. Pick composite when the user cares about the ORDER of product details, individual when they care about styling each part differently.',
+                        ],
                         'replace_existing' => ['type' => 'boolean', 'description' => 'Unpublish any template already claiming product pages. Default true — two live templates conflict.'],
                         'publish'          => ['type' => 'boolean', 'description' => 'Publish immediately. Default false (draft, matching Elementor).'],
                         'dry_run'          => ['type' => 'boolean', 'description' => 'Report what would happen without changing anything.'],
@@ -365,6 +376,29 @@ class BuilderTools
             $notes[] = __('Place this only inside a FluentCart product Theme Builder document; on an ordinary page it renders a placeholder.', 'fluent-cart-elementor-blocks');
         }
 
+        // Settings alone do not let an agent style the thing it just placed,
+        // and the markup is not guessable: two widgets wrap product images in
+        // different classes, and several emit WordPress button classes that
+        // take the theme's colours. Rendering costs a request; finding this
+        // out from a browser costs an afternoon.
+        $hooks = Arr::get($params, 'style_hooks', true)
+            ? StyleHooks::forWidget($widget)
+            : null;
+
+        if ($hooks && !empty($hooks['theme_styled_buttons'])) {
+            $notes[] = __('This widget renders WordPress button markup that inherits the active theme\'s colours. Style it through the scoped selectors in style_hooks.theme_styled_buttons, not through the widget settings.', 'fluent-cart-elementor-blocks');
+        }
+
+        $data = [
+            'widget'          => $widget,
+            'settings_schema' => $schema,
+            'placement_notes' => $notes,
+        ];
+
+        if ($hooks !== null) {
+            $data['style_hooks'] = $hooks;
+        }
+
         return MCPHelper::envelope(
             sprintf(
                 /* translators: 1: setting count, 2: widget name */
@@ -372,11 +406,7 @@ class BuilderTools
                 count($schema['properties']),
                 $widget
             ),
-            [
-                'widget'          => $widget,
-                'settings_schema' => $schema,
-                'placement_notes' => $notes,
-            ]
+            $data
         );
     }
 
@@ -539,6 +569,18 @@ class BuilderTools
         $lines[] = '6. Elementor `publish-document`.';
         $lines[] = '7. `fluent-cart/validate-storefront` — confirm it is actually wired up.';
         $lines[] = '';
+        $lines[] = '## Styling what you placed';
+        $lines[] = '';
+        $lines[] = 'Widget settings cover layout and content, not appearance — the colours and';
+        $lines[] = 'spacing come from CSS in the Elementor kit. Do not guess the class names or';
+        $lines[] = 'read them off a rendered page: `get-builder-widget-schema` returns';
+        $lines[] = '`style_hooks` with the selectors that widget actually emits.';
+        $lines[] = '';
+        $lines[] = 'Read `style_hooks.theme_styled_buttons` before writing button CSS. Those';
+        $lines[] = 'widgets render WordPress button markup and take the **active theme\'s** colours,';
+        $lines[] = 'not yours, so they stay off-palette until you style the scoped selector given';
+        $lines[] = 'there. They are the likeliest reason a storefront looks almost right.';
+        $lines[] = '';
         $lines[] = '## The pages a store needs';
         $lines[] = '';
         $lines[] = '| Page | Widget | FluentCart setting |';
@@ -587,6 +629,12 @@ class BuilderTools
         $lines[] = '| Category / brand listings | `archive` + FluentCart condition | taxonomy archives |';
         $lines[] = '';
         $lines[] = 'Prefer the Theme Builder template. Place widgets directly on a product post only when that one product genuinely needs a different layout — `place-builder-widget` accepts a product `post_id` and sets the document type for you.';
+        $lines[] = '';
+        $lines[] = '## Reorder with the widget, not with CSS';
+        $lines[] = '';
+        $lines[] = 'Widgets that lay out sub-elements expose a repeater for it — `card_elements` on the product card, carousel and shop; `shop_layout` on the shop. **Row order is the render order.** Call `get-builder-widget-schema` to see the valid values.';
+        $lines[] = '';
+        $lines[] = 'Do NOT reorder by writing `order`, `grid-area` or `flex-direction` into Elementor\'s custom CSS against `fct-*` selectors. The CSS wins, the widget setting is silently ignored, and both calls still report success — so the page looks wrong with nothing to point at. `validate-storefront` reports this conflict if it already exists.';
         $lines[] = '';
         $lines[] = '## Naming';
         $lines[] = '';
@@ -1089,7 +1137,8 @@ class BuilderTools
         $title   = (string) Arr::get($params, 'title', __('Single Product', 'fluent-cart-elementor-blocks'));
 
         $existing = ProductTemplate::liveTemplates();
-        $layout   = ProductTemplate::defaultLayout();
+        $style    = Arr::get($params, 'layout', 'individual') === 'composite' ? 'composite' : 'individual';
+        $layout   = ProductTemplate::defaultLayout($style);
 
         if ($dryRun) {
             return MCPHelper::envelope(
@@ -1122,14 +1171,17 @@ class BuilderTools
             return $postId;
         }
 
-        // Two columns side by side, stacking on mobile, then full-width rows.
-        $tree = [
-            self::container('row', [
-                self::container('col-left', []),
-                self::container('col-right', []),
-            ]),
-            self::container('below', []),
-        ];
+        // The composite widget draws its own two-column layout internally, so
+        // wrapping it in empty columns would only add dead containers.
+        $tree = $style === 'composite'
+            ? [self::container('product', [])]
+            : [
+                self::container('row', [
+                    self::container('col-left', []),
+                    self::container('col-right', []),
+                ]),
+                self::container('below', []),
+            ];
 
         $ids = [];
         $place = function ($widgets, &$parent) use (&$ids, &$tree) {
@@ -1144,14 +1196,22 @@ class BuilderTools
             }
         };
 
-        $place($layout['left'], $tree[0]['elements'][0]);
-        $place($layout['right'], $tree[0]['elements'][1]);
-        $place($layout['below'], $tree[1]);
+        if ($style === 'composite') {
+            $place($layout['below'], $tree[0]);
+        } else {
+            $place($layout['left'], $tree[0]['elements'][0]);
+            $place($layout['right'], $tree[0]['elements'][1]);
+            $place($layout['below'], $tree[1]);
+        }
 
         ElementorDocument::write($postId, $tree);
 
         if ($publish) {
             wp_update_post(['ID' => $postId, 'post_status' => 'publish']);
+            // Elementor caches which template claims which location; a status
+            // change does not invalidate it, so the template would be live and
+            // silently not applied.
+            ProductTemplate::flushConditions();
         }
 
         return MCPHelper::envelope(
@@ -1166,12 +1226,15 @@ class BuilderTools
                 'condition'    => ProductTemplate::CONDITION,
                 'published'    => $publish,
                 'element_ids'  => $ids,
-                'containers'   => [
-                    'row'       => $tree[0]['id'],
-                    'col_left'  => $tree[0]['elements'][0]['id'],
-                    'col_right' => $tree[0]['elements'][1]['id'],
-                    'below'     => $tree[1]['id'],
-                ],
+                'layout'       => $style,
+                'containers'   => $style === 'composite'
+                    ? ['product' => $tree[0]['id']]
+                    : [
+                        'row'       => $tree[0]['id'],
+                        'col_left'  => $tree[0]['elements'][0]['id'],
+                        'col_right' => $tree[0]['elements'][1]['id'],
+                        'below'     => $tree[1]['id'],
+                    ],
                 'unpublished'  => $unpublished,
                 'edit_url'     => admin_url('post.php?post=' . $postId . '&action=elementor'),
                 'next_step'    => $publish
@@ -1317,6 +1380,28 @@ class BuilderTools
                     }
                 }
             }
+        }
+
+        // Custom CSS that re-positions FluentCart markup defeats the layout
+        // controls without either side reporting a problem. Reported here
+        // because the page looks wrong while every call looked successful.
+        foreach (StyleConflicts::summarise() as $conflict) {
+            $findings[] = [
+                'page'     => 'theme_styles',
+                'severity' => 'warning',
+                'issue'    => sprintf(
+                    /* translators: 1: CSS property, 2: number of selectors, 3: the selectors */
+                    __('Custom CSS in the Elementor kit sets %1$s on %2$d FluentCart selector(s), which overrides the widget layout settings: %3$s', 'fluent-cart-elementor-blocks'),
+                    $conflict['property'],
+                    $conflict['count'],
+                    implode(', ', array_slice($conflict['selectors'], 0, 5))
+                ),
+                'fix'      => sprintf(
+                    /* translators: %s: CSS property */
+                    __('Reorder with the widget\'s own layout control (card_elements, shop_layout) and drop the %s rules, or accept that the CSS wins and leave the layout control alone.', 'fluent-cart-elementor-blocks'),
+                    $conflict['property']
+                ),
+            ];
         }
 
         $errors = array_filter($findings, function ($f) {

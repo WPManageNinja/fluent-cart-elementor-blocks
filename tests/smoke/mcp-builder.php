@@ -20,7 +20,9 @@ FceTest::requireLive('tests/smoke/mcp-builder.php', [
 use FluentCartElementorBlocks\App\Modules\MCP\AbilitiesRegistrar;
 use FluentCartElementorBlocks\App\Modules\MCP\Support\BuilderRegistry;
 use FluentCartElementorBlocks\App\Modules\MCP\Support\ElementorDocument;
+use FluentCartElementorBlocks\App\Modules\MCP\Support\ProductTemplate;
 use FluentCartElementorBlocks\App\Modules\MCP\Support\StorefrontRecipes;
+use FluentCartElementorBlocks\App\Modules\MCP\Support\StyleConflicts;
 use FluentCartElementorBlocks\App\Modules\MCP\Support\WidgetSchemaReader;
 
 $test = new FceTest('smoke/mcp-builder');
@@ -225,5 +227,98 @@ foreach (StorefrontRecipes::all() as $name => $recipe) {
     }
 }
 $test->same($incomplete, [], 'every storefront recipe is complete and points at a real widget');
+
+// --------------------------------------------------------- layout controls
+
+// Without this an agent cannot tell a deeply configurable widget from a
+// single-purpose one, and reaches for eight widgets instead of the one that
+// already reorders its own parts.
+$test->same(
+    BuilderRegistry::layoutControlsFor('fluentcart_product_info'),
+    ['summary_sections'],
+    'product_info advertises the repeater that reorders it'
+);
+$test->same(
+    BuilderRegistry::layoutControlsFor('fluent_cart_shop_app'),
+    ['shop_layout', 'card_elements'],
+    'the shop advertises both of its layout repeaters'
+);
+$test->same(BuilderRegistry::layoutControlsFor('fluentcart_product_title'), [], 'a single-purpose widget advertises none');
+
+$advertised = [];
+foreach (BuilderRegistry::widgets() as $row) {
+    if (!empty($row['layout_controls'])) {
+        $advertised[$row['name']] = $row['layout_controls'];
+    }
+}
+// Derived from the widgets, so this grows on its own when one gains a
+// repeater. Pinning an exact count would just break on the next widget.
+$test->check(count($advertised) >= 4, 'the catalog surfaces the layout-capable widgets (' . count($advertised) . ')');
+
+// The two a hand-kept list missed. They are read-only here — advertising a
+// control the widget already has does not re-emit any markup.
+$test->check(
+    in_array('form_elements', BuilderRegistry::layoutControlsFor('fluent_cart_checkout'), true),
+    'the checkout\'s own form_elements repeater is no longer hidden from agents'
+);
+$test->check(
+    in_array('row_fields', BuilderRegistry::layoutControlsFor('fluentcart_product_review_list'), true),
+    'the review list\'s row_fields repeater is advertised'
+);
+
+// Each advertised control must actually exist on the widget, or the agent is
+// told to set a key that does nothing.
+$missing = [];
+foreach ($advertised as $widget => $controls) {
+    $widgetSchema = WidgetSchemaReader::schemaFor($widget);
+
+    foreach ($controls as $control) {
+        if (!isset($widgetSchema['properties'][$control])) {
+            $missing[] = $widget . '.' . $control;
+        }
+    }
+}
+$test->same($missing, [], 'every advertised layout control exists on its widget');
+
+// The two product-page strategies must differ, and both must be buildable.
+$individual = ProductTemplate::defaultLayout('individual');
+$composite  = ProductTemplate::defaultLayout('composite');
+$test->check(count($individual['left']) + count($individual['right']) >= 5, 'the individual layout places separate widgets');
+$test->same($composite['below'], ['fluentcart_product_info'], 'the composite layout places the one configurable widget');
+$test->same($composite['left'], [], 'the composite layout creates no empty columns');
+
+// ------------------------------------------------------- style conflicts
+
+// The defect this detector exists for: an agent set card_elements AND wrote
+// kit CSS contradicting it. Both reported success and the page was wrong.
+$conflictCss = '
+.fct-product-card { display: flex; flex-direction: column; }
+.fct-product-card .fct-product-card-title { order: 1; margin: 0; }
+.fct-product-card .fct-product-card-prices { order: 2; }
+';
+
+$found = StyleConflicts::find($conflictCss);
+$selectors = array_column($found, 'selector');
+
+$test->check(count($found) === 3, 'every positioning rule on FluentCart markup is found (' . count($found) . ')');
+$test->check(
+    in_array('.fct-product-card .fct-product-card-title', $selectors, true),
+    'the exact rule that defeated card_elements is reported'
+);
+
+$summary = StyleConflicts::summarise($conflictCss);
+$properties = array_column($summary, 'property');
+sort($properties);
+$test->same($properties, ['flex-direction', 'order'], 'conflicts group by property, not one finding per selector');
+
+// Noise would train everyone to ignore the warning, so the scan must be tight.
+$test->same(StyleConflicts::find('.fct-product-card { color: red; padding: 10px; }'), [], 'ordinary styling on our markup is not a conflict');
+$test->same(StyleConflicts::find('.some-theme-card { order: 2; }'), [], 'positioning on someone else\'s markup is not our business');
+$test->same(StyleConflicts::find('/* .fct-product-card { order: 1; } */'), [], 'a commented-out rule is not a conflict');
+$test->same(StyleConflicts::find('.fct-products-container { grid-row-gap: 10px; }'), [], 'grid-row-gap is not grid-row');
+$test->same(StyleConflicts::find(''), [], 'empty CSS yields nothing');
+
+$test->check(count(StyleConflicts::find('.fct-product-card { grid-area: body; }')) === 1, 'grid-area counts as positioning');
+$test->check(count(StyleConflicts::find('.fct-shop-toolbar { flex-direction: column-reverse; }')) === 1, 'flex-direction counts — column-reverse inverts a whole section list');
 
 $test->finish();

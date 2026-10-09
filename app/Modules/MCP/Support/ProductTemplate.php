@@ -85,7 +85,6 @@ class ProductTemplate
         return $rows;
     }
 
-    /** FluentCart widget names used inside one template. */
     /**
      * Create the Theme Builder document for single product pages.
      *
@@ -119,6 +118,8 @@ class ProductTemplate
             wp_set_object_terms($postId, self::DOCUMENT_TYPE, 'elementor_library_type');
         }
 
+        self::flushConditions();
+
         return $postId;
     }
 
@@ -133,11 +134,64 @@ class ProductTemplate
     public static function unpublish($postId)
     {
         wp_update_post(['ID' => (int) $postId, 'post_status' => 'draft']);
+        self::flushConditions();
     }
 
-    /** The default single-product layout: two columns, media left, detail right. */
-    public static function defaultLayout()
+    /**
+     * Rebuild Elementor Pro's cached map of which template claims which location.
+     *
+     * Publishing a template through the editor updates this cache; publishing it
+     * by changing post_status does not. Without a rebuild a freshly built
+     * template is live, correctly conditioned, and silently not applied — the
+     * page just keeps rendering FluentCart's own output, which reads as "the
+     * template was ignored" rather than "a cache is stale".
+     *
+     * Deleting the option is NOT invalidation, and that mistake is expensive:
+     * Conditions_Cache::refresh() reads get_option($key, []) and nothing ever
+     * rebuilds it lazily, so a missing option means "no template claims any
+     * location". The entire Theme Builder goes dark site-wide — header, footer
+     * and every unrelated template, not just FluentCart's. Regenerating is what
+     * Elementor Pro's own documents do (see Documents\Section::save).
+     */
+    public static function flushConditions()
     {
+        if (class_exists('\ElementorPro\Modules\ThemeBuilder\Module')) {
+            $module = \ElementorPro\Modules\ThemeBuilder\Module::instance();
+
+            if ($module && method_exists($module, 'get_conditions_manager')) {
+                $manager = $module->get_conditions_manager();
+
+                if ($manager && method_exists($manager, 'get_cache')) {
+                    // regenerate() persists on its own.
+                    $manager->get_cache()->regenerate();
+                }
+            }
+        }
+
+        if (class_exists('\Elementor\Plugin') && \Elementor\Plugin::$instance->files_manager) {
+            \Elementor\Plugin::$instance->files_manager->clear_cache();
+        }
+    }
+
+    /**
+     * Two ways to build a product page, and they are a genuine trade-off.
+     *
+     * `individual` gives each part its own Elementor widget, so each can be
+     * styled separately — but the order is fixed by where they sit in the
+     * containers. `composite` is one widget whose `summary_sections` repeater
+     * reorders the detail rows at will, at the cost of styling them as a
+     * group. Neither is strictly better, so the caller chooses.
+     */
+    public static function defaultLayout($style = 'individual')
+    {
+        if ($style === 'composite') {
+            return [
+                'left'  => [],
+                'right' => [],
+                'below' => ['fluentcart_product_info'],
+            ];
+        }
+
         return [
             'left'  => ['fluentcart_product_gallery'],
             'right' => [
@@ -153,6 +207,7 @@ class ProductTemplate
         ];
     }
 
+    /** FluentCart widget names used inside one template. */
     public static function fluentCartWidgets($postId)
     {
         $tree  = ElementorDocument::read($postId);

@@ -59,7 +59,7 @@ class BuilderRegistry
             'fluentcart_product_content'             => ['Full description', self::CONTEXT_PRODUCT],
             'fluentcart_product_package_description' => ['Package/variant description', self::CONTEXT_PRODUCT],
             'fluentcart_product_buy_section'         => ['Variations + add to cart', self::CONTEXT_PRODUCT],
-            'fluentcart_product_info'                => ['ALL-IN-ONE product block — do not combine with the individual product widgets', self::CONTEXT_PRODUCT],
+            'fluentcart_product_info'                => ['Whole product block in one widget, with the summary rows reorderable — use this OR the individual product widgets, never both', self::CONTEXT_PRODUCT],
             'fluentcart_related_products'            => ['Related products', self::CONTEXT_PRODUCT],
             'fluentcart_product_rating'              => ['Star rating', self::CONTEXT_PRODUCT, 'reviews'],
             'fluentcart_product_review_summary'      => ['Review summary', self::CONTEXT_PRODUCT, 'reviews'],
@@ -123,6 +123,64 @@ class BuilderRegistry
         }
 
         return $covering ? ['role' => 'part', 'widgets' => $covering] : null;
+    }
+
+    /**
+     * The settings a widget uses to reorder its own sub-elements.
+     *
+     * Read from the widget rather than listed here. A hand-kept list was
+     * written first and was already wrong within the hour — it missed the
+     * checkout's `form_elements`/`summary_elements` and the review list's
+     * `row_fields` — which is the same drift the schema reader exists to
+     * avoid. Any repeater on the content tab is a layout control by
+     * definition: rows that render in order.
+     *
+     * Without this an agent cannot tell a deeply configurable widget from a
+     * single-purpose one. The control sits among 300+ style controls, so it
+     * reaches for several widgets instead of the one that already reorders.
+     */
+    public static function layoutControlsFor($name)
+    {
+        if (!self::isFluentCartWidget($name)) {
+            return [];
+        }
+
+        $schema = WidgetSchemaReader::schemaFor($name);
+
+        if (!$schema || empty($schema['properties'])) {
+            return [];
+        }
+
+        $controls = [];
+
+        foreach ($schema['properties'] as $key => $property) {
+            // A repeater the reader could expand: an array of rows with a
+            // known shape. An opaque array tells the agent nothing orderable.
+            if (
+                isset($property['type'], $property['items']['properties'])
+                && $property['type'] === 'array'
+            ) {
+                $controls[] = $key;
+            }
+        }
+
+        return $controls;
+    }
+
+    /** Every widget that can reorder its own parts, keyed by widget name. */
+    public static function layoutControls()
+    {
+        $map = [];
+
+        foreach (array_keys(self::elementorCatalog()) as $name) {
+            $controls = self::layoutControlsFor($name);
+
+            if ($controls) {
+                $map[$name] = $controls;
+            }
+        }
+
+        return $map;
     }
 
     /** Is a widget name one of ours? Guards every write. */
@@ -191,6 +249,7 @@ class BuilderRegistry
                 'unavailable_reason'       => $reason,
                 'is_composite'             => $conflict && $conflict['role'] === 'composite',
                 'do_not_combine_with'      => $conflict ? $conflict['widgets'] : [],
+                'layout_controls'          => self::layoutControlsFor($name),
             ];
         }
 

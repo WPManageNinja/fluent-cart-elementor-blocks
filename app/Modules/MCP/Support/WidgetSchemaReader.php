@@ -169,6 +169,24 @@ class WidgetSchemaReader
             $prop['enum'] = array_map('strval', array_keys($options));
         }
 
+        // A multi-select stores an ARRAY, whatever its base control type maps to.
+        // The renderers type-check it: ProductCarouselWidget bails on
+        // `!is_array($productIds)` and prints nothing at all on the front end, so
+        // a schema that says "string" sends the agent down a silent dead end —
+        // the setting saves, the call reports ok, and the section is empty.
+        if (Arr::get($control, 'multiple')) {
+            $items = ['type' => $prop['type'] === 'array' ? 'string' : $prop['type']];
+
+            if (isset($prop['enum'])) {
+                $items['enum'] = $prop['enum'];
+                unset($prop['enum']);
+            }
+
+            $prop['type']        = 'array';
+            $prop['items']       = $items;
+            $prop['description'] .= ' Accepts an array, even for a single value.';
+        }
+
         // A conditional control only applies when its siblings hold certain
         // values; say so rather than letting the agent set a dead key.
         $condition = Arr::get($control, 'condition');
