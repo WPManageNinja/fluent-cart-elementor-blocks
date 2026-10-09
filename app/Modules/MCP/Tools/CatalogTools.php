@@ -65,13 +65,13 @@ class CatalogTools
         $permission = isset($map[$action]) ? $map[$action] : null;
 
         if (!$permission) {
-            return MCPHelper::error('unknown_action', __('action must be create, update or delete.', 'fluent-cart'));
+            return MCPHelper::error('unknown_action', __('action must be create, update or delete.', 'fluent-cart-elementor-blocks'));
         }
 
         if (!PermissionGate::can($permission)) {
             return MCPHelper::error('forbidden', sprintf(
                 /* translators: %s: capability name */
-                __('This action needs the %s capability.', 'fluent-cart'),
+                __('This action needs the %s capability.', 'fluent-cart-elementor-blocks'),
                 $permission
             ));
         }
@@ -83,8 +83,8 @@ class CatalogTools
     {
         return [
             'fluent-cart/list-attribute-groups' => [
-                'label'       => __('List Attribute Groups', 'fluent-cart'),
-                'description' => __('The variation attribute library: groups such as Colour or Size, each with its terms. type tells you what a term carries and how it renders — color terms hold a hex value and draw a dot, image terms hold an image URL and draw a thumbnail, options and text draw a labelled chip. styling "dropdown" renders a select instead of swatches. Read this before building a product page with swatches, and before creating a group, because the store is seeded with system groups you should reuse rather than duplicate.', 'fluent-cart'),
+                'label'       => __('List Attribute Groups', 'fluent-cart-elementor-blocks'),
+                'description' => __('The variation attribute library: groups such as Colour or Size, each with its terms. type tells you what a term carries and how it renders — color terms hold a hex value and draw a dot, image terms hold an image URL and draw a thumbnail, options and text draw a labelled chip. styling "dropdown" renders a select instead of swatches. Read this before building a product page with swatches, and before creating a group, because the store is seeded with system groups you should reuse rather than duplicate.', 'fluent-cart-elementor-blocks'),
                 'input_schema' => [
                     'type'       => 'object',
                     'properties' => [
@@ -101,8 +101,8 @@ class CatalogTools
             ],
 
             'fluent-cart/manage-attribute-group' => [
-                'label'       => __('Manage Attribute Group', 'fluent-cart'),
-                'description' => __('Create, update or delete a variation attribute group. type decides what its terms must carry: "color" requires a hex value per term, "image" requires an image URL, "options" and "text" need neither. styling "dropdown" renders a select rather than swatches. Deleting a group deletes its terms and unlinks every variant using them, so it refuses system groups outright and needs confirm:true for the rest.', 'fluent-cart'),
+                'label'       => __('Manage Attribute Group', 'fluent-cart-elementor-blocks'),
+                'description' => __('Create, update or delete a variation attribute group. type decides what its terms must carry: "color" requires a hex value per term, "image" requires an image URL, "options" and "text" need neither. styling "dropdown" renders a select rather than swatches. Deleting a group deletes its terms and unlinks every variant using them, so it refuses system groups outright and needs confirm:true for the rest.', 'fluent-cart-elementor-blocks'),
                 'input_schema' => [
                     'type'       => 'object',
                     'properties' => [
@@ -125,8 +125,8 @@ class CatalogTools
             ],
 
             'fluent-cart/manage-attribute-terms' => [
-                'label'       => __('Manage Attribute Terms', 'fluent-cart'),
-                'description' => __('Create, update or delete the terms inside one attribute group — the individual colours, sizes or materials. A term in a "color" group needs settings.color as a hex value (#rrggbb); a term in an "image" group needs settings.image as a URL. Create accepts up to 10 terms per call, matching the admin UI. Deleting a term unlinks every variant using it.', 'fluent-cart'),
+                'label'       => __('Manage Attribute Terms', 'fluent-cart-elementor-blocks'),
+                'description' => __('Create, update or delete the terms inside one attribute group — the individual colours, sizes or materials. A term in a "color" group needs settings.color as a hex value (#rrggbb); a term in an "image" group needs settings.image as a URL. Create accepts up to 10 terms per call, matching the admin UI. Deleting a term unlinks every variant using it.', 'fluent-cart-elementor-blocks'),
                 'input_schema' => [
                     'type'       => 'object',
                     'properties' => [
@@ -161,8 +161,8 @@ class CatalogTools
             ],
 
             'fluent-cart/get-product-variations' => [
-                'label'       => __('Get Product Variations', 'fluent-cart'),
-                'description' => __('How one product is varied: its variation_type, the attribute groups and terms it offers, and every variant with its price, SKU, stock, image and the terms it maps to. Call this before manage-product-variations, and to diagnose a swatch row that renders wrong — the usual causes are visible here as variants with no terms, or an advanced product with an empty attribute_config.', 'fluent-cart'),
+                'label'       => __('Get Product Variations', 'fluent-cart-elementor-blocks'),
+                'description' => __('How one product is varied: its variation_type, the attribute groups and terms it offers, and every variant with its price, SKU, stock, image and the terms it maps to. Call this before manage-product-variations, and to diagnose a swatch row that renders wrong — the usual causes are visible here as variants with no terms, or an advanced product with an empty attribute_config.', 'fluent-cart-elementor-blocks'),
                 'input_schema' => [
                     'type'       => 'object',
                     'properties' => [
@@ -178,8 +178,8 @@ class CatalogTools
             ],
 
             'fluent-cart/manage-product-variations' => [
-                'label'       => __('Manage Product Variations', 'fluent-cart'),
-                'description' => __('Set how a product is varied, and configure its variants. This is what turns a plain product into one with colour swatches: set variation_type to advanced_variations, declare which attribute groups and terms it offers, then give each variant its terms, price, SKU and image. A variant with no variation_id is created. Amounts are in cents. Setting media_id is what makes the gallery change when a swatch is clicked. Run with dry_run first — this rewrites the variant set.', 'fluent-cart'),
+                'label'       => __('Manage Product Variations', 'fluent-cart-elementor-blocks'),
+                'description' => __('Set how a product is varied, and configure its variants. This is what turns a plain product into one with colour swatches: set variation_type to advanced_variations, declare which attribute groups and terms it offers, then give each variant its terms, price, SKU and image. A variant with no variation_id is created. Amounts are in cents. Setting media_id is what makes the gallery change when a swatch is clicked. Run with dry_run first — this rewrites the variant set.', 'fluent-cart-elementor-blocks'),
                 'input_schema' => [
                     'type'       => 'object',
                     'properties' => [
@@ -285,7 +285,7 @@ class CatalogTools
         return MCPHelper::envelope(
             sprintf(
                 /* translators: %d: group count */
-                _n('%d attribute group.', '%d attribute groups.', count($rows), 'fluent-cart'),
+                _n('%d attribute group.', '%d attribute groups.', count($rows), 'fluent-cart-elementor-blocks'),
                 count($rows)
             ),
             ['groups' => $rows]
@@ -305,7 +305,7 @@ class CatalogTools
             $title = trim((string) Arr::get($params, 'title', ''));
 
             if ($title === '') {
-                return MCPHelper::error('title_required', __('A title is required to create a group.', 'fluent-cart'));
+                return MCPHelper::error('title_required', __('A title is required to create a group.', 'fluent-cart-elementor-blocks'));
             }
 
             $type    = self::validType(Arr::get($params, 'type', 'options'));
@@ -323,7 +323,7 @@ class CatalogTools
 
             if ($dryRun) {
                 return MCPHelper::envelope(
-                    __('Dry run — would create the attribute group.', 'fluent-cart'),
+                    __('Dry run — would create the attribute group.', 'fluent-cart-elementor-blocks'),
                     ['dry_run' => true, 'title' => $title, 'slug' => $slug, 'type' => $type, 'styling' => $styling]
                 );
             }
@@ -336,7 +336,7 @@ class CatalogTools
             ]);
 
             return MCPHelper::envelope(
-                sprintf(/* translators: %s: group title */ __('Created the "%s" attribute group.', 'fluent-cart'), $title),
+                sprintf(/* translators: %s: group title */ __('Created the "%s" attribute group.', 'fluent-cart-elementor-blocks'), $title),
                 ['group' => self::groupRow($group)]
             );
         }
@@ -345,7 +345,7 @@ class CatalogTools
         $group   = $groupId ? AttributeGroup::query()->find($groupId) : null;
 
         if (!$group) {
-            return MCPHelper::error('group_not_found', __('No attribute group with that id. Call list-attribute-groups.', 'fluent-cart'));
+            return MCPHelper::error('group_not_found', __('No attribute group with that id. Call list-attribute-groups.', 'fluent-cart-elementor-blocks'));
         }
 
         if ($action === 'update') {
@@ -380,12 +380,12 @@ class CatalogTools
             }
 
             if (!$changes) {
-                return MCPHelper::error('nothing_to_update', __('Pass title, type or styling.', 'fluent-cart'));
+                return MCPHelper::error('nothing_to_update', __('Pass title, type or styling.', 'fluent-cart-elementor-blocks'));
             }
 
             if ($dryRun) {
                 return MCPHelper::envelope(
-                    __('Dry run — would update the group.', 'fluent-cart'),
+                    __('Dry run — would update the group.', 'fluent-cart-elementor-blocks'),
                     ['dry_run' => true, 'group_id' => $group->id, 'would_change' => $changes]
                 );
             }
@@ -399,7 +399,7 @@ class CatalogTools
             $incomplete = self::termsMissingSettings($group);
 
             return MCPHelper::envelope(
-                sprintf(/* translators: %s: group title */ __('Updated the "%s" attribute group.', 'fluent-cart'), $group->title),
+                sprintf(/* translators: %s: group title */ __('Updated the "%s" attribute group.', 'fluent-cart-elementor-blocks'), $group->title),
                 [
                     'group'            => self::groupRow($group),
                     'changed'          => $changes,
@@ -414,7 +414,7 @@ class CatalogTools
                     'system_group',
                     sprintf(
                         /* translators: %s: group title */
-                        __('"%s" is a built-in group and cannot be deleted. Create your own group instead.', 'fluent-cart'),
+                        __('"%s" is a built-in group and cannot be deleted. Create your own group instead.', 'fluent-cart-elementor-blocks'),
                         $group->title
                     )
                 );
@@ -427,7 +427,7 @@ class CatalogTools
 
             if (!Arr::get($params, 'confirm') || $dryRun) {
                 return MCPHelper::envelope(
-                    __('Confirm required — deleting a group removes its terms and unlinks every variant using them.', 'fluent-cart'),
+                    __('Confirm required — deleting a group removes its terms and unlinks every variant using them.', 'fluent-cart-elementor-blocks'),
                     [
                         'dry_run'          => true,
                         'group_id'         => $group->id,
@@ -447,12 +447,12 @@ class CatalogTools
             $group->delete();
 
             return MCPHelper::envelope(
-                sprintf(/* translators: %s: group title */ __('Deleted the "%s" group.', 'fluent-cart'), $title),
+                sprintf(/* translators: %s: group title */ __('Deleted the "%s" group.', 'fluent-cart-elementor-blocks'), $title),
                 ['deleted_terms' => count($termIds), 'unlinked_variants' => $links]
             );
         }
 
-        return MCPHelper::error('unknown_action', __('action must be create, update or delete.', 'fluent-cart'));
+        return MCPHelper::error('unknown_action', __('action must be create, update or delete.', 'fluent-cart-elementor-blocks'));
     }
 
     // ----------------------------------------------------------------- terms
@@ -463,7 +463,7 @@ class CatalogTools
         $group   = AttributeGroup::query()->find($groupId);
 
         if (!$group) {
-            return MCPHelper::error('group_not_found', __('No attribute group with that id. Call list-attribute-groups.', 'fluent-cart'));
+            return MCPHelper::error('group_not_found', __('No attribute group with that id. Call list-attribute-groups.', 'fluent-cart-elementor-blocks'));
         }
 
         $action = (string) Arr::get($params, 'action', '');
@@ -478,13 +478,13 @@ class CatalogTools
             $rows = Arr::get($params, 'terms', []);
 
             if (!is_array($rows) || !$rows) {
-                return MCPHelper::error('terms_required', __('Pass terms as an array of {title, color?, image?}.', 'fluent-cart'));
+                return MCPHelper::error('terms_required', __('Pass terms as an array of {title, color?, image?}.', 'fluent-cart-elementor-blocks'));
             }
 
             // The admin UI caps a create at ten; matching it keeps a runaway
             // agent from writing a hundred rows in one unreviewable call.
             if (count($rows) > 10) {
-                return MCPHelper::error('too_many_terms', __('Create at most 10 terms per call.', 'fluent-cart'));
+                return MCPHelper::error('too_many_terms', __('Create at most 10 terms per call.', 'fluent-cart-elementor-blocks'));
             }
 
             $prepared = [];
@@ -501,7 +501,7 @@ class CatalogTools
 
             if ($dryRun) {
                 return MCPHelper::envelope(
-                    __('Dry run — would create the terms.', 'fluent-cart'),
+                    __('Dry run — would create the terms.', 'fluent-cart-elementor-blocks'),
                     ['dry_run' => true, 'group' => $group->title, 'terms' => $prepared]
                 );
             }
@@ -524,7 +524,7 @@ class CatalogTools
             return MCPHelper::envelope(
                 sprintf(
                     /* translators: 1: term count, 2: group title */
-                    __('Created %1$d term(s) in "%2$s".', 'fluent-cart'),
+                    __('Created %1$d term(s) in "%2$s".', 'fluent-cart-elementor-blocks'),
                     count($created),
                     $group->title
                 ),
@@ -536,7 +536,7 @@ class CatalogTools
         $term   = $termId ? AttributeTerm::query()->where('group_id', $group->id)->find($termId) : null;
 
         if (!$term) {
-            return MCPHelper::error('term_not_found', __('No term with that id in this group.', 'fluent-cart'));
+            return MCPHelper::error('term_not_found', __('No term with that id in this group.', 'fluent-cart-elementor-blocks'));
         }
 
         if ($action === 'update') {
@@ -552,7 +552,7 @@ class CatalogTools
                 $hex = sanitize_hex_color($color);
 
                 if (!$hex) {
-                    return MCPHelper::error('invalid_color', __('color must be a hex value such as #B5A897.', 'fluent-cart'));
+                    return MCPHelper::error('invalid_color', __('color must be a hex value such as #B5A897.', 'fluent-cart-elementor-blocks'));
                 }
 
                 $settings['color'] = $hex;
@@ -561,7 +561,7 @@ class CatalogTools
 
             if (($image = (string) Arr::get($params, 'image', '')) !== '') {
                 if (!filter_var($image, FILTER_VALIDATE_URL)) {
-                    return MCPHelper::error('invalid_image', __('image must be a URL.', 'fluent-cart'));
+                    return MCPHelper::error('invalid_image', __('image must be a URL.', 'fluent-cart-elementor-blocks'));
                 }
 
                 $settings['image'] = esc_url_raw($image);
@@ -569,12 +569,12 @@ class CatalogTools
             }
 
             if (!$changes) {
-                return MCPHelper::error('nothing_to_update', __('Pass title, color or image.', 'fluent-cart'));
+                return MCPHelper::error('nothing_to_update', __('Pass title, color or image.', 'fluent-cart-elementor-blocks'));
             }
 
             if ($dryRun) {
                 return MCPHelper::envelope(
-                    __('Dry run — would update the term.', 'fluent-cart'),
+                    __('Dry run — would update the term.', 'fluent-cart-elementor-blocks'),
                     ['dry_run' => true, 'term_id' => $term->id, 'would_change' => $changes]
                 );
             }
@@ -583,7 +583,7 @@ class CatalogTools
             $term->save();
 
             return MCPHelper::envelope(
-                sprintf(/* translators: %s: term title */ __('Updated the "%s" term.', 'fluent-cart'), $term->title),
+                sprintf(/* translators: %s: term title */ __('Updated the "%s" term.', 'fluent-cart-elementor-blocks'), $term->title),
                 ['term' => self::termRow($term), 'changed' => $changes]
             );
         }
@@ -593,7 +593,7 @@ class CatalogTools
 
             if (!Arr::get($params, 'confirm') || $dryRun) {
                 return MCPHelper::envelope(
-                    __('Confirm required — deleting a term unlinks every variant using it.', 'fluent-cart'),
+                    __('Confirm required — deleting a term unlinks every variant using it.', 'fluent-cart-elementor-blocks'),
                     ['dry_run' => true, 'term_id' => $term->id, 'variant_links' => $links, 'pass_confirm' => true]
                 );
             }
@@ -603,12 +603,12 @@ class CatalogTools
             $term->delete();
 
             return MCPHelper::envelope(
-                sprintf(/* translators: %s: term title */ __('Deleted the "%s" term.', 'fluent-cart'), $title),
+                sprintf(/* translators: %s: term title */ __('Deleted the "%s" term.', 'fluent-cart-elementor-blocks'), $title),
                 ['unlinked_variants' => $links]
             );
         }
 
-        return MCPHelper::error('unknown_action', __('action must be create, update or delete.', 'fluent-cart'));
+        return MCPHelper::error('unknown_action', __('action must be create, update or delete.', 'fluent-cart-elementor-blocks'));
     }
 
     // ------------------------------------------------------------ variations
@@ -619,7 +619,7 @@ class CatalogTools
         $product   = Product::query()->find($productId);
 
         if (!$product) {
-            return MCPHelper::error('product_not_found', __('No product with that id. Call list-products.', 'fluent-cart'));
+            return MCPHelper::error('product_not_found', __('No product with that id. Call list-products.', 'fluent-cart-elementor-blocks'));
         }
 
         $detail        = ProductDetail::query()->where('post_id', $productId)->first();
@@ -667,11 +667,11 @@ class CatalogTools
         $findings = [];
 
         if ($variationType === 'advanced_variations' && !$config) {
-            $findings[] = __('variation_type is advanced_variations but attribute_config is empty — no selector will render. Set attribute_groups.', 'fluent-cart');
+            $findings[] = __('variation_type is advanced_variations but attribute_config is empty — no selector will render. Set attribute_groups.', 'fluent-cart-elementor-blocks');
         }
 
         if ($config && $variationType !== 'advanced_variations') {
-            $findings[] = __('attribute_config is set but variation_type is not advanced_variations, so the swatches are ignored.', 'fluent-cart');
+            $findings[] = __('attribute_config is set but variation_type is not advanced_variations, so the swatches are ignored.', 'fluent-cart-elementor-blocks');
         }
 
         $withoutTerms = 0;
@@ -684,7 +684,7 @@ class CatalogTools
         if ($variationType === 'advanced_variations' && $withoutTerms) {
             $findings[] = sprintf(
                 /* translators: %d: variant count */
-                __('%d variant(s) map to no attribute terms, so no swatch combination selects them.', 'fluent-cart'),
+                __('%d variant(s) map to no attribute terms, so no swatch combination selects them.', 'fluent-cart-elementor-blocks'),
                 $withoutTerms
             );
         }
@@ -697,7 +697,7 @@ class CatalogTools
         }
 
         if ($withoutMedia === count($rows) && count($rows)) {
-            $findings[] = __('No variant has a media_id, so the gallery will not change when a swatch is chosen. Set media_id per variant.', 'fluent-cart');
+            $findings[] = __('No variant has a media_id, so the gallery will not change when a swatch is chosen. Set media_id per variant.', 'fluent-cart-elementor-blocks');
         }
 
         // The gallery only swaps between slides it already holds, so a variant
@@ -722,7 +722,7 @@ class CatalogTools
         if ($orphanMedia) {
             $findings[] = sprintf(
                 /* translators: %s: attachment ids */
-                __('Variant image(s) %s are not in the product gallery, so selecting those variants will not change the picture. Re-run manage-product-variations, which adds them.', 'fluent-cart'),
+                __('Variant image(s) %s are not in the product gallery, so selecting those variants will not change the picture. Re-run manage-product-variations, which adds them.', 'fluent-cart-elementor-blocks'),
                 implode(', ', array_keys($orphanMedia))
             );
         }
@@ -730,7 +730,7 @@ class CatalogTools
         return MCPHelper::envelope(
             sprintf(
                 /* translators: 1: variant count, 2: product title */
-                __('%1$d variant(s) on "%2$s".', 'fluent-cart'),
+                __('%1$d variant(s) on "%2$s".', 'fluent-cart-elementor-blocks'),
                 count($rows),
                 $product->post_title
             ),
@@ -751,21 +751,21 @@ class CatalogTools
         $product   = Product::query()->find($productId);
 
         if (!$product) {
-            return MCPHelper::error('product_not_found', __('No product with that id. Call list-products.', 'fluent-cart'));
+            return MCPHelper::error('product_not_found', __('No product with that id. Call list-products.', 'fluent-cart-elementor-blocks'));
         }
 
         $detail = ProductDetail::query()->where('post_id', $productId)->first();
 
         if (!$detail) {
-            return MCPHelper::error('product_detail_missing', __('This product has no detail row; it cannot be varied.', 'fluent-cart'));
+            return MCPHelper::error('product_detail_missing', __('This product has no detail row; it cannot be varied.', 'fluent-cart-elementor-blocks'));
         }
 
         if (!PermissionGate::can('products/edit')) {
-            return MCPHelper::error('forbidden', __('This action needs the products/edit capability.', 'fluent-cart'));
+            return MCPHelper::error('forbidden', __('This action needs the products/edit capability.', 'fluent-cart-elementor-blocks'));
         }
 
         if (Arr::get($params, 'remove_missing_variants') && !PermissionGate::can('products/delete')) {
-            return MCPHelper::error('forbidden', __('remove_missing_variants needs the products/delete capability.', 'fluent-cart'));
+            return MCPHelper::error('forbidden', __('remove_missing_variants needs the products/delete capability.', 'fluent-cart-elementor-blocks'));
         }
 
         $dryRun        = (bool) Arr::get($params, 'dry_run', false);
@@ -775,7 +775,7 @@ class CatalogTools
         $removeMissing = (bool) Arr::get($params, 'remove_missing_variants', false);
 
         if ($variationType !== null && !in_array($variationType, self::VARIATION_TYPES, true)) {
-            return MCPHelper::error('invalid_variation_type', __('variation_type must be simple_variations or advanced_variations.', 'fluent-cart'));
+            return MCPHelper::error('invalid_variation_type', __('variation_type must be simple_variations or advanced_variations.', 'fluent-cart-elementor-blocks'));
         }
 
         // Validate the declared groups and terms before writing anything: a
@@ -793,7 +793,7 @@ class CatalogTools
                 if (!AttributeGroup::query()->find($groupId)) {
                     return MCPHelper::error('group_not_found', sprintf(
                         /* translators: %d: group id */
-                        __('Attribute group %d does not exist.', 'fluent-cart'),
+                        __('Attribute group %d does not exist.', 'fluent-cart-elementor-blocks'),
                         $groupId
                     ));
                 }
@@ -808,7 +808,7 @@ class CatalogTools
                 if ($missing) {
                     return MCPHelper::error('term_not_in_group', sprintf(
                         /* translators: 1: term ids, 2: group id */
-                        __('Term(s) %1$s are not in group %2$d.', 'fluent-cart'),
+                        __('Term(s) %1$s are not in group %2$d.', 'fluent-cart-elementor-blocks'),
                         implode(', ', $missing),
                         $groupId
                     ));
@@ -833,7 +833,7 @@ class CatalogTools
             if ($id && !isset($byId[$id])) {
                 return MCPHelper::error('variant_not_found', sprintf(
                     /* translators: %d: variation id */
-                    __('Variant %d does not belong to this product.', 'fluent-cart'),
+                    __('Variant %d does not belong to this product.', 'fluent-cart-elementor-blocks'),
                     $id
                 ));
             }
@@ -860,7 +860,7 @@ class CatalogTools
 
         if ($dryRun) {
             return MCPHelper::envelope(
-                __('Dry run — nothing was written.', 'fluent-cart'),
+                __('Dry run — nothing was written.', 'fluent-cart-elementor-blocks'),
                 [
                     'dry_run'          => true,
                     'product_id'       => $productId,
@@ -999,7 +999,7 @@ class CatalogTools
         return MCPHelper::envelope(
             sprintf(
                 /* translators: 1: variant count, 2: product title */
-                __('Configured %1$d variant(s) on "%2$s".', 'fluent-cart'),
+                __('Configured %1$d variant(s) on "%2$s".', 'fluent-cart-elementor-blocks'),
                 count($results),
                 $product->post_title
             ),
@@ -1010,7 +1010,7 @@ class CatalogTools
                 'variants'         => $results,
                 'gallery_images_added' => $galleryAdded,
                 'deleted'          => $toDelete,
-                'next_step'        => __('Read it back with get-product-variations; its findings report anything still unconfigured.', 'fluent-cart'),
+                'next_step'        => __('Read it back with get-product-variations; its findings report anything still unconfigured.', 'fluent-cart-elementor-blocks'),
             ],
             ['currency' => MCPHelper::currencyCode()]
         );
@@ -1222,7 +1222,7 @@ class CatalogTools
         if (!in_array($type, self::GROUP_TYPES, true)) {
             return MCPHelper::error('invalid_type', sprintf(
                 /* translators: %s: allowed values */
-                __('type must be one of: %s.', 'fluent-cart'),
+                __('type must be one of: %s.', 'fluent-cart-elementor-blocks'),
                 implode(', ', self::GROUP_TYPES)
             ));
         }
@@ -1237,7 +1237,7 @@ class CatalogTools
         if (!in_array($styling, self::GROUP_STYLINGS, true)) {
             return MCPHelper::error('invalid_styling', sprintf(
                 /* translators: %s: allowed values */
-                __('styling must be one of: %s.', 'fluent-cart'),
+                __('styling must be one of: %s.', 'fluent-cart-elementor-blocks'),
                 implode(', ', self::GROUP_STYLINGS)
             ));
         }
@@ -1272,13 +1272,13 @@ class CatalogTools
         if ($title === '') {
             return MCPHelper::error('term_title_required', sprintf(
                 /* translators: %d: row number */
-                __('Term %d has no title.', 'fluent-cart'),
+                __('Term %d has no title.', 'fluent-cart-elementor-blocks'),
                 $index + 1
             ));
         }
 
         if (mb_strlen($title) > 50) {
-            return MCPHelper::error('term_title_too_long', __('Term titles are limited to 50 characters.', 'fluent-cart'));
+            return MCPHelper::error('term_title_too_long', __('Term titles are limited to 50 characters.', 'fluent-cart-elementor-blocks'));
         }
 
         $settings = [];
@@ -1289,7 +1289,7 @@ class CatalogTools
             if (!$hex) {
                 return MCPHelper::error('term_color_required', sprintf(
                     /* translators: 1: term title, 2: group title */
-                    __('"%1$s" needs a hex colour because "%2$s" is a colour group.', 'fluent-cart'),
+                    __('"%1$s" needs a hex colour because "%2$s" is a colour group.', 'fluent-cart-elementor-blocks'),
                     $title,
                     $group->title
                 ));
@@ -1302,7 +1302,7 @@ class CatalogTools
             if (!filter_var($image, FILTER_VALIDATE_URL)) {
                 return MCPHelper::error('term_image_required', sprintf(
                     /* translators: 1: term title, 2: group title */
-                    __('"%1$s" needs an image URL because "%2$s" is an image group.', 'fluent-cart'),
+                    __('"%1$s" needs an image URL because "%2$s" is an image group.', 'fluent-cart-elementor-blocks'),
                     $title,
                     $group->title
                 ));
