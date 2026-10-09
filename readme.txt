@@ -4,7 +4,7 @@ Tags: fluentcart, elementor, ecommerce, checkout, cart, shop
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.1.0
+Stable tag: 1.1.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Elementor Blocks for FluentCart lets you build checkout flows, cart interactions, and product layouts visually in Elementor while using FluentCart’s native commerce logic and assets.
@@ -84,6 +84,10 @@ Are FluentCart assets loaded automatically?
 Yes. Required CSS and JavaScript assets are enqueued automatically when widgets are rendered.
 
 == Changelog ==
+
+= 1.1.1 (Oct 9, 2026) =
+- Adds Show reviews from to the Product Reviews, Product Review List and Review Summary widgets: Current Product, Selected Products or All Products.
+- With several products, their reviews show together with one combined rating, and the Write a Review button and its settings are hidden.
 
 = 1.1.0 (Sep 30, 2026) =
 - Adds six Product Review widgets: Product Reviews, Product Review List, Review Summary, Review Form, Write a Review Button and Product Rating.
