@@ -86,8 +86,8 @@ Yes. Required CSS and JavaScript assets are enqueued automatically when widgets 
 == Changelog ==
 
 = 1.1.1 (Oct 9, 2026) =
-- Adds Show reviews from to the Product Reviews, Product Review List and Review Summary widgets: Current Product, Selected Products or All Products.
-- With several products, their reviews show together with one combined rating, and the Write a Review button and its settings are hidden.
+- Added an option to the review widgets to show reviews from all products, or from specific products you choose, not just the current product.
+- Added a combined rating summary for those products: one overall rating and star breakdown across all of them.
 
 = 1.1.0 (Sep 30, 2026) =
 - Adds six Product Review widgets: Product Reviews, Product Review List, Review Summary, Review Form, Write a Review Button and Product Rating.
