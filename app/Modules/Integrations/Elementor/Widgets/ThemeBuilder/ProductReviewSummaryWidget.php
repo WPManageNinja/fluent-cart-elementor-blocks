@@ -213,7 +213,7 @@ class ProductReviewSummaryWidget extends Widget_Base
             ]
         );
 
-        $this->registerProductSourceControls();
+        $this->registerReviewSourceControls();
 
         $this->end_controls_section();
 
@@ -248,34 +248,51 @@ class ProductReviewSummaryWidget extends Widget_Base
             return;
         }
 
-        $product = $this->getProduct($settings);
-
-        if (!$product && \Elementor\Plugin::$instance->editor->is_edit_mode()) {
-            $product = $this->getPreviewProduct();
-        }
-
-        if (!$product) {
-            $this->renderPlaceholder(
-                esc_html__('Please select a product or use this widget inside a product template.', 'fluent-cart-elementor-blocks')
-            );
-            return;
-        }
-
-        if ($this->renderReviewsUnavailable($product->ID)) {
-            return;
-        }
-
-        AssetLoader::loadSingleProductAssets();
+        $source = $this->resolveReviewSource($settings);
 
         // The renderer sanitises the colour itself and falls back to its own
         // default, so an emptied control returns the stock colour rather than
         // an unstyled star.
-        $starColor = sanitize_hex_color((string) ($settings['star_color'] ?? '')) ?: self::DEFAULT_STAR_COLOR;
+        $options = [
+            'starColor' => sanitize_hex_color((string) ($settings['star_color'] ?? '')) ?: self::DEFAULT_STAR_COLOR,
+        ];
+
+        if ($source['multi']) {
+            if ($source['filters'] === null) {
+                $this->renderPlaceholder(
+                    esc_html__('None of the selected products can be shown.', 'fluent-cart-elementor-blocks')
+                );
+                return;
+            }
+
+            // One card added up across the products.
+            $postId = 0;
+            $options['productFilters'] = $source['filters'];
+        } else {
+            $product = $source['product'];
+
+            if (!$product && \Elementor\Plugin::$instance->editor->is_edit_mode()) {
+                $product = $this->getPreviewProduct();
+            }
+
+            if (!$product) {
+                $this->renderPlaceholder(
+                    esc_html__('Please select a product or use this widget inside a product template.', 'fluent-cart-elementor-blocks')
+                );
+                return;
+            }
+
+            if ($this->renderReviewsUnavailable($product->ID)) {
+                return;
+            }
+
+            $postId = $product->ID;
+        }
+
+        AssetLoader::loadSingleProductAssets();
 
         ob_start();
-        (new ProductReviewRenderer($product->ID, [
-            'starColor' => $starColor,
-        ]))->renderSummarySection();
+        (new ProductReviewRenderer($postId, $options))->renderSummarySection();
         $content = ob_get_clean();
 
         if (trim($content) === '') {

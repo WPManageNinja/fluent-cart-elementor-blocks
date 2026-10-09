@@ -21,6 +21,30 @@
 
         initialized = true;
 
+        // The review widgets hide their Write a Review settings for several products.
+        // Elementor's conditions cannot count a list, so this keeps a flag for them.
+        // Other widgets have no review_several_products setting and are left alone.
+        var syncSeveralProducts = function(settings) {
+            if (!settings || settings.get('review_several_products') === undefined) {
+                return;
+            }
+
+            var value = settings.get('product_id');
+            var count = Array.isArray(value) ? value.filter(Boolean).length : (value ? 1 : 0);
+            var flag = count > 1 ? 'yes' : '';
+
+            if (settings.get('review_several_products') !== flag) {
+                settings.set('review_several_products', flag);
+            }
+        };
+
+        // On opening, whichever section shows: the picker may not be drawn at all.
+        if (elementor.hooks) {
+            elementor.hooks.addAction('panel/open_editor/widget', function(panel, model) {
+                syncSeveralProducts(model && model.get('settings'));
+            });
+        }
+
         var ControlBaseData = elementor.modules.controls.BaseData;
 
         if (!ControlBaseData) {
@@ -136,6 +160,16 @@
                 };
 
                 $select.select2(options);
+
+                // And on every pick, while the picker is open.
+                var settings = self.container ? self.container.settings : self.elementSettingsModel;
+
+                if (settings && self.model.get('name') === 'product_id') {
+                    this.listenTo(settings, 'change:product_id', function() {
+                        syncSeveralProducts(settings);
+                    });
+                    syncSeveralProducts(settings);
+                }
 
                 // Fetch initial values if exist
                 var initialValue = this.getControlValue();

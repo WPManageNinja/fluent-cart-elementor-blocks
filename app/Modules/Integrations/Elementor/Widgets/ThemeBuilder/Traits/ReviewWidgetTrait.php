@@ -14,6 +14,8 @@ use FluentCart\Framework\Support\Arr;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support\ReviewSupport;
 use FluentCartElementorBlocks\App\Utils\Enqueuer\Enqueue;
 use FluentCart\App\App;
+use FluentCart\App\Modules\Data\ProductDataSetup;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Controls\ProductSelectControl;
 use FluentCart\App\Vite;
 
 if (!defined('ABSPATH')) {
@@ -615,6 +617,135 @@ trait ReviewWidgetTrait
     protected static function switchOn(array $settings, string $key): bool
     {
         return ($settings[$key] ?? '') === 'yes';
+    }
+
+    /**
+     * Show reviews from the current product, selected products, or all products,
+     * as the Gutenberg review blocks do. The picker keeps the product_id key, so a
+     * widget saved with one product opens with it selected.
+     */
+    protected function registerReviewSourceControls()
+    {
+        if (!ReviewSupport::coreHasMultiProductReviews()) {
+            $this->registerProductSourceControls();
+            return;
+        }
+
+        $this->add_control(
+            'source',
+            [
+                'label'   => esc_html__('Show reviews from', 'fluent-cart-elementor-blocks'),
+                'type'    => \Elementor\Controls_Manager::SELECT,
+                'default' => 'default',
+                'options' => [
+                    'default' => esc_html__('Current Product', 'fluent-cart-elementor-blocks'),
+                    'custom'  => esc_html__('Selected Products', 'fluent-cart-elementor-blocks'),
+                    'all'     => esc_html__('All Products', 'fluent-cart-elementor-blocks'),
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'product_id',
+            [
+                'label'       => esc_html__('Select Products', 'fluent-cart-elementor-blocks'),
+                'type'        => (new ProductSelectControl())->get_type(),
+                'label_block' => true,
+                'multiple'    => true,
+                'default'     => '',
+                'description' => esc_html__('With two or more products, their reviews and rating are combined, and there is no Write a Review button.', 'fluent-cart-elementor-blocks'),
+                'condition'   => [
+                    'source' => 'custom',
+                ],
+            ]
+        );
+
+        // Set by the product picker (product-select-control.js): Elementor's
+        // conditions cannot count a list, and several products have no Write a Review.
+        $this->add_control(
+            'review_several_products',
+            [
+                'type'    => \Elementor\Controls_Manager::HIDDEN,
+                'default' => '',
+            ]
+        );
+    }
+
+    /**
+     * Conditions for the Write a Review settings: one product only. Empty on a core
+     * without multi-product reviews, where the source is always one product.
+     */
+    protected static function singleProductConditions(): array
+    {
+        if (!ReviewSupport::coreHasMultiProductReviews()) {
+            return [];
+        }
+
+        return [
+            'conditions' => [
+                'relation' => 'and',
+                'terms'    => [
+                    ['name' => 'source', 'operator' => '!==', 'value' => 'all'],
+                    [
+                        'relation' => 'or',
+                        'terms'    => [
+                            ['name' => 'source', 'operator' => '!==', 'value' => 'custom'],
+                            ['name' => 'review_several_products', 'operator' => '!==', 'value' => 'yes'],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * Which reviews the settings ask for: one product, or product filters for
+     * several (null filters: a selection with nothing valid, which shows nothing).
+     *
+     * @return array{multi: bool, product: mixed, filters: array|null}
+     */
+    protected function resolveReviewSource(array $settings): array
+    {
+        $source = !empty($settings['source']) ? $settings['source'] : 'default';
+        $single = ['multi' => false, 'product' => null, 'filters' => null];
+
+        if (!ReviewSupport::coreHasMultiProductReviews()) {
+            return array_merge($single, ['product' => $this->getProduct($settings)]);
+        }
+
+        if ($source === 'all') {
+            return ['multi' => true, 'product' => null, 'filters' => ProductReviewService::blockProductFilters('all', [])];
+        }
+
+        if ($source !== 'custom') {
+            return array_merge($single, ['product' => $this->getProduct($settings)]);
+        }
+
+        $productIds = $this->selectedReviewProductIds($settings);
+
+        if (count($productIds) > 1) {
+            return ['multi' => true, 'product' => null, 'filters' => ProductReviewService::blockProductFilters('multiple', $productIds)];
+        }
+
+        return array_merge($single, [
+            'product' => $productIds ? ProductDataSetup::getProductModel($productIds[0]) : null,
+        ]);
+    }
+
+    /**
+     * The picked product ids, whether saved as one id (older widgets) or a list.
+     *
+     * @return int[]
+     */
+    protected function selectedReviewProductIds(array $settings): array
+    {
+        $raw = $settings['product_id'] ?? [];
+        $raw = is_array($raw) ? $raw : [$raw];
+        $raw = array_slice($raw, 0, ProductReviewService::MAX_PRODUCT_FILTER_IDS);
+
+        return array_values(array_unique(array_filter(array_map('intval', $raw), function ($id) {
+            return $id > 0;
+        })));
     }
 
     protected function renderReviewsUnavailable($postId = 0): bool
