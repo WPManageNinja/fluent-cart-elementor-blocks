@@ -149,7 +149,7 @@ class ProductReviewListWidget extends Widget_Base
             ]
         );
 
-        $this->registerProductSourceControls();
+        $this->registerReviewSourceControls();
 
         $this->add_control(
             'min_rating',
@@ -718,21 +718,40 @@ class ProductReviewListWidget extends Widget_Base
             return;
         }
 
-        $product = $this->getProduct($settings);
+        $source = $this->resolveReviewSource($settings);
 
-        if (!$product && \Elementor\Plugin::$instance->editor->is_edit_mode()) {
-            $product = $this->getPreviewProduct();
-        }
+        if ($source['multi']) {
+            if ($source['filters'] === null) {
+                $this->renderPlaceholder(
+                    esc_html__('None of the selected products can be shown.', 'fluent-cart-elementor-blocks')
+                );
+                return;
+            }
 
-        if (!$product) {
-            $this->renderPlaceholder(
-                esc_html__('Please select a product or use this widget inside a product template.', 'fluent-cart-elementor-blocks')
-            );
-            return;
-        }
+            // The Review List block's own multi-product query.
+            $productIds = $source['filters']['product_ids'];
+            $query = $productIds
+                ? ['query_type' => 'multiple', 'product_id' => '', 'product_ids' => $productIds]
+                : ['query_type' => 'all', 'product_id' => '', 'product_ids' => []];
+        } else {
+            $product = $source['product'];
 
-        if ($this->renderReviewsUnavailable($product->ID)) {
-            return;
+            if (!$product && \Elementor\Plugin::$instance->editor->is_edit_mode()) {
+                $product = $this->getPreviewProduct();
+            }
+
+            if (!$product) {
+                $this->renderPlaceholder(
+                    esc_html__('Please select a product or use this widget inside a product template.', 'fluent-cart-elementor-blocks')
+                );
+                return;
+            }
+
+            if ($this->renderReviewsUnavailable($product->ID)) {
+                return;
+            }
+
+            $query = ['query_type' => 'custom', 'product_id' => (int) $product->ID];
         }
 
         AssetLoader::loadSingleProductAssets();
@@ -751,7 +770,7 @@ class ProductReviewListWidget extends Widget_Base
             add_filter('fluent_cart/review/renderer_options', $inject, 20);
         }
 
-        $content = render_block($this->buildListBlock($product->ID, $settings));
+        $content = render_block($this->buildListBlock($query, $settings));
 
         if ($injected) {
             remove_filter('fluent_cart/review/renderer_options', $inject, 20);
@@ -772,12 +791,12 @@ class ProductReviewListWidget extends Widget_Base
      * The whole tree: the list, its header pieces, the row and its fields,
      * and the pager.
      *
-     * @param int $productId
+     * @param array $query query_type with product_id or product_ids
      * @param array $settings
      */
-    protected function buildListBlock($productId, array $settings): array
+    protected function buildListBlock(array $query, array $settings): array
     {
-        $attributes = $this->listAttributes($productId, $settings);
+        $attributes = $this->listAttributes($query, $settings);
 
         // Core's own header — count, chips and sort in one row — renders only
         // for a list nobody composed. Placing a single header block here would
@@ -917,20 +936,17 @@ class ProductReviewListWidget extends Widget_Base
     /**
      * The list block's own attributes, shared by both layouts.
      *
-     * @param int $productId
+     * @param array $query query_type with product_id or product_ids
      * @param array $settings
      */
-    protected function listAttributes($productId, array $settings): array
+    protected function listAttributes(array $query, array $settings): array
     {
         list($sortBy, $sortOrder) = $this->defaultSort($settings);
 
-        return [
-            // The widget has already resolved the product, including the
-            // editor's preview fallback, so the block is told which one
-            // rather than asked to resolve it again from a context the
-            // canvas may not have.
-            'query_type'       => 'custom',
-            'product_id'       => (int) $productId,
+        // The widget has already resolved the product (or products), including
+        // the editor's preview fallback, so the block is told which rather than
+        // asked to resolve it again from a context the canvas may not have.
+        return $query + [
             'viewMode'         => $this->pick($settings, 'view_mode', self::VIEW_MODES, 'list'),
             'gridColumns'      => max(self::MIN_COLUMNS, min(self::MAX_COLUMNS, absint($settings['grid_columns'] ?? 2))),
             'sliderSettings'   => $this->sliderSettings($settings),

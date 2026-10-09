@@ -126,7 +126,7 @@ class ProductReviewsWidget extends Widget_Base
         // layout picker below draws the reviews of whichever one is named
         // here - a picker that comes first is showing eleven arrangements of
         // nothing in particular.
-        $this->registerProductSourceControls();
+        $this->registerReviewSourceControls();
 
         $this->addReviewLayoutPresetControl();
 
@@ -187,7 +187,7 @@ class ProductReviewsWidget extends Widget_Base
             [
                 'label' => esc_html__('Write a Review Button', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_CONTENT,
-            ]
+            ] + static::singleProductConditions()
         );
 
         $this->add_control(
@@ -897,7 +897,7 @@ class ProductReviewsWidget extends Widget_Base
             [
                 'label' => esc_html__('Write a Review Button', 'fluent-cart-elementor-blocks'),
                 'tab'   => Controls_Manager::TAB_STYLE,
-            ]
+            ] + static::singleProductConditions()
         );
 
         WriteAReviewButtonWidget::registerCtaStyleControls($this);
@@ -915,21 +915,39 @@ class ProductReviewsWidget extends Widget_Base
             return;
         }
 
-        $product = $this->getProduct($settings);
+        $source = $this->resolveReviewSource($settings);
+        $options = $this->rendererOptions($settings);
 
-        if (!$product && \Elementor\Plugin::$instance->editor->is_edit_mode()) {
-            $product = $this->getPreviewProduct();
-        }
+        if ($source['multi']) {
+            if ($source['filters'] === null) {
+                $this->renderPlaceholder(
+                    esc_html__('None of the selected products can be shown.', 'fluent-cart-elementor-blocks')
+                );
+                return;
+            }
 
-        if (!$product) {
-            $this->renderPlaceholder(
-                esc_html__('Please select a product or use this widget inside a product template.', 'fluent-cart-elementor-blocks')
-            );
-            return;
-        }
+            // Several products: post id 0 and the filters, the way the block renders them.
+            $postId = 0;
+            $options['productFilters'] = $source['filters'];
+        } else {
+            $product = $source['product'];
 
-        if ($this->renderReviewsUnavailable($product->ID)) {
-            return;
+            if (!$product && \Elementor\Plugin::$instance->editor->is_edit_mode()) {
+                $product = $this->getPreviewProduct();
+            }
+
+            if (!$product) {
+                $this->renderPlaceholder(
+                    esc_html__('Please select a product or use this widget inside a product template.', 'fluent-cart-elementor-blocks')
+                );
+                return;
+            }
+
+            if ($this->renderReviewsUnavailable($product->ID)) {
+                return;
+            }
+
+            $postId = $product->ID;
         }
 
         AssetLoader::loadSingleProductAssets();
@@ -945,7 +963,7 @@ class ProductReviewsWidget extends Widget_Base
         // whether it won depended on how the argument was scored. There is
         // no argument now. They changed a setting; the setting is what draws.
         ob_start();
-        (new ProductReviewRenderer($product->ID, $this->rendererOptions($settings)))->render();
+        (new ProductReviewRenderer($postId, $options))->render();
         $content = ob_get_clean();
 
         // The layout's own stylesheet keys off this, so it has to say what

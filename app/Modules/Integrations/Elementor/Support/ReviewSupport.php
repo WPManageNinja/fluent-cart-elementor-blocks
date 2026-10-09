@@ -63,6 +63,17 @@ class ReviewSupport
             && class_exists('\FluentCart\App\Services\Reviews\LayoutPresets');
     }
 
+    /**
+     * Can core list and summarise reviews across several products? Added after
+     * the reviews feature, so an older core keeps the single-product source only.
+     */
+    public static function coreHasMultiProductReviews(): bool
+    {
+        return self::coreHasReviews()
+            && method_exists('\FluentCart\App\Services\ProductReviewService', 'blockProductFilters')
+            && method_exists('\FluentCart\App\Services\ProductReviewService', 'getProductsRatingSummary');
+    }
+
     /** Has the store switched the Product Reviews module on? */
     public static function isModuleActive(): bool
     {
