@@ -389,3 +389,14 @@ Nothing here changes what is gated. Core has three review gates —
 and the first two have panel controls, which `pro-feature-guard.js` shows and
 disables rather than hides. `exists()` remains the single authority on which
 layouts are real, so the picker and the renderer cannot disagree.
+
+## Product source: several products (1.1.1)
+
+The Product Reviews, Review List and Rating Summary widgets offer **Show reviews from**: Current product, Selected products (one or more) or All products, matching the Gutenberg blocks (core #3048–#3051).
+
+- One selected product renders as before, through the single-product path.
+- Two or more, or All products, render through core's multi-product mode: `ProductReviewRenderer(0, ['productFilters' => …])`. The Review List hands the Gutenberg block its own `multiple` / `all` query. There is one combined rating (`getProductsRatingSummary()`) and no Write a Review button.
+- The picker keeps the `product_id` key, and is now multiple. A widget saved with one ID still opens with it selected (`ReviewWidgetTrait::selectedReviewProductIds()`).
+- Product Reviews hides its Write a Review Button sections for several products. Elementor's conditions cannot count a list, so `product-select-control.js` keeps a hidden `review_several_products` flag, updated on each pick and on `panel/open_editor/widget`.
+- Write a Review and Review Form stay single-product.
+- On a FluentCart core without `ProductReviewService::blockProductFilters()`, the widgets keep the old single-product source (`ReviewSupport::coreHasMultiProductReviews()`).
