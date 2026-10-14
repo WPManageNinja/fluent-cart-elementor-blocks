@@ -101,3 +101,58 @@
 .fct-reviews-layout-preset--testimonials .fct-review-votes {
     display: none;
 }
+
+/* Currency Switcher while multi-currency needs FluentCart Pro: the admin's Pro notice
+   (core styles/tailwind/pro-feature.scss) - amber crown on cream, dark text and button.
+   Amber text measures 1.74:1 on cream, so only the crown is amber. */
+.fct-elementor-pro-notice {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 16px 12px;
+    text-align: center;
+    border: 1px dashed #d6dae1;
+    border-radius: 6px;
+}
+
+.fct-elementor-pro-notice .fct-elementor-pro-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    background: #fffaeb;
+    color: #f6b51e;
+}
+
+.fct-elementor-pro-notice svg {
+    width: 16px;
+    height: 16px;
+}
+
+.fct-elementor-pro-notice .fct-elementor-pro-text {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #565865;
+}
+
+.fct-elementor-pro-notice .fct-elementor-pro-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border-radius: 6px;
+    background: #253241;
+    color: #fff;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.fct-elementor-pro-notice .fct-elementor-pro-button:hover,
+.fct-elementor-pro-notice .fct-elementor-pro-button:focus {
+    background: #1c2732;
+    color: #fff;
+}

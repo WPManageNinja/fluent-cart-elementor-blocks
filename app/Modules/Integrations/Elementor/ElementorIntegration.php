@@ -12,6 +12,7 @@ use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Controls\Produc
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Controls\ReviewLayoutPresetControl;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Renderers\ElementorShopAppRenderer;
 use FluentCart\App\Modules\Templating\AssetLoader;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support\ProFeature;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support\ReviewSupport;
 use FluentCartElementorBlocks\App\Services\Badges\BadgeRenderer;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\AddToCartWidget;
@@ -319,6 +320,11 @@ class ElementorIntegration
                 background: url("data:image/svg+xml;base64,' . $svgBase64 . '") center / contain no-repeat;
             }
         ');
+
+        // Pro widgets' tiles carry the admin's amber Pro crown while Pro is inactive
+        if (!CurrencySwitcherWidget::isAvailable()) {
+            wp_add_inline_style('fluent-cart-elementor-editor-badge', ProFeature::tileCrownCss(['fluent_cart_currency_switcher']));
+        }
 
         $restInfo = Helper::getRestInfo();
 

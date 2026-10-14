@@ -6,6 +6,8 @@ use Elementor\Controls_Manager;
 use Elementor\Widget_Base;
 use FluentCart\App\Modules\MultiCurrency\Services\CurrencySwitcher;
 use FluentCart\Framework\Support\Arr;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support\ProFeature;
+use FluentCartElementorBlocks\App\Utils\Enqueuer\Enqueue;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -44,6 +46,20 @@ class CurrencySwitcherWidget extends Widget_Base
     }
 
     /**
+     * The editor's Pro notice is styled by elementor.css, the stylesheet the review
+     * widgets load (same handle, so it prints once).
+     */
+    public function get_style_depends()
+    {
+        $preview = \Elementor\Plugin::$instance->preview;
+        if (!static::isAvailable() && $preview && $preview->is_preview_mode()) {
+            Enqueue::staticStyle('fluentcart-product-reviews-elementor', 'css/elementor.css', [], FLUENTCART_ELEMENTOR_BLOCKS_VERSION);
+        }
+
+        return [];
+    }
+
+    /**
      * Core's switcher is a plain select with no options; only a plugin that
      * replaces it (Pro's flag button) reads them — same gate as the block.
      */
@@ -52,6 +68,17 @@ class CurrencySwitcherWidget extends Widget_Base
         $preview = apply_filters('fluent_cart/currency_switcher/editor_preview', ['style' => 'select', 'currencies' => []]);
 
         return is_array($preview) && Arr::get($preview, 'style') === 'button';
+    }
+
+    /**
+     * Multi-currency is a Pro feature: without it core's switcher renders nothing.
+     * The same gate as the block; an older core without it counts as available.
+     */
+    public static function isAvailable(): bool
+    {
+        $settings = '\\FluentCart\\App\\Modules\\MultiCurrency\\Services\\MultiCurrencySettings';
+
+        return !method_exists($settings, 'isAvailable') || $settings::isAvailable();
     }
 
     protected function register_controls()
@@ -169,6 +196,14 @@ class CurrencySwitcherWidget extends Widget_Base
 
     protected function render()
     {
+        if (!static::isAvailable()) {
+            if (\Elementor\Plugin::$instance->editor->is_edit_mode()) {
+                echo ProFeature::notice(__('The currency switcher is a FluentCart Pro feature. It shows nothing on your site until FluentCart Pro is active.', 'fluent-cart-elementor-blocks')); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in ProFeature::notice()
+            }
+
+            return;
+        }
+
         $atts = static::hasOptions() ? static::switcherAtts((array) $this->get_settings_for_display()) : [];
         $html = CurrencySwitcher::render($atts);
 
