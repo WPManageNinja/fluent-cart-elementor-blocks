@@ -321,6 +321,20 @@ class ElementorIntegration
             }
         ');
 
+        // A $ coin in exchange arrows, drawn as a mask so it takes the panel's icon colour
+        $currencyIcon = 'url("data:image/svg+xml;base64,' . base64_encode(CurrencySwitcherWidget::ICON_SVG) . '") center / contain no-repeat';
+        wp_add_inline_style('fluent-cart-elementor-editor-badge', '
+            .fluent-cart-currency-switcher-widget-icon::before {
+                content: "";
+                display: inline-block;
+                width: 1em;
+                height: 1em;
+                background-color: currentColor;
+                mask: ' . $currencyIcon . ';
+                -webkit-mask: ' . $currencyIcon . ';
+            }
+        ');
+
         // Pro widgets' tiles carry the admin's amber Pro crown while Pro is inactive
         if (!CurrencySwitcherWidget::isAvailable()) {
             wp_add_inline_style('fluent-cart-elementor-editor-badge', ProFeature::tileCrownCss(['fluent_cart_currency_switcher']));
