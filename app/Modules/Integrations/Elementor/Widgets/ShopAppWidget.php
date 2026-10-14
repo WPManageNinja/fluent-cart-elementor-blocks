@@ -790,7 +790,6 @@ class ShopAppWidget extends Widget_Base
     protected function render()
     {
         $settings = $this->get_settings_for_display();
-        $isEditor = \Elementor\Plugin::$instance->editor->is_edit_mode();
 
         AssetLoader::loadProductArchiveAssets();
 
@@ -928,31 +927,6 @@ class ShopAppWidget extends Widget_Base
             'sold_out_badge_text'     => Arr::get($settings, 'sold_out_badge_text', ''),
         ];
 
-        // Build a transient cache key based on the relevant settings. The
-        // archive term must be part of the key: on product taxonomy archives
-        // the handler scopes the query to the current term (applyArchiveScope),
-        // so the same widget renders different products per category/brand —
-        // without the term, one archive's HTML would be served on all of them.
-        // Taxonomy-qualified: term IDs are not schema-guaranteed unique across
-        // taxonomies (legacy shared terms), so a category and a brand could
-        // share an ID — the taxonomy keeps their caches apart.
-        $fluentCartTaxonomies = get_object_taxonomies('fluent-products');
-        $archiveTerm = '';
-        if ($fluentCartTaxonomies && is_tax($fluentCartTaxonomies)) {
-            $queriedTerm = get_queried_object();
-            $archiveTerm = $queriedTerm instanceof \WP_Term ? $queriedTerm->taxonomy . ':' . $queriedTerm->term_id : '';
-        }
-        $cacheKey = 'fce_shop_app_' . md5(wp_json_encode($shortcodeAtts) . wp_json_encode($cardElements) . wp_json_encode($shopLayout) . wp_json_encode($badgeSettings) . '|term:' . $archiveTerm);
-
-        if (!$isEditor) {
-            $cached = get_transient($cacheKey);
-
-            if ($cached) {
-                echo $cached; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-                return;
-            }
-        }
-
         // Sale + Sold Out badge overlays via core's before/after_image_block
         // hooks (fire inside each card's renderProductImage). The closures
         // buffer each card image and re-wrap it so the badge overlays the
@@ -975,12 +949,7 @@ class ShopAppWidget extends Widget_Base
 
         BadgeRenderer::removeCardBadgeHooks($badgeHooks);
 
-        $html = '<div class="fluent-cart-elementor-shop-app">' . $output . '</div>';
-
-        if (!$isEditor) {
-            set_transient($cacheKey, $html, 4 * HOUR_IN_SECONDS);
-        }
-
-        echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+        // Rendered fresh, like core's block: prices follow the visitor's currency and current product data
+        echo '<div class="fluent-cart-elementor-shop-app">' . $output . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
     }
 }
