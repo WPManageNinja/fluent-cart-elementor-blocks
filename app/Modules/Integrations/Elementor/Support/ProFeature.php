@@ -25,8 +25,9 @@ class ProFeature
      */
     public static function notice(string $note): string
     {
+        // Elementor cancels link clicks in its preview, so the button opens the page itself
         $button = sprintf(
-            '<a class="fct-elementor-pro-button" href="%1$s" target="_blank" rel="noopener noreferrer">%2$s%3$s</a>',
+            '<a class="fct-elementor-pro-button" href="%1$s" target="_blank" rel="noopener noreferrer" onclick="window.open(this.href, \'_blank\', \'noopener\'); return false;">%2$s%3$s</a>',
             esc_url(self::UPGRADE_URL),
             self::CROWN_SVG,
             esc_html__('Upgrade to Pro', 'fluent-cart-elementor-blocks')
