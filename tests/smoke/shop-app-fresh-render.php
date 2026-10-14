@@ -52,13 +52,24 @@ $render = function () {
     return (string) ob_get_clean();
 };
 
-// Only the card prices: the rest of the HTML carries a per-render client ID
+// Only the card prices: the rest of the HTML carries a per-render client ID.
+// Each .fct-item-price's full text, nested screen-reader labels included.
 $prices = function (string $html): array {
-    preg_match_all('#<span class="fct-item-price">(.*?)</span>\s*(?=<|$)#s', $html, $matches);
+    $dom = new \DOMDocument();
+    libxml_use_internal_errors(true);
+    $dom->loadHTML('<?xml encoding="utf-8"?>' . $html);
+    libxml_clear_errors();
+    $found = [];
+    foreach ((new \DOMXPath($dom))->query('//span[contains(concat(" ", normalize-space(@class), " "), " fct-item-price ")]') as $node) {
+        $found[] = trim(preg_replace('/\s+/u', ' ', $node->textContent));
+    }
 
-    return array_map(function ($price) {
-        return trim(preg_replace('/\s+/', ' ', html_entity_decode(wp_strip_all_tags($price))));
-    }, $matches[1]);
+    return $found;
+};
+
+// The amount alone, in minor units ("From $5,00" -> 500), whatever the separators
+$amount = function (string $price): int {
+    return (int) preg_replace('/\D/', '', $price);
 };
 
 $baseFirst = $prices($context::withCurrency($base, $render));
@@ -78,5 +89,12 @@ $test->same($baseAgain, $baseFirst, 'two renders in one currency show the same p
 $test->check(strpos($baseFirst[0] ?? '', $baseSign) !== false, "the {$base} render shows {$baseSign} prices: " . ($baseFirst[0] ?? 'none'));
 $test->check(strpos($firstQuoted, $quoteSign) !== false, "the {$quote} render shows {$quoteSign} prices, not the {$base} render served again: " . ($firstQuoted ?: 'none'));
 $test->check($quoted !== $baseFirst, "the {$quote} prices differ from the {$base} prices");
+$test->same(
+    array_map($amount, $quoted),
+    array_map(function ($price) use ($amount) {
+        return $amount($price) * 2;
+    }, $baseFirst),
+    "each {$quote} price is the {$base} price at the test's rate of 2"
+);
 
 $test->finish();
