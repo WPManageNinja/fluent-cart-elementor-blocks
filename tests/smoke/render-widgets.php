@@ -45,6 +45,12 @@ $expect = [
     'fluentcart_write_a_review_button'  => 'fct-review-cta-btn',
 ];
 
+// The switcher renders nothing until the store offers two currencies
+$switcherClass = '\FluentCart\App\Modules\MultiCurrency\Services\CurrencyContext';
+if (class_exists($switcherClass) && count($switcherClass::selectableCurrencies()) > 1) {
+    $expect['fluent_cart_currency_switcher'] = 'fct-currency-switcher';
+}
+
 $warnings = [];
 set_error_handler(function ($severity, $message, $file, $line) use (&$warnings) {
     if (strpos($file, 'fluent-cart-elementor-blocks') !== false) {

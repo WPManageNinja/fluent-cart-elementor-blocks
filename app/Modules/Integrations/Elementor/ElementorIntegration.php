@@ -18,6 +18,7 @@ use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\AddToCa
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\BuyNowWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\CartWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\CheckoutWidget;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\CurrencySwitcherWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\CustomerDashboardButtonWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\CustomerDashboardWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\MiniCartWidget;
@@ -141,6 +142,11 @@ class ElementorIntegration
         $widgets_manager->register(new CustomerDashboardWidget());
         $widgets_manager->register(new SearchBarWidget());
         $widgets_manager->register(new StoreLogoWidget());
+
+        // Needs a core with multi-currency
+        if (class_exists('\FluentCart\App\Modules\MultiCurrency\Services\CurrencySwitcher')) {
+            $widgets_manager->register(new CurrencySwitcherWidget());
+        }
 
         // Theme Builder product widgets
         $widgets_manager->register(new ProductTitleWidget());
