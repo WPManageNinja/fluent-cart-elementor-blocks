@@ -12,12 +12,14 @@ use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Controls\Produc
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Controls\ReviewLayoutPresetControl;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Renderers\ElementorShopAppRenderer;
 use FluentCart\App\Modules\Templating\AssetLoader;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support\ProFeature;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support\ReviewSupport;
 use FluentCartElementorBlocks\App\Services\Badges\BadgeRenderer;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\AddToCartWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\BuyNowWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\CartWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\CheckoutWidget;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\CurrencySwitcherWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\CustomerDashboardButtonWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\CustomerDashboardWidget;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\MiniCartWidget;
@@ -141,6 +143,11 @@ class ElementorIntegration
         $widgets_manager->register(new CustomerDashboardWidget());
         $widgets_manager->register(new SearchBarWidget());
         $widgets_manager->register(new StoreLogoWidget());
+
+        // Needs a core with multi-currency
+        if (class_exists('\FluentCart\App\Modules\MultiCurrency\Services\CurrencySwitcher')) {
+            $widgets_manager->register(new CurrencySwitcherWidget());
+        }
 
         // Theme Builder product widgets
         $widgets_manager->register(new ProductTitleWidget());
@@ -313,6 +320,25 @@ class ElementorIntegration
                 background: url("data:image/svg+xml;base64,' . $svgBase64 . '") center / contain no-repeat;
             }
         ');
+
+        // A $ coin in exchange arrows, drawn as a mask so it takes the panel's icon colour
+        $currencyIcon = 'url("data:image/svg+xml;base64,' . base64_encode(CurrencySwitcherWidget::ICON_SVG) . '") center / contain no-repeat';
+        wp_add_inline_style('fluent-cart-elementor-editor-badge', '
+            .fluent-cart-currency-switcher-widget-icon::before {
+                content: "";
+                display: inline-block;
+                width: 1em;
+                height: 1em;
+                background-color: currentColor;
+                mask: ' . $currencyIcon . ';
+                -webkit-mask: ' . $currencyIcon . ';
+            }
+        ');
+
+        // Pro widgets' tiles carry the admin's amber Pro crown while Pro is inactive
+        if (!CurrencySwitcherWidget::isAvailable()) {
+            wp_add_inline_style('fluent-cart-elementor-editor-badge', ProFeature::tileCrownCss(['fluent_cart_currency_switcher']));
+        }
 
         $restInfo = Helper::getRestInfo();
 
