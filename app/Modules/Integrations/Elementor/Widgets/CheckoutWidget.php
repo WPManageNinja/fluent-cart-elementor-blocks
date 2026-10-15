@@ -14,6 +14,8 @@ use FluentCart\App\Models\Cart;
 use FluentCart\App\Services\Renderer\CheckoutRenderer;
 use FluentCart\App\Modules\Templating\AssetLoader;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Controls\ProductVariationSelectControl;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support\InlineCheckoutPreview;
+use FluentCartElementorBlocks\App\Utils\Enqueuer\Enqueue;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Renderers\ElementorCheckoutRenderer;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Renderers\DummyCheckoutRenderer;
 
@@ -66,6 +68,10 @@ class CheckoutWidget extends Widget_Base
         // enqueued from render() never reaches it.
         if (self::hasInlineCheckoutStyles()) {
             $styles[] = 'fct-inline-checkout-items';
+        } elseif (self::isEditorPreview()) {
+            // Without Pro's stylesheet the sample rows are unstyled, so this add-on supplies its own.
+            Enqueue::staticStyle('fce-inline-preview-css', 'css/inline-checkout-preview.css', [], FLUENTCART_ELEMENTOR_BLOCKS_VERSION);
+            $styles[] = 'fce-inline-preview-css';
         }
 
         return $styles;
@@ -112,6 +118,11 @@ class CheckoutWidget extends Widget_Base
         );
     }
 
+    private static function isEditorPreview(): bool
+    {
+        return \Elementor\Plugin::$instance->editor->is_edit_mode() || \Elementor\Plugin::$instance->preview->is_preview_mode();
+    }
+
     private static function hasInlineCheckoutStyles(): bool
     {
         return class_exists('\FluentCartPro\App\Utils\Enqueuer\Vite');
@@ -153,6 +164,7 @@ class CheckoutWidget extends Widget_Base
                 [
                         'label' => esc_html__('General Settings', 'fluent-cart-elementor-blocks'),
                         'tab'   => Controls_Manager::TAB_CONTENT,
+                        'condition' => ['inline_checkout_mode!' => 'custom'],
                 ]
         );
 
@@ -257,17 +269,6 @@ class CheckoutWidget extends Widget_Base
                 ]
         );
 
-        if (!App::isProActive()) {
-            $this->add_control(
-                    'inline_pro_notice',
-                    [
-                            'type'            => Controls_Manager::RAW_HTML,
-                            'raw'             => esc_html__('Letting shoppers pick products on the checkout needs FluentCart Pro.', 'fluent-cart-elementor-blocks'),
-                            'content_classes' => 'elementor-panel-alert elementor-panel-alert-info',
-                    ]
-            );
-        }
-
         $this->add_control(
                 'inline_checkout_mode',
                 [
@@ -276,11 +277,34 @@ class CheckoutWidget extends Widget_Base
                         'default'     => 'cart',
                         'options'     => [
                                 'cart'   => esc_html__('Default Cart', 'fluent-cart-elementor-blocks'),
-                                'custom' => esc_html__('Custom Product', 'fluent-cart-elementor-blocks'),
+                                'custom' => App::isProActive()
+                                        ? esc_html__('Custom Product', 'fluent-cart-elementor-blocks')
+                                        : esc_html__('Custom Product (Pro)', 'fluent-cart-elementor-blocks'),
                         ],
                         'description' => esc_html__('"Default Cart" checks out the shopper\'s cart. "Custom Product" lets them pick from products you choose.', 'fluent-cart-elementor-blocks'),
                 ]
         );
+
+        $this->add_control(
+                'inline_core_layout_notice',
+                [
+                        'type'            => Controls_Manager::RAW_HTML,
+                        'raw'             => esc_html__('The live Custom Product checkout uses FluentCart\'s own layout, so this preview is only an approximation.', 'fluent-cart-elementor-blocks'),
+                        'content_classes' => 'elementor-panel-alert elementor-panel-alert-info',
+                        'condition'       => ['inline_checkout_mode' => 'custom'],
+                ]
+        );
+
+        if (!App::isProActive()) {
+            $this->add_control(
+                    'inline_pro_notice',
+                    [
+                            'type'            => Controls_Manager::RAW_HTML,
+                            'raw'             => esc_html__('Custom Product checkout is a FluentCart Pro feature. Without Pro, a checkout set to Custom Product shows nothing on the live page.', 'fluent-cart-elementor-blocks'),
+                            'content_classes' => 'elementor-panel-alert elementor-panel-alert-warning',
+                    ]
+            );
+        }
 
         $this->add_control(
                 'inline_variant_ids',
@@ -351,6 +375,7 @@ class CheckoutWidget extends Widget_Base
                 [
                         'label' => esc_html__('Form Fields', 'fluent-cart-elementor-blocks'),
                         'tab'   => Controls_Manager::TAB_CONTENT,
+                        'condition' => ['inline_checkout_mode!' => 'custom'],
                 ]
         );
 
@@ -482,6 +507,7 @@ class CheckoutWidget extends Widget_Base
                 [
                         'label' => esc_html__('Order Summary', 'fluent-cart-elementor-blocks'),
                         'tab'   => Controls_Manager::TAB_CONTENT,
+                        'condition' => ['inline_checkout_mode!' => 'custom'],
                 ]
         );
 
@@ -590,6 +616,7 @@ class CheckoutWidget extends Widget_Base
                 [
                         'label' => esc_html__('Layout Options', 'fluent-cart-elementor-blocks'),
                         'tab'   => Controls_Manager::TAB_CONTENT,
+                        'condition' => ['inline_checkout_mode!' => 'custom'],
                 ]
         );
 
@@ -1390,6 +1417,7 @@ class CheckoutWidget extends Widget_Base
                 [
                         'label' => esc_html__('Line Items', 'fluent-cart-elementor-blocks'),
                         'tab'   => Controls_Manager::TAB_STYLE,
+                        'condition' => ['inline_checkout_mode!' => 'custom'],
                 ]
         );
 
@@ -1910,30 +1938,12 @@ class CheckoutWidget extends Widget_Base
             return (new ElementorCheckoutRenderer($settings, $attributes, new Cart()))->render();
         }
 
-        $surface = 'checkout-elementor';
-
-        $listener = function ($html, $cart, $context) use ($settings, $attributes, $surface) {
-            if (($context['surface'] ?? '') !== $surface) {
-                return $html;
-            }
-
-            // Core's own render path loads these; ours replaces that path, so it has to.
-            AssetLoader::loadCheckoutAssets($cart);
-
-            return (new ElementorCheckoutRenderer($settings, $attributes, $cart))->render();
-        };
-
-        add_filter('fluent_cart/checkout/custom_product_cart_html', $listener, 10, 3);
-
-        try {
-            return CheckoutRenderer::renderCustomProductCheckout([
-                'surface'    => $surface,
-                'attributes' => $attributes,
-                'block'      => null,
-            ]);
-        } finally {
-            remove_filter('fluent_cart/checkout/custom_product_cart_html', $listener, 10);
-        }
+        // The shortcode surface is the one that renders a full checkout without a WP_Block; the block surface needs inner blocks.
+        return CheckoutRenderer::renderCustomProductCheckout([
+            'surface'    => 'checkout-shortcode',
+            'attributes' => $attributes,
+            'block'      => null,
+        ]);
     }
 
     private function normalizeCheckoutSettings(array $settings): array
@@ -1991,7 +2001,13 @@ class CheckoutWidget extends Widget_Base
 
         if ($isEditor) {
             $inlineAttributes = $this->getInlineCheckoutAttributes($settings);
-            $renderer = new DummyCheckoutRenderer($settings, $inlineAttributes);
+
+            if (($inlineAttributes['checkout_mode'] ?? '') === 'custom') {
+                echo InlineCheckoutPreview::render($inlineAttributes); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                return;
+            }
+
+            $renderer = new DummyCheckoutRenderer($settings);
         } else {
             $inlineAttributes = $this->getInlineCheckoutAttributes($settings);
 

@@ -2,10 +2,8 @@
 
 namespace FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Renderers;
 
-use FluentCart\App\Helpers\Helper;
 use FluentCart\App\Services\Renderer\CheckoutRenderer;
 use FluentCart\App\Models\Cart;
-use FluentCart\App\Models\ProductVariation;
 use FluentCart\App\Vite;
 
 
@@ -17,16 +15,13 @@ class DummyCheckoutRenderer
 {
     protected $settings;
 
-    protected $attributes;
-
     protected $cart;
 
     protected $requireShipping = false;
 
-    public function __construct(array $settings, array $attributes = [])
+    public function __construct(array $settings)
     {
         $this->settings = $settings;
-        $this->attributes = $attributes;
         $this->cart = new Cart();
         $this->requireShipping = $this->cart->requireShipping();
     }
@@ -485,122 +480,8 @@ class DummyCheckoutRenderer
     /**
      * Render order summary items (dummy products)
      */
-    /**
-     * Pro's own option list for the chosen variations, so the preview cannot drift from the
-     * frontend. Null when Pro is inactive or nothing offerable is chosen.
-     */
-    protected function getProSelectorHtml(): ?string
-    {
-        $configClass = '\\FluentCartPro\\App\\Modules\\InlineCheckout\\Config\\InlineCheckoutConfig';
-        $rendererClass = '\\FluentCartPro\\App\\Modules\\InlineCheckout\\Renderer\\InlineCheckoutItemsRenderer';
-
-        if (!class_exists($configClass) || !class_exists($rendererClass) || empty($this->attributes['variant_ids'])) {
-            return null;
-        }
-
-        $config = $configClass::normalize($this->attributes, 'elementor');
-        $variations = $configClass::resolveVariations($config);
-
-        if (!$variations) {
-            return null;
-        }
-
-        // The renderer reads the selection off the cart, so seed the first row as selected.
-        $cart = new Cart();
-        $cart->cart_data = [['object_id' => (int)$variations[0]->id]];
-
-        return (new $rendererClass($cart, $config, $variations))->getItemsHtml();
-    }
-
-    /**
-     * Static preview of Pro's product selector, using its row markup so Pro's stylesheet styles it.
-     */
-    protected function renderInlineSelectorItems(): void
-    {
-        $proHtml = $this->getProSelectorHtml();
-
-        if ($proHtml !== null) {
-            echo '<div class="fct_items_wrapper">' . $proHtml . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped by Pro's renderer
-            return;
-        }
-
-        $isSingle = ($this->attributes['selection_mode'] ?? 'single') !== 'multiple';
-        $rows = $this->getInlineSelectorRows();
-        $label = $isSingle
-            ? __('Choose an option', 'fluent-cart-elementor-blocks')
-            : __('Choose one or more options', 'fluent-cart-elementor-blocks');
-        ?>
-        <div class="fct_items_wrapper">
-            <div class="fct-inline-items <?php echo $isSingle ? 'fct-inline-items-single' : 'fct-inline-items-multiple'; ?>" role="<?php echo $isSingle ? 'radiogroup' : 'group'; ?>" aria-label="<?php echo esc_attr($label); ?>">
-                <?php foreach ($rows as $index => $row): ?>
-                    <label class="fct-inline-item<?php echo $index === 0 ? ' is-selected' : ''; ?>">
-                        <input class="fct-inline-item-input" type="<?php echo $isSingle ? 'radio' : 'checkbox'; ?>" name="fct_inline_preview<?php echo $isSingle ? '' : '_' . (int)$index; ?>" <?php echo $index === 0 ? 'checked' : ''; ?> />
-                        <span class="fct-inline-item-media" aria-hidden="true"><img src="<?php echo esc_url($row['image']); ?>" alt="" /></span>
-                        <span class="fct-inline-item-content">
-                            <span class="fct-inline-item-title"><?php echo esc_html($row['title']); ?></span>
-                            <?php if ($row['subtitle'] !== ''): ?>
-                                <span class="fct-inline-item-variant"><?php echo esc_html($row['subtitle']); ?></span>
-                            <?php endif; ?>
-                        </span>
-                        <span class="fct-inline-item-price"><?php echo esc_html($row['price']); ?></span>
-                    </label>
-                <?php endforeach; ?>
-            </div>
-        </div>
-        <?php
-    }
-
-    /**
-     * The chosen variations when there are any, otherwise two sample rows.
-     */
-    protected function getInlineSelectorRows(): array
-    {
-        $ids = array_slice(array_values(array_filter(array_map('absint', (array)($this->attributes['variant_ids'] ?? [])))), 0, 20);
-        $rows = [];
-
-        if ($ids) {
-            $variations = ProductVariation::query()
-                ->with('product')
-                ->whereIn('id', $ids)
-                ->get()
-                ->keyBy('id');
-
-            foreach ($ids as $id) {
-                $variation = $variations->get($id);
-                if (!$variation) {
-                    continue;
-                }
-
-                $product = $variation->product;
-                $title = $product ? (string)$product->post_title : (string)$variation->variation_title;
-                $subtitle = $product ? (string)$variation->variation_title : '';
-
-                $rows[] = [
-                    'title'    => $title,
-                    'subtitle' => $subtitle === $title ? '' : $subtitle,
-                    'price'    => Helper::toDecimal($variation->item_price),
-                    'image'    => (string)($variation->thumbnail ?: ($product ? $product->thumbnail : '')) ?: 'https://placehold.co/600x400',
-                ];
-            }
-        }
-
-        if ($rows) {
-            return $rows;
-        }
-
-        return [
-            ['title' => 'Sample Product', 'subtitle' => 'Premium Plan', 'price' => '$200.00', 'image' => 'https://placehold.co/600x400'],
-            ['title' => 'Another Product', 'subtitle' => 'Basic Plan', 'price' => '$300.00', 'image' => 'https://placehold.co/600x400'],
-        ];
-    }
-
     protected function renderOrderSummaryItems(): void
     {
-        if (($this->attributes['checkout_mode'] ?? '') === 'custom') {
-            $this->renderInlineSelectorItems();
-            return;
-        }
-
         ?>
         <div class="fct_items_wrapper">
             <div class="fct_line_items">
