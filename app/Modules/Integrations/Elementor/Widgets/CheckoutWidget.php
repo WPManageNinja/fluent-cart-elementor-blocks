@@ -163,6 +163,7 @@ class CheckoutWidget extends Widget_Base
                 [
                         'label' => esc_html__('General Settings', 'fluent-cart-elementor-blocks'),
                         'tab'   => Controls_Manager::TAB_CONTENT,
+                        'condition' => ['inline_checkout_mode!' => 'custom'],
                 ]
         );
 
@@ -283,6 +284,16 @@ class CheckoutWidget extends Widget_Base
                 ]
         );
 
+        $this->add_control(
+                'inline_core_layout_notice',
+                [
+                        'type'            => Controls_Manager::RAW_HTML,
+                        'raw'             => esc_html__('The live Custom Product checkout uses FluentCart\'s own layout, so this preview is only an approximation.', 'fluent-cart-elementor-blocks'),
+                        'content_classes' => 'elementor-panel-alert elementor-panel-alert-info',
+                        'condition'       => ['inline_checkout_mode' => 'custom'],
+                ]
+        );
+
         if (!App::isProActive()) {
             $this->add_control(
                     'inline_pro_notice',
@@ -363,6 +374,7 @@ class CheckoutWidget extends Widget_Base
                 [
                         'label' => esc_html__('Form Fields', 'fluent-cart-elementor-blocks'),
                         'tab'   => Controls_Manager::TAB_CONTENT,
+                        'condition' => ['inline_checkout_mode!' => 'custom'],
                 ]
         );
 
@@ -477,6 +489,7 @@ class CheckoutWidget extends Widget_Base
                 [
                         'label' => esc_html__('Order Summary', 'fluent-cart-elementor-blocks'),
                         'tab'   => Controls_Manager::TAB_CONTENT,
+                        'condition' => ['inline_checkout_mode!' => 'custom'],
                 ]
         );
 
@@ -585,6 +598,7 @@ class CheckoutWidget extends Widget_Base
                 [
                         'label' => esc_html__('Layout Options', 'fluent-cart-elementor-blocks'),
                         'tab'   => Controls_Manager::TAB_CONTENT,
+                        'condition' => ['inline_checkout_mode!' => 'custom'],
                 ]
         );
 
@@ -1385,6 +1399,7 @@ class CheckoutWidget extends Widget_Base
                 [
                         'label' => esc_html__('Line Items', 'fluent-cart-elementor-blocks'),
                         'tab'   => Controls_Manager::TAB_STYLE,
+                        'condition' => ['inline_checkout_mode!' => 'custom'],
                 ]
         );
 
@@ -1960,7 +1975,19 @@ class CheckoutWidget extends Widget_Base
      */
     protected function render()
     {
-        $settings = $this->normalizeCheckoutSettings($this->get_settings_for_display());
+        $display = $this->get_settings_for_display();
+
+        // Custom Product hides the layout, form and summary sections, so their display values come back null,
+        // but the editor preview still draws the Elementor layout from the saved ones.
+        if (($display['inline_checkout_mode'] ?? '') === 'custom') {
+            foreach ($this->get_settings() as $key => $value) {
+                if (($display[$key] ?? null) === null) {
+                    $display[$key] = $value;
+                }
+            }
+        }
+
+        $settings = $this->normalizeCheckoutSettings($display);
         $isEditor = \Elementor\Plugin::$instance->editor->is_edit_mode();
 
         // Load checkout styles (works even without cart for editor preview)
