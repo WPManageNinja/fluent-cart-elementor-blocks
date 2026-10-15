@@ -15,18 +15,31 @@ class ElementorCheckoutRenderer
 {
     protected $settings;
     protected $cart;
+    protected $attributes;
     protected $checkoutRenderer;
     protected $summaryRenderer;
 
-    public function __construct(array $settings)
+    public function __construct(array $settings, array $attributes = [])
     {
         $this->settings = $settings;
-        $this->cart = CartHelper::getCart();
+        $this->attributes = $attributes;
+
+        // Lets Pro's inline checkout supply the cart; null keeps the shopper's own cart.
+        $this->cart = apply_filters('fluent_cart/checkout/render_cart', null, [
+            'surface'    => 'checkout-elementor',
+            'attributes' => $attributes,
+            'block'      => null,
+        ]) ?: CartHelper::getCart();
 
         if ($this->cart && !empty(Arr::get($this->cart, 'cart_data', []))) {
             $this->checkoutRenderer = new CheckoutRenderer($this->cart);
             $this->summaryRenderer = new CartSummaryRender($this->cart);
         }
+    }
+
+    public function getCart()
+    {
+        return $this->cart ?: null;
     }
 
     /**
@@ -74,7 +87,13 @@ class ElementorCheckoutRenderer
         ob_start();
         ?>
         <div class="fce-checkout-empty-cart">
-            <?php (new CartRenderer())->renderEmpty(); ?>
+            <?php
+            $emptyMessage = apply_filters('fluent_cart/checkout/empty_message', null, [
+                'surface'    => 'checkout-elementor',
+                'attributes' => $this->attributes,
+            ]);
+            (new CartRenderer())->renderEmpty($emptyMessage);
+            ?>
         </div>
         <?php
         return ob_get_clean();
