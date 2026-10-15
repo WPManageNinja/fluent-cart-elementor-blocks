@@ -9,7 +9,9 @@ use Elementor\Group_Control_Border;
 use Elementor\Group_Control_Box_Shadow;
 use Elementor\Group_Control_Background;
 use Elementor\Repeater;
+use FluentCart\App\App;
 use FluentCart\App\Modules\Templating\AssetLoader;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Controls\ProductVariationSelectControl;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Renderers\ElementorCheckoutRenderer;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Renderers\DummyCheckoutRenderer;
 
@@ -103,6 +105,7 @@ class CheckoutWidget extends Widget_Base
     protected function register_controls()
     {
         $this->registerGeneralControls();
+        $this->registerInlineCheckoutControls();
         $this->registerFormFieldsControls();
         $this->registerSummaryControls();
         $this->registerLayoutControls();
@@ -213,6 +216,103 @@ class CheckoutWidget extends Widget_Base
                         'label_off'    => esc_html__('No', 'fluent-cart-elementor-blocks'),
                         'return_value' => 'yes',
                         'default'      => 'yes',
+                ]
+        );
+
+        $this->end_controls_section();
+    }
+
+    /**
+     * Products controls: inline checkout (FluentCart Pro)
+     */
+    private function registerInlineCheckoutControls()
+    {
+        $this->start_controls_section(
+                'inline_checkout_section',
+                [
+                        'label' => esc_html__('Products', 'fluent-cart-elementor-blocks'),
+                        'tab'   => Controls_Manager::TAB_CONTENT,
+                ]
+        );
+
+        if (!App::isProActive()) {
+            $this->add_control(
+                    'inline_pro_notice',
+                    [
+                            'type'            => Controls_Manager::RAW_HTML,
+                            'raw'             => esc_html__('Letting shoppers pick products on the checkout needs FluentCart Pro.', 'fluent-cart-elementor-blocks'),
+                            'content_classes' => 'elementor-panel-alert elementor-panel-alert-info',
+                    ]
+            );
+        }
+
+        $this->add_control(
+                'inline_checkout_mode',
+                [
+                        'label'       => esc_html__('Checkout Source', 'fluent-cart-elementor-blocks'),
+                        'type'        => Controls_Manager::SELECT,
+                        'default'     => 'cart',
+                        'options'     => [
+                                'cart'   => esc_html__('Default Cart', 'fluent-cart-elementor-blocks'),
+                                'custom' => esc_html__('Custom Product', 'fluent-cart-elementor-blocks'),
+                        ],
+                        'description' => esc_html__('"Default Cart" checks out the shopper\'s cart. "Custom Product" lets them pick from products you choose.', 'fluent-cart-elementor-blocks'),
+                ]
+        );
+
+        $this->add_control(
+                'inline_variant_ids',
+                [
+                        'label'       => esc_html__('Products', 'fluent-cart-elementor-blocks'),
+                        'type'        => (new ProductVariationSelectControl())->get_type(),
+                        'multiple'    => true,
+                        'label_block' => true,
+                        'default'     => [],
+                        'placeholder' => esc_html__('Search for a variation...', 'fluent-cart-elementor-blocks'),
+                        'condition'   => ['inline_checkout_mode' => 'custom'],
+                ]
+        );
+
+        $this->add_control(
+                'inline_selection_mode',
+                [
+                        'label'       => esc_html__('Selection Mode', 'fluent-cart-elementor-blocks'),
+                        'type'        => Controls_Manager::SELECT,
+                        'default'     => 'single',
+                        'options'     => [
+                                'single'   => esc_html__('Select one', 'fluent-cart-elementor-blocks'),
+                                'multiple' => esc_html__('Select many', 'fluent-cart-elementor-blocks'),
+                        ],
+                        'description' => esc_html__('"Select one" shows radio buttons, "Select many" shows checkboxes.', 'fluent-cart-elementor-blocks'),
+                        'condition'   => ['inline_checkout_mode' => 'custom'],
+                ]
+        );
+
+        $this->add_control(
+                'inline_max_items',
+                [
+                        'label'       => esc_html__('Maximum Selectable Items', 'fluent-cart-elementor-blocks'),
+                        'type'        => Controls_Manager::NUMBER,
+                        'default'     => 5,
+                        'min'         => 1,
+                        'max'         => 20,
+                        'step'        => 1,
+                        'description' => esc_html__('How many of the products above a shopper may tick at once. Every product you added is always shown.', 'fluent-cart-elementor-blocks'),
+                        'condition'   => [
+                                'inline_checkout_mode'  => 'custom',
+                                'inline_selection_mode' => 'multiple',
+                        ],
+                ]
+        );
+
+        $this->add_control(
+                'inline_selector_label',
+                [
+                        'label'       => esc_html__('Selector Heading', 'fluent-cart-elementor-blocks'),
+                        'type'        => Controls_Manager::TEXT,
+                        'placeholder' => esc_html__('Choose your plan', 'fluent-cart-elementor-blocks'),
+                        'description' => esc_html__('Heading shown above the selectable list.', 'fluent-cart-elementor-blocks'),
+                        'condition'   => ['inline_checkout_mode' => 'custom'],
                 ]
         );
 
@@ -1737,6 +1837,24 @@ class CheckoutWidget extends Widget_Base
     /**
      * Ensure older saved widgets get newly introduced required form sections.
      */
+    /**
+     * Map the Products controls onto the attribute names Pro's inline checkout reads.
+     */
+    private function getInlineCheckoutAttributes(array $settings): array
+    {
+        if (($settings['inline_checkout_mode'] ?? '') !== 'custom') {
+            return ['checkout_mode' => 'cart'];
+        }
+
+        return [
+                'checkout_mode'  => 'custom',
+                'variant_ids'    => (array)($settings['inline_variant_ids'] ?? []),
+                'selection_mode' => $settings['inline_selection_mode'] ?? 'single',
+                'max_items'      => $settings['inline_max_items'] ?? 5,
+                'selector_label' => $settings['inline_selector_label'] ?? '',
+        ];
+    }
+
     private function normalizeCheckoutSettings(array $settings): array
     {
         $settings['form_elements'] = $this->normalizeFormElements($settings['form_elements'] ?? []);
@@ -1793,9 +1911,9 @@ class CheckoutWidget extends Widget_Base
         if ($isEditor) {
             $renderer = new DummyCheckoutRenderer($settings);
         } else {
-            // Also try loading full checkout assets for frontend (includes JS)
-            AssetLoader::loadCheckoutAssets();
-            $renderer = new ElementorCheckoutRenderer($settings);
+            // Built first: the cart resolves here and the asset loader localizes it only once per request.
+            $renderer = new ElementorCheckoutRenderer($settings, $this->getInlineCheckoutAttributes($settings));
+            AssetLoader::loadCheckoutAssets($renderer->getCart());
         }
 
         echo $renderer->render(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped

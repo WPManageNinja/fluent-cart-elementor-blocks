@@ -57,7 +57,11 @@
                     return;
                 }
 
+                // Opt-in via the control's `multiple` setting; the single pickers are untouched.
+                var isMultiple = !!this.model.get('multiple');
+
                 var options = {
+                    multiple: isMultiple,
                     allowClear: true,
                     placeholder: this.model.get('placeholder') || getEditorString('searchVariation', 'Search for a variation...'),
                     dir: (window.elementorCommon && elementorCommon.config && elementorCommon.config.isRTL) ? 'rtl' : 'ltr',
@@ -118,9 +122,13 @@
                 // Initialize Select2
                 $select.select2(options);
 
-                // Fetch initial value if exists
+                // Fetch initial value(s) if any
                 var initialValue = this.getControlValue();
-                if (initialValue) {
+                var initialIds = (Array.isArray(initialValue) ? initialValue : [initialValue]).filter(function(id) {
+                    return id;
+                });
+
+                if (initialIds.length) {
                     $.ajax({
                         url: fluentCartElementor.restUrl + 'products/search-product-variant-options',
                         dataType: 'json',
@@ -128,32 +136,35 @@
                             'X-WP-Nonce': fluentCartElementor.nonce
                         },
                         data: {
-                            include_ids: [initialValue]
+                            include_ids: initialIds
                         }
                     }).then(function (data) {
-                        var selectedOption = null;
                         var productGroups = data.products || data || [];
 
                         if (!Array.isArray(productGroups)) {
                             productGroups = [];
                         }
 
+                        var found = {};
+
                         $.each(productGroups, function(i, group) {
                             if (group.children && Array.isArray(group.children)) {
                                 $.each(group.children, function(j, child) {
-                                    if (child.value == initialValue) {
-                                        selectedOption = child;
-                                        return false; // break inner
-                                    }
+                                    found[String(child.value)] = child;
                                 });
                             }
-                            if (selectedOption) return false; // break outer
                         });
 
-                        if (selectedOption) {
-                            var option = new Option(selectedOption.label, selectedOption.value, true, true);
-                            $select.append(option).trigger('change');
-                        }
+                        // Keep the saved order, which is the order the shopper sees.
+                        $.each(initialIds, function(i, id) {
+                            var child = found[String(id)];
+
+                            if (child) {
+                                $select.append(new Option(child.label, child.value, true, true));
+                            }
+                        });
+
+                        $select.trigger('change');
                     });
                 }
             },
