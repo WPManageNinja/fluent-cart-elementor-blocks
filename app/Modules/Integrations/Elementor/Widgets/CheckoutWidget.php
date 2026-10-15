@@ -14,6 +14,7 @@ use FluentCart\App\Models\Cart;
 use FluentCart\App\Services\Renderer\CheckoutRenderer;
 use FluentCart\App\Modules\Templating\AssetLoader;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Controls\ProductVariationSelectControl;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support\InlineCheckoutPreview;
 use FluentCartElementorBlocks\App\Utils\Enqueuer\Enqueue;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Renderers\ElementorCheckoutRenderer;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Renderers\DummyCheckoutRenderer;
@@ -1975,19 +1976,7 @@ class CheckoutWidget extends Widget_Base
      */
     protected function render()
     {
-        $display = $this->get_settings_for_display();
-
-        // Custom Product hides the layout, form and summary sections, so their display values come back null,
-        // but the editor preview still draws the Elementor layout from the saved ones.
-        if (($display['inline_checkout_mode'] ?? '') === 'custom') {
-            foreach ($this->get_settings() as $key => $value) {
-                if (($display[$key] ?? null) === null) {
-                    $display[$key] = $value;
-                }
-            }
-        }
-
-        $settings = $this->normalizeCheckoutSettings($display);
+        $settings = $this->normalizeCheckoutSettings($this->get_settings_for_display());
         $isEditor = \Elementor\Plugin::$instance->editor->is_edit_mode();
 
         // Load checkout styles (works even without cart for editor preview)
@@ -1995,7 +1984,13 @@ class CheckoutWidget extends Widget_Base
 
         if ($isEditor) {
             $inlineAttributes = $this->getInlineCheckoutAttributes($settings);
-            $renderer = new DummyCheckoutRenderer($settings, $inlineAttributes);
+
+            if (($inlineAttributes['checkout_mode'] ?? '') === 'custom') {
+                echo InlineCheckoutPreview::render($inlineAttributes); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                return;
+            }
+
+            $renderer = new DummyCheckoutRenderer($settings);
         } else {
             $inlineAttributes = $this->getInlineCheckoutAttributes($settings);
 
