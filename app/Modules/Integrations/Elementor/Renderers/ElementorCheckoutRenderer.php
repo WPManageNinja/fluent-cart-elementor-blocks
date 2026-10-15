@@ -19,33 +19,29 @@ class ElementorCheckoutRenderer
     protected $checkoutRenderer;
     protected $summaryRenderer;
 
-    public function __construct(array $settings, array $attributes = [])
+    /**
+     * @param \FluentCart\App\Models\Cart|null $cart A cart the add-on already resolved. Null looks one up.
+     */
+    public function __construct(array $settings, array $attributes = [], $cart = null)
     {
         $this->settings = $settings;
         $this->attributes = $attributes;
 
-        // Lets Pro's inline checkout supply the cart; null keeps the shopper's own cart.
-        $this->cart = apply_filters('fluent_cart/checkout/render_cart', null, [
-            'surface'    => 'checkout-elementor',
-            'attributes' => $attributes,
-            'block'      => null,
-        ]);
-
-        // A custom checkout never falls back to the shopper's cart: without Pro nothing
-        // supplies the selector, and billing whatever is in their cart would be wrong.
-        if (!$this->cart && !$this->isCustomCheckout()) {
-            $this->cart = CartHelper::getCart();
+        if (!$cart) {
+            // Lets an add-on supply the cart; null keeps the shopper's own cart.
+            $cart = apply_filters('fluent_cart/checkout/render_cart', null, [
+                'surface'    => 'checkout-elementor',
+                'attributes' => $attributes,
+                'block'      => null,
+            ]) ?: CartHelper::getCart();
         }
+
+        $this->cart = $cart;
 
         if ($this->cart && !empty(Arr::get($this->cart, 'cart_data', []))) {
             $this->checkoutRenderer = new CheckoutRenderer($this->cart);
             $this->summaryRenderer = new CartSummaryRender($this->cart);
         }
-    }
-
-    public function isCustomCheckout(): bool
-    {
-        return ($this->attributes['checkout_mode'] ?? '') === 'custom';
     }
 
     public function getCart()
