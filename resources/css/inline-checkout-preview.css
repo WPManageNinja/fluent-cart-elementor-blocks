@@ -1,0 +1,106 @@
+/* Custom Product rows in the editor preview when FluentCart Pro, which ships the real styles, is inactive. */
+.fct-inline-items {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 0 0 16px;
+    padding: 0;
+    box-sizing: border-box;
+    color: #2f3448;
+    text-align: left;
+}
+
+.fct-inline-items * {
+    box-sizing: border-box;
+}
+
+.fct-inline-items .fct-inline-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    margin: 0;
+    padding: 12px;
+    border: 1px solid #d6dae1;
+    border-radius: 8px;
+    background: #fff;
+    color: inherit;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.4;
+    letter-spacing: normal;
+    text-transform: none;
+    cursor: pointer;
+}
+
+.fct-inline-items .fct-inline-item.is-selected {
+    border-color: #253241;
+    background: #f4f6fa;
+    box-shadow: inset 0 0 0 1px #253241;
+}
+
+/* Pinned with min/max so a theme's input width rule cannot stretch the control. */
+.fct-inline-items .fct-inline-item input.fct-inline-item-input {
+    flex: 0 0 auto;
+    width: 16px;
+    min-width: 16px;
+    max-width: 16px;
+    height: 16px;
+    min-height: 16px;
+    margin: 0;
+    padding: 0;
+    accent-color: #253241;
+}
+
+.fct-inline-items .fct-inline-item .fct-inline-item-media {
+    flex: 0 0 auto;
+    display: block;
+    width: 40px;
+    height: 40px;
+    overflow: hidden;
+    border: 1px solid #d6dae1;
+    border-radius: 6px;
+    background: #fff;
+}
+
+.fct-inline-items .fct-inline-item .fct-inline-item-media img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    object-fit: cover;
+}
+
+.fct-inline-items .fct-inline-item .fct-inline-item-content {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+    width: auto;
+    max-width: none;
+    text-align: left;
+}
+
+.fct-inline-items .fct-inline-item .fct-inline-item-title {
+    display: block;
+    color: #2f3448;
+    font-weight: 500;
+    overflow-wrap: anywhere;
+}
+
+.fct-inline-items .fct-inline-item .fct-inline-item-variant {
+    display: block;
+    color: #565865;
+    font-size: 13px;
+    overflow-wrap: anywhere;
+}
+
+.fct-inline-items .fct-inline-item .fct-inline-item-price {
+    flex: 0 0 auto;
+    display: block;
+    margin-inline-start: auto;
+    color: #2f3448;
+    font-weight: 600;
+    white-space: nowrap;
+}
