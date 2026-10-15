@@ -452,6 +452,23 @@ class CheckoutWidget extends Widget_Base
                 ]
         );
 
+        $this->add_control(
+                'field_label_style',
+                [
+                        'label'       => esc_html__('Field Labels', 'fluent-cart-elementor-blocks'),
+                        'type'        => Controls_Manager::SELECT,
+                        'default'     => 'docked',
+                        'options'     => [
+                                'docked'      => esc_html__('Docked (name on the right)', 'fluent-cart-elementor-blocks'),
+                                'floating'    => esc_html__('Floating (name above the value)', 'fluent-cart-elementor-blocks'),
+                                'placeholder' => esc_html__('Placeholder only', 'fluent-cart-elementor-blocks'),
+                        ],
+                        'description' => esc_html__('How checkout fields show their name once the customer has typed in them.', 'fluent-cart-elementor-blocks'),
+                        'label_block' => true,
+                        'separator'   => 'before',
+                ]
+        );
+
         $this->end_controls_section();
     }
 

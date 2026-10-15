@@ -70,6 +70,11 @@ class ElementorCheckoutRenderer
             'fct-checkout-type-' . $this->cart->cart_group,
         ];
 
+        // Older core has no field label styles.
+        if (method_exists(CheckoutRenderer::class, 'resolveFieldLabelStyle')) {
+            $wrapperClasses[] = 'fct-field-labels-' . CheckoutRenderer::resolveFieldLabelStyle($this->settings['field_label_style'] ?? '');
+        }
+
         if (!$useDefaultStyle) {
             $wrapperClasses[] = 'fce-custom-styles';
         }
