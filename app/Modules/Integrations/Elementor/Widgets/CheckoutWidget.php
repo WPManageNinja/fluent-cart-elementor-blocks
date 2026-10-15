@@ -10,6 +10,8 @@ use Elementor\Group_Control_Box_Shadow;
 use Elementor\Group_Control_Background;
 use Elementor\Repeater;
 use FluentCart\App\App;
+use FluentCart\App\Models\Cart;
+use FluentCart\App\Services\Renderer\CheckoutRenderer;
 use FluentCart\App\Modules\Templating\AssetLoader;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Controls\ProductVariationSelectControl;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Renderers\ElementorCheckoutRenderer;
@@ -1875,6 +1877,48 @@ class CheckoutWidget extends Widget_Base
         ];
     }
 
+    /**
+     * A custom-product checkout is only ever rendered by the add-on that supplies its products,
+     * so without Pro this renders nothing and never the shopper's own cart.
+     */
+    private function renderCustomProductCheckout(array $settings, array $attributes): string
+    {
+        // An older core has no custom-product routing, so nothing can supply the products.
+        if (!method_exists(CheckoutRenderer::class, 'renderCustomProductCheckout')) {
+            return '';
+        }
+
+        // Core treats a checkout with no products as an ordinary one, so show the empty state ourselves.
+        if (!CheckoutRenderer::isCustomProductCheckout($attributes)) {
+            return (new ElementorCheckoutRenderer($settings, $attributes, new Cart()))->render();
+        }
+
+        $surface = 'checkout-elementor';
+
+        $listener = function ($html, $cart, $context) use ($settings, $attributes, $surface) {
+            if (($context['surface'] ?? '') !== $surface) {
+                return $html;
+            }
+
+            // Core's own render path loads these; ours replaces that path, so it has to.
+            AssetLoader::loadCheckoutAssets($cart);
+
+            return (new ElementorCheckoutRenderer($settings, $attributes, $cart))->render();
+        };
+
+        add_filter('fluent_cart/checkout/custom_product_cart_html', $listener, 10, 3);
+
+        try {
+            return CheckoutRenderer::renderCustomProductCheckout([
+                'surface'    => $surface,
+                'attributes' => $attributes,
+                'block'      => null,
+            ]);
+        } finally {
+            remove_filter('fluent_cart/checkout/custom_product_cart_html', $listener, 10);
+        }
+    }
+
     private function normalizeCheckoutSettings(array $settings): array
     {
         $settings['form_elements'] = $this->normalizeFormElements($settings['form_elements'] ?? []);
@@ -1932,12 +1976,16 @@ class CheckoutWidget extends Widget_Base
             $inlineAttributes = $this->getInlineCheckoutAttributes($settings);
             $renderer = new DummyCheckoutRenderer($settings, $inlineAttributes);
         } else {
-            // Built first: the cart resolves here and the asset loader localizes it only once per request.
-            $renderer = new ElementorCheckoutRenderer($settings, $this->getInlineCheckoutAttributes($settings));
-            // Passing no cart makes the loader fetch the shopper's own, which a custom checkout must not use.
-            if ($renderer->getCart() || !$renderer->isCustomCheckout()) {
-                AssetLoader::loadCheckoutAssets($renderer->getCart());
+            $inlineAttributes = $this->getInlineCheckoutAttributes($settings);
+
+            if (($inlineAttributes['checkout_mode'] ?? '') === 'custom') {
+                echo $this->renderCustomProductCheckout($settings, $inlineAttributes); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                return;
             }
+
+            // Built first: the cart resolves here and the asset loader localizes it only once per request.
+            $renderer = new ElementorCheckoutRenderer($settings, $inlineAttributes);
+            AssetLoader::loadCheckoutAssets($renderer->getCart());
         }
 
         echo $renderer->render(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
