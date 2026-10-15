@@ -50,7 +50,7 @@ class CheckoutWidget extends Widget_Base
         $app = \FluentCart\App\App::getInstance();
         $slug = $app->config->get('app.slug');
 
-        return [
+        $styles = [
             // Checkout styles
                 'fce-checkout-page-css',
                 'fce-checkout-select-css',
@@ -59,6 +59,14 @@ class CheckoutWidget extends Widget_Base
                 $slug . '-global-styles',
                 $slug . '-fluentcart-toastify-notify-js',
         ];
+
+        // Elementor prints only the handles listed here in the editor preview, so a style
+        // enqueued from render() never reaches it.
+        if (self::hasInlineCheckoutStyles()) {
+            $styles[] = 'fct-inline-checkout-items';
+        }
+
+        return $styles;
     }
 
     /**
@@ -87,12 +95,24 @@ class CheckoutWidget extends Widget_Base
                 'public/components/select/style/style.scss'
         );
 
+        if (self::hasInlineCheckoutStyles()) {
+            \FluentCartPro\App\Utils\Enqueuer\Vite::enqueueStyle(
+                'fct-inline-checkout-items',
+                'public/inline-checkout/style/inline-checkout-items.scss'
+            );
+        }
+
         \wp_enqueue_style(
             'fce-elementor-css',
             FLUENTCART_ELEMENTOR_BLOCKS_URL . 'assets/css/elementor.css',
             [],
             FLUENTCART_ELEMENTOR_BLOCKS_VERSION
         );
+    }
+
+    private static function hasInlineCheckoutStyles(): bool
+    {
+        return class_exists('\FluentCartPro\App\Utils\Enqueuer\Vite');
     }
 
     public function get_script_depends()
@@ -1909,7 +1929,8 @@ class CheckoutWidget extends Widget_Base
         $this->loadCheckoutStyles();
 
         if ($isEditor) {
-            $renderer = new DummyCheckoutRenderer($settings);
+            $inlineAttributes = $this->getInlineCheckoutAttributes($settings);
+            $renderer = new DummyCheckoutRenderer($settings, $inlineAttributes);
         } else {
             // Built first: the cart resolves here and the asset loader localizes it only once per request.
             $renderer = new ElementorCheckoutRenderer($settings, $this->getInlineCheckoutAttributes($settings));
