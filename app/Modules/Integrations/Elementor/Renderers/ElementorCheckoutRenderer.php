@@ -29,12 +29,23 @@ class ElementorCheckoutRenderer
             'surface'    => 'checkout-elementor',
             'attributes' => $attributes,
             'block'      => null,
-        ]) ?: CartHelper::getCart();
+        ]);
+
+        // A custom checkout never falls back to the shopper's cart: without Pro nothing
+        // supplies the selector, and billing whatever is in their cart would be wrong.
+        if (!$this->cart && !$this->isCustomCheckout()) {
+            $this->cart = CartHelper::getCart();
+        }
 
         if ($this->cart && !empty(Arr::get($this->cart, 'cart_data', []))) {
             $this->checkoutRenderer = new CheckoutRenderer($this->cart);
             $this->summaryRenderer = new CartSummaryRender($this->cart);
         }
+    }
+
+    public function isCustomCheckout(): bool
+    {
+        return ($this->attributes['checkout_mode'] ?? '') === 'custom';
     }
 
     public function getCart()

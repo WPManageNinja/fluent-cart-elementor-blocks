@@ -1934,7 +1934,10 @@ class CheckoutWidget extends Widget_Base
         } else {
             // Built first: the cart resolves here and the asset loader localizes it only once per request.
             $renderer = new ElementorCheckoutRenderer($settings, $this->getInlineCheckoutAttributes($settings));
-            AssetLoader::loadCheckoutAssets($renderer->getCart());
+            // Passing no cart makes the loader fetch the shopper's own, which a custom checkout must not use.
+            if ($renderer->getCart() || !$renderer->isCustomCheckout()) {
+                AssetLoader::loadCheckoutAssets($renderer->getCart());
+            }
         }
 
         echo $renderer->render(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
