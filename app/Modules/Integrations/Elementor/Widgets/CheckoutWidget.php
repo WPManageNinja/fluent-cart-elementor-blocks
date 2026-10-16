@@ -270,7 +270,7 @@ class CheckoutWidget extends Widget_Base
                 ]
         );
 
-        // As Gutenberg's ProductsProPanel: no controls without Pro, and say saved products are kept.
+        // Keep saved settings available to section conditions while Pro controls are hidden.
         if (!App::isProActive()) {
             $this->registerProNoticeControls();
             $this->end_controls_section();
@@ -362,12 +362,19 @@ class CheckoutWidget extends Widget_Base
     }
 
     /**
-     * The Pro notice that stands in for the Products controls while Pro is inactive.
-     * The panel compares loosely, so an empty list equals ''. It never matches a setting
-     * that does not exist, hence the hidden products control with an empty default.
+     * Hidden defaults keep Elementor's section conditions working without Pro,
+     * while retaining saved custom checkout settings.
      */
     private function registerProNoticeControls()
     {
+        $this->add_control(
+                'inline_checkout_mode',
+                [
+                        'type'    => Controls_Manager::HIDDEN,
+                        'default' => 'cart',
+                ]
+        );
+
         $this->add_control(
                 'inline_variant_ids',
                 [
@@ -383,7 +390,7 @@ class CheckoutWidget extends Widget_Base
                 [
                         'type'       => Controls_Manager::RAW_HTML,
                         'raw'        => ProFeature::panelNotice($note),
-                        'conditions' => ['terms' => [['name' => 'inline_variant_ids', 'operator' => '==', 'value' => '']]],
+                        'conditions' => ['terms' => [['name' => 'inline_checkout_mode', 'operator' => '!=', 'value' => 'custom']]],
                 ]
         );
 
@@ -391,8 +398,8 @@ class CheckoutWidget extends Widget_Base
                 'inline_pro_notice_kept',
                 [
                         'type'       => Controls_Manager::RAW_HTML,
-                        'raw'        => ProFeature::panelNotice($note, __('This checkout already has products configured. They are kept, and work again as soon as FluentCart Pro is active.', 'fluent-cart-elementor-blocks')),
-                        'conditions' => ['terms' => [['name' => 'inline_variant_ids', 'operator' => '!=', 'value' => '']]],
+                        'raw'        => ProFeature::panelNotice($note, __('With custom products configured, this checkout displays nothing on the live page while FluentCart Pro is inactive. Reactivate FluentCart Pro to restore checkout. Your custom-product settings are kept.', 'fluent-cart-elementor-blocks')),
+                        'conditions' => ['terms' => [['name' => 'inline_checkout_mode', 'operator' => '==', 'value' => 'custom']]],
                 ]
         );
     }

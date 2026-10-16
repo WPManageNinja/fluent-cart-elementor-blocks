@@ -35,16 +35,44 @@ $productControls = ['inline_checkout_mode', 'inline_core_layout_notice', 'inline
 $present = array_values(array_intersect($productControls, array_keys($controls)));
 
 if (!App::isProActive()) {
-    $test->same($present, [], 'without Pro no product control is registered');
+    $test->same($present, ['inline_checkout_mode'], 'without Pro only the hidden product mode is registered');
+    $test->same($controls['inline_checkout_mode']['type'] ?? null, \Elementor\Controls_Manager::HIDDEN, 'the checkout source is hidden without Pro');
+    $test->same($widget->get_settings('inline_checkout_mode'), 'cart', 'a new checkout resolves its mode to cart');
+    $saved = \Elementor\Plugin::$instance->elements_manager->create_element_instance([
+        'id' => 'fcprog2', 'elType' => 'widget', 'widgetType' => 'fluent_cart_checkout',
+        'settings' => ['inline_checkout_mode' => 'custom', 'inline_variant_ids' => ['123']],
+    ]);
+    $test->same($saved->get_settings('inline_checkout_mode'), 'custom', 'a saved custom mode survives the Pro gate');
+    $test->same($saved->get_settings('inline_variant_ids'), ['123'], 'saved products survive the Pro gate');
+    $sectionCount = 0;
+    foreach ($controls as $name => $control) {
+        if (($control['type'] ?? '') === \Elementor\Controls_Manager::SECTION
+            && ($control['condition']['inline_checkout_mode!'] ?? '') === 'custom') {
+            $sectionCount++;
+            $test->check($widget->is_control_visible($control), "{$name} stays available for a new cart checkout");
+            $test->check(!$saved->is_control_visible($control), "{$name} stays gated for a saved custom checkout");
+        }
+    }
+    $test->check($sectionCount >= 5, 'ordinary content and style sections were checked');
 
-    // Kept hidden so a saved selection survives and the notices can tell empty from saved.
+    // Hidden controls preserve saved selections while Pro is inactive.
     $test->same($controls['inline_variant_ids']['type'] ?? null, \Elementor\Controls_Manager::HIDDEN, 'the products setting is kept as a hidden control');
     $test->same($controls['inline_variant_ids']['default'] ?? null, [], 'it defaults to an empty list');
 
     $plain = $controls['inline_pro_notice'] ?? [];
     $kept = $controls['inline_pro_notice_kept'] ?? [];
-    $test->same($plain['conditions']['terms'][0] ?? null, ['name' => 'inline_variant_ids', 'operator' => '==', 'value' => ''], 'the plain notice shows when no products are saved');
-    $test->same($kept['conditions']['terms'][0] ?? null, ['name' => 'inline_variant_ids', 'operator' => '!=', 'value' => ''], 'the kept notice shows when products are saved');
+    $test->same($plain['conditions']['terms'][0] ?? null, ['name' => 'inline_checkout_mode', 'operator' => '!=', 'value' => 'custom'], 'the plain notice is used for cart mode');
+    $test->same($kept['conditions']['terms'][0] ?? null, ['name' => 'inline_checkout_mode', 'operator' => '==', 'value' => 'custom'], 'the outage notice is used for custom mode');
+    $test->check($widget->is_control_visible($plain) && !$widget->is_control_visible($kept), 'a new cart checkout shows only the plain notice');
+    $test->check(!$saved->is_control_visible($plain) && $saved->is_control_visible($kept), 'a saved custom checkout shows only the outage notice');
+    $saved->set_settings('inline_checkout_mode', 'cart');
+    $test->check($saved->is_control_visible($plain) && !$saved->is_control_visible($kept), 'cart mode with dormant products does not show an outage warning');
+    $test->same($saved->get_settings('inline_variant_ids'), ['123'], 'changing the source preserves dormant product selections');
+    $saved->set_settings('inline_checkout_mode', 'custom');
+    $saved->set_settings('inline_variant_ids', []);
+    $test->check($saved->is_control_visible($kept), 'custom mode still explains the Pro requirement with no selected products');
+    $test->check(strpos($kept['raw'] ?? '', 'displays nothing on the live page') !== false, 'the warning explains the live checkout outage');
+    $test->check(strpos($kept['raw'] ?? '', 'Reactivate FluentCart Pro') !== false, 'the warning explains how to restore checkout');
     $test->check(strpos($kept['raw'] ?? '', 'fct-elementor-pro-panel-warning') !== false, 'the kept notice carries the warning line');
     $test->check(strpos($plain['raw'] ?? '', 'fct-elementor-pro-panel-warning') === false, 'the plain notice has no warning line');
     $test->check(strpos($plain['raw'] ?? '', 'href="' . ProFeature::UPGRADE_URL . '"') !== false, 'it links to the pricing page');
