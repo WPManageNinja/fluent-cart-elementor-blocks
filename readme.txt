@@ -88,9 +88,9 @@ Yes. Required CSS and JavaScript assets are enqueued automatically when widgets 
 = 1.1.1 (October 16, 2026) =
 - Added an option to the review widgets to show reviews from all products, or from specific products you choose, not just the current product.
 - Added a combined rating summary for those products: one overall rating and star breakdown across all of them.
-- Added a Currency Switcher module so shoppers can change the store currency (multi-currency needs FluentCart Pro).
-- Added inline checkout to the Checkout module: set Checkout Source to Custom Product and shoppers pick from products you choose, right on the checkout (needs FluentCart Pro).
-- Added a Field Labels setting to the Checkout module: docked, floating or placeholder-only field labels, as in the Gutenberg checkout block.
+- Added a Currency Switcher widget so shoppers can change the store currency (multi-currency needs FluentCart Pro).
+- Added inline checkout to the Checkout widget: set Checkout Source to Custom Product and shoppers pick from products you choose, right on the checkout (needs FluentCart Pro).
+- Added a Field Labels setting to the Checkout widget: docked, floating or placeholder-only field labels, as in the Gutenberg checkout block.
 
 = 1.1.0 (Sep 30, 2026) =
 - Adds six Product Review widgets: Product Reviews, Product Review List, Review Summary, Review Form, Write a Review Button and Product Rating.
