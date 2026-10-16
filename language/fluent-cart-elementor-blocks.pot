@@ -1,4 +1,4 @@
-# Copyright (C) 2026 
+# Copyright (C) 2026 FluentCart Team
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-30T10:34:49+00:00\n"
+"POT-Creation-Date: 2026-10-16T06:25:45+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: fluent-cart-elementor-blocks\n"
@@ -19,9 +19,24 @@ msgstr ""
 msgid "FluentCart Elementor Blocks"
 msgstr ""
 
+#. Plugin URI of the plugin
+#: fluent-cart-elementor-blocks.php
+msgid "https://fluentcart.com"
+msgstr ""
+
 #. Description of the plugin
 #: fluent-cart-elementor-blocks.php
 msgid "FluentCart Elementor Blocks WordPress plugin to extend Elementor with FluentCart specific widgets and features."
+msgstr ""
+
+#. Author of the plugin
+#: fluent-cart-elementor-blocks.php
+msgid "FluentCart Team"
+msgstr ""
+
+#. Author URI of the plugin
+#: fluent-cart-elementor-blocks.php
+msgid "https://fluentcart.com/about-us"
 msgstr ""
 
 #: app/Modules/Integrations/Elementor/Conditions/FluentCartArchiveCondition.php:32
@@ -35,15 +50,17 @@ msgstr ""
 #: app/Modules/Integrations/Elementor/Conditions/FluentCartCondition.php:26
 #: app/Modules/Integrations/Elementor/Documents/FluentCartProduct.php:63
 #: app/Modules/Integrations/Elementor/Documents/FluentCartProductPost.php:55
-#: app/Modules/Integrations/Elementor/ElementorIntegration.php:123
+#: app/Modules/Integrations/Elementor/ElementorIntegration.php:125
 msgid "FluentCart"
 msgstr ""
 
 #: app/Modules/Integrations/Elementor/Conditions/FluentCartCondition.php:31
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:643
 msgid "All Products"
 msgstr ""
 
 #: app/Modules/Integrations/Elementor/Controls/ReviewLayoutPresetControl.php:135
+#: app/Modules/Integrations/Elementor/Support/ProFeature.php:90
 msgid "Pro"
 msgstr ""
 
@@ -78,178 +95,181 @@ msgid "FluentCart Product Posts"
 msgstr ""
 
 #. translators: %s: product name.
-#: app/Modules/Integrations/Elementor/ElementorIntegration.php:253
+#: app/Modules/Integrations/Elementor/ElementorIntegration.php:260
 #: app/Modules/Integrations/Elementor/Renderers/ElementorShopAppRenderer.php:256
 #, php-format
 msgid "%s product card"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/ElementorIntegration.php:362
+#: app/Modules/Integrations/Elementor/ElementorIntegration.php:388
 #: app/Modules/Integrations/Elementor/Widgets/ProductCarouselWidget.php:213
 msgid "Search for products..."
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/ElementorIntegration.php:363
+#: app/Modules/Integrations/Elementor/ElementorIntegration.php:389
 #: app/Modules/Integrations/Elementor/Widgets/AddToCartWidget.php:63
 #: app/Modules/Integrations/Elementor/Widgets/BuyNowWidget.php:63
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:313
 msgid "Search for a variation..."
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/ElementorIntegration.php:364
+#: app/Modules/Integrations/Elementor/ElementorIntegration.php:390
 msgid "Unknown Product"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/ElementorIntegration.php:370
+#: app/Modules/Integrations/Elementor/ElementorIntegration.php:396
 msgid "Short Codes"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Renderers/DummyCheckoutRenderer.php:216
+#: app/Modules/Integrations/Elementor/Renderers/DummyCheckoutRenderer.php:221
 msgid "Create an account?"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Renderers/DummyCheckoutRenderer.php:271
+#: app/Modules/Integrations/Elementor/Renderers/DummyCheckoutRenderer.php:276
 msgid "Street Address"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Renderers/DummyCheckoutRenderer.php:272
+#: app/Modules/Integrations/Elementor/Renderers/DummyCheckoutRenderer.php:277
 msgid "123 Main Street"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Renderers/DummyCheckoutRenderer.php:275
+#: app/Modules/Integrations/Elementor/Renderers/DummyCheckoutRenderer.php:280
 msgid "Apartment, suite, etc. (optional)"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Renderers/DummyCheckoutRenderer.php:279
+#: app/Modules/Integrations/Elementor/Renderers/DummyCheckoutRenderer.php:284
 msgid "City"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Renderers/DummyCheckoutRenderer.php:280
+#: app/Modules/Integrations/Elementor/Renderers/DummyCheckoutRenderer.php:285
 msgid "New York"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Renderers/DummyCheckoutRenderer.php:283
+#: app/Modules/Integrations/Elementor/Renderers/DummyCheckoutRenderer.php:288
 msgid "State/Province"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Renderers/DummyCheckoutRenderer.php:285
+#: app/Modules/Integrations/Elementor/Renderers/DummyCheckoutRenderer.php:290
 msgid "Select State"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Renderers/DummyCheckoutRenderer.php:291
+#: app/Modules/Integrations/Elementor/Renderers/DummyCheckoutRenderer.php:296
 msgid "Postal Code"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Renderers/DummyCheckoutRenderer.php:292
+#: app/Modules/Integrations/Elementor/Renderers/DummyCheckoutRenderer.php:297
 msgid "10001"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Renderers/DummyCheckoutRenderer.php:295
+#: app/Modules/Integrations/Elementor/Renderers/DummyCheckoutRenderer.php:300
 msgid "Country"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Renderers/DummyCheckoutRenderer.php:297
+#: app/Modules/Integrations/Elementor/Renderers/DummyCheckoutRenderer.php:302
 msgid "United States"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Renderers/DummyCheckoutRenderer.php:302
+#: app/Modules/Integrations/Elementor/Renderers/DummyCheckoutRenderer.php:307
 msgid "Phone"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Renderers/DummyCheckoutRenderer.php:303
+#: app/Modules/Integrations/Elementor/Renderers/DummyCheckoutRenderer.php:308
 msgid "+1 (555) 123-4567"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Renderers/DummyCheckoutRenderer.php:313
+#: app/Modules/Integrations/Elementor/Renderers/DummyCheckoutRenderer.php:318
 msgid "Shipping Method"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Renderers/DummyCheckoutRenderer.php:327
+#: app/Modules/Integrations/Elementor/Renderers/DummyCheckoutRenderer.php:332
 #: app/Views/receipt-sample.php:76
 msgid "Payment Method"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Renderers/DummyCheckoutRenderer.php:346
+#: app/Modules/Integrations/Elementor/Renderers/DummyCheckoutRenderer.php:351
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/RelatedProductsWidget.php:175
 msgid "Card"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Renderers/DummyCheckoutRenderer.php:364
+#: app/Modules/Integrations/Elementor/Renderers/DummyCheckoutRenderer.php:369
 msgid "PayPal"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Renderers/DummyCheckoutRenderer.php:391
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:251
+#: app/Modules/Integrations/Elementor/Renderers/DummyCheckoutRenderer.php:396
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:437
 msgid "Order Notes"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Renderers/DummyCheckoutRenderer.php:399
+#: app/Modules/Integrations/Elementor/Renderers/DummyCheckoutRenderer.php:404
 msgid "Notes about your order, e.g. special notes for delivery."
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Renderers/DummyCheckoutRenderer.php:420
-#: app/Modules/Integrations/Elementor/Renderers/ElementorCheckoutRenderer.php:318
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:344
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:437
+#: app/Modules/Integrations/Elementor/Renderers/DummyCheckoutRenderer.php:425
+#: app/Modules/Integrations/Elementor/Renderers/ElementorCheckoutRenderer.php:349
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:547
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:641
 #: app/Modules/Integrations/Elementor/Widgets/ReceiptWidget.php:781
 msgid "Order Summary"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Renderers/DummyCheckoutRenderer.php:550
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:359
+#: app/Modules/Integrations/Elementor/Renderers/DummyCheckoutRenderer.php:555
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:563
 #: app/Views/receipt-sample.php:64
 msgid "Subtotal"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Renderers/DummyCheckoutRenderer.php:559
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:360
+#: app/Modules/Integrations/Elementor/Renderers/DummyCheckoutRenderer.php:564
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:564
 #: app/Views/receipt-sample.php:68
 msgid "Shipping"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Renderers/DummyCheckoutRenderer.php:566
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:404
+#: app/Modules/Integrations/Elementor/Renderers/DummyCheckoutRenderer.php:571
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:608
 msgid "Have a Coupon?"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Renderers/DummyCheckoutRenderer.php:579
+#: app/Modules/Integrations/Elementor/Renderers/DummyCheckoutRenderer.php:584
 msgid "Discount"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Renderers/DummyCheckoutRenderer.php:588
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:363
+#: app/Modules/Integrations/Elementor/Renderers/DummyCheckoutRenderer.php:593
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:567
 msgid "Tax"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Renderers/DummyCheckoutRenderer.php:597
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:364
+#: app/Modules/Integrations/Elementor/Renderers/DummyCheckoutRenderer.php:602
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:568
 msgid "Shipping Tax"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Renderers/DummyCheckoutRenderer.php:606
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:365
+#: app/Modules/Integrations/Elementor/Renderers/DummyCheckoutRenderer.php:611
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:569
 #: app/Views/receipt-sample.php:37
 #: app/Views/receipt-sample.php:72
 msgid "Total"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Renderers/DummyCheckoutRenderer.php:645
+#: app/Modules/Integrations/Elementor/Renderers/DummyCheckoutRenderer.php:650
 msgid "Add Extended Warranty - $9.99"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Renderers/DummyCheckoutRenderer.php:648
+#: app/Modules/Integrations/Elementor/Renderers/DummyCheckoutRenderer.php:653
 msgid "Protect your purchase with our extended warranty program."
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Renderers/ElementorCheckoutRenderer.php:72
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:497
+#: app/Modules/Integrations/Elementor/Renderers/ElementorCheckoutRenderer.php:97
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:702
 msgid "Your cart is empty."
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Renderers/ElementorCheckoutRenderer.php:137
+#: app/Modules/Integrations/Elementor/Renderers/ElementorCheckoutRenderer.php:168
 msgid "Checkout Form"
 msgstr ""
 
 #: app/Modules/Integrations/Elementor/Renderers/ElementorShopAppRenderer.php:105
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:268
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:308
 #: app/Modules/Integrations/Elementor/Widgets/ProductCarouselWidget.php:199
 #: app/Modules/Integrations/Elementor/Widgets/ShopAppWidget.php:25
 msgid "Products"
@@ -259,11 +279,24 @@ msgstr ""
 msgid "Product list"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Support/ReviewSupport.php:101
+#: app/Modules/Integrations/Elementor/Support/InlineCheckoutPreview.php:117
+msgid "Choose an option"
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Support/InlineCheckoutPreview.php:118
+msgid "Choose one or more options"
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Support/ProFeature.php:33
+#: app/Modules/Integrations/Elementor/Support/ProFeature.php:66
+msgid "Upgrade to Pro"
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Support/ReviewSupport.php:112
 msgid "The Product Reviews module is switched off. Enable it in FluentCart → Settings → Modules."
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Support/ReviewSupport.php:108
+#: app/Modules/Integrations/Elementor/Support/ReviewSupport.php:119
 msgid "Reviews are turned off for this product."
 msgstr ""
 
@@ -320,9 +353,9 @@ msgstr ""
 #: app/Modules/Integrations/Elementor/Widgets/AddToCartWidget.php:108
 #: app/Modules/Integrations/Elementor/Widgets/BuyNowWidget.php:117
 #: app/Modules/Integrations/Elementor/Widgets/CartWidget.php:183
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:551
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:854
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1389
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:756
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1059
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1595
 #: app/Modules/Integrations/Elementor/Widgets/CustomerDashboardButtonWidget.php:174
 #: app/Modules/Integrations/Elementor/Widgets/MiniCartWidget.php:168
 #: app/Modules/Integrations/Elementor/Widgets/ProductCardWidget.php:563
@@ -346,11 +379,11 @@ msgstr ""
 #: app/Modules/Integrations/Elementor/Widgets/BuyNowWidget.php:210
 #: app/Modules/Integrations/Elementor/Widgets/CartWidget.php:189
 #: app/Modules/Integrations/Elementor/Widgets/CartWidget.php:218
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:568
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:860
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:904
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1395
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1424
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:773
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1065
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1109
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1601
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1630
 #: app/Modules/Integrations/Elementor/Widgets/CustomerDashboardButtonWidget.php:181
 #: app/Modules/Integrations/Elementor/Widgets/CustomerDashboardButtonWidget.php:239
 #: app/Modules/Integrations/Elementor/Widgets/MiniCartWidget.php:175
@@ -398,10 +431,10 @@ msgstr ""
 #: app/Modules/Integrations/Elementor/Widgets/BuyNowWidget.php:152
 #: app/Modules/Integrations/Elementor/Widgets/CartWidget.php:119
 #: app/Modules/Integrations/Elementor/Widgets/CartWidget.php:253
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:639
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:958
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1053
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1537
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:844
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1163
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1258
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1743
 #: app/Modules/Integrations/Elementor/Widgets/CustomerDashboardButtonWidget.php:209
 #: app/Modules/Integrations/Elementor/Widgets/MiniCartWidget.php:214
 #: app/Modules/Integrations/Elementor/Widgets/ProductCardWidget.php:273
@@ -429,11 +462,11 @@ msgstr ""
 #: app/Modules/Integrations/Elementor/Widgets/BuyNowWidget.php:176
 #: app/Modules/Integrations/Elementor/Widgets/CartWidget.php:131
 #: app/Modules/Integrations/Elementor/Widgets/CartWidget.php:273
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:652
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:754
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:971
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1073
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1549
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:857
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:959
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1176
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1278
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1755
 #: app/Modules/Integrations/Elementor/Widgets/CustomerDashboardButtonWidget.php:159
 #: app/Modules/Integrations/Elementor/Widgets/MiniCartWidget.php:234
 #: app/Modules/Integrations/Elementor/Widgets/ProductCardWidget.php:293
@@ -456,7 +489,7 @@ msgstr ""
 
 #: app/Modules/Integrations/Elementor/Widgets/AddToCartWidget.php:179
 #: app/Modules/Integrations/Elementor/Widgets/BuyNowWidget.php:188
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:766
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:971
 #: app/Modules/Integrations/Elementor/Widgets/MiniCartWidget.php:246
 msgid "Margin"
 msgstr ""
@@ -464,8 +497,8 @@ msgstr ""
 #: app/Modules/Integrations/Elementor/Widgets/AddToCartWidget.php:194
 #: app/Modules/Integrations/Elementor/Widgets/BuyNowWidget.php:203
 #: app/Modules/Integrations/Elementor/Widgets/CartWidget.php:212
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:898
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1418
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1103
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1624
 #: app/Modules/Integrations/Elementor/Widgets/CustomerDashboardButtonWidget.php:232
 #: app/Modules/Integrations/Elementor/Widgets/MiniCartWidget.php:261
 #: app/Modules/Integrations/Elementor/Widgets/ProductCardWidget.php:625
@@ -603,12 +636,12 @@ msgstr ""
 
 #: app/Modules/Integrations/Elementor/Widgets/BadgeControls.php:102
 #: app/Modules/Integrations/Elementor/Widgets/BuyNowWidget.php:85
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:212
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:262
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:292
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:376
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:389
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:462
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:250
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:448
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:478
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:580
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:593
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:667
 #: app/Modules/Integrations/Elementor/Widgets/CustomerDashboardButtonWidget.php:109
 #: app/Modules/Integrations/Elementor/Widgets/MiniCartWidget.php:104
 #: app/Modules/Integrations/Elementor/Widgets/ProductCardWidget.php:549
@@ -628,6 +661,7 @@ msgstr ""
 #: app/Modules/Integrations/Elementor/Widgets/ShopAppWidget.php:309
 #: app/Modules/Integrations/Elementor/Widgets/ShopAppWidget.php:324
 #: app/Modules/Integrations/Elementor/Widgets/ShopAppWidget.php:346
+#: app/Modules/Integrations/Elementor/Widgets/ShopAppWidget.php:376
 #: app/Modules/Integrations/Elementor/Widgets/ShopAppWidget.php:396
 #: app/Modules/Integrations/Elementor/Widgets/ShopAppWidget.php:438
 #: app/Modules/Integrations/Elementor/Widgets/ShopAppWidget.php:451
@@ -648,19 +682,19 @@ msgstr ""
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:609
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:777
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductSkuWidget.php:105
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:527
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:544
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:529
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:546
 msgid "Yes"
 msgstr ""
 
 #: app/Modules/Integrations/Elementor/Widgets/BadgeControls.php:103
 #: app/Modules/Integrations/Elementor/Widgets/BuyNowWidget.php:86
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:213
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:263
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:293
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:377
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:390
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:463
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:251
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:449
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:479
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:581
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:594
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:668
 #: app/Modules/Integrations/Elementor/Widgets/CustomerDashboardButtonWidget.php:110
 #: app/Modules/Integrations/Elementor/Widgets/MiniCartWidget.php:105
 #: app/Modules/Integrations/Elementor/Widgets/ProductCardWidget.php:550
@@ -680,6 +714,7 @@ msgstr ""
 #: app/Modules/Integrations/Elementor/Widgets/ShopAppWidget.php:310
 #: app/Modules/Integrations/Elementor/Widgets/ShopAppWidget.php:325
 #: app/Modules/Integrations/Elementor/Widgets/ShopAppWidget.php:347
+#: app/Modules/Integrations/Elementor/Widgets/ShopAppWidget.php:377
 #: app/Modules/Integrations/Elementor/Widgets/ShopAppWidget.php:397
 #: app/Modules/Integrations/Elementor/Widgets/ShopAppWidget.php:439
 #: app/Modules/Integrations/Elementor/Widgets/ShopAppWidget.php:452
@@ -700,8 +735,8 @@ msgstr ""
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:610
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:778
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductSkuWidget.php:106
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:528
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:545
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:530
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:547
 msgid "No"
 msgstr ""
 
@@ -768,10 +803,10 @@ msgstr ""
 #: app/Modules/Integrations/Elementor/Widgets/CartWidget.php:100
 #: app/Modules/Integrations/Elementor/Widgets/CartWidget.php:200
 #: app/Modules/Integrations/Elementor/Widgets/CartWidget.php:229
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:557
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:606
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:743
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1496
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:762
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:811
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:948
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1702
 #: app/Modules/Integrations/Elementor/Widgets/ReceiptWidget.php:165
 #: app/Modules/Integrations/Elementor/Widgets/ReceiptWidget.php:443
 #: app/Modules/Integrations/Elementor/Widgets/ReceiptWidget.php:474
@@ -851,210 +886,294 @@ msgstr ""
 msgid "Checkout Button"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:25
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:32
 msgid "Checkout"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:129
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:166
 #: app/Modules/Integrations/Elementor/Widgets/ShopAppWidget.php:82
 msgid "General Settings"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:137
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:175
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:286
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:195
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:197
 msgid "Layout"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:141
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:179
 msgid "One Column"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:142
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:180
 msgid "Two Column"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:150
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:188
 msgid "Form Column Width (%)"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:170
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:208
 msgid "Summary Column Width (%)"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:190
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:228
 #: app/Modules/Integrations/Elementor/Widgets/ShopAppWidget.php:591
 msgid "Column Gap"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:210
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:248
 msgid "Use Default FluentCart Styles"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:230
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:512
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:284
+msgid "Checkout Source"
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:288
+msgid "Default Cart"
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:289
+msgid "Custom Product"
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:291
+msgid "\"Default Cart\" checks out the shopper's cart. \"Custom Product\" lets them pick from products you choose."
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:299
+msgid "The live Custom Product checkout uses FluentCart's own layout, so this preview is only an approximation."
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:321
+msgid "Selection Mode"
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:325
+msgid "Select one"
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:326
+msgid "Select many"
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:328
+msgid "\"Select one\" shows radio buttons, \"Select many\" shows checkboxes."
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:336
+msgid "Maximum Selectable Items"
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:342
+msgid "How many of the products above a shopper may tick at once. Every product you added is always shown."
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:353
+msgid "Selector Heading"
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:355
+msgid "Choose your plan"
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:356
+msgid "Heading shown above the selectable list."
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:386
+msgid "Let shoppers choose from products you pick, right here on the checkout — no product page visit needed. Available in FluentCart Pro."
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:401
+msgid "With custom products configured, this checkout displays nothing on the live page while FluentCart Pro is inactive. Reactivate FluentCart Pro to restore checkout. Your custom-product settings are kept."
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:415
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:717
 msgid "Form Fields"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:240
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:354
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:426
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:558
 #: app/Modules/Integrations/Elementor/Widgets/ShopAppWidget.php:185
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductInfoWidget.php:92
 msgid "Section"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:244
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:430
 msgid "Name Fields"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:245
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:431
 msgid "Create Account"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:246
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1624
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:432
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1830
 msgid "Address Fields"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:247
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:433
 msgid "Shipping Methods"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:248
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:434
 msgid "Business Details"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:249
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1488
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:435
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1694
 msgid "Payment Methods"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:250
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:436
 msgid "Agree to Terms"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:252
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:794
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:438
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:999
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewFormWidget.php:213
 msgid "Submit Button"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:260
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:374
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:446
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:578
 msgid "Visible"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:273
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:459
 msgid "Address Display"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:277
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:463
 msgid "Billing + Shipping"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:278
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:464
 msgid "Billing Only"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:279
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:465
 msgid "Shipping Only"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:290
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:476
 msgid "Show \"Ship to Different Address\""
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:307
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:493
 msgid "Custom Section Heading"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:309
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:495
 msgid "Leave empty for default"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:316
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:502
 msgid "Form Sections"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:358
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:522
+msgid "Field Labels"
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:526
+msgid "Docked (name on the right)"
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:527
+msgid "Floating (name above the value)"
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:528
+msgid "Placeholder only"
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:530
+msgid "How checkout fields show their name once the customer has typed in them."
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:562
 msgid "Order Summary (Items)"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:361
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1357
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:565
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1563
 msgid "Coupon Field"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:362
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:566
 msgid "Manual Discount"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:366
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:570
 msgid "Order Bump (Pro)"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:387
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:591
 msgid "Collapsible"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:402
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:606
 msgid "Coupon Label"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:414
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:618
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductInfoWidget.php:122
 msgid "Summary Sections"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:435
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:639
 msgid "Summary Heading"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:452
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:656
 msgid "Layout Options"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:460
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:665
 msgid "Sticky Summary"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:475
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:680
 msgid "Sticky Offset"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:495
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:700
 msgid "Empty Cart Message"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:521
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:726
 msgid "Input Typography"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:530
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1102
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:735
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1307
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductPackageDescriptionWidget.php:51
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductSkuWidget.php:51
 msgid "Label Typography"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:538
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1119
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:743
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1324
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductPackageDescriptionWidget.php:59
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductSkuWidget.php:59
 msgid "Label Color"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:579
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:784
 #: app/Modules/Integrations/Elementor/Widgets/SearchBarWidget.php:260
 msgid "Placeholder Color"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:600
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:805
 #: app/Modules/Integrations/Elementor/Widgets/SearchBarWidget.php:325
 msgid "Focus"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:617
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:822
 #: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:214
 #: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:245
 #: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:311
@@ -1066,25 +1185,25 @@ msgstr ""
 msgid "Border Color"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:664
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:869
 msgid "Input Height"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:679
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:884
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewFormWidget.php:96
 msgid "Field Spacing"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:694
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:983
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:899
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1188
 msgid "Transition Duration (ms)"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:714
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:919
 msgid "Section Headings"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:732
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:937
 #: app/Modules/Integrations/Elementor/Widgets/CustomerDashboardButtonWidget.php:316
 #: app/Modules/Integrations/Elementor/Widgets/ProductCardWidget.php:403
 #: app/Modules/Integrations/Elementor/Widgets/ProductCardWidget.php:456
@@ -1102,21 +1221,21 @@ msgstr ""
 msgid "Color"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:813
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1018
 msgid "Button Width"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:817
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1022
 msgid "Auto"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:818
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1023
 #: app/Modules/Integrations/Elementor/Widgets/ProductCardWidget.php:547
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/WriteAReviewButtonWidget.php:198
 msgid "Full Width"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:833
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1038
 #: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:895
 #: app/Modules/Integrations/Elementor/Widgets/StoreLogoWidget.php:136
 #: app/Modules/Integrations/Elementor/Widgets/StoreLogoWidget.php:208
@@ -1130,7 +1249,8 @@ msgstr ""
 msgid "Alignment"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:836
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1041
+#: app/Modules/Integrations/Elementor/Widgets/CurrencySwitcherWidget.php:163
 #: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:899
 #: app/Modules/Integrations/Elementor/Widgets/StoreLogoWidget.php:212
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductContentWidget.php:61
@@ -1144,7 +1264,7 @@ msgstr ""
 msgid "Left"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:837
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1042
 #: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:903
 #: app/Modules/Integrations/Elementor/Widgets/StoreLogoWidget.php:216
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductContentWidget.php:62
@@ -1157,7 +1277,8 @@ msgstr ""
 msgid "Center"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:838
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1043
+#: app/Modules/Integrations/Elementor/Widgets/CurrencySwitcherWidget.php:164
 #: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:907
 #: app/Modules/Integrations/Elementor/Widgets/StoreLogoWidget.php:220
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductContentWidget.php:63
@@ -1171,152 +1292,152 @@ msgstr ""
 msgid "Right"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:940
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1145
 msgid "Hover Animation"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:944
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1145
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1149
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1350
 #: app/Modules/Integrations/Elementor/Widgets/StoreLogoWidget.php:93
 msgid "None"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:945
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1150
 msgid "Scale Up"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:946
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1151
 msgid "Scale Down"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:947
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1152
 msgid "Lift"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:996
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1201
 msgid "Loading State"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1005
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1210
 msgid "Disabled Opacity"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1028
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1233
 msgid "Summary Box"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1093
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1298
 msgid "Summary Items"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1111
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1316
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductPackageDescriptionWidget.php:71
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductSkuWidget.php:71
 msgid "Value Typography"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1130
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1335
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductPackageDescriptionWidget.php:79
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductSkuWidget.php:79
 msgid "Value Color"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1141
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1346
 msgid "Separator Style"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1146
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1351
 msgid "Solid"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1147
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1352
 msgid "Dashed"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1148
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1353
 msgid "Dotted"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1159
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1364
 msgid "Separator Width"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1178
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1383
 msgid "Separator Color"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1192
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1397
 msgid "Row Padding"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1205
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1410
 msgid "Total Row"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1222
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1427
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewSummaryWidget.php:114
 msgid "Total Color"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1233
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1438
 msgid "Total Background"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1252
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1457
 msgid "Line Items"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1261
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1577
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1467
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1783
 #: app/Modules/Integrations/Elementor/Widgets/ReceiptWidget.php:199
 #: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:599
 msgid "Title Typography"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1269
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1585
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1475
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1791
 #: app/Modules/Integrations/Elementor/Widgets/ReceiptWidget.php:187
 #: app/Modules/Integrations/Elementor/Widgets/ReviewStyleControls.php:607
 msgid "Title Color"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1281
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1487
 msgid "Price Typography"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1289
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1495
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductPriceWidget.php:56
 msgid "Price Color"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1300
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1506
 msgid "Image Border Radius"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1313
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1519
 #: app/Modules/Integrations/Elementor/Widgets/ProductCategoriesListWidget.php:203
 msgid "Item Spacing"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1329
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1535
 msgid "Item Border"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1337
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1543
 msgid "Item Padding"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1368
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1574
 msgid "Toggle Link Color"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1379
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1585
 #: app/Modules/Integrations/Elementor/Widgets/ShopAppWidget.php:689
 msgid "Apply Button"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1406
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1435
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1612
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1641
 #: app/Modules/Integrations/Elementor/Widgets/ProductCategoriesListWidget.php:313
 #: app/Modules/Integrations/Elementor/Widgets/ProductCategoriesListWidget.php:386
 #: app/Modules/Integrations/Elementor/Widgets/ProductCategoriesListWidget.php:418
@@ -1338,27 +1459,27 @@ msgstr ""
 msgid "Background"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1449
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1655
 msgid "Messages"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1458
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1664
 msgid "Success Color"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1469
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1675
 msgid "Error Color"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1507
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1713
 msgid "Selected Background"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1526
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1732
 msgid "Selected Border Color"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1561
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1767
 #: app/Modules/Integrations/Elementor/Widgets/ProductCardWidget.php:427
 #: app/Modules/Integrations/Elementor/Widgets/ProductCardWidget.php:467
 #: app/Modules/Integrations/Elementor/Widgets/ProductCardWidget.php:518
@@ -1366,48 +1487,106 @@ msgstr ""
 msgid "Spacing"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1597
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1803
 msgid "Description Typography"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1605
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1811
 msgid "Description Color"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1636
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1842
 msgid "Section Border"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1644
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1850
 msgid "Section Border Radius"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1656
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1862
 msgid "Section Padding"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1669
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1875
 msgid "Address Title Typography"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1677
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1883
 msgid "Address Title Color"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1696
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1902
 msgid "Error/Validation"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1704
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1910
 msgid "Error Message Color"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1716
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1922
 msgid "Error Field Border Color"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1729
+#: app/Modules/Integrations/Elementor/Widgets/CheckoutWidget.php:1935
 msgid "Error Message Typography"
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Widgets/CurrencySwitcherWidget.php:33
+msgid "Currency Switcher"
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Widgets/CurrencySwitcherWidget.php:94
+msgid "Switcher Settings"
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Widgets/CurrencySwitcherWidget.php:101
+msgid "Dropdown List"
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Widgets/CurrencySwitcherWidget.php:116
+msgid "Display"
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Widgets/CurrencySwitcherWidget.php:120
+msgid "Name and code"
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Widgets/CurrencySwitcherWidget.php:121
+msgid "Currency name"
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Widgets/CurrencySwitcherWidget.php:122
+msgid "Code"
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Widgets/CurrencySwitcherWidget.php:123
+msgid "Sign only"
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Widgets/CurrencySwitcherWidget.php:124
+msgid "Flag only"
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Widgets/CurrencySwitcherWidget.php:131
+#: app/Modules/Integrations/Elementor/Widgets/CurrencySwitcherWidget.php:137
+#: app/Modules/Integrations/Elementor/Widgets/CurrencySwitcherWidget.php:144
+msgid "Show sign"
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Widgets/CurrencySwitcherWidget.php:152
+msgid "Show flag"
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Widgets/CurrencySwitcherWidget.php:159
+msgid "Flag position"
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Widgets/CurrencySwitcherWidget.php:204
+msgid "The currency switcher is a FluentCart Pro feature. It shows nothing on your site until FluentCart Pro is active."
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Widgets/CurrencySwitcherWidget.php:217
+msgid "Shows when Settings → Multi Currency offers more than one currency."
 msgstr ""
 
 #: app/Modules/Integrations/Elementor/Widgets/CustomerDashboardButtonWidget.php:26
@@ -1663,7 +1842,7 @@ msgstr ""
 #: app/Modules/Integrations/Elementor/Widgets/ProductCarouselWidget.php:377
 #: app/Modules/Integrations/Elementor/Widgets/ShopAppWidget.php:240
 #: app/Modules/Integrations/Elementor/Widgets/ShopAppWidget.php:412
-#: app/Modules/Integrations/Elementor/Widgets/ShopAppWidget.php:844
+#: app/Modules/Integrations/Elementor/Widgets/ShopAppWidget.php:843
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductInfoWidget.php:100
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductInfoWidget.php:134
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductInfoWidget.php:200
@@ -1769,6 +1948,7 @@ msgid "Product Carousel"
 msgstr ""
 
 #: app/Modules/Integrations/Elementor/Widgets/ProductCarouselWidget.php:207
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:651
 msgid "Select Products"
 msgstr ""
 
@@ -1928,8 +2108,8 @@ msgstr ""
 
 #: app/Modules/Integrations/Elementor/Widgets/ProductCategoriesListWidget.php:109
 #: app/Modules/Integrations/Elementor/Widgets/ShopAppWidget.php:107
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:365
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:444
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:367
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:446
 msgid "List"
 msgstr ""
 
@@ -2359,8 +2539,8 @@ msgstr ""
 
 #: app/Modules/Integrations/Elementor/Widgets/ShopAppWidget.php:106
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/RelatedProductsWidget.php:131
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:366
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:446
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:368
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:448
 msgid "Grid"
 msgstr ""
 
@@ -2445,6 +2625,16 @@ msgstr ""
 #: app/Modules/Integrations/Elementor/Widgets/ShopAppWidget.php:360
 #: app/Modules/Integrations/Elementor/Widgets/ShopAppWidget.php:410
 msgid "Display Name"
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Widgets/ShopAppWidget.php:374
+msgid "Show empty"
+msgstr ""
+
+#. translators: %1$s: taxonomy name (e.g. "categories", "brands")
+#: app/Modules/Integrations/Elementor/Widgets/ShopAppWidget.php:381
+#, php-format
+msgid "Display %1$s even if they have no products."
 msgstr ""
 
 #: app/Modules/Integrations/Elementor/Widgets/ShopAppWidget.php:394
@@ -2570,9 +2760,9 @@ msgstr ""
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductPriceWidget.php:123
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductRatingWidget.php:266
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewFormWidget.php:373
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:729
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewSummaryWidget.php:259
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:926
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:745
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewSummaryWidget.php:280
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:941
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductSkuWidget.php:147
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductStockWidget.php:161
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductTitleWidget.php:135
@@ -3128,23 +3318,29 @@ msgstr ""
 msgid "The standard layout paginates as soon as there is a second page, and FluentCart offers no way to turn that off. Pick Choose fields to control it."
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:762
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:726
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewSummaryWidget.php:263
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:924
+msgid "None of the selected products can be shown."
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:781
 msgid "This product has no approved reviews yet."
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:845
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:864
 msgid "Newest"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:846
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:865
 msgid "Oldest"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:847
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:866
 msgid "Highest Rating"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:848
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewListWidget.php:867
 msgid "Lowest Rating"
 msgstr ""
 
@@ -3200,7 +3396,7 @@ msgstr ""
 msgid "Colours the stars in the summary. Matches the Star Color setting on the Gutenberg block."
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewSummaryWidget.php:286
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewSummaryWidget.php:303
 msgid "This product has no approved reviews yet, so the summary is empty."
 msgstr ""
 
@@ -3339,11 +3535,11 @@ msgid "Verified Badge After The Variation"
 msgstr ""
 
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:658
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:452
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:454
 msgid "Slider"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:967
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/ProductReviewsWidget.php:985
 msgid "There is nothing to show for this product yet."
 msgstr ""
 
@@ -3412,6 +3608,7 @@ msgid "Source"
 msgstr ""
 
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ProductWidgetTrait.php:28
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:641
 msgid "Current Product"
 msgstr ""
 
@@ -3419,84 +3616,96 @@ msgstr ""
 msgid "Custom"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:204
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:206
 msgid "Layout Preset"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:205
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:207
 msgid "Builds the section from these settings. Anything you have set is replaced."
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:233
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:235
 msgid "Custom layout"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:234
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:236
 msgid "Custom layout. Choose a preset to replace it with a starter layout."
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:367
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:369
 msgid "Carousel"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:368
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:370
 msgid "Photo"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:373
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:375
 msgid "All layouts"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:433
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:435
 msgid "The greyed layouts need FluentCart Pro. Until then the section is whatever the controls below say. After Pro is activated, the layout you choose supplies what you have not set yourself."
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:447
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:449
 msgid "Grid (Pro)"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:449
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:451
 msgid "Masonry"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:450
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:452
 msgid "Masonry (Pro)"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:453
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:455
 msgid "Slider (Pro)"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:495
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:497
 msgid "Grid and Slider need FluentCart Pro. Without it this list renders as a single column."
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:523
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:525
 msgid "Attachment As Card Background"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:524
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:526
 msgid "Attachment As Card Background (Pro)"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:525
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:527
 msgid "The first attachment fills the card and the rest of the review sits over it. A review with no attachment is unaffected, so a grid can mix photo cards and plain ones."
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:540
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:542
 msgid "Flush To Card Edges"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:541
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:543
 msgid "Flush To Card Edges (Pro)"
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:542
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:544
 msgid "The attachment becomes the top of the card: no padding around it, and one height for every card in the row. Applies when the attachments are the first thing in the review."
 msgstr ""
 
-#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:577
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:579
 msgid "These two need FluentCart Pro. Without it an attachment stays inside the card at its own size."
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:637
+msgid "Show reviews from"
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:642
+msgid "Selected Products"
+msgstr ""
+
+#: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/Traits/ReviewWidgetTrait.php:656
+msgid "With two or more products, their reviews and rating are combined, and there is no Write a Review button."
 msgstr ""
 
 #: app/Modules/Integrations/Elementor/Widgets/ThemeBuilder/WriteAReviewButtonWidget.php:79
@@ -3507,12 +3716,22 @@ msgstr ""
 msgid "This visitor cannot review this product, so no button is shown."
 msgstr ""
 
-#: app/Services/PluginManager/Updater.php:316
-msgid "You do not have permission to install plugin updates"
+#: app/Services/PluginManager/Updater.php:203
+#: app/Services/PluginManager/Updater.php:291
+msgid "Full version details are available on the plugin page."
 msgstr ""
 
-#: app/Services/PluginManager/Updater.php:316
-msgid "Error"
+#: app/Services/PluginManager/Updater.php:205
+msgid "View Plugin Page &rarr;"
+msgstr ""
+
+#: app/Services/PluginManager/Updater.php:336
+#, php-format
+msgid "%1$s updates require an active FluentCart Pro license. Please activate your FluentCart Pro license to receive updates."
+msgstr ""
+
+#: app/Services/PluginManager/Updater.php:344
+msgid "Activate License"
 msgstr ""
 
 #. translators: 1: template title, 2: bundled version
@@ -3609,6 +3828,6 @@ msgstr ""
 msgid "Ship To"
 msgstr ""
 
-#: boot/app.php:36
+#: boot/app.php:41
 msgid "Check Update"
 msgstr ""
