@@ -208,3 +208,82 @@
 .fct-el-preset-custom.is-current .fct-el-preset-custom-mark {
     color: #3b5bdb;
 }
+
+/* A FluentCart Pro feature in a widget's panel while Pro is inactive
+   (ProFeature::panelNotice()): the Divi add-on's sidebar notice. Text uses
+   Elementor's --e-a-color-txt so it stays readable in the dark editor theme. */
+.fct-elementor-pro-panel {
+    align-items: center;
+    border: 1px dashed #d6dae1;
+    border-radius: 6px;
+    color: var(--e-a-color-txt, #565865);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 16px 12px;
+    text-align: center;
+}
+
+.fct-elementor-pro-panel svg {
+    height: 16px;
+    width: 16px;
+}
+
+.fct-elementor-pro-panel-icon {
+    align-items: center;
+    background: #fffaeb;
+    border-radius: 6px;
+    color: #f6b51e;
+    display: flex;
+    height: 32px;
+    justify-content: center;
+    width: 32px;
+}
+
+.fct-elementor-pro-panel-text {
+    font-size: 13px;
+    font-style: normal;
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* Dark on cream: amber text fails contrast. */
+.fct-elementor-pro-panel-warning {
+    background: #fffaeb;
+    border-radius: 6px;
+    color: #5c4813;
+    font-size: 12px;
+    font-style: normal;
+    line-height: 1.5;
+    margin: 0;
+    padding: 8px 10px;
+    width: 100%;
+}
+
+.elementor-control-raw-html .fct-elementor-pro-panel a.fct-elementor-pro-panel-button {
+    background: #253241;
+    border-radius: 6px;
+    display: inline-flex;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 14px;
+    text-decoration: none;
+}
+
+.elementor-control-raw-html .fct-elementor-pro-panel a.fct-elementor-pro-panel-button:hover,
+.elementor-control-raw-html .fct-elementor-pro-panel a.fct-elementor-pro-panel-button:focus {
+    background: #1b2531;
+}
+
+.elementor-control-raw-html .fct-elementor-pro-panel a.fct-elementor-pro-panel-button:focus-visible {
+    outline: 2px solid #6366f1;
+    outline-offset: 2px;
+}
+
+/* The label carries the colour so panel link styles cannot repaint it. */
+.fct-elementor-pro-panel-button-label {
+    align-items: center;
+    color: #ffffff;
+    display: inline-flex;
+    gap: 6px;
+}

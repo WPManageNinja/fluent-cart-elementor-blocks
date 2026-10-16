@@ -42,6 +42,32 @@ class ProFeature
     }
 
     /**
+     * The same notice for a widget's settings panel, inside a RAW_HTML control. Styled
+     * by css/elementor-editor.css. The label carries the colour so panel link styles
+     * cannot repaint it.
+     *
+     * @param string $note Plain text saying what the feature needs.
+     * @param string $warning Optional second line, e.g. that saved settings are kept.
+     */
+    public static function panelNotice(string $note, string $warning = ''): string
+    {
+        $html = '<div class="fct-elementor-pro-panel">'
+            . '<span class="fct-elementor-pro-panel-icon">' . self::CROWN_SVG . '</span>'
+            . '<p class="fct-elementor-pro-panel-text">' . esc_html($note) . '</p>';
+
+        if ($warning !== '') {
+            $html .= '<p class="fct-elementor-pro-panel-warning">' . esc_html($warning) . '</p>';
+        }
+
+        return $html . sprintf(
+            '<a class="fct-elementor-pro-panel-button" href="%1$s" target="_blank" rel="noopener noreferrer"><span class="fct-elementor-pro-panel-button-label">%2$s%3$s</span></a></div>',
+            esc_url(self::UPGRADE_URL),
+            self::CROWN_SVG,
+            esc_html__('Upgrade to Pro', 'fluent-cart-elementor-blocks')
+        );
+    }
+
+    /**
      * Panel CSS putting the amber crown top-left on these widgets' tiles (the FluentCart
      * badge has top-right). "Pro" is its alt text.
      *
