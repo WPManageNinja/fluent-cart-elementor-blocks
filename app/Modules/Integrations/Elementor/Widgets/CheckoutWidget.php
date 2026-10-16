@@ -165,7 +165,6 @@ class CheckoutWidget extends Widget_Base
                 [
                         'label' => esc_html__('General Settings', 'fluent-cart-elementor-blocks'),
                         'tab'   => Controls_Manager::TAB_CONTENT,
-                        'condition' => ['inline_checkout_mode!' => 'custom'],
                 ]
         );
 
@@ -296,7 +295,7 @@ class CheckoutWidget extends Widget_Base
                 'inline_core_layout_notice',
                 [
                         'type'            => Controls_Manager::RAW_HTML,
-                        'raw'             => esc_html__('The live Custom Product checkout uses FluentCart\'s own layout, so this preview is only an approximation.', 'fluent-cart-elementor-blocks'),
+                        'raw'             => esc_html__('The live Custom Product checkout uses FluentCart\'s own layout: Field Labels and the Style tab apply, the other content settings apply to Default Cart only.', 'fluent-cart-elementor-blocks'),
                         'content_classes' => 'elementor-panel-alert elementor-panel-alert-info',
                         'condition'       => ['inline_checkout_mode' => 'custom'],
                 ]
@@ -414,7 +413,6 @@ class CheckoutWidget extends Widget_Base
                 [
                         'label' => esc_html__('Form Fields', 'fluent-cart-elementor-blocks'),
                         'tab'   => Controls_Manager::TAB_CONTENT,
-                        'condition' => ['inline_checkout_mode!' => 'custom'],
                 ]
         );
 
@@ -546,7 +544,6 @@ class CheckoutWidget extends Widget_Base
                 [
                         'label' => esc_html__('Order Summary', 'fluent-cart-elementor-blocks'),
                         'tab'   => Controls_Manager::TAB_CONTENT,
-                        'condition' => ['inline_checkout_mode!' => 'custom'],
                 ]
         );
 
@@ -655,7 +652,6 @@ class CheckoutWidget extends Widget_Base
                 [
                         'label' => esc_html__('Layout Options', 'fluent-cart-elementor-blocks'),
                         'tab'   => Controls_Manager::TAB_CONTENT,
-                        'condition' => ['inline_checkout_mode!' => 'custom'],
                 ]
         );
 
@@ -1958,6 +1954,7 @@ class CheckoutWidget extends Widget_Base
                 'selection_mode' => $settings['inline_selection_mode'] ?? 'single',
                 'max_items'      => $settings['inline_max_items'] ?? 5,
                 'selector_label' => $settings['inline_selector_label'] ?? '',
+                'field_label_style' => $settings['field_label_style'] ?? '',
         ];
     }
 
