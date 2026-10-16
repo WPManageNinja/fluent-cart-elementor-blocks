@@ -15,6 +15,7 @@ use FluentCart\App\Services\Renderer\CheckoutRenderer;
 use FluentCart\App\Modules\Templating\AssetLoader;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Controls\ProductVariationSelectControl;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support\InlineCheckoutPreview;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support\ProFeature;
 use FluentCartElementorBlocks\App\Utils\Enqueuer\Enqueue;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Renderers\ElementorCheckoutRenderer;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Renderers\DummyCheckoutRenderer;
@@ -269,6 +270,14 @@ class CheckoutWidget extends Widget_Base
                 ]
         );
 
+        // As Gutenberg's ProductsProPanel: no controls without Pro, and say saved products are kept.
+        if (!App::isProActive()) {
+            $this->registerProNoticeControls();
+            $this->end_controls_section();
+
+            return;
+        }
+
         $this->add_control(
                 'inline_checkout_mode',
                 [
@@ -277,9 +286,7 @@ class CheckoutWidget extends Widget_Base
                         'default'     => 'cart',
                         'options'     => [
                                 'cart'   => esc_html__('Default Cart', 'fluent-cart-elementor-blocks'),
-                                'custom' => App::isProActive()
-                                        ? esc_html__('Custom Product', 'fluent-cart-elementor-blocks')
-                                        : esc_html__('Custom Product (Pro)', 'fluent-cart-elementor-blocks'),
+                                'custom' => esc_html__('Custom Product', 'fluent-cart-elementor-blocks'),
                         ],
                         'description' => esc_html__('"Default Cart" checks out the shopper\'s cart. "Custom Product" lets them pick from products you choose.', 'fluent-cart-elementor-blocks'),
                 ]
@@ -294,17 +301,6 @@ class CheckoutWidget extends Widget_Base
                         'condition'       => ['inline_checkout_mode' => 'custom'],
                 ]
         );
-
-        if (!App::isProActive()) {
-            $this->add_control(
-                    'inline_pro_notice',
-                    [
-                            'type'            => Controls_Manager::RAW_HTML,
-                            'raw'             => esc_html__('Custom Product checkout is a FluentCart Pro feature. Without Pro, a checkout set to Custom Product shows nothing on the live page.', 'fluent-cart-elementor-blocks'),
-                            'content_classes' => 'elementor-panel-alert elementor-panel-alert-warning',
-                    ]
-            );
-        }
 
         $this->add_control(
                 'inline_variant_ids',
@@ -363,6 +359,42 @@ class CheckoutWidget extends Widget_Base
         );
 
         $this->end_controls_section();
+    }
+
+    /**
+     * The Pro notice that stands in for the Products controls while Pro is inactive.
+     * The panel compares loosely, so an empty list equals ''. It never matches a setting
+     * that does not exist, hence the hidden products control with an empty default.
+     */
+    private function registerProNoticeControls()
+    {
+        $this->add_control(
+                'inline_variant_ids',
+                [
+                        'type'    => Controls_Manager::HIDDEN,
+                        'default' => [],
+                ]
+        );
+
+        $note = __('Let shoppers choose from products you pick, right here on the checkout — no product page visit needed. Available in FluentCart Pro.', 'fluent-cart-elementor-blocks');
+
+        $this->add_control(
+                'inline_pro_notice',
+                [
+                        'type'       => Controls_Manager::RAW_HTML,
+                        'raw'        => ProFeature::panelNotice($note),
+                        'conditions' => ['terms' => [['name' => 'inline_variant_ids', 'operator' => '==', 'value' => '']]],
+                ]
+        );
+
+        $this->add_control(
+                'inline_pro_notice_kept',
+                [
+                        'type'       => Controls_Manager::RAW_HTML,
+                        'raw'        => ProFeature::panelNotice($note, __('This checkout already has products configured. They are kept, and work again as soon as FluentCart Pro is active.', 'fluent-cart-elementor-blocks')),
+                        'conditions' => ['terms' => [['name' => 'inline_variant_ids', 'operator' => '!=', 'value' => '']]],
+                ]
+        );
     }
 
     /**
