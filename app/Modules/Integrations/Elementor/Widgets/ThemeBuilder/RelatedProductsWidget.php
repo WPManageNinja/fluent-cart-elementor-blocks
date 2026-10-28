@@ -8,7 +8,7 @@ use Elementor\Group_Control_Typography;
 use Elementor\Group_Control_Border;
 use Elementor\Group_Control_Box_Shadow;
 use FluentCart\App\Modules\Templating\AssetLoader;
-use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support\AttributeSwatches;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support\ProductAttributeSwatches;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\BadgeControls;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ThemeBuilder\Traits\ProductWidgetTrait;
 use FluentCartElementorBlocks\App\Services\Badges\BadgeRenderer;
@@ -75,7 +75,7 @@ class RelatedProductsWidget extends Widget_Base
 
     private function registerSwatchControls()
     {
-        if (!AttributeSwatches::swatchesAvailable()) {
+        if (!ProductAttributeSwatches::swatchesAvailable()) {
             return;
         }
 
@@ -113,7 +113,7 @@ class RelatedProductsWidget extends Widget_Base
             ]
         );
 
-        AttributeSwatches::registerSwatchControls($this, ['show_swatches' => 'yes'], '{{WRAPPER}} .fct-card-swatch-rows');
+        ProductAttributeSwatches::registerSwatchControls($this, ['show_swatches' => 'yes'], '{{WRAPPER}} .fct-card-swatch-rows');
 
         $this->end_controls_section();
     }
@@ -546,12 +546,12 @@ class RelatedProductsWidget extends Widget_Base
 
         $swatchHook = '';
         $swatchCallback = null;
-        if (($settings['show_swatches'] ?? '') === 'yes' && AttributeSwatches::swatchesAvailable()) {
-            AttributeSwatches::enqueueAssets();
+        if (($settings['show_swatches'] ?? '') === 'yes' && ProductAttributeSwatches::swatchesAvailable()) {
+            ProductAttributeSwatches::enqueueAssets();
             $position = in_array($settings['swatch_position'] ?? '', ['image', 'title', 'price'], true) ? $settings['swatch_position'] : 'price';
             $swatchHook = 'fluent_cart/product/group/after_' . $position . '_block';
             $swatchCallback = function ($context) use ($settings) {
-                echo AttributeSwatches::render(is_array($context) ? ($context['product'] ?? null) : null, $settings); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                echo ProductAttributeSwatches::render(is_array($context) ? ($context['product'] ?? null) : null, $settings); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
             };
             // After the badge closures, which buffer the image block at priority 10.
             add_action($swatchHook, $swatchCallback, 20, 1);

@@ -10,16 +10,16 @@ require __DIR__ . '/../lib/assert.php';
 
 FceTest::requireLive('tests/smoke/attribute-swatches.php', ['\Elementor\Plugin', '\FluentCart\App\Models\Product']);
 
-use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support\AttributeSwatches;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support\ProductAttributeSwatches;
 
 $test = new FceTest('smoke/attribute-swatches');
 
-if (!AttributeSwatches::swatchesAvailable()) {
+if (!ProductAttributeSwatches::swatchesAvailable()) {
     echo "  (skipped: this FluentCart has no attribute filters or card swatches)\n";
     $test->finish();
 }
 
-$groups = AttributeSwatches::groupOptions();
+$groups = ProductAttributeSwatches::groupOptions();
 $relation = \FluentCart\App\Models\AttributeRelation::query()
     ->from('fct_atts_relations as rel')
     ->join('fct_product_variations as var', 'var.id', '=', 'rel.object_id')

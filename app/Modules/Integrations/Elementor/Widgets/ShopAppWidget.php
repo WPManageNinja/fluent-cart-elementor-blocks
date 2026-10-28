@@ -8,7 +8,7 @@ use Elementor\Group_Control_Typography;
 use Elementor\Repeater;
 use FluentCart\Api\Taxonomy;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Renderers\ElementorShopAppHandler;
-use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support\AttributeSwatches;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support\ProductAttributeSwatches;
 use FluentCartElementorBlocks\App\Services\Badges\BadgeRenderer;
 use FluentCart\App\Modules\Templating\AssetLoader;
 use FluentCart\Framework\Support\Str;
@@ -241,12 +241,12 @@ class ShopAppWidget extends Widget_Base
                     'price'   => esc_html__('Price', 'fluent-cart-elementor-blocks'),
                     'rating'  => esc_html__('Rating', 'fluent-cart-elementor-blocks'),
                     'button'  => esc_html__('Button', 'fluent-cart-elementor-blocks'),
-                ] + AttributeSwatches::cardElementOption(),
+                ] + ProductAttributeSwatches::cardElementOption(),
             ]
         );
 
-        if (AttributeSwatches::swatchesAvailable()) {
-            AttributeSwatches::registerSwatchControls($repeater, ['element_type' => 'swatches'], '{{WRAPPER}} {{CURRENT_ITEM}}');
+        if (ProductAttributeSwatches::swatchesAvailable()) {
+            ProductAttributeSwatches::registerSwatchControls($repeater, ['element_type' => 'swatches'], '{{WRAPPER}} {{CURRENT_ITEM}}');
         }
 
         $this->add_control(
@@ -430,7 +430,7 @@ class ShopAppWidget extends Widget_Base
     private function registerAttributeFilterControls()
     {
         // Like the block: only offered when the store has attribute groups.
-        if (!AttributeSwatches::groupOptions()) {
+        if (!ProductAttributeSwatches::groupOptions()) {
             return;
         }
 
@@ -462,7 +462,7 @@ class ShopAppWidget extends Widget_Base
                 'type'        => Controls_Manager::SELECT2,
                 'multiple'    => true,
                 'label_block' => true,
-                'options'     => AttributeSwatches::groupOptions(),
+                'options'     => ProductAttributeSwatches::groupOptions(),
                 'default'     => [],
                 'condition'   => $condition,
             ]
@@ -900,8 +900,8 @@ class ShopAppWidget extends Widget_Base
             ];
 
             // Core's renderer turns these into the attr_{id} sidebar filters.
-            $attributeGroups = AttributeSwatches::groupIds($settings['attribute_filter_groups'] ?? []);
-            if (($settings['enable_attribute_filters'] ?? '') === 'yes' && $attributeGroups && AttributeSwatches::filtersAvailable()) {
+            $attributeGroups = ProductAttributeSwatches::groupIds($settings['attribute_filter_groups'] ?? []);
+            if (($settings['enable_attribute_filters'] ?? '') === 'yes' && $attributeGroups && ProductAttributeSwatches::filtersAvailable()) {
                 $customFilters['attributes'] = $attributeGroups;
                 $customFilters['show_attribute_counts'] = ($settings['attribute_filter_show_count'] ?? '') === 'yes';
                 $customFilters['show_attribute_empty'] = ($settings['attribute_filter_show_empty'] ?? '') === 'yes';
@@ -1027,7 +1027,7 @@ class ShopAppWidget extends Widget_Base
 
         // Before rendering: cards loaded later by AJAX bring no stylesheet.
         if (in_array('swatches', array_column((array) $cardElements, 'element_type'), true)) {
-            AttributeSwatches::enqueueAssets();
+            ProductAttributeSwatches::enqueueAssets();
         }
 
         $handler = new ElementorShopAppHandler();

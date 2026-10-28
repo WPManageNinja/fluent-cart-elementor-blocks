@@ -15,7 +15,7 @@ if (!defined('ABSPATH')) {
  * Attribute filters and card swatches. Both need a FluentCart core that ships
  * ShopAttributeFilter and ProductCardSwatchesRenderer; on an older core the controls stay hidden.
  */
-class AttributeSwatches
+class ProductAttributeSwatches
 {
     private static $groupOptions = null;
 

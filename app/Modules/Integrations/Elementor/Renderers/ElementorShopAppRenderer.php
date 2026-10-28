@@ -9,7 +9,7 @@ use FluentCart\App\Services\Renderer\RenderHelper;
 use FluentCart\App\Services\Renderer\ShopAppRenderer;
 use FluentCart\Framework\Pagination\CursorPaginator;
 use FluentCart\Framework\Support\Arr;
-use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support\AttributeSwatches;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support\ProductAttributeSwatches;
 
 class ElementorShopAppRenderer extends ShopAppRenderer
 {
@@ -298,7 +298,7 @@ class ElementorShopAppRenderer extends ShopAppRenderer
                     $cardRender->showBuyButton();
                     break;
                 case 'swatches':
-                    echo AttributeSwatches::render($product, $element, 'elementor-repeater-item-' . Arr::get($element, '_id', '')); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                    echo ProductAttributeSwatches::render($product, $element, 'elementor-repeater-item-' . Arr::get($element, '_id', '')); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                     break;
             }
         }

@@ -9,7 +9,7 @@ use FluentCart\App\Models\Product;
 use FluentCart\App\Modules\Templating\AssetLoader;
 use FluentCart\App\Services\Renderer\ProductCardRender;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Controls\ProductSelectControl;
-use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support\AttributeSwatches;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support\ProductAttributeSwatches;
 use FluentCartElementorBlocks\App\Services\Badges\BadgeRenderer;
 use FluentCartElementorBlocks\App\Utils\Enqueuer\Enqueue;
 
@@ -377,12 +377,12 @@ class ProductCarouselWidget extends Widget_Base
                     'excerpt' => esc_html__('Excerpt', 'fluent-cart-elementor-blocks'),
                     'price'   => esc_html__('Price', 'fluent-cart-elementor-blocks'),
                     'button'  => esc_html__('Button', 'fluent-cart-elementor-blocks'),
-                ] + AttributeSwatches::cardElementOption(),
+                ] + ProductAttributeSwatches::cardElementOption(),
             ]
         );
 
-        if (AttributeSwatches::swatchesAvailable()) {
-            AttributeSwatches::registerSwatchControls($repeater, ['element_type' => 'swatches'], '{{WRAPPER}} {{CURRENT_ITEM}}');
+        if (ProductAttributeSwatches::swatchesAvailable()) {
+            ProductAttributeSwatches::registerSwatchControls($repeater, ['element_type' => 'swatches'], '{{WRAPPER}} {{CURRENT_ITEM}}');
         }
 
         $this->add_control(
@@ -584,7 +584,7 @@ class ProductCarouselWidget extends Widget_Base
         $priceFormat = $settings['price_format'] ?? 'starts_from';
 
         if (in_array('swatches', array_column((array) $cardElements, 'element_type'), true)) {
-            AttributeSwatches::enqueueAssets();
+            ProductAttributeSwatches::enqueueAssets();
         }
 
         // Sale + Sold Out badge overlays via core's before/after_image_block
@@ -778,7 +778,7 @@ class ProductCarouselWidget extends Widget_Base
                     break;
 
                 case 'swatches':
-                    echo AttributeSwatches::render($product, $element, 'elementor-repeater-item-' . ($element['_id'] ?? '')); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                    echo ProductAttributeSwatches::render($product, $element, 'elementor-repeater-item-' . ($element['_id'] ?? '')); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                     break;
             }
         }
