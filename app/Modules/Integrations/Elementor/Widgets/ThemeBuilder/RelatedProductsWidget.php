@@ -8,6 +8,7 @@ use Elementor\Group_Control_Typography;
 use Elementor\Group_Control_Border;
 use Elementor\Group_Control_Box_Shadow;
 use FluentCart\App\Modules\Templating\AssetLoader;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support\AttributeSwatches;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\BadgeControls;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ThemeBuilder\Traits\ProductWidgetTrait;
 use FluentCartElementorBlocks\App\Services\Badges\BadgeRenderer;
@@ -59,6 +60,8 @@ class RelatedProductsWidget extends Widget_Base
 
         $this->end_controls_section();
 
+        $this->registerSwatchControls();
+
         BadgeControls::registerBadgeContentControls($this, false);
 
         $this->registerHeadingStyleControls();
@@ -68,6 +71,51 @@ class RelatedProductsWidget extends Widget_Base
         $this->registerPriceStyleControls();
         $this->registerButtonStyleControls();
         BadgeControls::registerBadgeStyleControls($this, false);
+    }
+
+    private function registerSwatchControls()
+    {
+        if (!AttributeSwatches::swatchesAvailable()) {
+            return;
+        }
+
+        $this->start_controls_section(
+            'swatches_section',
+            [
+                'label' => esc_html__('Swatches', 'fluent-cart-elementor-blocks'),
+                'tab'   => Controls_Manager::TAB_CONTENT,
+            ]
+        );
+
+        $this->add_control(
+            'show_swatches',
+            [
+                'label'        => esc_html__('Show Swatches', 'fluent-cart-elementor-blocks'),
+                'type'         => Controls_Manager::SWITCHER,
+                'return_value' => 'yes',
+                'default'      => '',
+            ]
+        );
+
+        // Core renders the related cards, so swatches go in at one of its card hooks.
+        $this->add_control(
+            'swatch_position',
+            [
+                'label'     => esc_html__('Position', 'fluent-cart-elementor-blocks'),
+                'type'      => Controls_Manager::SELECT,
+                'default'   => 'price',
+                'options'   => [
+                    'image' => esc_html__('After Image', 'fluent-cart-elementor-blocks'),
+                    'title' => esc_html__('After Title', 'fluent-cart-elementor-blocks'),
+                    'price' => esc_html__('After Price', 'fluent-cart-elementor-blocks'),
+                ],
+                'condition' => ['show_swatches' => 'yes'],
+            ]
+        );
+
+        AttributeSwatches::registerSwatchControls($this, ['show_swatches' => 'yes'], '{{WRAPPER}} .fct-card-swatch-rows');
+
+        $this->end_controls_section();
     }
 
     /* ------------------------------------------------------------------ */
@@ -496,9 +544,25 @@ class RelatedProductsWidget extends Widget_Base
             add_action('fluent_cart/product/group/after_image_block', $badgeHooks['after'], 10, 1);
         }
 
+        $swatchHook = '';
+        $swatchCallback = null;
+        if (($settings['show_swatches'] ?? '') === 'yes' && AttributeSwatches::swatchesAvailable()) {
+            AttributeSwatches::enqueueAssets();
+            $position = in_array($settings['swatch_position'] ?? '', ['image', 'title', 'price'], true) ? $settings['swatch_position'] : 'price';
+            $swatchHook = 'fluent_cart/product/group/after_' . $position . '_block';
+            $swatchCallback = function ($context) use ($settings) {
+                echo AttributeSwatches::render(is_array($context) ? ($context['product'] ?? null) : null, $settings); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+            };
+            // After the badge closures, which buffer the image block at priority 10.
+            add_action($swatchHook, $swatchCallback, 20, 1);
+        }
+
         $content = do_shortcode('[fluent_cart_related_products ' . $shortcodeAtts . ']');
 
         BadgeRenderer::removeCardBadgeHooks($badgeHooks);
+        if ($swatchCallback) {
+            remove_action($swatchHook, $swatchCallback, 20);
+        }
 
         if (trim((string) $content) === '') {
             return;
