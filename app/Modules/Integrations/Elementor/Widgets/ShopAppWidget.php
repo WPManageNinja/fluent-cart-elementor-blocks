@@ -8,6 +8,7 @@ use Elementor\Group_Control_Typography;
 use Elementor\Repeater;
 use FluentCart\Api\Taxonomy;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Renderers\ElementorShopAppHandler;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support\ProductAttributeSwatches;
 use FluentCartElementorBlocks\App\Services\Badges\BadgeRenderer;
 use FluentCart\App\Modules\Templating\AssetLoader;
 use FluentCart\Framework\Support\Str;
@@ -240,9 +241,13 @@ class ShopAppWidget extends Widget_Base
                     'price'   => esc_html__('Price', 'fluent-cart-elementor-blocks'),
                     'rating'  => esc_html__('Rating', 'fluent-cart-elementor-blocks'),
                     'button'  => esc_html__('Button', 'fluent-cart-elementor-blocks'),
-                ],
+                ] + ProductAttributeSwatches::cardElementOption(),
             ]
         );
+
+        if (ProductAttributeSwatches::swatchesAvailable()) {
+            ProductAttributeSwatches::registerSwatchControls($repeater, ['element_type' => 'swatches'], '{{WRAPPER}} {{CURRENT_ITEM}}');
+        }
 
         $this->add_control(
             'card_elements',
@@ -417,7 +422,78 @@ class ShopAppWidget extends Widget_Base
             ]
         );
 
+        $this->registerAttributeFilterControls();
+
         $this->end_controls_section();
+    }
+
+    private function registerAttributeFilterControls()
+    {
+        // Like the block: only offered when the store has attribute groups.
+        if (!ProductAttributeSwatches::groupOptions()) {
+            return;
+        }
+
+        $this->add_control(
+            'enable_attribute_filters',
+            [
+                'label'        => esc_html__('Attribute Filters', 'fluent-cart-elementor-blocks'),
+                'type'         => Controls_Manager::SWITCHER,
+                'label_on'     => esc_html__('Yes', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('No', 'fluent-cart-elementor-blocks'),
+                'return_value' => 'yes',
+                'default'      => '',
+                'separator'    => 'before',
+                'condition'    => [
+                    'enable_filter' => 'yes',
+                ],
+            ]
+        );
+
+        $condition = [
+            'enable_filter'            => 'yes',
+            'enable_attribute_filters' => 'yes',
+        ];
+
+        $this->add_control(
+            'attribute_filter_groups',
+            [
+                'label'       => esc_html__('Attributes', 'fluent-cart-elementor-blocks'),
+                'type'        => Controls_Manager::SELECT2,
+                'multiple'    => true,
+                'label_block' => true,
+                'options'     => ProductAttributeSwatches::groupOptions(),
+                'default'     => [],
+                'condition'   => $condition,
+            ]
+        );
+
+        $this->add_control(
+            'attribute_filter_show_count',
+            [
+                'label'        => esc_html__('Show counts', 'fluent-cart-elementor-blocks'),
+                'type'         => Controls_Manager::SWITCHER,
+                'label_on'     => esc_html__('Yes', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('No', 'fluent-cart-elementor-blocks'),
+                'return_value' => 'yes',
+                'default'      => '',
+                'condition'    => $condition,
+            ]
+        );
+
+        $this->add_control(
+            'attribute_filter_show_empty',
+            [
+                'label'        => esc_html__('Show empty', 'fluent-cart-elementor-blocks'),
+                'type'         => Controls_Manager::SWITCHER,
+                'label_on'     => esc_html__('Yes', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('No', 'fluent-cart-elementor-blocks'),
+                'return_value' => 'yes',
+                'default'      => '',
+                'description'  => esc_html__('Display attribute values even if no product uses them.', 'fluent-cart-elementor-blocks'),
+                'condition'    => $condition,
+            ]
+        );
     }
 
     private function registerDefaultFilterControls()
@@ -823,6 +899,14 @@ class ShopAppWidget extends Widget_Base
                 'price_range' => $enablePriceRange,
             ];
 
+            // Core's renderer turns these into the attr_{id} sidebar filters.
+            $attributeGroups = ProductAttributeSwatches::groupIds($settings['attribute_filter_groups'] ?? []);
+            if (($settings['enable_attribute_filters'] ?? '') === 'yes' && $attributeGroups && ProductAttributeSwatches::filtersAvailable()) {
+                $customFilters['attributes'] = $attributeGroups;
+                $customFilters['show_attribute_counts'] = ($settings['attribute_filter_show_count'] ?? '') === 'yes';
+                $customFilters['show_attribute_empty'] = ($settings['attribute_filter_show_empty'] ?? '') === 'yes';
+            }
+
             // filters drives the ShopAppHandler query-level filter config
             foreach ($enabledTaxonomies as $taxonomy) {
                 $key = sanitize_key(str_replace('-', '_', $taxonomy));
@@ -939,6 +1023,11 @@ class ShopAppWidget extends Widget_Base
         if ($badgeHooks) {
             add_action('fluent_cart/product/group/before_image_block', $badgeHooks['before'], 10, 1);
             add_action('fluent_cart/product/group/after_image_block', $badgeHooks['after'], 10, 1);
+        }
+
+        // Before rendering: cards loaded later by AJAX bring no stylesheet.
+        if (in_array('swatches', array_column((array) $cardElements, 'element_type'), true)) {
+            ProductAttributeSwatches::enqueueAssets();
         }
 
         $handler = new ElementorShopAppHandler();

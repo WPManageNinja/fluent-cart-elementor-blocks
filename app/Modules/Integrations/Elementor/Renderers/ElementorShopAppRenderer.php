@@ -9,6 +9,7 @@ use FluentCart\App\Services\Renderer\RenderHelper;
 use FluentCart\App\Services\Renderer\ShopAppRenderer;
 use FluentCart\Framework\Pagination\CursorPaginator;
 use FluentCart\Framework\Support\Arr;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support\ProductAttributeSwatches;
 
 class ElementorShopAppRenderer extends ShopAppRenderer
 {
@@ -257,7 +258,7 @@ class ElementorShopAppRenderer extends ShopAppRenderer
                 $product->post_title
             ));
             ?>">
-            <?php static::renderCardElements($cardRender, $this->cardElements); ?>
+            <?php static::renderCardElements($cardRender, $this->cardElements, $product); ?>
         </article>
         <?php
     }
@@ -266,7 +267,7 @@ class ElementorShopAppRenderer extends ShopAppRenderer
      * Render card elements in the given order.
      * Shared between initial render and AJAX preload callback.
      */
-    public static function renderCardElements(ProductCardRender $cardRender, array $cardElements)
+    public static function renderCardElements(ProductCardRender $cardRender, array $cardElements, $product = null)
     {
         foreach ($cardElements as $element) {
             $type = Arr::get($element, 'element_type', '');
@@ -295,6 +296,9 @@ class ElementorShopAppRenderer extends ShopAppRenderer
                     break;
                 case 'button':
                     $cardRender->showBuyButton();
+                    break;
+                case 'swatches':
+                    echo ProductAttributeSwatches::render($product, $element, 'elementor-repeater-item-' . Arr::get($element, '_id', '')); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                     break;
             }
         }

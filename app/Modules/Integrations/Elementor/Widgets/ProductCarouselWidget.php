@@ -9,6 +9,7 @@ use FluentCart\App\Models\Product;
 use FluentCart\App\Modules\Templating\AssetLoader;
 use FluentCart\App\Services\Renderer\ProductCardRender;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Controls\ProductSelectControl;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support\ProductAttributeSwatches;
 use FluentCartElementorBlocks\App\Services\Badges\BadgeRenderer;
 use FluentCartElementorBlocks\App\Utils\Enqueuer\Enqueue;
 
@@ -376,9 +377,13 @@ class ProductCarouselWidget extends Widget_Base
                     'excerpt' => esc_html__('Excerpt', 'fluent-cart-elementor-blocks'),
                     'price'   => esc_html__('Price', 'fluent-cart-elementor-blocks'),
                     'button'  => esc_html__('Button', 'fluent-cart-elementor-blocks'),
-                ],
+                ] + ProductAttributeSwatches::cardElementOption(),
             ]
         );
+
+        if (ProductAttributeSwatches::swatchesAvailable()) {
+            ProductAttributeSwatches::registerSwatchControls($repeater, ['element_type' => 'swatches'], '{{WRAPPER}} {{CURRENT_ITEM}}');
+        }
 
         $this->add_control(
             'card_elements',
@@ -578,6 +583,10 @@ class ProductCarouselWidget extends Widget_Base
 
         $priceFormat = $settings['price_format'] ?? 'starts_from';
 
+        if (in_array('swatches', array_column((array) $cardElements, 'element_type'), true)) {
+            ProductAttributeSwatches::enqueueAssets();
+        }
+
         // Sale + Sold Out badge overlays via core's before/after_image_block
         // hooks (fire inside renderProductImage). The closures buffer each
         // slide's image and re-wrap it so the badge overlays the IMAGE, not the
@@ -766,6 +775,10 @@ class ProductCarouselWidget extends Widget_Base
 
                 case 'button':
                     $cardRender->showBuyButton();
+                    break;
+
+                case 'swatches':
+                    echo ProductAttributeSwatches::render($product, $element, 'elementor-repeater-item-' . ($element['_id'] ?? '')); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                     break;
             }
         }
