@@ -71,9 +71,11 @@ class ShopAppWidget extends Widget_Base
         $this->registerDefaultFilterControls();
         // Sold Out panel is gated on the shop's allow_out_of_stock filter — an
         // out-of-stock card only appears in the grid when that is on.
-        BadgeControls::registerBadgeContentControls($this, true, ['default_filter_allow_out_of_stock' => 'yes']);
+        // A layout card brings core's own badges, so these settings show only for Custom.
+        $customCardOnly = ProductCardLayouts::available() ? ['card_layout' => ''] : [];
+        BadgeControls::registerBadgeContentControls($this, true, ['default_filter_allow_out_of_stock' => 'yes'], $customCardOnly);
         $this->registerStyleControls();
-        BadgeControls::registerBadgeStyleControls($this, true, ['default_filter_allow_out_of_stock' => 'yes']);
+        BadgeControls::registerBadgeStyleControls($this, true, ['default_filter_allow_out_of_stock' => 'yes'], $customCardOnly);
     }
 
     private function registerContentControls()
@@ -227,20 +229,7 @@ class ShopAppWidget extends Widget_Base
             ]
         );
 
-        $cardElementsCondition = [];
-        if (ProductCardLayouts::available()) {
-            $this->add_control(
-                'card_layout',
-                [
-                    'label'       => esc_html__('Card Layout', 'fluent-cart-elementor-blocks'),
-                    'type'        => Controls_Manager::SELECT,
-                    'default'     => '',
-                    'options'     => ProductCardLayouts::options(),
-                    'description' => esc_html__('A FluentCart layout builds the whole card, with its own badges, swatches and Quick View. Custom uses the card elements below.', 'fluent-cart-elementor-blocks'),
-                ]
-            );
-            $cardElementsCondition = ['card_layout' => ''];
-        }
+        $cardElementsCondition = ProductCardLayouts::registerControl($this);
 
         $repeater = new Repeater();
 

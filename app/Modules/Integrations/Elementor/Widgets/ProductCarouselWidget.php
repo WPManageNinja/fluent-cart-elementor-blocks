@@ -10,6 +10,7 @@ use FluentCart\App\Modules\Templating\AssetLoader;
 use FluentCart\App\Services\Renderer\ProductCardRender;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Controls\ProductSelectControl;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support\ProductAttributeSwatches;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support\ProductCardLayouts;
 use FluentCartElementorBlocks\App\Services\Badges\BadgeRenderer;
 use FluentCartElementorBlocks\App\Utils\Enqueuer\Enqueue;
 
@@ -118,9 +119,11 @@ class ProductCarouselWidget extends Widget_Base
         $this->registerProductSelectionControls();
         $this->registerCarouselSettingsControls();
         $this->registerCardLayoutControls();
-        BadgeControls::registerBadgeContentControls($this, false);
+        // A layout card brings core's own badges, so these settings show only for Custom.
+        $customCardOnly = ProductCardLayouts::available() ? ['card_layout' => ''] : [];
+        BadgeControls::registerBadgeContentControls($this, false, [], $customCardOnly);
         $this->registerStyleControls();
-        BadgeControls::registerBadgeStyleControls($this, false);
+        BadgeControls::registerBadgeStyleControls($this, false, [], $customCardOnly);
     }
 
     private function registerStyleControls()
@@ -132,7 +135,7 @@ class ProductCarouselWidget extends Widget_Base
                 'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
-        ProductCardWidget::registerCardStyleControls($this, '{{WRAPPER}} .fct-product-card');
+        ProductCardWidget::registerCardStyleControls($this, ProductCardLayouts::cardFrameSelector());
         $this->end_controls_section();
 
         $this->start_controls_section(
@@ -175,8 +178,8 @@ class ProductCarouselWidget extends Widget_Base
         ProductCardWidget::registerCardPriceStyleControls($this, '{{WRAPPER}} .fct-product-card-prices');
         $this->end_controls_section();
 
-        $btnSelector = '{{WRAPPER}} .fct-product-card .fct-product-view-button, {{WRAPPER}} .fct-product-card .fluent-cart-add-to-cart-button';
-        $btnHoverSelector = '{{WRAPPER}} .fct-product-card .fct-product-view-button:hover, {{WRAPPER}} .fct-product-card .fluent-cart-add-to-cart-button:hover';
+        $btnSelector = ProductCardLayouts::buttonSelector();
+        $btnHoverSelector = ProductCardLayouts::buttonSelector('{{WRAPPER}}', ':hover');
 
         $this->start_controls_section(
             'button_style_section',
@@ -363,6 +366,8 @@ class ProductCarouselWidget extends Widget_Base
             ]
         );
 
+        $cardElementsCondition = ProductCardLayouts::registerControl($this);
+
         $repeater = new Repeater();
 
         $repeater->add_control(
@@ -398,6 +403,7 @@ class ProductCarouselWidget extends Widget_Base
                     ['element_type' => 'button'],
                 ],
                 'title_field' => '{{{ element_type.charAt(0).toUpperCase() + element_type.slice(1) }}}',
+                'condition'   => $cardElementsCondition,
             ]
         );
 
@@ -582,8 +588,12 @@ class ProductCarouselWidget extends Widget_Base
         ];
 
         $priceFormat = $settings['price_format'] ?? 'starts_from';
+        $cardLayout = ProductCardLayouts::selected($settings);
+        if ($cardLayout) {
+            ProductCardLayouts::prepareCards($products);
+        }
 
-        if (in_array('swatches', array_column((array) $cardElements, 'element_type'), true)) {
+        if (!$cardLayout && in_array('swatches', array_column((array) $cardElements, 'element_type'), true)) {
             ProductAttributeSwatches::enqueueAssets();
         }
 
@@ -591,14 +601,15 @@ class ProductCarouselWidget extends Widget_Base
         // hooks (fire inside renderProductImage). The closures buffer each
         // slide's image and re-wrap it so the badge overlays the IMAGE, not the
         // whole card. Scoped: removed right after the carousel render.
-        $badgeHooks = BadgeRenderer::cardBadgeClosures($settings, false);
+        // A layout card draws core's own badges, so the widget adds none.
+        $badgeHooks = $cardLayout ? null : BadgeRenderer::cardBadgeClosures($settings, false);
         if ($badgeHooks) {
             add_action('fluent_cart/product/group/before_image_block', $badgeHooks['before'], 10, 1);
             add_action('fluent_cart/product/group/after_image_block', $badgeHooks['after'], 10, 1);
         }
 
         // Render carousel
-        $this->renderCarousel($products, $carouselSettings, $cardElements, $priceFormat);
+        $this->renderCarousel($products, $carouselSettings, $cardElements, $priceFormat, $cardLayout);
 
         BadgeRenderer::removeCardBadgeHooks($badgeHooks);
     }
@@ -673,7 +684,7 @@ class ProductCarouselWidget extends Widget_Base
         <?php
     }
 
-    private function renderCarousel($products, array $carouselSettings, array $cardElements, string $priceFormat)
+    private function renderCarousel($products, array $carouselSettings, array $cardElements, string $priceFormat, string $cardLayout = '')
     {
         $arrowsSize = $carouselSettings['arrowsSize'] ?? 'md';
         $paginationType = $carouselSettings['paginationType'] ?? 'dots';
@@ -704,9 +715,13 @@ class ProductCarouselWidget extends Widget_Base
                     <div class="swiper-wrapper">
                         <?php foreach ($products as $product) : ?>
                             <div class="swiper-slide">
+                                <?php if ($cardLayout) : ?>
+                                    <?php ProductCardLayouts::renderCard($product, $cardLayout, $priceFormat); ?>
+                                <?php else : ?>
                                 <article class="fct-product-card" data-fct-product-card>
                                     <?php $this->renderCardElements($product, $cardElements, $priceFormat); ?>
                                 </article>
+                                <?php endif; ?>
                             </div>
                         <?php endforeach; ?>
                     </div>

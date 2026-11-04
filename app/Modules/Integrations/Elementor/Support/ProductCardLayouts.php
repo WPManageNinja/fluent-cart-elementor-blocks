@@ -2,7 +2,10 @@
 
 namespace FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support;
 
+use Elementor\Controls_Manager;
+use FluentCart\App\Modules\Data\ProductDataSetup;
 use FluentCart\App\Services\Renderer\ProductCardLayoutPresets;
+use FluentCart\App\Services\Renderer\ProductCardRender;
 use FluentCart\Framework\Support\Arr;
 
 if (!defined('ABSPATH')) {
@@ -37,6 +40,49 @@ class ProductCardLayouts
         }
 
         return $options;
+    }
+
+    /**
+     * The Card Layout picker, in the widget's open section.
+     *
+     * @return array Condition for the card element controls: shown only for Custom
+     */
+    public static function registerControl($widget)
+    {
+        if (!self::available()) {
+            return [];
+        }
+
+        $widget->add_control(
+            'card_layout',
+            [
+                'label'       => esc_html__('Card Layout', 'fluent-cart-elementor-blocks'),
+                'type'        => Controls_Manager::SELECT,
+                'default'     => '',
+                'options'     => self::options(),
+                'description' => esc_html__('A FluentCart layout builds the whole card, with its own badges, swatches and Quick View. Custom uses the card elements below.', 'fluent-cart-elementor-blocks'),
+            ]
+        );
+
+        return ['card_layout' => ''];
+    }
+
+    /** Before a loop of layout cards: their styles, and the products their swatches batch over. */
+    public static function prepareCards($products)
+    {
+        ProductCardLayoutPresets::enqueueAssets();
+        if (method_exists(ProductDataSetup::class, 'setProductsCache')) {
+            ProductDataSetup::setProductsCache($products);
+        }
+    }
+
+    /** One layout card, through core's card renderer. */
+    public static function renderCard($product, $layout, $priceFormat)
+    {
+        (new ProductCardRender($product, [
+            'card_layout'         => $layout,
+            'layout_price_format' => $priceFormat,
+        ]))->render();
     }
 
     /**

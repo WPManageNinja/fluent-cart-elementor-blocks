@@ -50,14 +50,15 @@ class BadgeControls
      *        only surfaces when out-of-stock cards can actually appear).
      * @return void
      */
-    public static function registerBadgeContentControls($widget, $includeSoldOut = false, array $soldOutCondition = [])
+    public static function registerBadgeContentControls($widget, $includeSoldOut = false, array $soldOutCondition = [], array $sectionCondition = [])
     {
         // ── Sale: Badge ────────────────────────────────────
         $widget->start_controls_section(
             'sale_badge_settings_section',
             [
-                'label' => esc_html__('Badge', 'fluent-cart-elementor-blocks'),
-                'tab'   => Controls_Manager::TAB_CONTENT,
+                'label'     => esc_html__('Badge', 'fluent-cart-elementor-blocks'),
+                'tab'       => Controls_Manager::TAB_CONTENT,
+                'condition' => $sectionCondition,
             ]
         );
 
@@ -261,7 +262,7 @@ class BadgeControls
      *        Sold Out style section (kept in step with the content panel).
      * @return void
      */
-    public static function registerBadgeStyleControls($widget, $includeSoldOut = false, array $soldOutCondition = [])
+    public static function registerBadgeStyleControls($widget, $includeSoldOut = false, array $soldOutCondition = [], array $sectionCondition = [])
     {
         self::badgeStyleSection(
             $widget,
@@ -269,7 +270,7 @@ class BadgeControls
             esc_html__('Sale Badge', 'fluent-cart-elementor-blocks'),
             '{{WRAPPER}} .fct-sale-badge',
             'sale_badge',
-            ['show_sale_badge' => 'yes']
+            array_merge(['show_sale_badge' => 'yes'], $sectionCondition)
         );
 
         if ($includeSoldOut) {
@@ -279,7 +280,7 @@ class BadgeControls
                 esc_html__('Sold Out Badge', 'fluent-cart-elementor-blocks'),
                 '{{WRAPPER}} .fct-sold-out-badge',
                 'sold_out_badge',
-                array_merge(['show_sold_out_badge' => 'yes'], $soldOutCondition)
+                array_merge(['show_sold_out_badge' => 'yes'], $soldOutCondition, $sectionCondition)
             );
         }
     }
