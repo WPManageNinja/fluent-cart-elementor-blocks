@@ -902,7 +902,7 @@ class ShopAppWidget extends Widget_Base
             ];
 
             // Core's renderer turns these into the attr_{id} sidebar filters.
-            $attributeGroups = ProductAttributeSwatches::filterGroupIds($settings['attribute_filter_groups'] ?? []);
+            $attributeGroups = ProductAttributeSwatches::filterGroupIds(Arr::get($settings, 'attribute_filter_groups', []));
             if (($settings['enable_attribute_filters'] ?? '') === 'yes' && $attributeGroups && ProductAttributeSwatches::filtersAvailable()) {
                 $customFilters['attributes'] = $attributeGroups;
                 $customFilters['show_attribute_counts'] = ($settings['attribute_filter_show_count'] ?? '') === 'yes';

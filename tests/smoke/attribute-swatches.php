@@ -101,7 +101,7 @@ if (strpos($related, 'fct-product-card') !== false && strpos($related, 'data-fct
 }
 
 // The storefront keeps core's group limit, so the picker sends no more and says so.
-$groupLimit = \FluentCart\App\Services\Filter\ShopAttributeFilter::MAX_GROUPS;
+$groupLimit = ProductAttributeSwatches::filterGroupLimit();
 $test->same(count(ProductAttributeSwatches::filterGroupIds(range(1, $groupLimit + 5))), $groupLimit, 'the Products widget sends core at most its attribute group limit');
 // Outside the editor Elementor drops control labels and descriptions; build the widget as the editor does.
 $editorControls = new ReflectionProperty(\Elementor\Core\Frontend\Performance::class, 'is_frontend');
@@ -112,5 +112,14 @@ $shopWidget = new \FluentCartElementorBlocks\App\Modules\Integrations\Elementor\
 $attributePicker = $shopWidget->get_controls('attribute_filter_groups');
 $editorControls->setValue(null, null);
 $test->check(strpos((string) Arr::get((array) $attributePicker, 'description', ''), (string) $groupLimit) !== false, 'the Attributes picker states the group limit');
+
+if (method_exists(\FluentCart\App\Services\Filter\ShopAttributeFilter::class, 'maxGroups')) {
+    $raisedLimit = function () {
+        return 12;
+    };
+    add_filter('fluent_cart/shop/attribute_filters/max_groups', $raisedLimit);
+    $test->same(count(ProductAttributeSwatches::filterGroupIds(range(1, 17))), 12, 'the Products widget follows core\'s max_groups filter');
+    remove_filter('fluent_cart/shop/attribute_filters/max_groups', $raisedLimit);
+}
 
 $test->finish();
