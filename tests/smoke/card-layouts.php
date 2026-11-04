@@ -1,0 +1,64 @@
+<?php
+/**
+ * Core's product card layouts in the Products widget. Reads only.
+ *
+ * Usage:  bash tests/bin/run-all.sh smoke card-layouts
+ */
+
+require __DIR__ . '/../lib/assert.php';
+
+FceTest::requireLive('tests/smoke/card-layouts.php', ['\Elementor\Plugin', '\FluentCart\App\Models\Product']);
+
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support\ProductCardLayouts;
+
+$test = new FceTest('smoke/card-layouts');
+
+if (!ProductCardLayouts::available()) {
+    echo "  (skipped: this FluentCart has no product card layouts)\n";
+    $test->finish();
+}
+
+$render = function ($widgetType, array $settings) {
+    $element = \Elementor\Plugin::$instance->elements_manager->create_element_instance([
+        'id'         => 'fcecl' . substr(md5(wp_json_encode($settings)), 0, 4),
+        'elType'     => 'widget',
+        'widgetType' => $widgetType,
+        'settings'   => $settings,
+    ]);
+    ob_start();
+    $element->print_element();
+
+    return (string) ob_get_clean();
+};
+
+$test->same(array_keys(ProductCardLayouts::options()), ['', 'classic', 'compact', 'floating', 'framed'], 'the picker lists the card elements option and core\'s four layouts');
+
+$shopSettings = ['per_page' => 4, 'paginator' => 'numbers'];
+
+$custom = $render('fluent_cart_shop_app', $shopSettings);
+$test->check(strpos($custom, 'fct-product-card') !== false, 'the Products widget renders cards');
+$test->check(strpos($custom, 'fct-card-layout') === false && strpos($custom, 'data-card-layout') === false, 'no layout by default: the widget\'s own card elements');
+$test->check(strpos($custom, 'data-template-provider="elementor"') !== false, 'own card elements keep the Elementor pagination provider');
+
+foreach (['compact', 'floating', 'framed'] as $layout) {
+    $html = $render('fluent_cart_shop_app', $shopSettings + ['card_layout' => $layout]);
+    $test->check(strpos($html, 'fct-card-layout--' . $layout) !== false, $layout . ': the cards use the layout');
+    $test->check(strpos($html, 'data-card-layout="' . $layout . '"') !== false, $layout . ': the wrapper tells AJAX pages the layout');
+    $test->check(strpos($html, 'data-template-provider="elementor"') === false, $layout . ': AJAX pages render through core, not the card elements');
+}
+
+$classic = $render('fluent_cart_shop_app', $shopSettings + ['card_layout' => 'classic']);
+$test->check(strpos($classic, 'fct-product-card-template') !== false, 'classic: the cards use core\'s Classic template');
+
+$unknown = $render('fluent_cart_shop_app', $shopSettings + ['card_layout' => 'not-a-layout']);
+$test->check(strpos($unknown, 'data-card-layout') === false && strpos($unknown, 'data-template-provider="elementor"') !== false, 'an unknown layout falls back to the card elements');
+
+// Layout cards draw their own Sale badge; the widget's badge setting must not add a second.
+$badged = $render('fluent_cart_shop_app', $shopSettings + ['card_layout' => 'compact', 'show_sale_badge' => 'yes']);
+preg_match_all('/<article\b.*?<\/article>/s', $badged, $cards);
+$doubled = array_filter($cards[0], function ($card) {
+    return substr_count($card, 'fct-sale-badge') > 1 && substr_count($card, 'class="fct-sale-badge') > 1;
+});
+$test->same(count($doubled), 0, 'a layout card never shows two Sale badges');
+
+$test->finish();
