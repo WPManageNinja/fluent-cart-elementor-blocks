@@ -13,6 +13,7 @@ use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Controls\Review
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Renderers\ElementorShopAppRenderer;
 use FluentCart\App\Modules\Templating\AssetLoader;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support\ProductAttributeSwatches;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support\ProductCardLayouts;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support\ProFeature;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support\ReviewSupport;
 use FluentCartElementorBlocks\App\Services\Badges\BadgeRenderer;
@@ -524,6 +525,9 @@ class ElementorIntegration
 
         // Widgets re-render over AJAX in the preview, so their own enqueue comes too late.
         ProductAttributeSwatches::enqueueAssets();
+        if (ProductCardLayouts::available()) {
+            \FluentCart\App\Services\Renderer\ProductCardLayoutPresets::enqueueAssets();
+        }
 
         // Product Carousel loading-skeleton styles for the editor preview (shown
         // when no products are selected yet). Editor-preview only — never enqueued

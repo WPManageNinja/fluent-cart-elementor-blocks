@@ -10,6 +10,7 @@ require __DIR__ . '/../lib/assert.php';
 
 FceTest::requireLive('tests/smoke/attribute-swatches.php', ['\Elementor\Plugin', '\FluentCart\App\Models\Product']);
 
+use FluentCart\Framework\Support\Arr;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support\ProductAttributeSwatches;
 
 $test = new FceTest('smoke/attribute-swatches');
@@ -97,6 +98,28 @@ $relatedOff = $render('fluentcart_related_products', ['source' => 'custom', 'pro
 $test->check(strpos($relatedOff, 'fct-card-swatch-rows') === false, 'Related Products shows no swatches until turned on');
 if (strpos($related, 'fct-product-card') !== false && strpos($related, 'data-fct-card-swatches') === false) {
     echo "  (note: the related products here use no attributes)\n";
+}
+
+// The storefront keeps core's group limit, so the picker sends no more and says so.
+$groupLimit = ProductAttributeSwatches::filterGroupLimit();
+$test->same(count(ProductAttributeSwatches::filterGroupIds(range(1, $groupLimit + 5))), $groupLimit, 'the Products widget sends core at most its attribute group limit');
+// Outside the editor Elementor drops control labels and descriptions; build the widget as the editor does.
+$editorControls = new ReflectionProperty(\Elementor\Core\Frontend\Performance::class, 'is_frontend');
+$editorControls->setAccessible(true);
+$editorControls->setValue(null, false);
+$shopWidget = new \FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ShopAppWidget();
+\Elementor\Plugin::$instance->controls_manager->delete_stack($shopWidget); // the renders above cached it without them
+$attributePicker = $shopWidget->get_controls('attribute_filter_groups');
+$editorControls->setValue(null, null);
+$test->check(strpos((string) Arr::get((array) $attributePicker, 'description', ''), (string) $groupLimit) !== false, 'the Attributes picker states the group limit');
+
+if (method_exists(\FluentCart\App\Services\Filter\ShopAttributeFilter::class, 'maxGroups')) {
+    $raisedLimit = function () {
+        return 12;
+    };
+    add_filter('fluent_cart/shop_app/product_attribute/max_groups', $raisedLimit);
+    $test->same(count(ProductAttributeSwatches::filterGroupIds(range(1, 17))), 12, 'the Products widget follows core\'s max_groups filter');
+    remove_filter('fluent_cart/shop_app/product_attribute/max_groups', $raisedLimit);
 }
 
 $test->finish();

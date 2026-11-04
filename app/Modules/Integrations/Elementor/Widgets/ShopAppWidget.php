@@ -9,6 +9,7 @@ use Elementor\Repeater;
 use FluentCart\Api\Taxonomy;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Renderers\ElementorShopAppHandler;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support\ProductAttributeSwatches;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support\ProductCardLayouts;
 use FluentCartElementorBlocks\App\Services\Badges\BadgeRenderer;
 use FluentCart\App\Modules\Templating\AssetLoader;
 use FluentCart\Framework\Support\Str;
@@ -70,9 +71,11 @@ class ShopAppWidget extends Widget_Base
         $this->registerDefaultFilterControls();
         // Sold Out panel is gated on the shop's allow_out_of_stock filter — an
         // out-of-stock card only appears in the grid when that is on.
-        BadgeControls::registerBadgeContentControls($this, true, ['default_filter_allow_out_of_stock' => 'yes']);
+        // A layout card brings core's own badges, so these settings show only for Custom.
+        $customCardOnly = ProductCardLayouts::available() ? ['card_layout' => ''] : [];
+        BadgeControls::registerBadgeContentControls($this, true, ['default_filter_allow_out_of_stock' => 'yes'], $customCardOnly);
         $this->registerStyleControls();
-        BadgeControls::registerBadgeStyleControls($this, true, ['default_filter_allow_out_of_stock' => 'yes']);
+        BadgeControls::registerBadgeStyleControls($this, true, ['default_filter_allow_out_of_stock' => 'yes'], $customCardOnly);
     }
 
     private function registerContentControls()
@@ -226,6 +229,8 @@ class ShopAppWidget extends Widget_Base
             ]
         );
 
+        $cardElementsCondition = ProductCardLayouts::registerControl($this);
+
         $repeater = new Repeater();
 
         $repeater->add_control(
@@ -262,6 +267,7 @@ class ShopAppWidget extends Widget_Base
                     ['element_type' => 'button'],
                 ],
                 'title_field' => '{{{ element_type.charAt(0).toUpperCase() + element_type.slice(1) }}}',
+                'condition'   => $cardElementsCondition,
             ]
         );
 
@@ -464,6 +470,8 @@ class ShopAppWidget extends Widget_Base
                 'label_block' => true,
                 'options'     => ProductAttributeSwatches::groupOptions(),
                 'default'     => [],
+                /* translators: %d: how many attribute filters one Products widget can show */
+                'description' => sprintf(esc_html__('Up to %d attributes. The storefront shows the first ones you pick.', 'fluent-cart-elementor-blocks'), ProductAttributeSwatches::filterGroupLimit()),
                 'condition'   => $condition,
             ]
         );
@@ -589,7 +597,7 @@ class ShopAppWidget extends Widget_Base
                 'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
-        ProductCardWidget::registerCardStyleControls($this, '{{WRAPPER}} .fct-product-card');
+        ProductCardWidget::registerCardStyleControls($this, ProductCardLayouts::cardFrameSelector());
         $this->end_controls_section();
 
         $this->registerGridStyleControls();
@@ -634,8 +642,8 @@ class ShopAppWidget extends Widget_Base
         ProductCardWidget::registerCardPriceStyleControls($this, '{{WRAPPER}} .fct-product-card-prices');
         $this->end_controls_section();
 
-        $btnSelector = '{{WRAPPER}} .fct-product-card .fct-product-view-button, {{WRAPPER}} .fct-product-card .fluent-cart-add-to-cart-button';
-        $btnHoverSelector = '{{WRAPPER}} .fct-product-card .fct-product-view-button:hover, {{WRAPPER}} .fct-product-card .fluent-cart-add-to-cart-button:hover';
+        $btnSelector = ProductCardLayouts::buttonSelector();
+        $btnHoverSelector = ProductCardLayouts::buttonSelector('{{WRAPPER}}', ':hover');
 
         $this->start_controls_section(
             'button_style_section',
@@ -900,7 +908,7 @@ class ShopAppWidget extends Widget_Base
             ];
 
             // Core's renderer turns these into the attr_{id} sidebar filters.
-            $attributeGroups = ProductAttributeSwatches::groupIds($settings['attribute_filter_groups'] ?? []);
+            $attributeGroups = ProductAttributeSwatches::filterGroupIds(Arr::get($settings, 'attribute_filter_groups', []));
             if (($settings['enable_attribute_filters'] ?? '') === 'yes' && $attributeGroups && ProductAttributeSwatches::filtersAvailable()) {
                 $customFilters['attributes'] = $attributeGroups;
                 $customFilters['show_attribute_counts'] = ($settings['attribute_filter_show_count'] ?? '') === 'yes';
@@ -969,6 +977,11 @@ class ShopAppWidget extends Widget_Base
             'default_filters'                  => $defaultFilters,
         ];
 
+        $cardLayout = ProductCardLayouts::selected($settings);
+        if ($cardLayout) {
+            $shortcodeAtts['card_layout'] = $cardLayout;
+        }
+
         // Extract card layout elements from the repeater
         $cardElements = $settings['card_elements'] ?? [
             ['element_type' => 'image'],
@@ -1019,7 +1032,8 @@ class ShopAppWidget extends Widget_Base
         // (ElementorIntegration::preloadProductCollectionsAjax), which re-applies
         // these same closures from the badge settings the handler caches
         // alongside the card layout — keeping the configured card elements.
-        $badgeHooks = BadgeRenderer::cardBadgeClosures($badgeSettings, true);
+        // A layout card draws core's own badges, so the widget adds none.
+        $badgeHooks = $cardLayout ? null : BadgeRenderer::cardBadgeClosures($badgeSettings, true);
         if ($badgeHooks) {
             add_action('fluent_cart/product/group/before_image_block', $badgeHooks['before'], 10, 1);
             add_action('fluent_cart/product/group/after_image_block', $badgeHooks['after'], 10, 1);
