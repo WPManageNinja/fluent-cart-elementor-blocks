@@ -75,9 +75,13 @@ class ProductAttributeSwatches
         return array_values(array_unique(array_filter($ids)));
     }
 
-    /** The most attribute filters core shows on one Products widget. */
+    /** The most attribute filters core shows on one Products widget, after its limit filter. */
     public static function filterGroupLimit()
     {
+        if (method_exists(ShopAttributeFilter::class, 'maxGroups')) {
+            return ShopAttributeFilter::maxGroups();
+        }
+
         return defined(ShopAttributeFilter::class . '::MAX_GROUPS') ? (int) ShopAttributeFilter::MAX_GROUPS : 10;
     }
 
