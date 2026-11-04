@@ -13,6 +13,7 @@ use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support\Product
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\BadgeControls;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ThemeBuilder\Traits\ProductWidgetTrait;
 use FluentCartElementorBlocks\App\Services\Badges\BadgeRenderer;
+use FluentCart\Framework\Support\Arr;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -556,9 +557,10 @@ class RelatedProductsWidget extends Widget_Base
 
         $swatchHook = '';
         $swatchCallback = null;
-        if (!$cardLayout && ($settings['show_swatches'] ?? '') === 'yes' && ProductAttributeSwatches::swatchesAvailable()) {
+        if (!$cardLayout && Arr::get($settings, 'show_swatches') === 'yes' && ProductAttributeSwatches::swatchesAvailable()) {
             ProductAttributeSwatches::enqueueAssets();
-            $position = in_array($settings['swatch_position'] ?? '', ['image', 'title', 'price'], true) ? $settings['swatch_position'] : 'price';
+            $position = Arr::get($settings, 'swatch_position', '');
+            $position = in_array($position, ['image', 'title', 'price'], true) ? $position : 'price';
             $swatchHook = 'fluent_cart/product/group/after_' . $position . '_block';
             $swatchCallback = function ($context) use ($settings) {
                 echo ProductAttributeSwatches::render(is_array($context) ? ($context['product'] ?? null) : null, $settings); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
