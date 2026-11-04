@@ -13,6 +13,7 @@ use FluentCart\App\Helpers\Helper;
 use FluentCart\App\Models\Product;
 use FluentCart\App\Modules\Templating\AssetLoader;
 use FluentCart\App\Services\Renderer\ProductCardRender;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support\ProductCardLayouts;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Controls\ProductSelectControl;
 use FluentCartElementorBlocks\App\Services\Badges\BadgeRenderer;
 
@@ -59,9 +60,11 @@ class ProductCardWidget extends Widget_Base
     {
         $this->registerContentControls();
         $this->registerCardLayoutControls();
-        BadgeControls::registerBadgeContentControls($this, false);
+        // A layout card brings core's own badges, so these settings show only for Custom.
+        $customCardOnly = ProductCardLayouts::available() ? ['card_layout' => ''] : [];
+        BadgeControls::registerBadgeContentControls($this, false, [], $customCardOnly);
         $this->registerStyleControls();
-        BadgeControls::registerBadgeStyleControls($this, false);
+        BadgeControls::registerBadgeStyleControls($this, false, [], $customCardOnly);
     }
 
     private function registerContentControls()
@@ -138,6 +141,8 @@ class ProductCardWidget extends Widget_Base
             ]
         );
 
+        $cardElementsCondition = ProductCardLayouts::registerControl($this);
+
         $repeater = new Repeater();
 
         $repeater->add_control(
@@ -169,6 +174,7 @@ class ProductCardWidget extends Widget_Base
                     ['element_type' => 'button'],
                 ],
                 'title_field' => '{{{ element_type.charAt(0).toUpperCase() + element_type.slice(1) }}}',
+                'condition'   => $cardElementsCondition,
             ]
         );
 
@@ -184,7 +190,7 @@ class ProductCardWidget extends Widget_Base
                 'tab'   => Controls_Manager::TAB_STYLE,
             ]
         );
-        static::registerCardStyleControls($this, '{{WRAPPER}} .fct-product-card');
+        static::registerCardStyleControls($this, ProductCardLayouts::cardFrameSelector());
         $this->end_controls_section();
 
         $this->start_controls_section(
@@ -227,8 +233,8 @@ class ProductCardWidget extends Widget_Base
         static::registerCardPriceStyleControls($this, '{{WRAPPER}} .fct-product-card-prices');
         $this->end_controls_section();
 
-        $btnSelector = '{{WRAPPER}} .fct-product-card .fct-product-view-button, {{WRAPPER}} .fct-product-card .fluent-cart-add-to-cart-button';
-        $btnHoverSelector = '{{WRAPPER}} .fct-product-card .fct-product-view-button:hover, {{WRAPPER}} .fct-product-card .fluent-cart-add-to-cart-button:hover';
+        $btnSelector = ProductCardLayouts::buttonSelector();
+        $btnHoverSelector = ProductCardLayouts::buttonSelector('{{WRAPPER}}', ':hover');
 
         $this->start_controls_section(
             'button_style_section',
@@ -709,6 +715,13 @@ class ProductCardWidget extends Widget_Base
         ];
 
         $priceFormat = $settings['price_format'] ?? 'starts_from';
+
+        $cardLayout = ProductCardLayouts::selected($settings);
+        if ($cardLayout) {
+            ProductCardLayouts::prepareCards([$product]);
+            ProductCardLayouts::renderCard($product, $cardLayout, $priceFormat);
+            return;
+        }
 
         $cardRender = new ProductCardRender($product, [
             'price_format' => $priceFormat,
