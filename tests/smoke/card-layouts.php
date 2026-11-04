@@ -99,4 +99,15 @@ if (!$relatedProductId) {
     })), 0, 'Related Products: a layout card gets no second swatch rows or Sale badge from the widget');
 }
 
+// Product Card widget: one product, drawn by the layout.
+$cardProductId = (string) \FluentCart\App\Models\Product::query()->where('post_status', 'publish')->orderBy('ID', 'DESC')->value('ID');
+$singleCustom = $render('fluent_cart_product_card', ['product_id' => $cardProductId]);
+$test->check(strpos($singleCustom, 'fct-product-card') !== false && strpos($singleCustom, 'fct-card-layout') === false, 'Product Card: no layout by default');
+foreach (['classic' => 'fct-product-card-template', 'floating' => 'fct-card-layout--floating'] as $layout => $marker) {
+    $html = $render('fluent_cart_product_card', ['product_id' => $cardProductId, 'card_layout' => $layout, 'show_sale_badge' => 'yes']);
+    $test->check(strpos($html, $marker) !== false, 'Product Card ' . $layout . ': the card uses the layout');
+    $test->same(substr_count($html, '<article'), 1, 'Product Card ' . $layout . ': one card');
+    $test->check(substr_count($html, 'class="fct-sale-badge') <= 1, 'Product Card ' . $layout . ': no second Sale badge from the widget');
+}
+
 $test->finish();
