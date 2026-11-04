@@ -9,9 +9,11 @@ use Elementor\Group_Control_Border;
 use Elementor\Group_Control_Box_Shadow;
 use FluentCart\App\Modules\Templating\AssetLoader;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support\ProductAttributeSwatches;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support\ProductCardLayouts;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\BadgeControls;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\ThemeBuilder\Traits\ProductWidgetTrait;
 use FluentCartElementorBlocks\App\Services\Badges\BadgeRenderer;
+use FluentCart\Framework\Support\Arr;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -57,12 +59,14 @@ class RelatedProductsWidget extends Widget_Base
         );
 
         $this->registerProductSourceControls();
+        // A layout card brings core's own swatches and badges, so those settings show only for Custom.
+        $customCardOnly = ProductCardLayouts::registerControl($this, esc_html__('A FluentCart layout builds the whole card, with its own badges, swatches and Quick View. Standard keeps the related products card.', 'fluent-cart-elementor-blocks'), esc_html__('Standard', 'fluent-cart-elementor-blocks'));
 
         $this->end_controls_section();
 
-        $this->registerSwatchControls();
+        $this->registerSwatchControls($customCardOnly);
 
-        BadgeControls::registerBadgeContentControls($this, false);
+        BadgeControls::registerBadgeContentControls($this, false, [], $customCardOnly);
 
         $this->registerHeadingStyleControls();
         $this->registerGridStyleControls();
@@ -70,10 +74,10 @@ class RelatedProductsWidget extends Widget_Base
         $this->registerTitleStyleControls();
         $this->registerPriceStyleControls();
         $this->registerButtonStyleControls();
-        BadgeControls::registerBadgeStyleControls($this, false);
+        BadgeControls::registerBadgeStyleControls($this, false, [], $customCardOnly);
     }
 
-    private function registerSwatchControls()
+    private function registerSwatchControls(array $sectionCondition = [])
     {
         if (!ProductAttributeSwatches::swatchesAvailable()) {
             return;
@@ -82,8 +86,9 @@ class RelatedProductsWidget extends Widget_Base
         $this->start_controls_section(
             'swatches_section',
             [
-                'label' => esc_html__('Swatches', 'fluent-cart-elementor-blocks'),
-                'tab'   => Controls_Manager::TAB_CONTENT,
+                'label'     => esc_html__('Swatches', 'fluent-cart-elementor-blocks'),
+                'tab'       => Controls_Manager::TAB_CONTENT,
+                'condition' => $sectionCondition,
             ]
         );
 
@@ -225,7 +230,7 @@ class RelatedProductsWidget extends Widget_Base
             ]
         );
 
-        $card = '{{WRAPPER}} .fct-product-card';
+        $card = ProductCardLayouts::cardFrameSelector();
 
         $this->add_control(
             'card_background',
@@ -386,6 +391,7 @@ class RelatedProductsWidget extends Widget_Base
         $bases = [
             '{{WRAPPER}} .fct-product-card .fct-product-view-button',
             '{{WRAPPER}} .fct-product-card .fluent-cart-add-to-cart-button',
+            ProductCardLayouts::layoutButtonSelector(),
         ];
         $hoverBases = array_map(function ($base) {
             return $base . ':hover';
@@ -532,13 +538,18 @@ class RelatedProductsWidget extends Widget_Base
         AssetLoader::loadSingleProductAssets();
 
         $shortcodeAtts = 'id="' . (int) $product->ID . '"';
+        $cardLayout = ProductCardLayouts::selected($settings);
+        if ($cardLayout) {
+            // Core renders the layout cards with their own badges and swatches; the widget adds neither.
+            $shortcodeAtts .= ' card_layout="' . esc_attr($cardLayout) . '"';
+        }
 
         // Sale badge overlay via core's before/after_image_block hooks (fire
         // inside each related card's renderProductImage). The closures buffer
         // the image and re-wrap it so the badge overlays the IMAGE, not the
         // whole card. Scoped: removed right after the shortcode render. Sale
         // only ($includeSoldOut false) — Sold Out is Products/Carousel-only.
-        $badgeHooks = BadgeRenderer::cardBadgeClosures($settings, false);
+        $badgeHooks = $cardLayout ? null : BadgeRenderer::cardBadgeClosures($settings, false);
         if ($badgeHooks) {
             add_action('fluent_cart/product/group/before_image_block', $badgeHooks['before'], 10, 1);
             add_action('fluent_cart/product/group/after_image_block', $badgeHooks['after'], 10, 1);
@@ -546,9 +557,10 @@ class RelatedProductsWidget extends Widget_Base
 
         $swatchHook = '';
         $swatchCallback = null;
-        if (($settings['show_swatches'] ?? '') === 'yes' && ProductAttributeSwatches::swatchesAvailable()) {
+        if (!$cardLayout && Arr::get($settings, 'show_swatches') === 'yes' && ProductAttributeSwatches::swatchesAvailable()) {
             ProductAttributeSwatches::enqueueAssets();
-            $position = in_array($settings['swatch_position'] ?? '', ['image', 'title', 'price'], true) ? $settings['swatch_position'] : 'price';
+            $position = Arr::get($settings, 'swatch_position', '');
+            $position = in_array($position, ['image', 'title', 'price'], true) ? $position : 'price';
             $swatchHook = 'fluent_cart/product/group/after_' . $position . '_block';
             $swatchCallback = function ($context) use ($settings) {
                 echo ProductAttributeSwatches::render(is_array($context) ? ($context['product'] ?? null) : null, $settings); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped

@@ -4,6 +4,7 @@ namespace FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Renderers
 
 use FluentCart\App\Models\Product;
 use FluentCart\App\Modules\Templating\AssetLoader;
+use FluentCart\App\Services\Renderer\ProductCardLayoutPresets;
 use FluentCart\App\Services\Renderer\ProductCardRender;
 use FluentCart\App\Services\Renderer\RenderHelper;
 use FluentCart\App\Services\Renderer\ShopAppRenderer;
@@ -25,7 +26,8 @@ class ElementorShopAppRenderer extends ShopAppRenderer
         $this->clientId = Arr::get($config, 'client_id', '');
         $this->shopLayout = Arr::get($config, 'shop_layout', []);
 
-        if ($this->clientId && !empty($this->cardElements)) {
+        // Layout cards page through core's own AJAX render, so the card elements cache is not needed.
+        if ($this->clientId && !empty($this->cardElements) && !Arr::get($config, 'card_layout', '')) {
             set_transient(
                 'fc_el_collection_' . $this->clientId,
                 $this->cardElements,
@@ -101,6 +103,12 @@ class ElementorShopAppRenderer extends ShopAppRenderer
             'data-paginator' => $this->paginator,
             'data-default-filters' => wp_json_encode($this->defaultFilters),
         ];
+        // As core's Products block: Paginator.js sends these back so AJAX pages keep the layout.
+        if (Arr::get($this->config, 'card_layout', '')) {
+            ProductCardLayoutPresets::enqueueAssets();
+            $wrapperAttributes['data-card-layout'] = Arr::get($this->config, 'card_layout');
+            $wrapperAttributes['data-price-format'] = $this->priceFormat;
+        }
         ?>
         <div class="fct-products-wrapper" data-fluent-cart-shop-app data-fluent-cart-product-wrapper role="main"
             aria-label="<?php esc_attr_e('Products', 'fluent-cart-elementor-blocks'); ?>">
@@ -213,6 +221,11 @@ class ElementorShopAppRenderer extends ShopAppRenderer
 
     public function renderProduct()
     {
+        if (Arr::get($this->config, 'card_layout', '')) {
+            parent::renderProduct();
+            return;
+        }
+
         $products = $this->products;
 
         $cursor = '';
