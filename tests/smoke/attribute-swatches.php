@@ -117,9 +117,9 @@ if (method_exists(\FluentCart\App\Services\Filter\ShopAttributeFilter::class, 'm
     $raisedLimit = function () {
         return 12;
     };
-    add_filter('fluent_cart/shop_app_product/attribute/max_groups', $raisedLimit);
+    add_filter('fluent_cart/shop_app/product_attribute/max_groups', $raisedLimit);
     $test->same(count(ProductAttributeSwatches::filterGroupIds(range(1, 17))), 12, 'the Products widget follows core\'s max_groups filter');
-    remove_filter('fluent_cart/shop_app_product/attribute/max_groups', $raisedLimit);
+    remove_filter('fluent_cart/shop_app/product_attribute/max_groups', $raisedLimit);
 }
 
 $test->finish();
