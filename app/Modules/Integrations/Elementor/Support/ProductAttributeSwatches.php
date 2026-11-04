@@ -75,8 +75,25 @@ class ProductAttributeSwatches
         return array_values(array_unique(array_filter($ids)));
     }
 
+    /** The most attribute filters core shows on one Products widget. */
+    public static function filterGroupLimit()
+    {
+        return defined(ShopAttributeFilter::class . '::MAX_GROUPS') ? (int) ShopAttributeFilter::MAX_GROUPS : 10;
+    }
+
     /**
-     * The four Gutenberg swatch settings plus its align/margin/padding supports.
+     * Attribute filter groups, capped at core's limit so the picker and the storefront agree.
+     *
+     * @param mixed $value Saved select value
+     * @return int[]
+     */
+    public static function filterGroupIds($value)
+    {
+        return array_slice(self::groupIds($value), 0, self::filterGroupLimit());
+    }
+
+    /**
+     * The Gutenberg Product Swatches settings, in its panels' order, plus its margin/padding supports.
      *
      * @param \Elementor\Controls_Stack|\Elementor\Repeater $host
      * @param array  $condition Extra condition for every control
@@ -84,18 +101,27 @@ class ProductAttributeSwatches
      */
     public static function registerSwatchControls($host, array $condition, $selector)
     {
+        $advancedOn = array_merge($condition, ['swatch_advanced_enabled' => 'yes']);
+        $simpleOn = array_merge($condition, ['swatch_simple_enabled' => 'yes']);
+
         $host->add_control(
-            'swatch_group_ids',
+            'swatch_advanced_heading',
             [
-                'label'       => esc_html__('Attributes', 'fluent-cart-elementor-blocks'),
-                'type'        => Controls_Manager::SELECT2,
-                'multiple'    => true,
-                'label_block' => true,
-                'options'     => self::groupOptions(),
-                'default'     => [],
-                'select2options' => ['placeholder' => esc_html__('All attributes', 'fluent-cart-elementor-blocks')],
-                'description' => esc_html__('Empty shows every attribute.', 'fluent-cart-elementor-blocks'),
+                'label'       => esc_html__('Advanced Variations', 'fluent-cart-elementor-blocks'),
+                'type'        => Controls_Manager::HEADING,
                 'condition'   => $condition,
+            ]
+        );
+
+        $host->add_control(
+            'swatch_advanced_enabled',
+            [
+                'label'        => esc_html__('Show Swatches', 'fluent-cart-elementor-blocks'),
+                'description'  => esc_html__('Products with attributes such as Color and Size. One row per attribute.', 'fluent-cart-elementor-blocks'),
+                'type'         => Controls_Manager::SWITCHER,
+                'return_value' => 'yes',
+                'default'      => 'yes',
+                'condition'    => $condition,
             ]
         );
 
@@ -107,7 +133,22 @@ class ProductAttributeSwatches
                 'size_units' => [''],
                 'range'      => ['' => ['min' => 1, 'max' => 6, 'step' => 1]],
                 'default'    => ['size' => 3, 'unit' => ''],
-                'condition'  => $condition,
+                'condition'  => $advancedOn,
+            ]
+        );
+
+        $host->add_control(
+            'swatch_group_ids',
+            [
+                'label'       => esc_html__('Attributes', 'fluent-cart-elementor-blocks'),
+                'type'        => Controls_Manager::SELECT2,
+                'multiple'    => true,
+                'label_block' => true,
+                'options'     => self::groupOptions(),
+                'default'     => [],
+                'select2options' => ['placeholder' => esc_html__('All attributes', 'fluent-cart-elementor-blocks')],
+                'description' => esc_html__('Empty shows every attribute.', 'fluent-cart-elementor-blocks'),
+                'condition'   => $advancedOn,
             ]
         );
 
@@ -118,7 +159,64 @@ class ProductAttributeSwatches
                 'type'         => Controls_Manager::SWITCHER,
                 'return_value' => 'yes',
                 'default'      => '',
+                'condition'    => $advancedOn,
+            ]
+        );
+
+        $host->add_control(
+            'swatch_simple_heading',
+            [
+                'label'       => esc_html__('Simple Variations', 'fluent-cart-elementor-blocks'),
+                'type'        => Controls_Manager::HEADING,
+                'separator'   => 'before',
+                'condition'   => $condition,
+            ]
+        );
+
+        $host->add_control(
+            'swatch_simple_enabled',
+            [
+                'label'        => esc_html__('Show Swatches', 'fluent-cart-elementor-blocks'),
+                'description'  => esc_html__('Products with a plain list of variants, such as pack sizes. One row of their names.', 'fluent-cart-elementor-blocks'),
+                'type'         => Controls_Manager::SWITCHER,
+                'return_value' => 'yes',
+                'default'      => 'yes',
                 'condition'    => $condition,
+            ]
+        );
+
+        $host->add_control(
+            'swatch_simple_max_visible',
+            [
+                'label'      => esc_html__('Max Options', 'fluent-cart-elementor-blocks'),
+                'type'       => Controls_Manager::SLIDER,
+                'size_units' => [''],
+                'range'      => ['' => ['min' => 1, 'max' => 6, 'step' => 1]],
+                'default'    => ['size' => 4, 'unit' => ''],
+                'condition'  => $simpleOn,
+            ]
+        );
+
+        $host->add_control(
+            'swatch_simple_show_label',
+            [
+                'label'        => esc_html__('Show Row Label', 'fluent-cart-elementor-blocks'),
+                'type'         => Controls_Manager::SWITCHER,
+                'return_value' => 'yes',
+                'default'      => '',
+                'condition'    => $simpleOn,
+            ]
+        );
+
+        $host->add_control(
+            'swatch_simple_label',
+            [
+                'label'       => esc_html__('Row Label', 'fluent-cart-elementor-blocks'),
+                'type'        => Controls_Manager::TEXT,
+                'default'     => '',
+                'placeholder' => esc_html__('Option', 'fluent-cart-elementor-blocks'),
+                'description' => esc_html__('Names the row of option names, e.g. Plan or Pack.', 'fluent-cart-elementor-blocks'),
+                'condition'   => array_merge($simpleOn, ['swatch_simple_show_label' => 'yes']),
             ]
         );
 
@@ -129,6 +227,8 @@ class ProductAttributeSwatches
                 'type'         => Controls_Manager::SWITCHER,
                 'return_value' => 'yes',
                 'default'      => '',
+                'separator'    => 'before',
+                'description'  => esc_html__('Prints the picked value after the row label on both product types, e.g. COLOR · BLACK.', 'fluent-cart-elementor-blocks'),
                 'condition'    => $condition,
             ]
         );
@@ -186,11 +286,22 @@ class ProductAttributeSwatches
 
         $class = trim('fct-card-swatch-rows ' . $extraClass);
 
+        $simpleMaxVisible = Arr::get($settings, 'swatch_simple_max_visible', 4);
+        if (is_array($simpleMaxVisible)) {
+            $simpleMaxVisible = Arr::get($simpleMaxVisible, 'size', 4);
+        }
+
+        // Widgets saved before these switches existed have no value; they stay on, as Gutenberg defaults them.
         return ProductCardSwatchesRenderer::render($product, [
-            'group_ids'       => self::groupIds(Arr::get($settings, 'swatch_group_ids', [])),
-            'max_visible'     => max(1, min(6, (int) ($maxVisible ?: 3))),
-            'show_label'      => Arr::get($settings, 'swatch_show_label') === 'yes',
-            'show_group_name' => Arr::get($settings, 'swatch_show_group_name') === 'yes',
+            'group_ids'          => self::groupIds(Arr::get($settings, 'swatch_group_ids', [])),
+            'max_visible'        => max(1, min(6, (int) ($maxVisible ?: 3))),
+            'show_label'         => Arr::get($settings, 'swatch_show_label') === 'yes',
+            'show_group_name'    => Arr::get($settings, 'swatch_show_group_name') === 'yes',
+            'advanced_enabled'   => Arr::get($settings, 'swatch_advanced_enabled', 'yes') === 'yes',
+            'simple_enabled'     => Arr::get($settings, 'swatch_simple_enabled', 'yes') === 'yes',
+            'simple_max_visible' => max(1, min(6, (int) ($simpleMaxVisible ?: 4))),
+            'simple_show_label'  => Arr::get($settings, 'swatch_simple_show_label') === 'yes',
+            'simple_label'       => sanitize_text_field((string) Arr::get($settings, 'swatch_simple_label', '')),
         ], 'class="' . esc_attr($class) . '"');
     }
 }

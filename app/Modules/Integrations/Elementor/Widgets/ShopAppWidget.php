@@ -464,6 +464,8 @@ class ShopAppWidget extends Widget_Base
                 'label_block' => true,
                 'options'     => ProductAttributeSwatches::groupOptions(),
                 'default'     => [],
+                /* translators: %d: how many attribute filters one Products widget can show */
+                'description' => sprintf(esc_html__('Up to %d attributes. The storefront shows the first ones you pick.', 'fluent-cart-elementor-blocks'), ProductAttributeSwatches::filterGroupLimit()),
                 'condition'   => $condition,
             ]
         );
@@ -900,7 +902,7 @@ class ShopAppWidget extends Widget_Base
             ];
 
             // Core's renderer turns these into the attr_{id} sidebar filters.
-            $attributeGroups = ProductAttributeSwatches::groupIds($settings['attribute_filter_groups'] ?? []);
+            $attributeGroups = ProductAttributeSwatches::filterGroupIds($settings['attribute_filter_groups'] ?? []);
             if (($settings['enable_attribute_filters'] ?? '') === 'yes' && $attributeGroups && ProductAttributeSwatches::filtersAvailable()) {
                 $customFilters['attributes'] = $attributeGroups;
                 $customFilters['show_attribute_counts'] = ($settings['attribute_filter_show_count'] ?? '') === 'yes';
