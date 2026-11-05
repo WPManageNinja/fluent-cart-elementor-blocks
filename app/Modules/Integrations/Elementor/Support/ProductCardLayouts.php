@@ -117,6 +117,47 @@ class ProductCardLayouts
         return $scope . ' .fct-product-card .fct-card-layout.fct-card-layout .fct-card-layout-details .fct-card-layout-footer :is(.fct-product-view-button, .fluent-cart-add-to-cart-button)' . $state;
     }
 
+    /** Core's script that staggers a grid of the widget's own cards ships with the Masonry layout. */
+    public static function masonryGridAvailable()
+    {
+        return self::available() && array_key_exists('masonry', ProductCardLayoutPresets::all());
+    }
+
+    /** A Masonry Grid switch for the widget's own cards; a card layout brings its own grid. */
+    public static function registerMasonryGridControl($widget, array $condition)
+    {
+        if (!self::masonryGridAvailable()) {
+            return;
+        }
+
+        $widget->add_control(
+            'masonry_grid',
+            [
+                'label'        => esc_html__('Masonry Grid', 'fluent-cart-elementor-blocks'),
+                'type'         => Controls_Manager::SWITCHER,
+                'label_on'     => esc_html__('Yes', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('No', 'fluent-cart-elementor-blocks'),
+                'default'      => '',
+                'description'  => esc_html__('Staggers the cards, each at its own height, like the Masonry card layout.', 'fluent-cart-elementor-blocks'),
+                'condition'    => $condition,
+            ]
+        );
+    }
+
+    /**
+     * The wrapper attribute that makes core stagger the grid of the widget's own cards, with the script and
+     * stylesheet that do it. '' when the switch is off or a card layout draws the cards.
+     */
+    public static function masonryGridAttribute(array $settings)
+    {
+        if (Arr::get($settings, 'masonry_grid') !== 'yes' || self::selected($settings) || !self::masonryGridAvailable()) {
+            return '';
+        }
+        ProductCardLayoutPresets::enqueueAssets();
+
+        return ' data-fct-masonry';
+    }
+
     /** The saved layout when core can render it, else '' for the widget's own card elements. */
     public static function selected(array $settings)
     {

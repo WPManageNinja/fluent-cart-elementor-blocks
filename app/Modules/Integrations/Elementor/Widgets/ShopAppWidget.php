@@ -230,6 +230,7 @@ class ShopAppWidget extends Widget_Base
         );
 
         $cardElementsCondition = ProductCardLayouts::registerControl($this);
+        ProductCardLayouts::registerMasonryGridControl($this, $cardElementsCondition);
 
         $repeater = new Repeater();
 
@@ -1053,6 +1054,6 @@ class ShopAppWidget extends Widget_Base
         BadgeRenderer::removeCardBadgeHooks($badgeHooks);
 
         // Rendered fresh, like core's block: prices follow the visitor's currency and current product data
-        echo '<div class="fluent-cart-elementor-shop-app">' . $output . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+        echo '<div class="fluent-cart-elementor-shop-app"' . ProductCardLayouts::masonryGridAttribute($settings) . '>' . $output . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
     }
 }
