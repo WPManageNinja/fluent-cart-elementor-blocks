@@ -13,11 +13,15 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Core's product card layouts (Classic, Compact, Floating, Framed). Needs a FluentCart core
- * that ships ProductCardLayoutPresets; on an older core the picker stays hidden.
+ * Core's product card layouts (Compact, Masonry, Floating, Framed). In the widgets "Classic" is
+ * each widget's own card, saved as '' (or 'classic'), so core's Classic preset is not offered.
+ * Needs a FluentCart core that ships ProductCardLayoutPresets; on an older core the picker stays hidden.
  */
 class ProductCardLayouts
 {
+    /** The widget's own card: '' as saved before, or a saved core 'classic'. */
+    const WIDGET_CARD = 'classic';
+
     public static function available()
     {
         return class_exists(ProductCardLayoutPresets::class)
@@ -25,19 +29,18 @@ class ProductCardLayouts
             && method_exists(ProductCardLayoutPresets::class, 'cardBlock');
     }
 
-    /**
-     * @param string $customLabel Name of the widget's own card ('' option)
-     * @return array<string, string> '' (the widget's own card) plus core's layouts, in core's order
-     */
-    public static function options($customLabel = '')
+    /** @return array<string, string> Classic ('' = the widget's own card) plus core's other layouts, in core's order */
+    public static function options()
     {
-        $options = ['' => $customLabel ?: esc_html__('Custom (Card Elements)', 'fluent-cart-elementor-blocks')];
+        $options = ['' => esc_html__('Classic', 'fluent-cart-elementor-blocks')];
         if (!self::available()) {
             return $options;
         }
 
         foreach (ProductCardLayoutPresets::all() as $layout => $preset) {
-            $options[$layout] = (string) Arr::get($preset, 'label', $layout);
+            if ($layout !== self::WIDGET_CARD) {
+                $options[$layout] = (string) Arr::get($preset, 'label', $layout);
+            }
         }
 
         return $options;
@@ -46,9 +49,9 @@ class ProductCardLayouts
     /**
      * The Card Layout picker, in the widget's open section.
      *
-     * @return array Condition for the card element controls: shown only for Custom
+     * @return array Condition for the widget's own card controls: shown only for Classic
      */
-    public static function registerControl($widget, $description = '', $customLabel = '')
+    public static function registerControl($widget, $description = '')
     {
         if (!self::available()) {
             return [];
@@ -60,8 +63,8 @@ class ProductCardLayouts
                 'label'       => esc_html__('Card Layout', 'fluent-cart-elementor-blocks'),
                 'type'        => Controls_Manager::SELECT,
                 'default'     => '',
-                'options'     => self::options($customLabel),
-                'description' => $description ?: esc_html__('A FluentCart layout builds the whole card, with its own badges, swatches and Quick View. Custom uses the card elements below.', 'fluent-cart-elementor-blocks'),
+                'options'     => self::options(),
+                'description' => $description ?: esc_html__('Classic is this widget\'s own card, with all of its card settings. A layout builds the whole card, with its own badges, swatches and Quick View.', 'fluent-cart-elementor-blocks'),
             ]
         );
 
@@ -77,13 +80,89 @@ class ProductCardLayouts
         }
     }
 
-    /** One layout card, through core's card renderer. */
-    public static function renderCard($product, $layout, $priceFormat)
+    /** One layout card, through core's card renderer, with the widget's layout card settings. */
+    public static function renderCard($product, $layout, $priceFormat, array $options = [])
     {
         (new ProductCardRender($product, [
             'card_layout'         => $layout,
             'layout_price_format' => $priceFormat,
+            'layout_options'      => $options,
         ]))->render();
+    }
+
+    /** Whether core takes a builder's swatch, badge and rating settings for layout cards. */
+    public static function cardOptionsAvailable()
+    {
+        return self::available() && method_exists(ProductCardLayoutPresets::class, 'withCardOptions');
+    }
+
+    /**
+     * A layout card's Swatches, Badge and Product Rating switches, each in its own section and on
+     * until switched off. Classic keeps its own sections; these show only for a layout.
+     */
+    public static function registerLayoutCardSections($widget, $withSoldOut = true)
+    {
+        if (!self::cardOptionsAvailable()) {
+            return;
+        }
+        $condition = ['card_layout!' => ''];
+        $switch = function ($name, $label) use ($widget) {
+            $widget->add_control($name, [
+                'label'        => $label,
+                'type'         => Controls_Manager::SWITCHER,
+                'label_on'     => esc_html__('Show', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('Hide', 'fluent-cart-elementor-blocks'),
+                'return_value' => 'yes',
+                'default'      => 'yes',
+            ]);
+        };
+        $sections = [
+            'layout_card_swatches_section' => [esc_html__('Swatches', 'fluent-cart-elementor-blocks'), ['layout_show_swatches' => esc_html__('Show Swatches', 'fluent-cart-elementor-blocks')]],
+            'layout_card_badge_section'    => [esc_html__('Badge', 'fluent-cart-elementor-blocks'), array_filter([
+                'layout_show_sale_badge'     => esc_html__('Show Sale Badge', 'fluent-cart-elementor-blocks'),
+                'layout_show_sold_out_badge' => $withSoldOut ? esc_html__('Show Sold Out Badge', 'fluent-cart-elementor-blocks') : '',
+            ])],
+            'layout_card_rating_section'   => [esc_html__('Product Rating', 'fluent-cart-elementor-blocks'), ['layout_show_rating' => esc_html__('Show Rating', 'fluent-cart-elementor-blocks')]],
+        ];
+        foreach ($sections as $id => $section) {
+            $widget->start_controls_section($id, ['label' => $section[0], 'tab' => Controls_Manager::TAB_CONTENT, 'condition' => $condition]);
+            foreach ($section[1] as $name => $label) {
+                $switch($name, $label);
+            }
+            $widget->end_controls_section();
+        }
+    }
+
+    /** ProductCardRender's layout_options from the widget's layout card switches. */
+    public static function cardOptions(array $settings, $withSoldOut = true)
+    {
+        if (!self::cardOptionsAvailable()) {
+            return [];
+        }
+        $isOn = function ($name) use ($settings) {
+            return Arr::get($settings, $name, 'yes') === 'yes';
+        };
+        $options = [
+            'swatches'   => $isOn('layout_show_swatches') ? null : false,
+            'sale_badge' => $isOn('layout_show_sale_badge'),
+            'rating'     => $isOn('layout_show_rating'),
+        ];
+        if ($withSoldOut) {
+            $options['sold_out_badge'] = $isOn('layout_show_sold_out_badge');
+        }
+
+        // Swatches on keeps the layout's own swatch block, so only "off" is passed.
+        return array_filter($options, function ($value) {
+            return $value !== null;
+        });
+    }
+
+    /** The same switches as [fluent_cart_related_products]'s layout_hide list. */
+    public static function hiddenParts(array $settings, $withSoldOut = true)
+    {
+        return implode(',', array_keys(array_filter(self::cardOptions($settings, $withSoldOut), function ($on) {
+            return $on === false;
+        })));
     }
 
     /**
@@ -117,52 +196,11 @@ class ProductCardLayouts
         return $scope . ' .fct-product-card .fct-card-layout.fct-card-layout .fct-card-layout-details .fct-card-layout-footer :is(.fct-product-view-button, .fluent-cart-add-to-cart-button)' . $state;
     }
 
-    /** Core's script that staggers a grid of the widget's own cards ships with the Masonry layout. */
-    public static function masonryGridAvailable()
-    {
-        return self::available() && array_key_exists('masonry', ProductCardLayoutPresets::all());
-    }
-
-    /** A Masonry Grid switch for the widget's own cards; a card layout brings its own grid. */
-    public static function registerMasonryGridControl($widget, array $condition)
-    {
-        if (!self::masonryGridAvailable()) {
-            return;
-        }
-
-        $widget->add_control(
-            'masonry_grid',
-            [
-                'label'        => esc_html__('Masonry Grid', 'fluent-cart-elementor-blocks'),
-                'type'         => Controls_Manager::SWITCHER,
-                'label_on'     => esc_html__('Yes', 'fluent-cart-elementor-blocks'),
-                'label_off'    => esc_html__('No', 'fluent-cart-elementor-blocks'),
-                'default'      => '',
-                'description'  => esc_html__('Staggers the cards, each at its own height, like the Masonry card layout.', 'fluent-cart-elementor-blocks'),
-                'condition'    => $condition,
-            ]
-        );
-    }
-
-    /**
-     * The wrapper attribute that makes core stagger the grid of the widget's own cards, with the script and
-     * stylesheet that do it. '' when the switch is off or a card layout draws the cards.
-     */
-    public static function masonryGridAttribute(array $settings)
-    {
-        if (Arr::get($settings, 'masonry_grid') !== 'yes' || self::selected($settings) || !self::masonryGridAvailable()) {
-            return '';
-        }
-        ProductCardLayoutPresets::enqueueAssets();
-
-        return ' data-fct-masonry';
-    }
-
     /** The saved layout when core can render it, else '' for the widget's own card elements. */
     public static function selected(array $settings)
     {
         $layout = sanitize_key((string) Arr::get($settings, 'card_layout', ''));
-        if ($layout === '' || !self::available()) {
+        if ($layout === '' || $layout === self::WIDGET_CARD || !self::available()) {
             return '';
         }
 

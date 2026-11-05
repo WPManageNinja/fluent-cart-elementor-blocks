@@ -74,6 +74,7 @@ class ShopAppWidget extends Widget_Base
         // A layout card brings core's own badges, so these settings show only for Custom.
         $customCardOnly = ProductCardLayouts::available() ? ['card_layout' => ''] : [];
         BadgeControls::registerBadgeContentControls($this, true, ['default_filter_allow_out_of_stock' => 'yes'], $customCardOnly);
+        ProductCardLayouts::registerLayoutCardSections($this);
         $this->registerStyleControls();
         BadgeControls::registerBadgeStyleControls($this, true, ['default_filter_allow_out_of_stock' => 'yes'], $customCardOnly);
     }
@@ -230,7 +231,6 @@ class ShopAppWidget extends Widget_Base
         );
 
         $cardElementsCondition = ProductCardLayouts::registerControl($this);
-        ProductCardLayouts::registerMasonryGridControl($this, $cardElementsCondition);
 
         $repeater = new Repeater();
 
@@ -1049,11 +1049,14 @@ class ShopAppWidget extends Widget_Base
         $handler->setCardElements($cardElements);
         $handler->setShopLayout($shopLayout);
         $handler->setBadgeSettings($badgeSettings);
+        if ($cardLayout) {
+            $handler->setLayoutOptions(ProductCardLayouts::cardOptions($settings));
+        }
         $output  = $handler->handelShortcodeCall($shortcodeAtts);
 
         BadgeRenderer::removeCardBadgeHooks($badgeHooks);
 
         // Rendered fresh, like core's block: prices follow the visitor's currency and current product data
-        echo '<div class="fluent-cart-elementor-shop-app"' . ProductCardLayouts::masonryGridAttribute($settings) . '>' . $output . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+        echo '<div class="fluent-cart-elementor-shop-app">' . $output . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
     }
 }
