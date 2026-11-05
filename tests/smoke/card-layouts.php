@@ -90,6 +90,13 @@ if (!isset(\FluentCart\App\Services\Renderer\ProductCardLayoutPresets::all()['ma
     $test->same(substr_count($masonryCarousel, 'fct-card-layout--masonry'), count($carouselIds), 'Masonry: every Carousel slide uses the layout');
     $masonryCard = $render('fluent_cart_product_card', ['product_id' => (string) \FluentCart\App\Models\Product::query()->where('post_status', 'publish')->orderBy('ID', 'DESC')->value('ID'), 'card_layout' => 'masonry']);
     $test->same(substr_count($masonryCard, 'fct-card-layout--masonry'), 1, 'Masonry: the Product Card widget draws one Masonry card');
+
+    // Masonry Grid: the widget's own card elements stagger in the same grid.
+    $gridOwn = $render('fluent_cart_shop_app', $shopSettings + ['masonry_grid' => 'yes']);
+    $test->check(strpos($gridOwn, 'data-fct-masonry') !== false && strpos($gridOwn, 'fct-card-layout') === false, 'Masonry Grid: the Products widget staggers its own cards');
+    $gridLayout = $render('fluent_cart_shop_app', $shopSettings + ['masonry_grid' => 'yes', 'card_layout' => 'compact']);
+    $test->check(strpos($gridLayout, 'data-fct-masonry') === false, 'Masonry Grid: a card layout keeps its own grid');
+    $test->check(strpos($render('fluent_cart_shop_app', $shopSettings), 'data-fct-masonry') === false, 'Masonry Grid: off by default');
 }
 
 // Related Products: needs core's [fluent_cart_related_products card_layout] (fluent-cart#3486).
@@ -106,6 +113,8 @@ if (!$relatedProductId) {
     $relatedSettings = ['source' => 'custom', 'product_id' => (string) $relatedProductId];
     $relatedCustom = $render('fluentcart_related_products', $relatedSettings);
     $test->check(strpos($relatedCustom, 'fct-product-card') !== false && strpos($relatedCustom, 'fct-card-layout') === false, 'Related Products: no layout by default');
+    $relatedGrid = $render('fluentcart_related_products', $relatedSettings + ['masonry_grid' => 'yes']);
+    $test->check(!isset(\FluentCart\App\Services\Renderer\ProductCardLayoutPresets::all()['masonry']) || strpos($relatedGrid, 'data-fct-masonry') !== false, 'Masonry Grid: Related Products staggers its own cards');
     $relatedFramed = $render('fluentcart_related_products', $relatedSettings + ['card_layout' => 'framed', 'show_swatches' => 'yes', 'show_sale_badge' => 'yes']);
     $test->check(substr_count($relatedFramed, 'fct-card-layout--framed') > 0 && substr_count($relatedFramed, 'fct-card-layout--framed') === substr_count($relatedFramed, '<article'), 'Related Products framed: every card uses the layout');
     preg_match_all('/<article\b.*?<\/article>/s', $relatedFramed, $relatedCards);

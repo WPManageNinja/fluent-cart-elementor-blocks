@@ -61,6 +61,7 @@ class RelatedProductsWidget extends Widget_Base
         $this->registerProductSourceControls();
         // A layout card brings core's own swatches and badges, so those settings show only for Custom.
         $customCardOnly = ProductCardLayouts::registerControl($this, esc_html__('A FluentCart layout builds the whole card, with its own badges, swatches and Quick View. Standard keeps the related products card.', 'fluent-cart-elementor-blocks'), esc_html__('Standard', 'fluent-cart-elementor-blocks'));
+        ProductCardLayouts::registerMasonryGridControl($this, $customCardOnly);
 
         $this->end_controls_section();
 
@@ -580,6 +581,6 @@ class RelatedProductsWidget extends Widget_Base
             return;
         }
 
-        echo '<div class="fluentcart-related-products">' . $content . '</div>';
+        echo '<div class="fluentcart-related-products"' . ProductCardLayouts::masonryGridAttribute($settings) . '>' . $content . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- the attribute is a fixed string
     }
 }
