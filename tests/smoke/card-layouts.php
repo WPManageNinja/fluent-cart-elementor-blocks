@@ -31,7 +31,8 @@ $render = function ($widgetType, array $settings) {
     return (string) ob_get_clean();
 };
 
-$test->same(array_keys(ProductCardLayouts::options()), ['', 'classic', 'compact', 'floating', 'framed'], 'the picker lists the card elements option and core\'s four layouts');
+// Core adds layouts (Masonry), so the picker follows core's list rather than a fixed one.
+$test->same(array_keys(ProductCardLayouts::options()), array_merge([''], array_keys(\FluentCart\App\Services\Renderer\ProductCardLayoutPresets::all())), 'the picker lists the card elements option, then core\'s layouts in core\'s order');
 
 $shopSettings = ['per_page' => 4, 'paginator' => 'numbers'];
 
