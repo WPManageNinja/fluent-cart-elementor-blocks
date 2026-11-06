@@ -283,6 +283,9 @@ class ProductAttributeSwatches
             return '';
         }
 
+        // Assets with the markup, so every widget that draws swatches gets their stylesheet.
+        self::enqueueAssets();
+
         $maxVisible = Arr::get($settings, 'swatch_max_visible', 3);
         if (is_array($maxVisible)) {
             $maxVisible = Arr::get($maxVisible, 'size', 3);

@@ -7,7 +7,9 @@ use Elementor\Controls_Manager;
 use Elementor\Group_Control_Typography;
 use Elementor\Group_Control_Border;
 use Elementor\Group_Control_Box_Shadow;
+use Elementor\Repeater;
 use FluentCart\App\Modules\Templating\AssetLoader;
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Renderers\ElementorShopAppRenderer;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support\ProductAttributeSwatches;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support\ProductCardLayouts;
 use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Widgets\BadgeControls;
@@ -21,6 +23,9 @@ if (!defined('ABSPATH')) {
 
 class RelatedProductsWidget extends Widget_Base
 {
+    /** Parts of core's Classic layout its Classic card adds; Swatches keeps this widget's own section. */
+    const CLASSIC_PARTS = ['rating', 'quick_view'];
+
     use ProductWidgetTrait;
 
     public function get_name()
@@ -59,15 +64,17 @@ class RelatedProductsWidget extends Widget_Base
         );
 
         $this->registerProductSourceControls();
-        // A layout card brings core's own swatches and badges, so the Classic card's settings show only for Classic.
+        // A layout card brings core's own swatches, so this widget's Swatches settings show only for Classic.
         $customCardOnly = ProductCardLayouts::registerControl($this);
+        $this->registerCardElementsControls($customCardOnly);
 
         $this->end_controls_section();
 
         $this->registerSwatchControls($customCardOnly);
 
-        BadgeControls::registerBadgeContentControls($this, false, [], $customCardOnly);
-        ProductCardLayouts::registerLayoutCardSections($this);
+        // Sale and Sold Out badges, Product Rating and Quick View, for Classic and every layout.
+        BadgeControls::registerBadgeSections($this);
+        ProductCardLayouts::registerPartSections($this, self::CLASSIC_PARTS);
 
         $this->registerHeadingStyleControls();
         $this->registerGridStyleControls();
@@ -75,7 +82,41 @@ class RelatedProductsWidget extends Widget_Base
         $this->registerTitleStyleControls();
         $this->registerPriceStyleControls();
         $this->registerButtonStyleControls();
-        BadgeControls::registerBadgeStyleControls($this, false, [], $customCardOnly);
+        BadgeControls::registerBadgeStyleSections($this);
+        ProductCardLayouts::registerPartStyleSections($this);
+    }
+
+    /**
+     * Classic's Card Elements, drawing this widget's own card in core's related grid. A new widget
+     * starts as core's Classic layout; one saved before has no list and keeps core's related card.
+     */
+    private function registerCardElementsControls(array $classicOnly)
+    {
+        if (!ProductCardLayouts::cardSettingsAvailable()) {
+            return;
+        }
+        $repeater = new Repeater();
+        $repeater->add_control('element_type', [
+            'label'   => esc_html__('Element', 'fluent-cart-elementor-blocks'),
+            'type'    => Controls_Manager::SELECT,
+            'default' => 'image',
+            'options' => [
+                'image'   => esc_html__('Image', 'fluent-cart-elementor-blocks'),
+                'title'   => esc_html__('Title', 'fluent-cart-elementor-blocks'),
+                'excerpt' => esc_html__('Excerpt', 'fluent-cart-elementor-blocks'),
+                'price'   => esc_html__('Price', 'fluent-cart-elementor-blocks'),
+                'button'  => esc_html__('Button', 'fluent-cart-elementor-blocks'),
+            ] + ProductCardLayouts::classicElementOptions(),
+        ]);
+        $this->add_control('card_elements', [
+            'label'       => esc_html__('Card Elements', 'fluent-cart-elementor-blocks'),
+            'type'        => Controls_Manager::REPEATER,
+            'fields'      => $repeater->get_controls(),
+            'default'     => ProductCardLayouts::classicElementsDefault([]),
+            'title_field' => ProductCardLayouts::elementTitleField(),
+            'condition'   => $classicOnly,
+        ]);
+        ProductCardLayouts::registerLayoutElementsControls($this);
     }
 
     private function registerSwatchControls(array $sectionCondition = [])
@@ -93,13 +134,14 @@ class RelatedProductsWidget extends Widget_Base
             ]
         );
 
+        // On for a new widget's Card Elements; core's related card reads only a saved choice (render()).
         $this->add_control(
             'show_swatches',
             [
                 'label'        => esc_html__('Show Swatches', 'fluent-cart-elementor-blocks'),
                 'type'         => Controls_Manager::SWITCHER,
                 'return_value' => 'yes',
-                'default'      => '',
+                'default'      => ProductCardLayouts::cardSettingsAvailable() ? 'yes' : '',
             ]
         );
 
@@ -538,31 +580,66 @@ class RelatedProductsWidget extends Widget_Base
 
         AssetLoader::loadSingleProductAssets();
 
-        $shortcodeAtts = 'id="' . (int) $product->ID . '"';
-        $cardLayout = ProductCardLayouts::selected($settings);
-        if ($cardLayout) {
-            // Core renders the layout cards with their own badges and swatches; the widget adds neither.
-            $shortcodeAtts .= ' card_layout="' . esc_attr($cardLayout) . '"';
-            $hidden = ProductCardLayouts::hiddenParts($settings);
-            if ($hidden !== '') {
-                $shortcodeAtts .= ' layout_hide="' . esc_attr($hidden) . '"';
+        // On the product page this follows the store's Related Products setting, as core's shortcode does.
+        if (is_singular('fluent-products')) {
+            $showRelevant = (new \FluentCart\Api\StoreSettings())->get('show_relevant_product_in_single_page') == 'yes';
+            if (!apply_filters('fluent_cart/single_product_page/show_relevant_products', $showRelevant, $product->ID)) {
+                return;
             }
         }
 
-        // Sale badge overlay via core's before/after_image_block hooks (fire
-        // inside each related card's renderProductImage). The closures buffer
-        // the image and re-wrap it so the badge overlays the IMAGE, not the
-        // whole card. Scoped: removed right after the shortcode render. Sale
-        // only ($includeSoldOut false) — Sold Out is Products/Carousel-only.
-        $badgeHooks = $cardLayout ? null : BadgeRenderer::cardBadgeClosures($settings, false);
+        $products = \FluentCart\Api\Resource\ShopResource::getSimilarProducts($product->ID, false);
+        if (empty($products)) {
+            return;
+        }
+
+        $cardLayout = ProductCardLayouts::selected($settings);
+        $listConfig = ['rating_context' => 'relevant'];
+        if ($cardLayout) {
+            // Core renders the layout cards with their own badges and swatches; the widget adds neither.
+            ProductCardLayouts::prepareCards($products);
+            $listConfig['card_layout'] = $cardLayout;
+            $listConfig['layout_price_format'] = 'starts_from';
+            $listConfig['layout_options'] = ProductCardLayouts::cardOptions($settings);
+        }
+
+        // Classic's Card Elements draw this widget's own card; a widget saved without them keeps core's.
+        $cardElements = $cardLayout ? [] : ProductCardLayouts::withClassicPartSettings($this, ProductCardLayouts::classicElements($this, $settings, []), $settings);
+        if ($cardElements && Arr::get($settings, 'show_swatches') !== 'yes') {
+            $cardElements = array_values(array_filter($cardElements, function ($row) {
+                return Arr::get($row, 'element_type') !== 'swatches';
+            }));
+        }
+        if ($cardElements) {
+            \FluentCart\App\Modules\Data\ProductDataSetup::setProductsCache($products);
+            if (in_array('swatches', array_column($cardElements, 'element_type'), true)) {
+                ProductAttributeSwatches::enqueueAssets();
+            }
+            $listConfig['render_card'] = function ($relatedProduct) use ($cardElements) {
+                $cardRender = new \FluentCart\App\Services\Renderer\ProductCardRender($relatedProduct, ['rating_context' => 'relevant']);
+                ob_start();
+                echo '<article class="fct-product-card" data-fct-product-card>';
+                ElementorShopAppRenderer::renderCardElements($cardRender, $cardElements, $relatedProduct);
+                echo '</article>';
+
+                return (string) ob_get_clean();
+            };
+        }
+
+        // Sale and Sold Out badge overlays via core's before/after_image_block hooks, which fire
+        // inside each card's renderProductImage. Scoped: removed right after the render.
+        $badgeHooks = $cardLayout ? null : BadgeRenderer::cardBadgeClosures($settings, true);
         if ($badgeHooks) {
             add_action('fluent_cart/product/group/before_image_block', $badgeHooks['before'], 10, 1);
             add_action('fluent_cart/product/group/after_image_block', $badgeHooks['after'], 10, 1);
         }
 
+        // Core's related card: swatches go in at the chosen position. Only a saved Show Swatches
+        // counts here, since its default is on for a new widget's Card Elements.
+        $savedShowSwatches = Arr::get((array) $this->get_data('settings'), 'show_swatches', '');
         $swatchHook = '';
         $swatchCallback = null;
-        if (!$cardLayout && Arr::get($settings, 'show_swatches') === 'yes' && ProductAttributeSwatches::swatchesAvailable()) {
+        if (!$cardLayout && !$cardElements && $savedShowSwatches === 'yes' && ProductAttributeSwatches::swatchesAvailable()) {
             ProductAttributeSwatches::enqueueAssets();
             $position = Arr::get($settings, 'swatch_position', '');
             $position = in_array($position, ['image', 'title', 'price'], true) ? $position : 'price';
@@ -574,14 +651,21 @@ class RelatedProductsWidget extends Widget_Base
             add_action($swatchHook, $swatchCallback, 20, 1);
         }
 
-        $content = do_shortcode('[fluent_cart_related_products ' . $shortcodeAtts . ']');
+        ob_start();
+        (new \FluentCart\App\Services\Renderer\ProductListRenderer(
+            $products,
+            __('Related Products', 'fluent-cart-elementor-blocks'),
+            'fct-similar-product-list-container',
+            $listConfig
+        ))->render();
+        $content = (string) ob_get_clean();
 
         BadgeRenderer::removeCardBadgeHooks($badgeHooks);
         if ($swatchCallback) {
             remove_action($swatchHook, $swatchCallback, 20);
         }
 
-        if (trim((string) $content) === '') {
+        if (trim($content) === '') {
             return;
         }
 

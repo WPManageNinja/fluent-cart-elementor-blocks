@@ -16,6 +16,9 @@ use FluentCartElementorBlocks\App\Utils\Enqueuer\Enqueue;
 
 class ProductCarouselWidget extends Widget_Base
 {
+    /** Parts of core's Classic layout this widget's own card can add, each with its own settings. */
+    const CLASSIC_PARTS = ['rating', 'swatches', 'quick_view'];
+
     public function get_name()
     {
         return 'fluent_cart_product_carousel';
@@ -119,12 +122,12 @@ class ProductCarouselWidget extends Widget_Base
         $this->registerProductSelectionControls();
         $this->registerCarouselSettingsControls();
         $this->registerCardLayoutControls();
-        // A layout card brings core's own badges, so these settings show only for Custom.
-        $customCardOnly = ProductCardLayouts::available() ? ['card_layout' => ''] : [];
-        BadgeControls::registerBadgeContentControls($this, false, [], $customCardOnly);
-        ProductCardLayouts::registerLayoutCardSections($this);
+        // Sale and Sold Out badges, Swatches, Product Rating and Quick View, for Classic and every layout.
+        BadgeControls::registerBadgeSections($this);
+        ProductCardLayouts::registerPartSections($this, self::CLASSIC_PARTS, '{{WRAPPER}} .fct-card-swatch-rows');
         $this->registerStyleControls();
-        BadgeControls::registerBadgeStyleControls($this, false, [], $customCardOnly);
+        BadgeControls::registerBadgeStyleSections($this);
+        ProductCardLayouts::registerPartStyleSections($this);
     }
 
     private function registerStyleControls()
@@ -383,11 +386,12 @@ class ProductCarouselWidget extends Widget_Base
                     'excerpt' => esc_html__('Excerpt', 'fluent-cart-elementor-blocks'),
                     'price'   => esc_html__('Price', 'fluent-cart-elementor-blocks'),
                     'button'  => esc_html__('Button', 'fluent-cart-elementor-blocks'),
-                ] + ProductAttributeSwatches::cardElementOption(),
+                ] + ProductAttributeSwatches::cardElementOption() + ProductCardLayouts::classicElementOptions(),
             ]
         );
 
-        if (ProductAttributeSwatches::swatchesAvailable()) {
+        // Classic's swatch settings live in the Swatches section; a row saved with its own keeps them.
+        if (ProductAttributeSwatches::swatchesAvailable() && !ProductCardLayouts::cardSettingsAvailable()) {
             ProductAttributeSwatches::registerSwatchControls($repeater, ['element_type' => 'swatches'], '{{WRAPPER}} {{CURRENT_ITEM}}');
         }
 
@@ -397,16 +401,14 @@ class ProductCarouselWidget extends Widget_Base
                 'label'       => esc_html__('Card Elements', 'fluent-cart-elementor-blocks'),
                 'type'        => Controls_Manager::REPEATER,
                 'fields'      => $repeater->get_controls(),
-                'default'     => [
-                    ['element_type' => 'image'],
-                    ['element_type' => 'title'],
-                    ['element_type' => 'price'],
-                    ['element_type' => 'button'],
-                ],
-                'title_field' => '{{{ element_type.charAt(0).toUpperCase() + element_type.slice(1) }}}',
+                // A new widget starts as core's Classic layout; one saved before keeps its own list.
+                'default'     => ProductCardLayouts::classicElementsDefault(ProductCardWidget::OLD_CARD_ELEMENTS),
+                'title_field' => ProductCardLayouts::elementTitleField(),
                 'condition'   => $cardElementsCondition,
             ]
         );
+
+        ProductCardLayouts::registerLayoutElementsControls($this);
 
         $this->add_control(
             'price_format',
@@ -581,12 +583,7 @@ class ProductCarouselWidget extends Widget_Base
         $carouselSettings = $this->buildCarouselSettings($settings);
 
         // Get card elements
-        $cardElements = $settings['card_elements'] ?? [
-            ['element_type' => 'image'],
-            ['element_type' => 'title'],
-            ['element_type' => 'price'],
-            ['element_type' => 'button'],
-        ];
+        $cardElements = ProductCardLayouts::withClassicPartSettings($this, ProductCardLayouts::classicElements($this, $settings, ProductCardWidget::OLD_CARD_ELEMENTS), $settings);
 
         $priceFormat = $settings['price_format'] ?? 'starts_from';
         $cardLayout = ProductCardLayouts::selected($settings);
@@ -605,7 +602,7 @@ class ProductCarouselWidget extends Widget_Base
         // slide's image and re-wrap it so the badge overlays the IMAGE, not the
         // whole card. Scoped: removed right after the carousel render.
         // A layout card draws core's own badges, so the widget adds none.
-        $badgeHooks = $cardLayout ? null : BadgeRenderer::cardBadgeClosures($settings, false);
+        $badgeHooks = $cardLayout ? null : BadgeRenderer::cardBadgeClosures($settings, true);
         if ($badgeHooks) {
             add_action('fluent_cart/product/group/before_image_block', $badgeHooks['before'], 10, 1);
             add_action('fluent_cart/product/group/after_image_block', $badgeHooks['after'], 10, 1);
@@ -797,6 +794,11 @@ class ProductCarouselWidget extends Widget_Base
 
                 case 'swatches':
                     echo ProductAttributeSwatches::render($product, $element, 'elementor-repeater-item-' . ($element['_id'] ?? '')); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                    break;
+
+                case 'rating':
+                case 'quick_view':
+                    echo ProductCardLayouts::renderClassicRow($cardRender, $element); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- rendered block markup
                     break;
             }
         }
