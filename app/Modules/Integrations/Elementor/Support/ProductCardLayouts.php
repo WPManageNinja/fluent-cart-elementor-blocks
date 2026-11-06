@@ -3,6 +3,9 @@
 namespace FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support;
 
 use Elementor\Controls_Manager;
+use Elementor\Group_Control_Border;
+use Elementor\Group_Control_Typography;
+use Elementor\Repeater;
 use FluentCart\App\Modules\Data\ProductDataSetup;
 use FluentCart\App\Services\Renderer\ProductCardLayoutPresets;
 use FluentCart\App\Services\Renderer\ProductCardRender;
@@ -97,72 +100,399 @@ class ProductCardLayouts
     }
 
     /**
-     * A layout card's Swatches, Badge and Product Rating switches, each in its own section and on
-     * until switched off. Classic keeps its own sections; these show only for a layout.
+     * Whether core gives Classic and every layout the same card settings (Card Elements, badge,
+     * swatch, rating and Quick View); the newest of those core methods stands for all of them.
      */
-    public static function registerLayoutCardSections($widget, $withSoldOut = true)
+    public static function cardSettingsAvailable()
     {
-        if (!self::cardOptionsAvailable()) {
+        return self::cardOptionsAvailable()
+            && method_exists(ProductCardLayoutPresets::class, 'classicCardParts')
+            && method_exists(ProductCardRender::class, 'renderCardPart');
+    }
+
+    /** @return array<string, string> Card part => label, for Card Elements lists. */
+    public static function partLabels()
+    {
+        return [
+            'image'      => esc_html__('Image', 'fluent-cart-elementor-blocks'),
+            'quick_view' => esc_html__('Quick View', 'fluent-cart-elementor-blocks'),
+            'category'   => esc_html__('Category', 'fluent-cart-elementor-blocks'),
+            'rating'     => esc_html__('Rating', 'fluent-cart-elementor-blocks'),
+            'title'      => esc_html__('Title', 'fluent-cart-elementor-blocks'),
+            'excerpt'    => esc_html__('Excerpt', 'fluent-cart-elementor-blocks'),
+            'swatches'   => esc_html__('Swatches', 'fluent-cart-elementor-blocks'),
+            'price'      => esc_html__('Price', 'fluent-cart-elementor-blocks'),
+            'button'     => esc_html__('Button', 'fluent-cart-elementor-blocks'),
+        ];
+    }
+
+    /** A repeater row title that names the element as its option label does. */
+    public static function elementTitleField()
+    {
+        return '{{{ (' . wp_json_encode(self::partLabels()) . ')[element_type] || element_type }}}';
+    }
+
+    /** Rating, Swatches and Quick View options for a Classic Card Elements list, with this core. */
+    public static function classicElementOptions()
+    {
+        if (!self::cardSettingsAvailable()) {
+            return [];
+        }
+
+        return array_intersect_key(self::partLabels(), array_flip(['rating', 'swatches', 'quick_view']));
+    }
+
+    /**
+     * A Classic Card Elements default: core's Classic layout for a new widget, or $old on a core
+     * without the parts. Elementor saves the list when a widget is added, so one saved before keeps its own.
+     */
+    public static function classicElementsDefault(array $old)
+    {
+        if (!self::cardSettingsAvailable()) {
+            return $old;
+        }
+        $parts = array_values(array_diff(ProductCardLayoutPresets::classicCardParts(), ['excerpt']));
+        if (!ProductAttributeSwatches::swatchesAvailable()) {
+            $parts = array_values(array_diff($parts, ['swatches']));
+        }
+
+        return array_map(function ($part) {
+            return ['element_type' => $part];
+        }, $parts);
+    }
+
+    /**
+     * The Classic Card Elements to draw. Elementor fills an unsaved repeater from its default, so a
+     * widget saved before the list had Rating, Swatches and Quick View keeps $old.
+     */
+    public static function classicElements($widget, array $settings, array $old)
+    {
+        $raw = method_exists($widget, 'get_data') ? (array) $widget->get_data('settings') : [];
+        if (!array_key_exists('card_elements', $raw)) {
+            return $old;
+        }
+
+        return (array) Arr::get($settings, 'card_elements', $old);
+    }
+
+    /**
+     * Classic's rows with the settings each part needs to draw itself, so they travel with the rows
+     * (the Products widget's AJAX pages redraw from them). Rating and Quick View carry Classic's
+     * settings; a Swatches row saved with its own swatch settings keeps them, any other takes the
+     * widget's Classic Swatches settings.
+     */
+    public static function withClassicPartSettings($widget, array $rows, array $settings)
+    {
+        if (!self::cardSettingsAvailable()) {
+            return $rows;
+        }
+        $raw = method_exists($widget, 'get_data') ? array_values((array) Arr::get((array) $widget->get_data('settings'), 'card_elements', [])) : [];
+        $saved = [];
+        foreach ($raw as $position => $row) {
+            if (is_array($row)) {
+                $saved[!empty($row['_id']) ? $row['_id'] : '#' . $position] = $row;
+            }
+        }
+        $swatchSettings = array_filter($settings, function ($key) {
+            return strpos((string) $key, 'swatch_') === 0;
+        }, ARRAY_FILTER_USE_KEY);
+
+        $position = 0;
+        foreach ($rows as $index => $row) {
+            $type = is_array($row) ? Arr::get($row, 'element_type', '') : '';
+            // The saved row, by its id, else by its place in the list.
+            $savedKey = is_array($row) && !empty($row['_id']) ? $row['_id'] : '#' . $position;
+            $position++;
+            if ($type === 'rating' || $type === 'quick_view') {
+                $rows[$index]['_part_settings'] = self::classicPartSettings($settings, $type);
+            } elseif ($type === 'swatches') {
+                $own = array_filter((array) Arr::get($saved, $savedKey, []), function ($key) {
+                    return strpos((string) $key, 'swatch_') === 0;
+                }, ARRAY_FILTER_USE_KEY);
+                $rows[$index] = $own ? array_merge($row, $own) : array_merge($row, $swatchSettings);
+            }
+        }
+
+        return $rows;
+    }
+
+    /** A Rating or Quick View row of Classic's card, through core's block with the row's settings. */
+    public static function renderClassicRow($cardRender, array $row)
+    {
+        if (!self::cardSettingsAvailable() || !is_array(Arr::get($row, '_part_settings'))) {
+            return '';
+        }
+
+        return $cardRender->renderCardPart((string) Arr::get($row, 'element_type', ''), $row['_part_settings']);
+    }
+
+    /** A Card Elements list for each layout, in the Card Layout section, holding its own parts. */
+    public static function registerLayoutElementsControls($widget)
+    {
+        if (!self::cardSettingsAvailable()) {
             return;
         }
-        $condition = ['card_layout!' => ''];
-        $switch = function ($name, $label) use ($widget) {
-            $widget->add_control($name, [
-                'label'        => $label,
-                'type'         => Controls_Manager::SWITCHER,
-                'label_on'     => esc_html__('Show', 'fluent-cart-elementor-blocks'),
-                'label_off'    => esc_html__('Hide', 'fluent-cart-elementor-blocks'),
-                'return_value' => 'yes',
-                'default'      => 'yes',
+        foreach (array_keys(ProductCardLayoutPresets::all()) as $layout) {
+            $parts = ProductCardLayoutPresets::cardParts($layout);
+            if (!$parts) {
+                continue;
+            }
+            $repeater = new Repeater();
+            $repeater->add_control('element_type', [
+                'label'   => esc_html__('Element', 'fluent-cart-elementor-blocks'),
+                'type'    => Controls_Manager::SELECT,
+                'default' => $parts[0],
+                'options' => array_intersect_key(array_replace(array_flip($parts), self::partLabels()), array_flip($parts)),
             ]);
-        };
-        $sections = [
-            'layout_card_swatches_section' => [esc_html__('Swatches', 'fluent-cart-elementor-blocks'), ['layout_show_swatches' => esc_html__('Show Swatches', 'fluent-cart-elementor-blocks')]],
-            'layout_card_badge_section'    => [esc_html__('Badge', 'fluent-cart-elementor-blocks'), array_filter([
-                'layout_show_sale_badge'     => esc_html__('Show Sale Badge', 'fluent-cart-elementor-blocks'),
-                'layout_show_sold_out_badge' => $withSoldOut ? esc_html__('Show Sold Out Badge', 'fluent-cart-elementor-blocks') : '',
-            ])],
-            'layout_card_rating_section'   => [esc_html__('Product Rating', 'fluent-cart-elementor-blocks'), ['layout_show_rating' => esc_html__('Show Rating', 'fluent-cart-elementor-blocks')]],
+            $widget->add_control('layout_elements_' . $layout, [
+                'label'       => esc_html__('Card Elements', 'fluent-cart-elementor-blocks'),
+                'type'        => Controls_Manager::REPEATER,
+                'fields'      => $repeater->get_controls(),
+                'default'     => array_map(function ($part) {
+                    return ['element_type' => $part];
+                }, $parts),
+                'title_field' => self::elementTitleField(),
+                'description' => esc_html__('Each element moves within its own area of the card. Empty shows them all.', 'fluent-cart-elementor-blocks'),
+                'condition'   => ['card_layout' => $layout],
+            ]);
+        }
+    }
+
+    /**
+     * Swatches, Product Rating and Quick View sections in the Content tab, with each layout's own
+     * settings and, for the parts in $classicParts, Classic's. Classic's swatches are the add-on's
+     * own swatch settings ($classicSwatchSelector), since its card draws them with the add-on renderer.
+     */
+    public static function registerPartSections($widget, array $classicParts = [], $classicSwatchSelector = '')
+    {
+        if (!self::cardSettingsAvailable()) {
+            return;
+        }
+        $titles = [
+            'swatches'   => esc_html__('Swatches', 'fluent-cart-elementor-blocks'),
+            'rating'     => esc_html__('Product Rating', 'fluent-cart-elementor-blocks'),
+            'quick_view' => esc_html__('Quick View', 'fluent-cart-elementor-blocks'),
         ];
-        foreach ($sections as $id => $section) {
-            $widget->start_controls_section($id, ['label' => $section[0], 'tab' => Controls_Manager::TAB_CONTENT, 'condition' => $condition]);
-            foreach ($section[1] as $name => $label) {
-                $switch($name, $label);
+        foreach ($titles as $part => $title) {
+            $layouts = self::layoutsWith($part);
+            $withClassic = in_array($part, $classicParts, true) && ($part !== 'swatches' || ProductAttributeSwatches::swatchesAvailable());
+            if (!$layouts && !$withClassic) {
+                continue;
+            }
+            $widget->start_controls_section('layout_' . $part . '_section', [
+                'label'     => $title,
+                'tab'       => Controls_Manager::TAB_CONTENT,
+                'condition' => ['card_layout' => array_merge($withClassic ? [''] : [], $layouts)],
+            ]);
+            if ($withClassic && $part === 'swatches') {
+                ProductAttributeSwatches::registerSwatchControls($widget, ['card_layout' => ''], $classicSwatchSelector);
+            } elseif ($withClassic) {
+                self::registerPartControls($widget, $part, self::WIDGET_CARD, ['card_layout' => '']);
+            }
+            foreach ($layouts as $layout) {
+                self::registerPartControls($widget, $part, $layout, ['card_layout' => $layout]);
             }
             $widget->end_controls_section();
         }
     }
 
-    /** ProductCardRender's layout_options from the widget's layout card switches. */
-    public static function cardOptions(array $settings, $withSoldOut = true)
+    /** Style sections for Swatches, Product Rating and Quick View; the same for Classic and every layout. */
+    public static function registerPartStyleSections($widget)
     {
-        if (!self::cardOptionsAvailable()) {
-            return [];
+        if (!self::cardSettingsAvailable()) {
+            return;
         }
-        $isOn = function ($name) use ($settings) {
-            return Arr::get($settings, $name, 'yes') === 'yes';
-        };
-        $options = [
-            'swatches'   => $isOn('layout_show_swatches') ? null : false,
-            'sale_badge' => $isOn('layout_show_sale_badge'),
-            'rating'     => $isOn('layout_show_rating'),
+        $sections = [
+            'layout_swatches_style_section'   => [esc_html__('Swatches', 'fluent-cart-elementor-blocks'), [
+                ['swatches_typography', 'typography', esc_html__('Typography', 'fluent-cart-elementor-blocks'), '{{WRAPPER}} .fct-card-swatch'],
+                ['swatches_label_typography', 'typography', esc_html__('Label Typography', 'fluent-cart-elementor-blocks'), '{{WRAPPER}} .fct-card-swatch-heading'],
+                ['swatches_border', 'border', '', '{{WRAPPER}} .fct-card-swatch'],
+            ]],
+            'layout_rating_style_section'     => [esc_html__('Product Rating', 'fluent-cart-elementor-blocks'), [
+                ['rating_star_color', 'color', esc_html__('Star Color', 'fluent-cart-elementor-blocks'), '{{WRAPPER}} .fct-product-card-rating .fct-star-filled, {{WRAPPER}} .fct-product-card-rating .fct-star-half'],
+                ['rating_empty_star_color', 'color', esc_html__('Empty Star Color', 'fluent-cart-elementor-blocks'), '{{WRAPPER}} .fct-product-card-rating .fct-star:not(.fct-star-filled):not(.fct-star-half)'],
+                ['rating_count_typography', 'typography', esc_html__('Count Typography', 'fluent-cart-elementor-blocks'), '{{WRAPPER}} .fct-product-card-review-count'],
+            ]],
+            'layout_quick_view_style_section' => [esc_html__('Quick View', 'fluent-cart-elementor-blocks'), [
+                ['quick_view_typography', 'typography', esc_html__('Typography', 'fluent-cart-elementor-blocks'), '{{WRAPPER}} .fct-card-quick-view-button'],
+                ['quick_view_text_color', 'color', esc_html__('Text Color', 'fluent-cart-elementor-blocks'), '{{WRAPPER}} .fct-card-quick-view-button'],
+                ['quick_view_background', 'background-color', esc_html__('Background Color', 'fluent-cart-elementor-blocks'), '{{WRAPPER}} .fct-card-quick-view-button'],
+                ['quick_view_border', 'border', '', '{{WRAPPER}} .fct-card-quick-view-button'],
+            ]],
         ];
-        if ($withSoldOut) {
-            $options['sold_out_badge'] = $isOn('layout_show_sold_out_badge');
+        foreach ($sections as $id => $section) {
+            $widget->start_controls_section($id, ['label' => $section[0], 'tab' => Controls_Manager::TAB_STYLE]);
+            foreach ($section[1] as $control) {
+                list($name, $type, $label, $selector) = $control;
+                if ($type === 'typography') {
+                    $widget->add_group_control(Group_Control_Typography::get_type(), ['name' => $name, 'label' => $label, 'selector' => $selector]);
+                } elseif ($type === 'border') {
+                    $widget->add_group_control(Group_Control_Border::get_type(), ['name' => $name, 'selector' => $selector]);
+                } else {
+                    $widget->add_control($name, [
+                        'label'     => $label,
+                        'type'      => Controls_Manager::COLOR,
+                        'selectors' => [$selector => ($type === 'color' ? 'color' : 'background-color') . ': {{VALUE}};'],
+                    ]);
+                }
+            }
+            $widget->end_controls_section();
         }
-
-        // Swatches on keeps the layout's own swatch block, so only "off" is passed.
-        return array_filter($options, function ($value) {
-            return $value !== null;
-        });
     }
 
-    /** The same switches as [fluent_cart_related_products]'s layout_hide list. */
-    public static function hiddenParts(array $settings, $withSoldOut = true)
+    /**
+     * ProductCardRender's layout_options from the selected layout's own settings: its Card
+     * Elements, its badge copies ("layout_sale_badge_text"), and its Swatches, Rating and Quick View.
+     */
+    public static function cardOptions(array $settings, $withSoldOut = true)
     {
-        return implode(',', array_keys(array_filter(self::cardOptions($settings, $withSoldOut), function ($on) {
-            return $on === false;
-        })));
+        $layout = self::selected($settings);
+        if (!$layout || !self::cardOptionsAvailable()) {
+            return [];
+        }
+        $options = [];
+        $rows = Arr::get($settings, 'layout_elements_' . $layout);
+        if (is_array($rows) && $rows) {
+            $options['elements'] = array_values(array_filter(array_map(function ($row) {
+                return is_array($row) ? (string) Arr::get($row, 'element_type', '') : '';
+            }, $rows)));
+        }
+        foreach (self::BADGE_SETTINGS as $part => $map) {
+            if ($part === 'sold_out_badge' && !$withSoldOut) {
+                continue;
+            }
+            $toggle = 'layout_' . key($map);
+            if (Arr::get($settings, $toggle, 'yes') !== 'yes') {
+                $options[$part] = false;
+                continue;
+            }
+            $badge = [];
+            foreach (array_slice($map, 1, null, true) as $key => $attribute) {
+                if (array_key_exists('layout_' . $key, $settings)) {
+                    $badge[$attribute] = $attribute === 'show_percentage' ? $settings['layout_' . $key] === 'yes' : $settings['layout_' . $key];
+                }
+            }
+            if ($badge) {
+                $options[$part] = $badge;
+            }
+        }
+        foreach (array_keys(self::partSettings()) as $part) {
+            $values = self::partValues($settings, $part, $layout);
+            if ($values) {
+                $options[$part] = $values;
+            }
+        }
+
+        return $options;
+    }
+
+    /** Classic's own Product Rating or Quick View settings, for ProductCardRender::renderCardPart(). */
+    public static function classicPartSettings(array $settings, $part)
+    {
+        return self::partValues($settings, $part, self::WIDGET_CARD);
+    }
+
+    /** The Classic badge settings => the badge block's; the first is the Show switch. */
+    const BADGE_SETTINGS = [
+        'sale_badge'     => [
+            'show_sale_badge'      => null,
+            'sale_badge_text'      => 'badge_text',
+            'show_percentage'      => 'show_percentage',
+            'sale_percentage_text' => 'percentage_text',
+            'sale_price_source'    => 'price_source',
+            'sale_badge_style'     => 'badge_style',
+            'sale_badge_position'  => 'badge_position',
+        ],
+        'sold_out_badge' => [
+            'show_sold_out_badge'     => null,
+            'sold_out_badge_text'     => 'badge_text',
+            'sold_out_badge_style'    => 'badge_style',
+            'sold_out_badge_position' => 'badge_position',
+        ],
+    ];
+
+    /** The layouts whose card has this part. */
+    private static function layoutsWith($part)
+    {
+        return array_values(array_filter(array_keys(ProductCardLayoutPresets::all()), function ($layout) use ($part) {
+            return in_array($part, ProductCardLayoutPresets::cardParts($layout), true);
+        }));
+    }
+
+    private static function partKey($part, $name, $layout)
+    {
+        return 'layout_' . $part . '_' . $name . '_' . $layout;
+    }
+
+    /** One layout's (or Classic's) controls for a part, pre-filled with its own values. */
+    private static function registerPartControls($widget, $part, $layout, array $condition)
+    {
+        $values = ProductCardLayoutPresets::partAttributes($layout, $part);
+        foreach (self::partSettings()[$part] as $name => $entry) {
+            $control = $entry['control'] + ['condition' => $condition];
+            // Filled here, so reading saved settings on a render never queries the attribute groups.
+            if ($name === 'group_ids') {
+                $control['options'] = ProductAttributeSwatches::groupOptions();
+            }
+            if (isset($entry['attribute'])) {
+                $value = $values[$entry['attribute']] ?? $entry['default'];
+                if ($control['type'] === Controls_Manager::SWITCHER) {
+                    $value = $value ? 'yes' : '';
+                    $control += ['label_on' => esc_html__('Show', 'fluent-cart-elementor-blocks'), 'label_off' => esc_html__('Hide', 'fluent-cart-elementor-blocks'), 'return_value' => 'yes'];
+                }
+                $control['default'] = $value;
+            }
+            if (!empty($entry['onImage'])) {
+                $control['condition'][self::partKey($part, 'position', $layout)] = 'image';
+            }
+            $widget->add_control(self::partKey($part, $name, $layout), $control);
+        }
+    }
+
+    /** A part's saved settings for one layout (or Classic), as the block's own settings. */
+    private static function partValues(array $settings, $part, $layout)
+    {
+        $values = [];
+        foreach (self::partSettings()[$part] ?? [] as $name => $entry) {
+            $key = self::partKey($part, $name, $layout);
+            if (!isset($entry['attribute']) || !array_key_exists($key, $settings)) {
+                continue;
+            }
+            $values[$entry['attribute']] = $entry['control']['type'] === Controls_Manager::SWITCHER ? $settings[$key] === 'yes' : $settings[$key];
+        }
+
+        return $values;
+    }
+
+    /** Each part's settings: name => the block's attribute, the block's default, the control. */
+    private static function partSettings()
+    {
+        $counts = array_combine(range(1, 6), range(1, 6));
+
+        return [
+            'swatches'   => [
+                'advanced_heading'   => ['control' => ['label' => esc_html__('Advanced Variations', 'fluent-cart-elementor-blocks'), 'type' => Controls_Manager::HEADING]],
+                'advanced_enabled'   => ['attribute' => 'advanced_enabled', 'default' => true, 'control' => ['label' => esc_html__('Show Swatches', 'fluent-cart-elementor-blocks'), 'type' => Controls_Manager::SWITCHER, 'description' => esc_html__('Products with attributes such as Color and Size.', 'fluent-cart-elementor-blocks')]],
+                'group_ids'          => ['attribute' => 'group_ids', 'default' => [], 'control' => ['label' => esc_html__('Attributes', 'fluent-cart-elementor-blocks'), 'type' => Controls_Manager::SELECT2, 'multiple' => true, 'label_block' => true, 'description' => esc_html__('Empty shows every attribute; rows follow the order you pick.', 'fluent-cart-elementor-blocks')]],
+                'max_visible'        => ['attribute' => 'max_visible', 'default' => 3, 'control' => ['label' => esc_html__('Max Swatches', 'fluent-cart-elementor-blocks'), 'type' => Controls_Manager::SELECT, 'options' => $counts]],
+                'show_group_name'    => ['attribute' => 'show_group_name', 'default' => false, 'control' => ['label' => esc_html__('Attribute Label', 'fluent-cart-elementor-blocks'), 'type' => Controls_Manager::SWITCHER]],
+                'show_label'         => ['attribute' => 'show_label', 'default' => false, 'control' => ['label' => esc_html__('Selected Name', 'fluent-cart-elementor-blocks'), 'type' => Controls_Manager::SWITCHER]],
+                'simple_heading'     => ['control' => ['label' => esc_html__('Simple Variations', 'fluent-cart-elementor-blocks'), 'type' => Controls_Manager::HEADING, 'separator' => 'before']],
+                'simple_enabled'     => ['attribute' => 'simple_enabled', 'default' => true, 'control' => ['label' => esc_html__('Show Swatches', 'fluent-cart-elementor-blocks'), 'type' => Controls_Manager::SWITCHER, 'description' => esc_html__('Products with a plain list of variants, such as pack sizes.', 'fluent-cart-elementor-blocks')]],
+                'simple_max_visible' => ['attribute' => 'simple_max_visible', 'default' => 4, 'control' => ['label' => esc_html__('Max Options', 'fluent-cart-elementor-blocks'), 'type' => Controls_Manager::SELECT, 'options' => $counts]],
+                'simple_show_label'  => ['attribute' => 'simple_show_label', 'default' => false, 'control' => ['label' => esc_html__('Row Label', 'fluent-cart-elementor-blocks'), 'type' => Controls_Manager::SWITCHER]],
+                'simple_label'       => ['attribute' => 'simple_label', 'default' => '', 'control' => ['label' => esc_html__('Row Label Text', 'fluent-cart-elementor-blocks'), 'type' => Controls_Manager::TEXT, 'placeholder' => esc_html__('Option', 'fluent-cart-elementor-blocks')]],
+            ],
+            'rating'     => [
+                'min_review_count'   => ['attribute' => 'minReviewCount', 'default' => 0, 'control' => ['label' => esc_html__('Minimum Reviews', 'fluent-cart-elementor-blocks'), 'type' => Controls_Manager::NUMBER, 'min' => 0, 'description' => esc_html__('0 shows the stars on every product, even one with no reviews.', 'fluent-cart-elementor-blocks')]],
+                'min_average_rating' => ['attribute' => 'minAverageRating', 'default' => 0, 'control' => ['label' => esc_html__('Minimum Average Rating', 'fluent-cart-elementor-blocks'), 'type' => Controls_Manager::NUMBER, 'min' => 0, 'max' => 5, 'step' => 0.5]],
+            ],
+            'quick_view' => [
+                'position' => ['attribute' => 'position', 'default' => 'button', 'control' => ['label' => esc_html__('Position', 'fluent-cart-elementor-blocks'), 'type' => Controls_Manager::SELECT, 'options' => ['image' => esc_html__('On the Image', 'fluent-cart-elementor-blocks'), 'button' => esc_html__('Beside the Button', 'fluent-cart-elementor-blocks')], 'description' => esc_html__('Beside the button it is always shown, as an icon.', 'fluent-cart-elementor-blocks')]],
+                'show_on'  => ['attribute' => 'show_on', 'default' => 'always', 'onImage' => true, 'control' => ['label' => esc_html__('Show', 'fluent-cart-elementor-blocks'), 'type' => Controls_Manager::SELECT, 'options' => ['always' => esc_html__('Always', 'fluent-cart-elementor-blocks'), 'hover' => esc_html__('On Hover', 'fluent-cart-elementor-blocks')]]],
+                'display'  => ['attribute' => 'display', 'default' => 'icon', 'onImage' => true, 'control' => ['label' => esc_html__('Display', 'fluent-cart-elementor-blocks'), 'type' => Controls_Manager::SELECT, 'options' => ['icon' => esc_html__('Icon', 'fluent-cart-elementor-blocks'), 'icon_text' => esc_html__('Icon and Text', 'fluent-cart-elementor-blocks')]]],
+            ],
+        ];
     }
 
     /**

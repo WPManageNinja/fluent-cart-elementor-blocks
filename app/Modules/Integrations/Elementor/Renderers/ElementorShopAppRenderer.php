@@ -2,6 +2,8 @@
 
 namespace FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Renderers;
 
+use FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support\ProductCardLayouts;
+
 use FluentCart\App\Models\Product;
 use FluentCart\App\Modules\Templating\AssetLoader;
 use FluentCart\App\Services\Renderer\ProductCardLayoutPresets;
@@ -301,14 +303,16 @@ class ElementorShopAppRenderer extends ShopAppRenderer
                     $cardRender->renderPrices();
                     break;
                 case 'rating':
-                    // Core gates this on the store's Show Rating In Shop
-                    // setting and on the product having reviews, so an
-                    // unrated product simply draws nothing. Guarded on the
-                    // method so a core without the review feature does not
-                    // fatal here.
-                    if (method_exists($cardRender, 'renderStarRating')) {
+                    // With Classic's Product Rating settings, core's rating block; without (an older
+                    // core), the shop card's own rating, gated on the store's Show Rating In Shop.
+                    if (is_array(Arr::get($element, '_part_settings'))) {
+                        echo ProductCardLayouts::renderClassicRow($cardRender, $element); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- rendered block markup
+                    } elseif (method_exists($cardRender, 'renderStarRating')) {
                         $cardRender->renderStarRating();
                     }
+                    break;
+                case 'quick_view':
+                    echo ProductCardLayouts::renderClassicRow($cardRender, $element); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- rendered block markup
                     break;
                 case 'button':
                     $cardRender->showBuyButton();

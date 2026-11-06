@@ -17,6 +17,9 @@ use FluentCart\Framework\Support\Arr;
 
 class ShopAppWidget extends Widget_Base
 {
+    /** Parts of core's Classic layout this widget's own card can add, each with its own settings. */
+    const CLASSIC_PARTS = ['rating', 'swatches', 'quick_view'];
+
     public function get_name()
     {
         return 'fluent_cart_shop_app';
@@ -71,12 +74,12 @@ class ShopAppWidget extends Widget_Base
         $this->registerDefaultFilterControls();
         // Sold Out panel is gated on the shop's allow_out_of_stock filter — an
         // out-of-stock card only appears in the grid when that is on.
-        // A layout card brings core's own badges, so these settings show only for Custom.
-        $customCardOnly = ProductCardLayouts::available() ? ['card_layout' => ''] : [];
-        BadgeControls::registerBadgeContentControls($this, true, ['default_filter_allow_out_of_stock' => 'yes'], $customCardOnly);
-        ProductCardLayouts::registerLayoutCardSections($this);
+        // Sale and Sold Out badges, Swatches, Product Rating and Quick View, for Classic and every layout.
+        BadgeControls::registerBadgeSections($this, ['default_filter_allow_out_of_stock' => 'yes']);
+        ProductCardLayouts::registerPartSections($this, self::CLASSIC_PARTS, '{{WRAPPER}} .fct-card-swatch-rows');
         $this->registerStyleControls();
-        BadgeControls::registerBadgeStyleControls($this, true, ['default_filter_allow_out_of_stock' => 'yes'], $customCardOnly);
+        BadgeControls::registerBadgeStyleSections($this, ['default_filter_allow_out_of_stock' => 'yes']);
+        ProductCardLayouts::registerPartStyleSections($this);
     }
 
     private function registerContentControls()
@@ -247,11 +250,12 @@ class ShopAppWidget extends Widget_Base
                     'price'   => esc_html__('Price', 'fluent-cart-elementor-blocks'),
                     'rating'  => esc_html__('Rating', 'fluent-cart-elementor-blocks'),
                     'button'  => esc_html__('Button', 'fluent-cart-elementor-blocks'),
-                ] + ProductAttributeSwatches::cardElementOption(),
+                ] + ProductAttributeSwatches::cardElementOption() + ProductCardLayouts::classicElementOptions(),
             ]
         );
 
-        if (ProductAttributeSwatches::swatchesAvailable()) {
+        // Classic's swatch settings live in the Swatches section; a row saved with its own keeps them.
+        if (ProductAttributeSwatches::swatchesAvailable() && !ProductCardLayouts::cardSettingsAvailable()) {
             ProductAttributeSwatches::registerSwatchControls($repeater, ['element_type' => 'swatches'], '{{WRAPPER}} {{CURRENT_ITEM}}');
         }
 
@@ -261,16 +265,14 @@ class ShopAppWidget extends Widget_Base
                 'label'       => esc_html__('Card Elements', 'fluent-cart-elementor-blocks'),
                 'type'        => Controls_Manager::REPEATER,
                 'fields'      => $repeater->get_controls(),
-                'default'     => [
-                    ['element_type' => 'image'],
-                    ['element_type' => 'title'],
-                    ['element_type' => 'price'],
-                    ['element_type' => 'button'],
-                ],
-                'title_field' => '{{{ element_type.charAt(0).toUpperCase() + element_type.slice(1) }}}',
+                // A new widget starts as core's Classic layout; one saved before keeps its own list.
+                'default'     => ProductCardLayouts::classicElementsDefault(ProductCardWidget::OLD_CARD_ELEMENTS),
+                'title_field' => ProductCardLayouts::elementTitleField(),
                 'condition'   => $cardElementsCondition,
             ]
         );
+
+        ProductCardLayouts::registerLayoutElementsControls($this);
 
         $this->end_controls_section();
     }
@@ -983,13 +985,8 @@ class ShopAppWidget extends Widget_Base
             $shortcodeAtts['card_layout'] = $cardLayout;
         }
 
-        // Extract card layout elements from the repeater
-        $cardElements = $settings['card_elements'] ?? [
-            ['element_type' => 'image'],
-            ['element_type' => 'title'],
-            ['element_type' => 'price'],
-            ['element_type' => 'button'],
-        ];
+        // Classic's rows carry their own part settings, so AJAX pages draw them the same.
+        $cardElements = ProductCardLayouts::withClassicPartSettings($this, ProductCardLayouts::classicElements($this, $settings, ProductCardWidget::OLD_CARD_ELEMENTS), $settings);
 
         // Extract shop layout sections from the repeater
         $shopLayout = $settings['shop_layout'] ?? [
