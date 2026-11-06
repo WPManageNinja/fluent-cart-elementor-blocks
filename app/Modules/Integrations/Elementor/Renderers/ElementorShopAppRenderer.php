@@ -108,6 +108,9 @@ class ElementorShopAppRenderer extends ShopAppRenderer
             ProductCardLayoutPresets::enqueueAssets();
             $wrapperAttributes['data-card-layout'] = Arr::get($this->config, 'card_layout');
             $wrapperAttributes['data-price-format'] = $this->priceFormat;
+            if (Arr::get($this->config, 'layout_options')) {
+                $wrapperAttributes['data-layout-options'] = wp_json_encode(Arr::get($this->config, 'layout_options'));
+            }
         }
         ?>
         <div class="fct-products-wrapper" data-fluent-cart-shop-app data-fluent-cart-product-wrapper role="main"

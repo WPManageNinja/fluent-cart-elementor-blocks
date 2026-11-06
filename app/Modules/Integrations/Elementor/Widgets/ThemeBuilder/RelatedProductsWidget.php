@@ -59,15 +59,15 @@ class RelatedProductsWidget extends Widget_Base
         );
 
         $this->registerProductSourceControls();
-        // A layout card brings core's own swatches and badges, so those settings show only for Custom.
-        $customCardOnly = ProductCardLayouts::registerControl($this, esc_html__('A FluentCart layout builds the whole card, with its own badges, swatches and Quick View. Standard keeps the related products card.', 'fluent-cart-elementor-blocks'), esc_html__('Standard', 'fluent-cart-elementor-blocks'));
-        ProductCardLayouts::registerMasonryGridControl($this, $customCardOnly);
+        // A layout card brings core's own swatches and badges, so the Classic card's settings show only for Classic.
+        $customCardOnly = ProductCardLayouts::registerControl($this);
 
         $this->end_controls_section();
 
         $this->registerSwatchControls($customCardOnly);
 
         BadgeControls::registerBadgeContentControls($this, false, [], $customCardOnly);
+        ProductCardLayouts::registerLayoutCardSections($this);
 
         $this->registerHeadingStyleControls();
         $this->registerGridStyleControls();
@@ -543,6 +543,10 @@ class RelatedProductsWidget extends Widget_Base
         if ($cardLayout) {
             // Core renders the layout cards with their own badges and swatches; the widget adds neither.
             $shortcodeAtts .= ' card_layout="' . esc_attr($cardLayout) . '"';
+            $hidden = ProductCardLayouts::hiddenParts($settings);
+            if ($hidden !== '') {
+                $shortcodeAtts .= ' layout_hide="' . esc_attr($hidden) . '"';
+            }
         }
 
         // Sale badge overlay via core's before/after_image_block hooks (fire
@@ -581,6 +585,6 @@ class RelatedProductsWidget extends Widget_Base
             return;
         }
 
-        echo '<div class="fluentcart-related-products"' . ProductCardLayouts::masonryGridAttribute($settings) . '>' . $content . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- the attribute is a fixed string
+        echo '<div class="fluentcart-related-products">' . $content . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
     }
 }

@@ -17,6 +17,8 @@ class ElementorShopAppHandler extends ShopAppHandler
 
     protected $badgeSettings = [];
 
+    protected $layoutOptions = [];
+
     public function setCardElements(array $cardElements)
     {
         $this->cardElements = $cardElements;
@@ -31,6 +33,12 @@ class ElementorShopAppHandler extends ShopAppHandler
     public function setBadgeSettings(array $badgeSettings)
     {
         $this->badgeSettings = $badgeSettings;
+    }
+
+    /** A layout card's switches (ProductCardLayouts::cardOptions()), for every page of the grid. */
+    public function setLayoutOptions(array $layoutOptions)
+    {
+        $this->layoutOptions = $layoutOptions;
     }
 
     public function renderView()
@@ -161,6 +169,7 @@ class ElementorShopAppHandler extends ShopAppHandler
         $config['price_format'] = $this->shortcodeAttributes['price_format'];
         // Core's handler already reset an unknown layout to ''.
         $config['card_layout'] = Arr::get($this->shortcodeAttributes, 'card_layout', '');
+        $config['layout_options'] = $this->layoutOptions;
         $config['enable_wildcard_filter'] = $this->shortcodeAttributes['enable_wildcard_filter'];
         $config['enable_wildcard_for_post_content'] = $this->shortcodeAttributes['enable_wildcard_for_post_content'];
         return $config;

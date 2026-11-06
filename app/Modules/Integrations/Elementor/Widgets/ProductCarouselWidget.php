@@ -122,6 +122,7 @@ class ProductCarouselWidget extends Widget_Base
         // A layout card brings core's own badges, so these settings show only for Custom.
         $customCardOnly = ProductCardLayouts::available() ? ['card_layout' => ''] : [];
         BadgeControls::registerBadgeContentControls($this, false, [], $customCardOnly);
+        ProductCardLayouts::registerLayoutCardSections($this);
         $this->registerStyleControls();
         BadgeControls::registerBadgeStyleControls($this, false, [], $customCardOnly);
     }
@@ -589,8 +590,10 @@ class ProductCarouselWidget extends Widget_Base
 
         $priceFormat = $settings['price_format'] ?? 'starts_from';
         $cardLayout = ProductCardLayouts::selected($settings);
+        $layoutOptions = [];
         if ($cardLayout) {
             ProductCardLayouts::prepareCards($products);
+            $layoutOptions = ProductCardLayouts::cardOptions($settings);
         }
 
         if (!$cardLayout && in_array('swatches', array_column((array) $cardElements, 'element_type'), true)) {
@@ -609,7 +612,7 @@ class ProductCarouselWidget extends Widget_Base
         }
 
         // Render carousel
-        $this->renderCarousel($products, $carouselSettings, $cardElements, $priceFormat, $cardLayout);
+        $this->renderCarousel($products, $carouselSettings, $cardElements, $priceFormat, $cardLayout, $layoutOptions);
 
         BadgeRenderer::removeCardBadgeHooks($badgeHooks);
     }
@@ -684,7 +687,7 @@ class ProductCarouselWidget extends Widget_Base
         <?php
     }
 
-    private function renderCarousel($products, array $carouselSettings, array $cardElements, string $priceFormat, string $cardLayout = '')
+    private function renderCarousel($products, array $carouselSettings, array $cardElements, string $priceFormat, string $cardLayout = '', array $layoutOptions = [])
     {
         $arrowsSize = $carouselSettings['arrowsSize'] ?? 'md';
         $paginationType = $carouselSettings['paginationType'] ?? 'dots';
@@ -716,7 +719,7 @@ class ProductCarouselWidget extends Widget_Base
                         <?php foreach ($products as $product) : ?>
                             <div class="swiper-slide">
                                 <?php if ($cardLayout) : ?>
-                                    <?php ProductCardLayouts::renderCard($product, $cardLayout, $priceFormat); ?>
+                                    <?php ProductCardLayouts::renderCard($product, $cardLayout, $priceFormat, $layoutOptions); ?>
                                 <?php else : ?>
                                 <article class="fct-product-card" data-fct-product-card>
                                     <?php $this->renderCardElements($product, $cardElements, $priceFormat); ?>

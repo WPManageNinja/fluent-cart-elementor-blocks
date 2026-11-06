@@ -63,6 +63,7 @@ class ProductCardWidget extends Widget_Base
         // A layout card brings core's own badges, so these settings show only for Custom.
         $customCardOnly = ProductCardLayouts::available() ? ['card_layout' => ''] : [];
         BadgeControls::registerBadgeContentControls($this, false, [], $customCardOnly);
+        ProductCardLayouts::registerLayoutCardSections($this);
         $this->registerStyleControls();
         BadgeControls::registerBadgeStyleControls($this, false, [], $customCardOnly);
     }
@@ -719,7 +720,7 @@ class ProductCardWidget extends Widget_Base
         $cardLayout = ProductCardLayouts::selected($settings);
         if ($cardLayout) {
             ProductCardLayouts::prepareCards([$product]);
-            ProductCardLayouts::renderCard($product, $cardLayout, $priceFormat);
+            ProductCardLayouts::renderCard($product, $cardLayout, $priceFormat, ProductCardLayouts::cardOptions($settings));
             return;
         }
 
