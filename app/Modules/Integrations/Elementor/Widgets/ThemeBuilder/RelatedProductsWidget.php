@@ -229,8 +229,8 @@ class RelatedProductsWidget extends Widget_Base
             ]
         );
 
-        // Core's list grid is driven by its own CSS variable — set that
-        // instead of fighting its grid-template rule.
+        // Core prints --fct-product-list-columns inline on the list, so a rule can't override it.
+        // Set the grid itself, and the count core's card layouts read.
         $this->add_responsive_control(
             'grid_columns',
             [
@@ -240,7 +240,7 @@ class RelatedProductsWidget extends Widget_Base
                     'px' => ['min' => 1, 'max' => 6, 'step' => 1],
                 ],
                 'selectors'  => [
-                    '{{WRAPPER}} .fct-product-list' => '--fct-product-list-columns: {{SIZE}};',
+                    '{{WRAPPER}} .fct-product-list' => 'grid-template-columns: repeat({{SIZE}}, 1fr); --fct-layout-columns: {{SIZE}};',
                 ],
             ]
         );
