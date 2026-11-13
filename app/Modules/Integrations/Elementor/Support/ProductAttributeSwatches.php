@@ -200,6 +200,21 @@ class ProductAttributeSwatches
             ]
         );
 
+        $host->add_control(
+            'swatch_selected_position',
+            [
+                'label'       => esc_html__('Where It Appears', 'fluent-cart-elementor-blocks'),
+                'type'        => Controls_Manager::SELECT,
+                'default'     => 'name',
+                'options'     => [
+                    'name'  => esc_html__('After the Label', 'fluent-cart-elementor-blocks'),
+                    'below' => esc_html__('Below the Options', 'fluent-cart-elementor-blocks'),
+                ],
+                // Attribute rows are not drawn while this tab's switch is off, so the position does nothing then.
+                'condition'   => array_merge($advancedOn, ['swatch_show_label' => 'yes']),
+            ]
+        );
+
         $host->end_controls_tab();
 
         $host->start_controls_tab('swatch_tab_list', ['label' => esc_html__('List Products', 'fluent-cart-elementor-blocks'), 'condition' => $condition]);
@@ -272,6 +287,51 @@ class ProductAttributeSwatches
                 'placeholder' => esc_html__('Option', 'fluent-cart-elementor-blocks'),
                 'description' => esc_html__('Names the row of option names, e.g. Plan or Pack.', 'fluent-cart-elementor-blocks'),
                 'condition'   => array_merge($simpleOn, ['swatch_simple_show_label' => 'yes']),
+            ]
+        );
+
+        // Left on Same as Attribute Products, list products follow the attribute tab's switch, so a page saved
+        // before this setting looks the same. A select, not a switch, because a switch cannot be unset.
+        $host->add_control(
+            'swatch_simple_show_selected',
+            [
+                'label'     => esc_html__('Show the Selected Choice', 'fluent-cart-elementor-blocks'),
+                'type'      => Controls_Manager::SELECT,
+                'default'   => '',
+                'options'   => [
+                    ''    => esc_html__('Same as Attribute Products', 'fluent-cart-elementor-blocks'),
+                    'yes' => esc_html__('Show', 'fluent-cart-elementor-blocks'),
+                    'no'  => esc_html__('Hide', 'fluent-cart-elementor-blocks'),
+                ],
+                'condition' => $simpleOn,
+            ]
+        );
+
+        // List products show the selected choice when their own select says Show, or is left on Same as
+        // Attribute Products while that tab shows it. A plain condition cannot say "or", so it becomes terms.
+        $positionTerms = [];
+        foreach ($simpleOn as $key => $value) {
+            $positionTerms[] = ['name' => $key, 'operator' => '==', 'value' => $value];
+        }
+        $positionTerms[] = ['relation' => 'or', 'terms' => [
+            ['name' => 'swatch_simple_show_selected', 'operator' => '==', 'value' => 'yes'],
+            ['relation' => 'and', 'terms' => [
+                ['name' => 'swatch_simple_show_selected', 'operator' => '==', 'value' => ''],
+                ['name' => 'swatch_show_label', 'operator' => '==', 'value' => 'yes'],
+            ]],
+        ]];
+
+        $host->add_control(
+            'swatch_simple_selected_position',
+            [
+                'label'      => esc_html__('Where It Appears', 'fluent-cart-elementor-blocks'),
+                'type'       => Controls_Manager::SELECT,
+                'default'    => 'name',
+                'options'     => [
+                    'name'  => esc_html__('After the Label', 'fluent-cart-elementor-blocks'),
+                    'below' => esc_html__('Below the Options', 'fluent-cart-elementor-blocks'),
+                ],
+                'conditions' => ['relation' => 'and', 'terms' => $positionTerms],
             ]
         );
 
@@ -362,7 +422,7 @@ class ProductAttributeSwatches
         $soldOut = Arr::get($settings, 'swatch_sold_out_display');
 
         // Widgets saved before these switches existed have no value; they stay on, as Gutenberg defaults them.
-        return ProductCardSwatchesRenderer::render($product, [
+        $swatchSettings = [
             'group_ids'          => self::groupIds(Arr::get($settings, 'swatch_group_ids', [])),
             // Show All is 0 in the swatches block, whatever the number says.
             'max_visible'        => Arr::get($settings, 'swatch_max_visible_all') === 'yes' ? 0 : max(1, min(12, (int) ($maxVisible ?: 3))),
@@ -375,6 +435,15 @@ class ProductAttributeSwatches
             'simple_label'       => sanitize_text_field((string) Arr::get($settings, 'swatch_simple_label', '')),
             // An unknown value keeps the swatches as before; core ignores it too.
             'sold_out_display'   => in_array($soldOut, ['normal', 'cross', 'hide'], true) ? $soldOut : 'normal',
-        ], 'class="' . esc_attr($class) . '"');
+            'selected_position'        => Arr::get($settings, 'swatch_selected_position') === 'below' ? 'below' : 'name',
+            'simple_selected_position' => Arr::get($settings, 'swatch_simple_selected_position') === 'below' ? 'below' : 'name',
+        ];
+        // Left on Same as Attribute Products, core makes list products follow the attribute tab's switch.
+        $ownSelected = Arr::get($settings, 'swatch_simple_show_selected');
+        if ($ownSelected === 'yes' || $ownSelected === 'no') {
+            $swatchSettings['simple_show_selected'] = $ownSelected === 'yes';
+        }
+
+        return ProductCardSwatchesRenderer::render($product, $swatchSettings, 'class="' . esc_attr($class) . '"');
     }
 }
