@@ -153,12 +153,25 @@ class ProductAttributeSwatches
         $host->add_control(
             'swatch_max_visible',
             [
-                'label'      => esc_html__('Max Swatches', 'fluent-cart-elementor-blocks'),
+                'label'      => esc_html__('Show Up To', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::SLIDER,
                 'size_units' => [''],
-                'range'      => ['' => ['min' => 1, 'max' => 6, 'step' => 1]],
+                'range'      => ['' => ['min' => 1, 'max' => 12, 'step' => 1]],
+                'description' => esc_html__('Extras show as "+2", "+3"…', 'fluent-cart-elementor-blocks'),
                 'default'    => ['size' => 3, 'unit' => ''],
-                'condition'  => $advancedOn,
+                'condition'  => array_merge($advancedOn, ['swatch_max_visible_all' => '']),
+            ]
+        );
+
+        $host->add_control(
+            'swatch_max_visible_all',
+            [
+                'label'        => esc_html__('Show All', 'fluent-cart-elementor-blocks'),
+                'description'  => esc_html__('Every option shows on the card.', 'fluent-cart-elementor-blocks'),
+                'type'         => Controls_Manager::SWITCHER,
+                'return_value' => 'yes',
+                'default'      => '',
+                'condition'    => $advancedOn,
             ]
         );
 
@@ -216,12 +229,25 @@ class ProductAttributeSwatches
         $host->add_control(
             'swatch_simple_max_visible',
             [
-                'label'      => esc_html__('Max Options', 'fluent-cart-elementor-blocks'),
+                'label'      => esc_html__('Show Up To', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::SLIDER,
                 'size_units' => [''],
-                'range'      => ['' => ['min' => 1, 'max' => 6, 'step' => 1]],
+                'range'      => ['' => ['min' => 1, 'max' => 12, 'step' => 1]],
+                'description' => esc_html__('Extras show as "+2", "+3"…', 'fluent-cart-elementor-blocks'),
                 'default'    => ['size' => 4, 'unit' => ''],
-                'condition'  => $simpleOn,
+                'condition'  => array_merge($simpleOn, ['swatch_simple_max_visible_all' => '']),
+            ]
+        );
+
+        $host->add_control(
+            'swatch_simple_max_visible_all',
+            [
+                'label'        => esc_html__('Show All', 'fluent-cart-elementor-blocks'),
+                'description'  => esc_html__('Every option shows on the card.', 'fluent-cart-elementor-blocks'),
+                'type'         => Controls_Manager::SWITCHER,
+                'return_value' => 'yes',
+                'default'      => '',
+                'condition'    => $simpleOn,
             ]
         );
 
@@ -317,12 +343,13 @@ class ProductAttributeSwatches
         // Widgets saved before these switches existed have no value; they stay on, as Gutenberg defaults them.
         return ProductCardSwatchesRenderer::render($product, [
             'group_ids'          => self::groupIds(Arr::get($settings, 'swatch_group_ids', [])),
-            'max_visible'        => max(1, min(6, (int) ($maxVisible ?: 3))),
+            // Show All is 0 in the swatches block, whatever the number says.
+            'max_visible'        => Arr::get($settings, 'swatch_max_visible_all') === 'yes' ? 0 : max(1, min(12, (int) ($maxVisible ?: 3))),
             'show_label'         => Arr::get($settings, 'swatch_show_label') === 'yes',
             'show_group_name'    => Arr::get($settings, 'swatch_show_group_name') === 'yes',
             'advanced_enabled'   => Arr::get($settings, 'swatch_advanced_enabled', 'yes') === 'yes',
             'simple_enabled'     => Arr::get($settings, 'swatch_simple_enabled', 'yes') === 'yes',
-            'simple_max_visible' => max(1, min(6, (int) ($simpleMaxVisible ?: 4))),
+            'simple_max_visible' => Arr::get($settings, 'swatch_simple_max_visible_all') === 'yes' ? 0 : max(1, min(12, (int) ($simpleMaxVisible ?: 4))),
             'simple_show_label'  => Arr::get($settings, 'swatch_simple_show_label') === 'yes',
             'simple_label'       => sanitize_text_field((string) Arr::get($settings, 'swatch_simple_label', '')),
         ], 'class="' . esc_attr($class) . '"');
