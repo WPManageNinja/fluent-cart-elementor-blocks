@@ -68,6 +68,19 @@ class RelatedProductsWidget extends Widget_Base
         $customCardOnly = ProductCardLayouts::registerControl($this);
         ProductCardLayouts::registerMasonryControl($this);
         $this->registerCardElementsControls($customCardOnly);
+        $this->add_control(
+            'price_format',
+            [
+                'label'     => esc_html__('Price Format', 'fluent-cart-elementor-blocks'),
+                'type'      => Controls_Manager::SELECT,
+                'default'   => 'starts_from',
+                'options'   => [
+                    'starts_from' => esc_html__('Starts From', 'fluent-cart-elementor-blocks'),
+                    'range'       => esc_html__('Range', 'fluent-cart-elementor-blocks'),
+                ],
+                'condition' => ['card_layout' => array_values(array_diff(array_keys(ProductCardLayouts::options()), ['']))],
+            ]
+        );
 
         $this->end_controls_section();
 
@@ -600,7 +613,7 @@ class RelatedProductsWidget extends Widget_Base
             // Core renders the layout cards with their own badges and swatches; the widget adds neither.
             ProductCardLayouts::prepareCards($products);
             $listConfig['card_layout'] = $cardLayout;
-            $listConfig['layout_price_format'] = 'starts_from';
+            $listConfig['layout_price_format'] = Arr::get($settings, 'price_format') === 'range' ? 'range' : 'starts_from';
             $listConfig['layout_options'] = ProductCardLayouts::cardOptions($settings, true, true);
         }
 
