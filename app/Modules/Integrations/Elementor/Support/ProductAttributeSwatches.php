@@ -206,10 +206,7 @@ class ProductAttributeSwatches
                 'label'       => esc_html__('Where It Appears', 'fluent-cart-elementor-blocks'),
                 'type'        => Controls_Manager::SELECT,
                 'default'     => 'name',
-                'options'     => [
-                    'name'  => esc_html__('After the Label', 'fluent-cart-elementor-blocks'),
-                    'below' => esc_html__('Below the Options', 'fluent-cart-elementor-blocks'),
-                ],
+                'options'     => self::positionOptions(),
                 // Attribute rows are not drawn while this tab's switch is off, so the position does nothing then.
                 'condition'   => array_merge($advancedOn, ['swatch_show_label' => 'yes']),
             ]
@@ -284,8 +281,12 @@ class ProductAttributeSwatches
                 'label'       => esc_html__('Label Name', 'fluent-cart-elementor-blocks'),
                 'type'        => Controls_Manager::TEXT,
                 'default'     => '',
+                // Quick picks under the field (swatch-label-chips.js), as in the Gutenberg label name.
+                'classes'     => 'fct-swatch-label-chips',
+                'label_block' => true,
+                'ai'          => ['active' => false],
                 'placeholder' => esc_html__('Option', 'fluent-cart-elementor-blocks'),
-                'description' => esc_html__('Names the row of option names, e.g. Plan or Pack.', 'fluent-cart-elementor-blocks'),
+                'description' => esc_html__('Empty shows "Option".', 'fluent-cart-elementor-blocks'),
                 'condition'   => array_merge($simpleOn, ['swatch_simple_show_label' => 'yes']),
             ]
         );
@@ -327,10 +328,7 @@ class ProductAttributeSwatches
                 'label'      => esc_html__('Where It Appears', 'fluent-cart-elementor-blocks'),
                 'type'       => Controls_Manager::SELECT,
                 'default'    => 'name',
-                'options'     => [
-                    'name'  => esc_html__('After the Label', 'fluent-cart-elementor-blocks'),
-                    'below' => esc_html__('Below the Options', 'fluent-cart-elementor-blocks'),
-                ],
+                'options'     => self::positionOptions(),
                 'conditions' => ['relation' => 'and', 'terms' => $positionTerms],
             ]
         );
@@ -348,11 +346,7 @@ class ProductAttributeSwatches
                 'toggle'      => false,
                 'default'     => 'normal',
                 'separator'   => 'before',
-                'options'     => [
-                    'normal' => ['title' => esc_html__('No Change', 'fluent-cart-elementor-blocks'), 'icon' => 'eicon-check'],
-                    'cross'  => ['title' => esc_html__('Cross Out', 'fluent-cart-elementor-blocks'), 'icon' => 'eicon-close'],
-                    'hide'   => ['title' => esc_html__('Hide', 'fluent-cart-elementor-blocks'), 'icon' => 'eicon-minus-circle'],
-                ],
+                'options'     => self::soldOutOptions(),
                 'description' => esc_html__('No Change, Cross Out or Hide, for both attribute and simple variations.', 'fluent-cart-elementor-blocks'),
                 'condition'   => $condition,
             ]
@@ -383,6 +377,25 @@ class ProductAttributeSwatches
                 'condition'  => $condition,
             ]
         );
+    }
+
+    /** Where the selected choice appears; the layout cards and Classic offer the same two places. */
+    public static function positionOptions()
+    {
+        return [
+            'name'  => esc_html__('After the Label', 'fluent-cart-elementor-blocks'),
+            'below' => esc_html__('Below the Options', 'fluent-cart-elementor-blocks'),
+        ];
+    }
+
+    /** The sold-out choices, as a segmented control; the layout cards and Classic offer the same three. */
+    public static function soldOutOptions()
+    {
+        return [
+            'normal' => ['title' => esc_html__('No Change', 'fluent-cart-elementor-blocks'), 'icon' => 'eicon-check'],
+            'cross'  => ['title' => esc_html__('Cross Out', 'fluent-cart-elementor-blocks'), 'icon' => 'eicon-close'],
+            'hide'   => ['title' => esc_html__('Hide', 'fluent-cart-elementor-blocks'), 'icon' => 'eicon-minus-circle'],
+        ];
     }
 
     public static function enqueueAssets()
