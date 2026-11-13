@@ -25,6 +25,9 @@ class ProductCardLayouts
     /** The widget's own card: '' as saved before, or a saved core 'classic'. */
     const WIDGET_CARD = 'classic';
 
+    /** The layout whose cards are already staggered. */
+    const MASONRY_LAYOUT = 'masonry';
+
     public static function available()
     {
         return class_exists(ProductCardLayoutPresets::class)
@@ -72,6 +75,31 @@ class ProductCardLayouts
         );
 
         return ['card_layout' => ''];
+    }
+
+    /**
+     * The Masonry switch, for the widgets that draw their cards in a grid (as Gutenberg shows it only in grid
+     * loops). It staggers a layout's cards; the Masonry layout is already staggered and Classic has no such look.
+     */
+    public static function registerMasonryControl($widget)
+    {
+        if (!self::available()) {
+            return;
+        }
+
+        $widget->add_control(
+            'layout_masonry',
+            [
+                'label'        => esc_html__('Masonry', 'fluent-cart-elementor-blocks'),
+                'type'         => Controls_Manager::SWITCHER,
+                'label_on'     => esc_html__('Yes', 'fluent-cart-elementor-blocks'),
+                'label_off'    => esc_html__('No', 'fluent-cart-elementor-blocks'),
+                'return_value' => 'yes',
+                'default'      => '',
+                'description'  => esc_html__('Staggers the cards, each image keeping its own height.', 'fluent-cart-elementor-blocks'),
+                'condition'    => ['card_layout' => array_values(array_diff(array_keys(self::options()), ['', self::MASONRY_LAYOUT]))],
+            ]
+        );
     }
 
     /** Before a loop of layout cards: their styles, and the products their swatches batch over. */
@@ -344,13 +372,17 @@ class ProductCardLayouts
      * ProductCardRender's layout_options from the selected layout's own settings: its Card
      * Elements, its badge copies ("layout_sale_badge_text"), and its Swatches, Rating and Quick View.
      */
-    public static function cardOptions(array $settings, $withSoldOut = true)
+    public static function cardOptions(array $settings, $withSoldOut = true, $inGrid = false)
     {
         $layout = self::selected($settings);
         if (!$layout || !self::cardOptionsAvailable()) {
             return [];
         }
         $options = [];
+        // Only the widgets with a Masonry switch pass $inGrid; a value left in a Carousel or Product Card is ignored.
+        if ($inGrid && $layout !== self::MASONRY_LAYOUT && Arr::get($settings, 'layout_masonry') === 'yes') {
+            $options['masonry'] = true;
+        }
         $rows = Arr::get($settings, 'layout_elements_' . $layout);
         if (is_array($rows) && $rows) {
             $options['elements'] = array_values(array_filter(array_map(function ($row) {

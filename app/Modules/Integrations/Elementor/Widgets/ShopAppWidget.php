@@ -234,6 +234,7 @@ class ShopAppWidget extends Widget_Base
         );
 
         $cardElementsCondition = ProductCardLayouts::registerControl($this);
+        ProductCardLayouts::registerMasonryControl($this);
 
         $repeater = new Repeater();
 
@@ -1047,7 +1048,7 @@ class ShopAppWidget extends Widget_Base
         $handler->setShopLayout($shopLayout);
         $handler->setBadgeSettings($badgeSettings);
         if ($cardLayout) {
-            $handler->setLayoutOptions(ProductCardLayouts::cardOptions($settings));
+            $handler->setLayoutOptions(ProductCardLayouts::cardOptions($settings, true, true));
         }
         $output  = $handler->handelShortcodeCall($shortcodeAtts);
 
