@@ -185,6 +185,10 @@ class ElementorShopAppRenderer extends ShopAppRenderer
      */
     private function renderViewSwitcherOnly()
     {
+        // A grid-only layout (Floating) has no Grid/List buttons, so without filters there is nothing to show here.
+        if ($this->isGridOnly && !$this->isFilterEnabled) {
+            return;
+        }
         ?>
         <div class="fct-shop-view-switcher-wrap">
             <?php $this->renderViewSwitcherButton(); ?>
