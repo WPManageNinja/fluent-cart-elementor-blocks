@@ -66,6 +66,7 @@ class RelatedProductsWidget extends Widget_Base
         $this->registerProductSourceControls();
         // A layout card brings core's own swatches, so this widget's Swatches settings show only for Classic.
         $customCardOnly = ProductCardLayouts::registerControl($this);
+        ProductCardLayouts::registerMasonryControl($this);
         $this->registerCardElementsControls($customCardOnly);
 
         $this->end_controls_section();
@@ -600,7 +601,7 @@ class RelatedProductsWidget extends Widget_Base
             ProductCardLayouts::prepareCards($products);
             $listConfig['card_layout'] = $cardLayout;
             $listConfig['layout_price_format'] = 'starts_from';
-            $listConfig['layout_options'] = ProductCardLayouts::cardOptions($settings);
+            $listConfig['layout_options'] = ProductCardLayouts::cardOptions($settings, true, true);
         }
 
         // Classic's Card Elements draw this widget's own card; a widget saved without them keeps core's.
