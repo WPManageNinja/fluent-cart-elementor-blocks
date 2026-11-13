@@ -19,6 +19,8 @@ class ElementorShopAppHandler extends ShopAppHandler
 
     protected $layoutOptions = [];
 
+    protected $masonry = false;
+
     public function setCardElements(array $cardElements)
     {
         $this->cardElements = $cardElements;
@@ -33,6 +35,12 @@ class ElementorShopAppHandler extends ShopAppHandler
     public function setBadgeSettings(array $badgeSettings)
     {
         $this->badgeSettings = $badgeSettings;
+    }
+
+    /** Whether the Classic cards stagger (the Masonry switch), for every page of the grid. */
+    public function setMasonry(bool $masonry)
+    {
+        $this->masonry = $masonry;
     }
 
     /** A layout card's switches (ProductCardLayouts::cardOptions()), for every page of the grid. */
@@ -170,6 +178,7 @@ class ElementorShopAppHandler extends ShopAppHandler
         // Core's handler already reset an unknown layout to ''.
         $config['card_layout'] = Arr::get($this->shortcodeAttributes, 'card_layout', '');
         $config['layout_options'] = $this->layoutOptions;
+        $config['masonry'] = $this->masonry;
         $config['enable_wildcard_filter'] = $this->shortcodeAttributes['enable_wildcard_filter'];
         $config['enable_wildcard_for_post_content'] = $this->shortcodeAttributes['enable_wildcard_for_post_content'];
         return $config;

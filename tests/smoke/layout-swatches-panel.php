@@ -20,8 +20,8 @@ if (!ProductCardLayouts::cardSettingsAvailable()) {
     $test->finish();
 }
 
-// The layouts whose card has swatches, other than Compact: each draws its own tabs.
-$otherLayouts = array_values(array_filter(array_keys(\FluentCart\App\Services\Renderer\ProductCardLayoutPresets::all()), function ($layout) {
+// The picker's layouts whose card has swatches, other than Compact: each draws its own tabs.
+$otherLayouts = array_values(array_filter(array_keys(ProductCardLayouts::options()), function ($layout) {
     return $layout !== 'compact' && in_array('swatches', \FluentCart\App\Services\Renderer\ProductCardLayoutPresets::cardParts($layout), true);
 }));
 $test->check(in_array('swatches', \FluentCart\App\Services\Renderer\ProductCardLayoutPresets::cardParts('compact'), true) && count($otherLayouts) > 0, 'Compact and at least one other layout have swatches');

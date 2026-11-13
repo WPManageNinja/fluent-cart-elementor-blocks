@@ -25,9 +25,6 @@ class ProductCardLayouts
     /** The widget's own card: '' as saved before, or a saved core 'classic'. */
     const WIDGET_CARD = 'classic';
 
-    /** The layout whose cards are already staggered. */
-    const MASONRY_LAYOUT = 'masonry';
-
     public static function available()
     {
         return class_exists(ProductCardLayoutPresets::class)
@@ -44,7 +41,7 @@ class ProductCardLayouts
         }
 
         foreach (ProductCardLayoutPresets::all() as $layout => $preset) {
-            if ($layout !== self::WIDGET_CARD) {
+            if ($layout !== self::WIDGET_CARD && empty($preset['builder_only'])) {
                 $options[$layout] = (string) Arr::get($preset, 'label', $layout);
             }
         }
@@ -79,7 +76,7 @@ class ProductCardLayouts
 
     /**
      * The Masonry switch, for the widgets that draw their cards in a grid (as Gutenberg shows it only in grid
-     * loops). It staggers a layout's cards; the Masonry layout is already staggered and Classic has no such look.
+     * loops). It staggers any layout's cards, as Gutenberg's switch does; Classic has no such look.
      */
     public static function registerMasonryControl($widget)
     {
@@ -97,7 +94,7 @@ class ProductCardLayouts
                 'return_value' => 'yes',
                 'default'      => '',
                 'description'  => esc_html__('Staggers the cards, each image keeping its own height.', 'fluent-cart-elementor-blocks'),
-                'condition'    => ['card_layout' => array_values(array_diff(array_keys(self::options()), ['', self::MASONRY_LAYOUT]))],
+                'condition'    => ['card_layout' => array_keys(self::options())],
             ]
         );
     }
@@ -260,7 +257,7 @@ class ProductCardLayouts
         if (!self::cardSettingsAvailable()) {
             return;
         }
-        foreach (array_keys(ProductCardLayoutPresets::all()) as $layout) {
+        foreach (self::layouts() as $layout) {
             $parts = ProductCardLayoutPresets::cardParts($layout);
             if (!$parts) {
                 continue;
@@ -380,7 +377,7 @@ class ProductCardLayouts
         }
         $options = [];
         // Only the widgets with a Masonry switch pass $inGrid; a value left in a Carousel or Product Card is ignored.
-        if ($inGrid && $layout !== self::MASONRY_LAYOUT && Arr::get($settings, 'layout_masonry') === 'yes') {
+        if ($inGrid && Arr::get($settings, 'layout_masonry') === 'yes') {
             $options['masonry'] = true;
         }
         $rows = Arr::get($settings, 'layout_elements_' . $layout);
@@ -443,10 +440,27 @@ class ProductCardLayouts
         ],
     ];
 
+    /** Whether the Masonry switch staggers a widget's cards. */
+    public static function masonryOn(array $settings)
+    {
+        return Arr::get($settings, 'layout_masonry') === 'yes';
+    }
+
+    /**
+     * The stylesheet that keeps a staggered card at its own height. Core loads it with layout cards only, so a Classic
+     * card would stretch to its row span, get a bigger span from the script, and grow without end.
+     */
+    public static function enqueueMasonryAssets()
+    {
+        if (class_exists(ProductCardLayoutPresets::class) && method_exists(ProductCardLayoutPresets::class, 'enqueueAssets')) {
+            ProductCardLayoutPresets::enqueueAssets();
+        }
+    }
+
     /** The layouts whose card has this part. */
     private static function layoutsWith($part)
     {
-        return array_values(array_filter(array_keys(ProductCardLayoutPresets::all()), function ($layout) use ($part) {
+        return array_values(array_filter(self::layouts(), function ($layout) use ($part) {
             return in_array($part, ProductCardLayoutPresets::cardParts($layout), true);
         }));
     }
@@ -677,6 +691,15 @@ class ProductCardLayouts
             return '';
         }
 
-        return ProductCardLayoutPresets::cardBlock($layout) ? $layout : '';
+        // A builder-only layout (Masonry), saved before it became a switch, falls back to Classic, as a Gutenberg card does.
+        return ProductCardLayoutPresets::cardBlock($layout) && in_array($layout, self::layouts(), true) ? $layout : '';
+    }
+
+    /** Core's layouts a widget can use; Masonry is a switch on every layout now, so the builder-only one is left out. */
+    private static function layouts()
+    {
+        return array_keys(array_filter(ProductCardLayoutPresets::all(), function ($preset) {
+            return empty($preset['builder_only']);
+        }));
     }
 }

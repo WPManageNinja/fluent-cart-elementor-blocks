@@ -31,9 +31,12 @@ $render = function ($widgetType, array $settings) {
     return (string) ob_get_clean();
 };
 
-// Core adds layouts (Masonry), so the picker follows core's list rather than a fixed one.
-// Classic ('') is the widget's own card, so core's Classic preset is not offered.
-$test->same(array_keys(ProductCardLayouts::options()), array_merge([''], array_values(array_diff(array_keys(\FluentCart\App\Services\Renderer\ProductCardLayoutPresets::all()), ['classic']))), 'the picker lists Classic, then core\'s other layouts in core\'s order');
+// The picker follows core's list rather than a fixed one. Classic ('') is the widget's own card, so core's Classic
+// preset is not offered, and a builder-only layout (Masonry) is not either: every layout has the Masonry switch, as in Gutenberg.
+$expected = array_keys(array_filter(\FluentCart\App\Services\Renderer\ProductCardLayoutPresets::all(), function ($preset) {
+    return empty($preset['builder_only']);
+}));
+$test->same(array_keys(ProductCardLayouts::options()), array_merge([''], array_values(array_diff($expected, ['classic']))), 'the picker lists Classic, then core\'s other layouts in core\'s order, without the builder-only Masonry');
 
 $shopSettings = ['per_page' => 4, 'paginator' => 'numbers'];
 
@@ -79,19 +82,14 @@ $test->same(count(array_filter($carouselCards[0], function ($card) {
     return substr_count($card, 'class="fct-sale-badge') > 1;
 })), 0, 'Carousel: a layout card never shows two Sale badges');
 
-// Masonry (fluent-cart#3503): the Compact card in a staggered grid; core's card script staggers the grid.
-if (!isset(\FluentCart\App\Services\Renderer\ProductCardLayoutPresets::all()['masonry'])) {
-    echo "  (skipped Masonry: this FluentCart has no Masonry layout)\n";
-} else {
-    $masonry = $render('fluent_cart_shop_app', $shopSettings + ['card_layout' => 'masonry']);
-    $test->check(substr_count($masonry, 'fct-card-layout--masonry') === substr_count($masonry, '<article') && strpos($masonry, '<article') !== false, 'Masonry: every Products card uses the layout');
-    $test->check(strpos($masonry, 'data-card-layout="masonry"') !== false, 'Masonry: AJAX pages keep the layout');
-    $test->check(wp_script_is('fluent-cart-product-card-js', 'enqueued'), 'Masonry: the card script that staggers the grid is queued');
-    $masonryCarousel = $render('fluent_cart_product_carousel', $carouselSettings + ['card_layout' => 'masonry']);
-    $test->same(substr_count($masonryCarousel, 'fct-card-layout--masonry'), count($carouselIds), 'Masonry: every Carousel slide uses the layout');
-    $masonryCard = $render('fluent_cart_product_card', ['product_id' => (string) \FluentCart\App\Models\Product::query()->where('post_status', 'publish')->orderBy('ID', 'DESC')->value('ID'), 'card_layout' => 'masonry']);
-    $test->same(substr_count($masonryCard, 'fct-card-layout--masonry'), 1, 'Masonry: the Product Card widget draws one Masonry card');
-}
+// Masonry is a switch on every layout now, as in Gutenberg, not a layout of its own. A widget saved with the Masonry
+// layout (before release) falls back to Classic, as a Gutenberg card saved with it does.
+$test->check(!isset(ProductCardLayouts::options()['masonry']), 'Masonry: not offered as a layout');
+$savedMasonry = $render('fluent_cart_shop_app', $shopSettings + ['card_layout' => 'masonry']);
+$test->check(strpos($savedMasonry, 'fct-card-layout') === false && strpos($savedMasonry, 'data-card-layout') === false && strpos($savedMasonry, 'fct-product-card') !== false, 'Masonry: a widget saved with it shows the widget\'s own Classic card');
+$switched = $render('fluent_cart_shop_app', $shopSettings + ['card_layout' => 'compact', 'layout_masonry' => 'yes']);
+$test->check(substr_count($switched, 'fct-card-masonry') === substr_count($switched, '<article') && strpos($switched, '<article') !== false, 'Masonry: the switch staggers every Compact card');
+$test->check(wp_script_is('fluent-cart-product-card-js', 'enqueued'), 'Masonry: the card script that staggers the grid is queued');
 
 // Related Products: needs core's [fluent_cart_related_products card_layout] (fluent-cart#3486).
 $relatedProductId = 0;
