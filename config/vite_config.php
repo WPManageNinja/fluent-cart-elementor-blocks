@@ -5,6 +5,12 @@
         'src' => 'resources/elementor/popup-integration.js',
         'isEntry' => true
     ],
+    'resources/elementor/swatch-label-chips.js' => [
+        'file' => 'swatch-label-chips.js',
+        'name' => 'swatch-label-chips',
+        'src' => 'resources/elementor/swatch-label-chips.js',
+        'isEntry' => true
+    ],
     'resources/elementor/pro-feature-guard.js' => [
         'file' => 'pro-feature-guard.js',
         'name' => 'pro-feature-guard',
