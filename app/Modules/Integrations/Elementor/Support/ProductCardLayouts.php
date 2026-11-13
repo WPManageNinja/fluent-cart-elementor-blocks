@@ -519,6 +519,24 @@ class ProductCardLayouts
             if (!empty($entry['shownWith'])) {
                 $control['condition'][self::partKey($part, $entry['shownWith'], $layout)] = 'yes';
             }
+            if (!empty($entry['shownWhenSelected'])) {
+                // List Products show the selected choice when their own select says Show, or is left on Same as
+                // Attribute Products while that tab shows it. A plain condition cannot say "or", so it becomes terms.
+                $all = [];
+                foreach ($control['condition'] as $key => $value) {
+                    $all[] = ['name' => $key, 'operator' => '==', 'value' => $value];
+                }
+                $own = self::partKey($part, 'simple_show_selected', $layout);
+                $all[] = ['relation' => 'or', 'terms' => [
+                    ['name' => $own, 'operator' => '==', 'value' => 'yes'],
+                    ['relation' => 'and', 'terms' => [
+                        ['name' => $own, 'operator' => '==', 'value' => ''],
+                        ['name' => self::partKey($part, 'show_label', $layout), 'operator' => '==', 'value' => 'yes'],
+                    ]],
+                ]];
+                $control['conditions'] = ['relation' => 'and', 'terms' => $all];
+                unset($control['condition']);
+            }
             $widget->add_control(self::partKey($part, $name, $layout), $control);
         }
         if ($openTab !== null) {
@@ -567,13 +585,25 @@ class ProductCardLayouts
                 }
                 continue;
             }
+            if (!empty($entry['unsetFollows'])) {
+                // Left unset, core follows the attribute tab's switch.
+                if ($settings[$key] === 'yes' || $settings[$key] === 'no') {
+                    $values[$entry['attribute']] = $settings[$key] === 'yes';
+                }
+                continue;
+            }
             $values[$entry['attribute']] = $entry['control']['type'] === Controls_Manager::SWITCHER ? $settings[$key] === 'yes' : $settings[$key];
         }
 
         return $values;
     }
 
-    /** Each part's settings: name => the block's attribute, the block's default, the control. */
+    /**
+     * Each part's settings: name => the block's attribute, the block's default, the control. Optional flags:
+     * 'tab' and 'group' place it in a tab and a heading group; 'allSwitch' pairs a number with its All switch;
+     * 'shownWith' shows it only while another setting is on; 'shownWhenSelected' follows the selected choice's
+     * effective state; 'unsetFollows' is a Show/Hide/Same select that is only passed on when set.
+     */
     private static function partSettings()
     {
         return [
@@ -584,11 +614,15 @@ class ProductCardLayouts
                 'max_visible_all'    => ['tab' => 'attribute', 'group' => 'card', 'control' => ['label' => esc_html__('Show All', 'fluent-cart-elementor-blocks'), 'type' => Controls_Manager::SWITCHER, 'return_value' => 'yes', 'label_on' => esc_html__('Yes', 'fluent-cart-elementor-blocks'), 'label_off' => esc_html__('No', 'fluent-cart-elementor-blocks'), 'description' => esc_html__('Every option shows on the card.', 'fluent-cart-elementor-blocks')]],
                 'show_group_name'    => ['tab' => 'attribute', 'group' => 'card', 'attribute' => 'show_group_name', 'default' => false, 'control' => ['label' => esc_html__('Show Label', 'fluent-cart-elementor-blocks'), 'type' => Controls_Manager::SWITCHER, 'description' => esc_html__('e.g. Color above the row.', 'fluent-cart-elementor-blocks')]],
                 'show_label'         => ['tab' => 'attribute', 'group' => 'card', 'attribute' => 'show_label', 'default' => false, 'control' => ['label' => esc_html__('Show the Selected Choice', 'fluent-cart-elementor-blocks'), 'type' => Controls_Manager::SWITCHER, 'description' => esc_html__('e.g. Color · Navy.', 'fluent-cart-elementor-blocks')]],
+                'selected_position'  => ['tab' => 'attribute', 'group' => 'card', 'shownWith' => 'show_label', 'attribute' => 'selected_position', 'default' => 'name', 'control' => ['label' => esc_html__('Where It Appears', 'fluent-cart-elementor-blocks'), 'type' => Controls_Manager::SELECT, 'options' => ['name' => esc_html__('After the Label', 'fluent-cart-elementor-blocks'), 'below' => esc_html__('Below the Options', 'fluent-cart-elementor-blocks')]]],
                 'simple_enabled'     => ['tab' => 'list', 'attribute' => 'simple_enabled', 'default' => true, 'control' => ['label' => esc_html__('Show the Option List on the Card', 'fluent-cart-elementor-blocks'), 'type' => Controls_Manager::SWITCHER, 'description' => esc_html__('Products with a plain list of variants, such as pack sizes.', 'fluent-cart-elementor-blocks')]],
                 'simple_max_visible' => ['tab' => 'list', 'group' => 'card', 'attribute' => 'simple_max_visible', 'default' => 4, 'allSwitch' => 'simple_max_visible_all', 'control' => ['label' => esc_html__('Show Up To', 'fluent-cart-elementor-blocks'), 'type' => Controls_Manager::NUMBER, 'min' => 1, 'max' => 12, 'step' => 1, 'description' => esc_html__('Extras show as "+2", "+3"…', 'fluent-cart-elementor-blocks')]],
                 'simple_max_visible_all' => ['tab' => 'list', 'group' => 'card', 'control' => ['label' => esc_html__('Show All', 'fluent-cart-elementor-blocks'), 'type' => Controls_Manager::SWITCHER, 'return_value' => 'yes', 'label_on' => esc_html__('Yes', 'fluent-cart-elementor-blocks'), 'label_off' => esc_html__('No', 'fluent-cart-elementor-blocks'), 'description' => esc_html__('Every option shows on the card.', 'fluent-cart-elementor-blocks')]],
                 'simple_show_label'  => ['tab' => 'list', 'group' => 'card', 'attribute' => 'simple_show_label', 'default' => false, 'control' => ['label' => esc_html__('Show Label', 'fluent-cart-elementor-blocks'), 'type' => Controls_Manager::SWITCHER, 'description' => esc_html__('e.g. Option above the row.', 'fluent-cart-elementor-blocks')]],
                 'simple_label'       => ['tab' => 'list', 'group' => 'card', 'shownWith' => 'simple_show_label', 'attribute' => 'simple_label', 'default' => '', 'control' => ['label' => esc_html__('Label Name', 'fluent-cart-elementor-blocks'), 'type' => Controls_Manager::TEXT, 'placeholder' => esc_html__('Option', 'fluent-cart-elementor-blocks')]],
+                // Unset follows the attribute tab's switch, as a Gutenberg block saved before the split does; so a select, not a switch.
+                'simple_show_selected' => ['tab' => 'list', 'group' => 'card', 'unsetFollows' => true, 'attribute' => 'simple_show_selected', 'default' => '', 'control' => ['label' => esc_html__('Show the Selected Choice', 'fluent-cart-elementor-blocks'), 'type' => Controls_Manager::SELECT, 'options' => ['' => esc_html__('Same as Attribute Products', 'fluent-cart-elementor-blocks'), 'yes' => esc_html__('Show', 'fluent-cart-elementor-blocks'), 'no' => esc_html__('Hide', 'fluent-cart-elementor-blocks')]]],
+                'simple_selected_position' => ['tab' => 'list', 'group' => 'card', 'shownWhenSelected' => true, 'attribute' => 'simple_selected_position', 'default' => 'name', 'control' => ['label' => esc_html__('Where It Appears', 'fluent-cart-elementor-blocks'), 'type' => Controls_Manager::SELECT, 'options' => ['name' => esc_html__('After the Label', 'fluent-cart-elementor-blocks'), 'below' => esc_html__('Below the Options', 'fluent-cart-elementor-blocks')]]],
                 'sold_out_display'   => ['attribute' => 'sold_out_display', 'default' => 'normal', 'control' => ['label' => esc_html__('Sold-out Options', 'fluent-cart-elementor-blocks'), 'type' => Controls_Manager::CHOOSE, 'toggle' => false, 'separator' => 'before', 'options' => ['normal' => ['title' => esc_html__('No Change', 'fluent-cart-elementor-blocks'), 'icon' => 'eicon-check'], 'cross' => ['title' => esc_html__('Cross Out', 'fluent-cart-elementor-blocks'), 'icon' => 'eicon-close'], 'hide' => ['title' => esc_html__('Hide', 'fluent-cart-elementor-blocks'), 'icon' => 'eicon-minus-circle']], 'description' => esc_html__('No Change, Cross Out or Hide, for both attribute and simple variations.', 'fluent-cart-elementor-blocks')]],
             ],
             'rating'     => [
