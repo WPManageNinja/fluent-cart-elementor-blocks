@@ -370,6 +370,15 @@ class ElementorIntegration
             true
         );
 
+        // Quick-pick chips under a swatch row's Label Name. Reads its names from fluentCartElementor.i18n.
+        Enqueue::script(
+            'fluent-cart-elementor-swatch-label-chips',
+            'elementor/swatch-label-chips.js',
+            ['elementor-editor', 'fluent-cart-elementor-editor'],
+            FLUENTCART_VERSION,
+            true
+        );
+
         Enqueue::script(
             'fluent-cart-elementor-review-layout-picker',
             'elementor/review-layout-picker.js',
@@ -390,6 +399,14 @@ class ElementorIntegration
                 'searchProducts'  => \__('Search for products...', 'fluent-cart-elementor-blocks'),
                 'searchVariation' => \__('Search for a variation...', 'fluent-cart-elementor-blocks'),
                 'unknownProduct'  => \__('Unknown Product', 'fluent-cart-elementor-blocks'),
+                // Quick picks for a swatch row's Label Name, as in the Gutenberg swatches settings.
+                'labelPresetsTitle' => \__('Suggested labels', 'fluent-cart-elementor-blocks'),
+                'labelPresets'      => [
+                    \__('Pack', 'fluent-cart-elementor-blocks'),
+                    \__('Plan', 'fluent-cart-elementor-blocks'),
+                    \__('Size', 'fluent-cart-elementor-blocks'),
+                    \__('Bundle', 'fluent-cart-elementor-blocks'),
+                ],
             ],
         ]);
 

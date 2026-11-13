@@ -68,4 +68,26 @@ $potFile = $root . '/language/' . $domain . '.pot';
 $test->check(is_file($potFile), 'POT file exists');
 $test->check(is_file($potFile) && strpos(file_get_contents($potFile), 'X-Domain: ' . $domain) !== false, 'POT is for this text domain');
 
+// Every script the add-on enqueues is built from a source file and has a manifest entry. A missing entry is a
+// fatal on a production site, so a script that is only half wired must fail here.
+$enqueued = [];
+$iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($root . '/app', FilesystemIterator::SKIP_DOTS));
+foreach ($iterator as $file) {
+    if ($file->getExtension() === 'php' && preg_match_all("~Enqueue::script\(\s*'[^']+',\s*'(elementor/[^']+\.js)'~", (string) file_get_contents($file->getPathname()), $found)) {
+        $enqueued = array_merge($enqueued, $found[1]);
+    }
+}
+$enqueued = array_values(array_unique($enqueued));
+$viteConfig = (string) file_get_contents($root . '/vite.config.mjs');
+$manifest = (string) file_get_contents($root . '/config/vite_config.php');
+$test->check(count($enqueued) > 0, 'found the enqueued editor scripts (' . count($enqueued) . ')');
+$unwired = [];
+foreach ($enqueued as $script) {
+    $source = 'resources/' . $script;
+    if (!is_file($root . '/' . $source) || strpos($viteConfig, "'" . $source . "'") === false || strpos($manifest, "'" . $source . "' =>") === false) {
+        $unwired[] = $source;
+    }
+}
+$test->check(!$unwired, 'every enqueued editor script has a source file, a build input and a manifest entry' . ($unwired ? ' (missing: ' . implode(', ', $unwired) . ')' : ''));
+
 $test->finish();

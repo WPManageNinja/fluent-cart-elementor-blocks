@@ -287,3 +287,38 @@
     display: inline-flex;
     gap: 6px;
 }
+
+/* ── Quick-pick chips under a swatch row's Label Name (swatch-label-chips.js) ──
+   Pack / Plan / Size / Bundle. The pressed chip matches the text in the field. */
+.elementor-control.fct-swatch-label-chips .fct-label-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+}
+
+.elementor-control.fct-swatch-label-chips .fct-label-chip {
+    padding: 3px 10px;
+    border: 1px solid var(--e-a-border-color-bold, #d5d8dc);
+    border-radius: 999px;
+    background: transparent;
+    color: inherit;
+    font-size: 11px;
+    line-height: 1.6;
+    cursor: pointer;
+}
+
+.elementor-control.fct-swatch-label-chips .fct-label-chip:hover {
+    border-color: var(--e-a-color-primary-bold, #93003f);
+}
+
+.elementor-control.fct-swatch-label-chips .fct-label-chip[aria-pressed="true"] {
+    border-color: var(--e-a-color-primary-bold, #93003f);
+    background: var(--e-a-bg-primary, #f3f3f3);
+    font-weight: 600;
+}
+
+.elementor-control.fct-swatch-label-chips .fct-label-chip:focus-visible {
+    outline: 2px solid var(--e-a-color-primary-bold, #93003f);
+    outline-offset: 1px;
+}
