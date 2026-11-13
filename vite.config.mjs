@@ -26,6 +26,8 @@ const inputs = [
     // The review layout picker's control view. Built, not copied, so it needs
     // its manifest entry like the two above.
     'resources/elementor/review-layout-picker.js',
+    // Quick-pick chips under a swatch row's Label Name. Built, not copied, so it needs its manifest entry too.
+    'resources/elementor/swatch-label-chips.js',
 ];
 
 let viteConfig;
