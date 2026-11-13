@@ -94,7 +94,7 @@ class ProductCardLayouts
                 'return_value' => 'yes',
                 'default'      => '',
                 'description'  => esc_html__('Staggers the cards, each image keeping its own height.', 'fluent-cart-elementor-blocks'),
-                'condition'    => ['card_layout' => array_values(array_diff(array_keys(self::options()), ['']))],
+                'condition'    => ['card_layout' => array_keys(self::options())],
             ]
         );
     }
@@ -439,6 +439,12 @@ class ProductCardLayouts
             'sold_out_badge_position' => 'badge_position',
         ],
     ];
+
+    /** Whether the Masonry switch staggers a widget's cards. */
+    public static function masonryOn(array $settings)
+    {
+        return Arr::get($settings, 'layout_masonry') === 'yes';
+    }
 
     /** The layouts whose card has this part. */
     private static function layoutsWith($part)

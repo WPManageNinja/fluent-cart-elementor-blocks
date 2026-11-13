@@ -268,7 +268,7 @@ class ElementorShopAppRenderer extends ShopAppRenderer
             $providerAttr = 'data-template-provider="elementor" data-fluent-client-id="' . esc_attr($this->clientId) . '"';
         }
         ?>
-        <article data-fluent-cart-shop-app-single-product data-fct-product-card="" class="fct-product-card" <?php echo $cursorData; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+        <article data-fluent-cart-shop-app-single-product data-fct-product-card="" class="fct-product-card<?php echo Arr::get($this->config, 'masonry') ? ' fct-card-masonry' : ''; ?>" <?php echo $cursorData; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
             <?php echo $providerAttr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
             aria-label="
     <?php echo esc_attr(sprintf(

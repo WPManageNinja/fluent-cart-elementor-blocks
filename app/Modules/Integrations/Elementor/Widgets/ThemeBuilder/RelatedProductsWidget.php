@@ -629,10 +629,11 @@ class RelatedProductsWidget extends Widget_Base
             if (in_array('swatches', array_column($cardElements, 'element_type'), true)) {
                 ProductAttributeSwatches::enqueueAssets();
             }
-            $listConfig['render_card'] = function ($relatedProduct) use ($cardElements) {
+            $masonry = !$cardLayout && ProductCardLayouts::masonryOn($settings);
+            $listConfig['render_card'] = function ($relatedProduct) use ($cardElements, $masonry) {
                 $cardRender = new \FluentCart\App\Services\Renderer\ProductCardRender($relatedProduct, ['rating_context' => 'relevant']);
                 ob_start();
-                echo '<article class="fct-product-card" data-fct-product-card>';
+                echo '<article class="fct-product-card' . ($masonry ? ' fct-card-masonry' : '') . '" data-fct-product-card>';
                 ElementorShopAppRenderer::renderCardElements($cardRender, $cardElements, $relatedProduct);
                 echo '</article>';
 
