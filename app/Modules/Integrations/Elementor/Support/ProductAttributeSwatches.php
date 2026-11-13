@@ -279,6 +279,25 @@ class ProductAttributeSwatches
 
         $host->end_controls_tabs();
 
+        // One setting for both product types, so it sits below the tabs, as in Gutenberg.
+        $host->add_control(
+            'swatch_sold_out_display',
+            [
+                'label'       => esc_html__('Sold-out Options', 'fluent-cart-elementor-blocks'),
+                'type'        => Controls_Manager::CHOOSE,
+                'toggle'      => false,
+                'default'     => 'normal',
+                'separator'   => 'before',
+                'options'     => [
+                    'normal' => ['title' => esc_html__('No Change', 'fluent-cart-elementor-blocks'), 'icon' => 'eicon-check'],
+                    'cross'  => ['title' => esc_html__('Cross Out', 'fluent-cart-elementor-blocks'), 'icon' => 'eicon-close'],
+                    'hide'   => ['title' => esc_html__('Hide', 'fluent-cart-elementor-blocks'), 'icon' => 'eicon-minus-circle'],
+                ],
+                'description' => esc_html__('No Change, Cross Out or Hide, for both attribute and simple variations.', 'fluent-cart-elementor-blocks'),
+                'condition'   => $condition,
+            ]
+        );
+
         $host->add_responsive_control(
             'swatch_margin',
             [
@@ -340,6 +359,8 @@ class ProductAttributeSwatches
             $simpleMaxVisible = Arr::get($simpleMaxVisible, 'size', 4);
         }
 
+        $soldOut = Arr::get($settings, 'swatch_sold_out_display');
+
         // Widgets saved before these switches existed have no value; they stay on, as Gutenberg defaults them.
         return ProductCardSwatchesRenderer::render($product, [
             'group_ids'          => self::groupIds(Arr::get($settings, 'swatch_group_ids', [])),
@@ -352,6 +373,8 @@ class ProductAttributeSwatches
             'simple_max_visible' => Arr::get($settings, 'swatch_simple_max_visible_all') === 'yes' ? 0 : max(1, min(12, (int) ($simpleMaxVisible ?: 4))),
             'simple_show_label'  => Arr::get($settings, 'swatch_simple_show_label') === 'yes',
             'simple_label'       => sanitize_text_field((string) Arr::get($settings, 'swatch_simple_label', '')),
+            // An unknown value keeps the swatches as before; core ignores it too.
+            'sold_out_display'   => in_array($soldOut, ['normal', 'cross', 'hide'], true) ? $soldOut : 'normal',
         ], 'class="' . esc_attr($class) . '"');
     }
 }
