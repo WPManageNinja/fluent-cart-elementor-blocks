@@ -440,6 +440,14 @@ class ProductCardLayouts
         ],
     ];
 
+    /** The layouts shown only as a grid (Floating), which have no Grid/List switch or View Mode; none on an older core. */
+    public static function gridOnlyLayouts()
+    {
+        return self::available() && method_exists(ProductCardLayoutPresets::class, 'gridOnlyLayouts')
+            ? ProductCardLayoutPresets::gridOnlyLayouts()
+            : [];
+    }
+
     /** Whether the Masonry switch staggers a widget's cards. */
     public static function masonryOn(array $settings)
     {

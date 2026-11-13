@@ -114,7 +114,7 @@ class ShopAppWidget extends Widget_Base
                     'grid' => esc_html__('Grid', 'fluent-cart-elementor-blocks'),
                     'list' => esc_html__('List', 'fluent-cart-elementor-blocks'),
                 ],
-            ]
+            ] + (ProductCardLayouts::gridOnlyLayouts() ? ['condition' => ['card_layout!' => ProductCardLayouts::gridOnlyLayouts()]] : [])
         );
 
         $this->add_control(
