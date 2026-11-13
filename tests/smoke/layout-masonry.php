@@ -62,6 +62,13 @@ $test->check(strpos($stagger, '&quot;masonry&quot;:true') !== false, 'Products: 
 $classicCards = $render('fluent_cart_shop_app', $shop + ['layout_masonry' => 'yes']);
 $test->same(substr_count($classicCards, 'fct-card-masonry'), substr_count($classicCards, '<article'), 'Products: Classic cards stagger with the switch');
 $test->same(substr_count($render('fluent_cart_shop_app', $shop), 'fct-card-masonry'), 0, 'Products: Classic cards are not staggered by default');
+// Core's masonry rules (align-self: start, height: auto) are in the card layouts stylesheet, which only layout cards load.
+// A Classic card without it stretches to its row span, the script then gives it a bigger span, and it grows without end.
+wp_dequeue_style('fluentcart-card-layouts');
+$render('fluent_cart_shop_app', $shop);
+$test->check(!wp_style_is('fluentcart-card-layouts', 'enqueued'), 'Products: Classic cards without the switch do not load the layouts stylesheet');
+$render('fluent_cart_shop_app', $shop + ['layout_masonry' => 'yes']);
+$test->check(wp_style_is('fluentcart-card-layouts', 'enqueued'), 'Products: Classic cards with the switch load the stylesheet that keeps a staggered card at its own height');
 
 $relatedProductId = 0;
 foreach (\FluentCart\App\Models\Product::query()->where('post_status', 'publish')->orderBy('ID', 'DESC')->limit(40)->pluck('ID') as $candidateId) {
@@ -83,6 +90,9 @@ if ($relatedProductId) {
     $relatedClassic = $render('fluentcart_related_products', $classic + ['layout_masonry' => 'yes']);
     $test->check(substr_count($relatedClassic, 'fct-card-masonry') > 0 && substr_count($relatedClassic, 'fct-card-masonry') === substr_count($relatedClassic, '<article'), 'Related Products: Classic cards stagger with the switch');
     $test->same(substr_count($render('fluentcart_related_products', $classic), 'fct-card-masonry'), 0, 'Related Products: Classic cards are not staggered by default');
+    wp_dequeue_style('fluentcart-card-layouts');
+    $render('fluentcart_related_products', $classic + ['layout_masonry' => 'yes']);
+    $test->check(wp_style_is('fluentcart-card-layouts', 'enqueued'), 'Related Products: Classic cards with the switch load the stylesheet too');
 }
 
 $test->finish();

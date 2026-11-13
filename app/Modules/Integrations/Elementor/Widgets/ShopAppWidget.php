@@ -1046,6 +1046,9 @@ class ShopAppWidget extends Widget_Base
         $handler = new ElementorShopAppHandler();
         $handler->setCardElements($cardElements);
         $handler->setMasonry(ProductCardLayouts::masonryOn($settings));
+        if (ProductCardLayouts::masonryOn($settings)) {
+            ProductCardLayouts::enqueueMasonryAssets();
+        }
         $handler->setShopLayout($shopLayout);
         $handler->setBadgeSettings($badgeSettings);
         if ($cardLayout) {

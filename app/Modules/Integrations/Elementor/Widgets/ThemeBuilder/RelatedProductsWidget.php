@@ -630,6 +630,9 @@ class RelatedProductsWidget extends Widget_Base
                 ProductAttributeSwatches::enqueueAssets();
             }
             $masonry = !$cardLayout && ProductCardLayouts::masonryOn($settings);
+            if ($masonry) {
+                ProductCardLayouts::enqueueMasonryAssets();
+            }
             $listConfig['render_card'] = function ($relatedProduct) use ($cardElements, $masonry) {
                 $cardRender = new \FluentCart\App\Services\Renderer\ProductCardRender($relatedProduct, ['rating_context' => 'relevant']);
                 ob_start();

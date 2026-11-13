@@ -446,6 +446,17 @@ class ProductCardLayouts
         return Arr::get($settings, 'layout_masonry') === 'yes';
     }
 
+    /**
+     * The stylesheet that keeps a staggered card at its own height. Core loads it with layout cards only, so a Classic
+     * card would stretch to its row span, get a bigger span from the script, and grow without end.
+     */
+    public static function enqueueMasonryAssets()
+    {
+        if (class_exists(ProductCardLayoutPresets::class) && method_exists(ProductCardLayoutPresets::class, 'enqueueAssets')) {
+            ProductCardLayoutPresets::enqueueAssets();
+        }
+    }
+
     /** The layouts whose card has this part. */
     private static function layoutsWith($part)
     {
