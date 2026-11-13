@@ -39,7 +39,10 @@ foreach (['fluent_cart_shop_app', 'fluent_cart_product_carousel', 'fluent_cart_p
         $controls['layout_swatches_max_visible_all_compact']['default'] ?? null,
         $controls['layout_swatches_simple_max_visible_all_compact']['default'] ?? null,
     ], ['number', '', ''], "{$type}: Show up to is a number, with an All switch for each tab, off by default");
-    $test->same(array_keys($controls['layout_swatches_max_visible_compact']['condition'] ?? []), ['card_layout', 'layout_swatches_max_visible_all_compact'], "{$type}: the number is hidden while All is on");
+    // Also hidden while the tab's own switch is off (the Swatches panel's tabs).
+    $conditionKeys = array_keys($controls['layout_swatches_max_visible_compact']['condition'] ?? []);
+    sort($conditionKeys);
+    $test->same($conditionKeys, ['card_layout', 'layout_swatches_advanced_enabled_compact', 'layout_swatches_max_visible_all_compact'], "{$type}: the number is hidden while All is on, or while the tab's switch is off");
 }
 
 // A product whose swatch row has more options than one, so "+N" shows when the count is 1. Attribute products
