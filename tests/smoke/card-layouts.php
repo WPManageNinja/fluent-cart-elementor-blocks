@@ -132,6 +132,7 @@ if (ProductCardLayouts::cardSettingsAvailable()) {
         $test->same([$c['layout_show_sale_badge']['default'] ?? null, $c['layout_sale_badge_text']['default'] ?? null, $c['show_sale_badge']['default'] ?? null], ['yes', 'Sale!', ''], "{$name}: a layout's badge is on with its own text; Classic's stays off until opted in");
         $test->same([$c['layout_swatches_max_visible_compact']['default'] ?? null, $c['layout_quick_view_position_framed']['default'] ?? null, $c['layout_quick_view_position_classic']['default'] ?? null], [2, 'button', 'image'], "{$name}: each layout's and Classic's own values");
         $test->check(!isset($c['layout_show_rating']) && !isset($c['layout_show_swatches']), "{$name}: swatches and rating are Card Elements, not switches");
+        $test->same([$c['layout_quick_view_image_position_compact']['default'] ?? null, $c['layout_quick_view_image_position_classic']['default'] ?? null], ['bottom-center', 'bottom-center'], "{$name}: Quick View's image position starts at the block's bottom middle, for a layout and for Classic");
     }
     $test->same(array_column($controlsOf('fluent_cart_product_card')['card_elements']['default'] ?? [], 'element_type'), ['image', 'title', 'rating', 'price', 'swatches', 'button', 'quick_view'], 'Product Card: a new widget starts as core\'s Classic layout');
 
@@ -152,6 +153,12 @@ if (ProductCardLayouts::cardSettingsAvailable()) {
     $variableId = (string) \FluentCart\App\Models\ProductDetail::query()->where('variation_type', '!=', 'simple')->whereHas('product', function ($q) { $q->where('post_status', 'publish'); })->value('post_id');
     if ($variableId) {
         $test->check(strpos($render('fluent_cart_product_card', ['product_id' => $variableId, 'card_layout' => 'compact', 'layout_quick_view_position_compact' => 'button']), 'data-position="button"') !== false, 'layout settings: Quick View moves beside the button');
+        $onImage = $render('fluent_cart_product_card', ['product_id' => $variableId, 'card_layout' => 'compact']);
+        $test->check(strpos($onImage, 'data-image-position="bottom-center"') !== false, 'layout settings: Quick View on the image starts at the bottom middle');
+        $corner = $render('fluent_cart_product_card', ['product_id' => $variableId, 'card_layout' => 'compact', 'layout_quick_view_image_position_compact' => 'top-right']);
+        $test->check(strpos($corner, 'data-image-position="top-right"') !== false, 'layout settings: Quick View moves to the chosen corner of the image');
+        $beside = $render('fluent_cart_product_card', ['product_id' => $variableId, 'card_layout' => 'compact', 'layout_quick_view_position_compact' => 'button', 'layout_quick_view_image_position_compact' => 'top-right']);
+        $test->check(strpos($beside, 'data-image-position') === false, 'layout settings: beside the button the image position is not used');
         // Classic: a widget saved with the new list draws Rating and Quick View with Classic's settings.
         $newList = $rows(['image', 'title', 'rating', 'price', 'swatches', 'button', 'quick_view']);
         $classicNew = $render('fluent_cart_product_card', ['product_id' => $variableId, 'card_elements' => $newList, 'layout_quick_view_position_classic' => 'button']);
