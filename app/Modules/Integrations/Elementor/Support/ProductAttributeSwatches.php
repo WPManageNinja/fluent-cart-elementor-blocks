@@ -126,6 +126,15 @@ class ProductAttributeSwatches
         );
 
         $host->add_control(
+            'swatch_which_heading',
+            [
+                'label'       => esc_html__('Which Attributes to Show', 'fluent-cart-elementor-blocks'),
+                'type'        => Controls_Manager::HEADING,
+                'condition'   => $advancedOn,
+            ]
+        );
+
+        $host->add_control(
             'swatch_group_ids',
             [
                 'label'       => esc_html__('Attributes', 'fluent-cart-elementor-blocks'),
@@ -136,6 +145,23 @@ class ProductAttributeSwatches
                 'default'     => [],
                 'select2options' => ['placeholder' => esc_html__('All attributes', 'fluent-cart-elementor-blocks')],
                 'description' => esc_html__('Empty shows every attribute.', 'fluent-cart-elementor-blocks'),
+                'condition'   => $advancedOn,
+            ]
+        );
+
+        // Automatic (unset) keeps the old rule; Yes and No are set explicitly, as in the Gutenberg checkbox.
+        $host->add_control(
+            'swatch_show_other_groups',
+            [
+                'label'       => esc_html__('Also show attributes not listed here', 'fluent-cart-elementor-blocks'),
+                'type'        => Controls_Manager::SELECT,
+                'default'     => '',
+                'options'     => [
+                    ''    => esc_html__('Automatic', 'fluent-cart-elementor-blocks'),
+                    'yes' => esc_html__('Yes', 'fluent-cart-elementor-blocks'),
+                    'no'  => esc_html__('No', 'fluent-cart-elementor-blocks'),
+                ],
+                'description' => esc_html__('Any other attribute a product has shows after the ones above.', 'fluent-cart-elementor-blocks'),
                 'condition'   => $advancedOn,
             ]
         );
@@ -435,6 +461,8 @@ class ProductAttributeSwatches
         $soldOut = Arr::get($settings, 'swatch_sold_out_display');
 
         // Widgets saved before these switches existed have no value; they stay on, as Gutenberg defaults them.
+        // Left Automatic (unset), core keeps the old rule.
+        $showOther = Arr::get($settings, 'swatch_show_other_groups');
         $swatchSettings = [
             'group_ids'          => self::groupIds(Arr::get($settings, 'swatch_group_ids', [])),
             // Show All is 0 in the swatches block, whatever the number says.
@@ -451,6 +479,9 @@ class ProductAttributeSwatches
             'selected_position'        => Arr::get($settings, 'swatch_selected_position') === 'below' ? 'below' : 'name',
             'simple_selected_position' => Arr::get($settings, 'swatch_simple_selected_position') === 'below' ? 'below' : 'name',
         ];
+        if ($showOther === 'yes' || $showOther === 'no') {
+            $swatchSettings['show_other_groups'] = $showOther === 'yes';
+        }
         // Left on Same as Attribute Products, core makes list products follow the attribute tab's switch.
         $ownSelected = Arr::get($settings, 'swatch_simple_show_selected');
         if ($ownSelected === 'yes' || $ownSelected === 'no') {
