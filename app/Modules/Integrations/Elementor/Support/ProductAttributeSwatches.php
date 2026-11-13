@@ -108,36 +108,20 @@ class ProductAttributeSwatches
         $advancedOn = array_merge($condition, ['swatch_advanced_enabled' => 'yes']);
         $simpleOn = array_merge($condition, ['swatch_simple_enabled' => 'yes']);
 
-        $host->add_control(
-            'swatch_advanced_heading',
-            [
-                'label'       => esc_html__('Advanced Variations', 'fluent-cart-elementor-blocks'),
-                'type'        => Controls_Manager::HEADING,
-                'condition'   => $condition,
-            ]
-        );
+        // A tab per product type, as in the Gutenberg swatches settings. Each tab's switch hides the rest of it.
+        $host->start_controls_tabs('swatch_tabs', ['condition' => $condition]);
+
+        $host->start_controls_tab('swatch_tab_attribute', ['label' => esc_html__('Attribute Products', 'fluent-cart-elementor-blocks'), 'condition' => $condition]);
 
         $host->add_control(
             'swatch_advanced_enabled',
             [
-                'label'        => esc_html__('Show Swatches', 'fluent-cart-elementor-blocks'),
+                'label'        => esc_html__('Show Attributes on the Card', 'fluent-cart-elementor-blocks'),
                 'description'  => esc_html__('Products with attributes such as Color and Size. One row per attribute.', 'fluent-cart-elementor-blocks'),
                 'type'         => Controls_Manager::SWITCHER,
                 'return_value' => 'yes',
                 'default'      => 'yes',
                 'condition'    => $condition,
-            ]
-        );
-
-        $host->add_control(
-            'swatch_max_visible',
-            [
-                'label'      => esc_html__('Max Swatches', 'fluent-cart-elementor-blocks'),
-                'type'       => Controls_Manager::SLIDER,
-                'size_units' => [''],
-                'range'      => ['' => ['min' => 1, 'max' => 6, 'step' => 1]],
-                'default'    => ['size' => 3, 'unit' => ''],
-                'condition'  => $advancedOn,
             ]
         );
 
@@ -157,9 +141,32 @@ class ProductAttributeSwatches
         );
 
         $host->add_control(
+            'swatch_group_card_attribute',
+            [
+                'label'     => esc_html__('How It Shows on the Card', 'fluent-cart-elementor-blocks'),
+                'type'      => Controls_Manager::HEADING,
+                'separator' => 'before',
+                'condition' => $advancedOn,
+            ]
+        );
+
+        $host->add_control(
+            'swatch_max_visible',
+            [
+                'label'      => esc_html__('Max Swatches', 'fluent-cart-elementor-blocks'),
+                'type'       => Controls_Manager::SLIDER,
+                'size_units' => [''],
+                'range'      => ['' => ['min' => 1, 'max' => 6, 'step' => 1]],
+                'default'    => ['size' => 3, 'unit' => ''],
+                'condition'  => $advancedOn,
+            ]
+        );
+
+        $host->add_control(
             'swatch_show_group_name',
             [
-                'label'        => esc_html__('Show Attribute Label', 'fluent-cart-elementor-blocks'),
+                'label'        => esc_html__('Show Label', 'fluent-cart-elementor-blocks'),
+                'description'  => esc_html__('e.g. Color above the row.', 'fluent-cart-elementor-blocks'),
                 'type'         => Controls_Manager::SWITCHER,
                 'return_value' => 'yes',
                 'default'      => '',
@@ -167,25 +174,42 @@ class ProductAttributeSwatches
             ]
         );
 
+        // One setting for both product types, so it is not hidden with this tab: List products read it too.
         $host->add_control(
-            'swatch_simple_heading',
+            'swatch_show_label',
             [
-                'label'       => esc_html__('Simple Variations', 'fluent-cart-elementor-blocks'),
-                'type'        => Controls_Manager::HEADING,
-                'separator'   => 'before',
-                'condition'   => $condition,
+                'label'        => esc_html__('Show the Selected Choice', 'fluent-cart-elementor-blocks'),
+                'type'         => Controls_Manager::SWITCHER,
+                'return_value' => 'yes',
+                'default'      => '',
+                'description'  => esc_html__('Prints the picked value after the row label on both product types, e.g. COLOR · BLACK.', 'fluent-cart-elementor-blocks'),
+                'condition'    => $condition,
             ]
         );
+
+        $host->end_controls_tab();
+
+        $host->start_controls_tab('swatch_tab_list', ['label' => esc_html__('List Products', 'fluent-cart-elementor-blocks'), 'condition' => $condition]);
 
         $host->add_control(
             'swatch_simple_enabled',
             [
-                'label'        => esc_html__('Show Swatches', 'fluent-cart-elementor-blocks'),
+                'label'        => esc_html__('Show the Option List on the Card', 'fluent-cart-elementor-blocks'),
                 'description'  => esc_html__('Products with a plain list of variants, such as pack sizes. One row of their names.', 'fluent-cart-elementor-blocks'),
                 'type'         => Controls_Manager::SWITCHER,
                 'return_value' => 'yes',
                 'default'      => 'yes',
                 'condition'    => $condition,
+            ]
+        );
+
+        $host->add_control(
+            'swatch_group_card_list',
+            [
+                'label'     => esc_html__('How It Shows on the Card', 'fluent-cart-elementor-blocks'),
+                'type'      => Controls_Manager::HEADING,
+                'separator' => 'before',
+                'condition' => $simpleOn,
             ]
         );
 
@@ -204,7 +228,8 @@ class ProductAttributeSwatches
         $host->add_control(
             'swatch_simple_show_label',
             [
-                'label'        => esc_html__('Show Row Label', 'fluent-cart-elementor-blocks'),
+                'label'        => esc_html__('Show Label', 'fluent-cart-elementor-blocks'),
+                'description'  => esc_html__('e.g. Option above the row.', 'fluent-cart-elementor-blocks'),
                 'type'         => Controls_Manager::SWITCHER,
                 'return_value' => 'yes',
                 'default'      => '',
@@ -215,7 +240,7 @@ class ProductAttributeSwatches
         $host->add_control(
             'swatch_simple_label',
             [
-                'label'       => esc_html__('Row Label', 'fluent-cart-elementor-blocks'),
+                'label'       => esc_html__('Label Name', 'fluent-cart-elementor-blocks'),
                 'type'        => Controls_Manager::TEXT,
                 'default'     => '',
                 'placeholder' => esc_html__('Option', 'fluent-cart-elementor-blocks'),
@@ -224,18 +249,9 @@ class ProductAttributeSwatches
             ]
         );
 
-        $host->add_control(
-            'swatch_show_label',
-            [
-                'label'        => esc_html__('Show Selected Name', 'fluent-cart-elementor-blocks'),
-                'type'         => Controls_Manager::SWITCHER,
-                'return_value' => 'yes',
-                'default'      => '',
-                'separator'    => 'before',
-                'description'  => esc_html__('Prints the picked value after the row label on both product types, e.g. COLOR · BLACK.', 'fluent-cart-elementor-blocks'),
-                'condition'    => $condition,
-            ]
-        );
+        $host->end_controls_tab();
+
+        $host->end_controls_tabs();
 
         $host->add_responsive_control(
             'swatch_margin',
