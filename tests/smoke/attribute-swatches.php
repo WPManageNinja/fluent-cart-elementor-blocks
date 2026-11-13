@@ -81,7 +81,8 @@ $test->check(strpos($carousel, 'class="fct-card-swatch-rows elementor-repeater-i
 $test->check(strpos($carousel, 'fct-card-swatch-group-name') !== false, 'Show Attribute Label prints the caption');
 $test->check(strpos($carousel, 'data-fct-card-swatch-label') !== false, 'Show Selected Name prints the value name');
 preg_match('/<div class="fct-card-swatch-list">(.*?)<\/div>/s', $carousel, $list);
-$test->check(substr_count($list[1] ?? '', 'data-fct-card-swatch') <= 2, 'Max Swatches limits the row to 2');
+// The swatches, not the "+N" marker: data-fct-card-swatch-more also starts with data-fct-card-swatch.
+$test->check(preg_match_all('/data-fct-card-swatch(?![-\w])/', $list[1] ?? '') <= 2, 'Max Swatches limits the row to 2');
 
 $plain = $render('fluent_cart_product_carousel', [
     'product_ids'   => [(string) $productId],
