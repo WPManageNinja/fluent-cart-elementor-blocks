@@ -284,8 +284,12 @@ class ProductAttributeSwatches
                 'label'       => esc_html__('Label Name', 'fluent-cart-elementor-blocks'),
                 'type'        => Controls_Manager::TEXT,
                 'default'     => '',
+                // Quick picks under the field (swatch-label-chips.js), as in the Gutenberg label name.
+                'classes'     => 'fct-swatch-label-chips',
+                'label_block' => true,
+                'ai'          => ['active' => false],
                 'placeholder' => esc_html__('Option', 'fluent-cart-elementor-blocks'),
-                'description' => esc_html__('Names the row of option names, e.g. Plan or Pack.', 'fluent-cart-elementor-blocks'),
+                'description' => esc_html__('Empty shows "Option".', 'fluent-cart-elementor-blocks'),
                 'condition'   => array_merge($simpleOn, ['swatch_simple_show_label' => 'yes']),
             ]
         );
