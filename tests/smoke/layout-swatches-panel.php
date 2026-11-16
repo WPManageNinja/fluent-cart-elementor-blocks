@@ -38,7 +38,7 @@ foreach (['fluent_cart_shop_app', 'fluent_cart_product_carousel', 'fluent_cart_p
             return ($c[$name]['inner_tab'] ?? null) === $tab;
         }, $names);
     };
-    $test->same($inTab(['layout_swatches_advanced_enabled_compact', 'layout_swatches_group_ids_compact', 'layout_swatches_max_visible_compact', 'layout_swatches_show_group_name_compact', 'layout_swatches_show_label_compact'], $attributeTab), [true, true, true, true, true], "{$type}: the attribute settings sit in the attribute tab");
+    $test->same($inTab(['layout_swatches_advanced_enabled_compact', 'layout_swatches_group_ids_compact', 'layout_swatches_hidden_group_ids_compact', 'layout_swatches_max_visible_compact', 'layout_swatches_show_group_name_compact', 'layout_swatches_show_label_compact'], $attributeTab), [true, true, true, true, true, true], "{$type}: the attribute settings sit in the attribute tab");
     $test->same($inTab(['layout_swatches_simple_enabled_compact', 'layout_swatches_simple_max_visible_compact', 'layout_swatches_simple_show_label_compact', 'layout_swatches_simple_label_compact'], $listTab), [true, true, true, true], "{$type}: the option list settings sit in the list tab");
 
     $test->same(array_key_exists('layout_swatches_advanced_enabled_compact', $c['layout_swatches_group_ids_compact']['condition'] ?? []), true, "{$type}: the attribute tab's settings hide while its switch is off");
