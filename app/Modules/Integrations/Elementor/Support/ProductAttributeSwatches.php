@@ -3,6 +3,7 @@
 namespace FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Support;
 
 use Elementor\Controls_Manager;
+use FluentCart\App\Models\AttributeTerm;
 use FluentCart\App\Services\Filter\ShopAttributeFilter;
 use FluentCart\App\Services\Renderer\ProductCardSwatchesRenderer;
 use FluentCart\Framework\Support\Arr;
@@ -17,7 +18,7 @@ if (!defined('ABSPATH')) {
  */
 class ProductAttributeSwatches
 {
-    private static $groupOptions = null;
+    private static $groupOptions = [];
 
     public static function filtersAvailable()
     {
@@ -34,24 +35,45 @@ class ProductAttributeSwatches
     }
 
     /**
+     * The attribute pickers' options. In the editor each says how many values it has, as Gutenberg's list
+     * does; the storefront skips that count query, as it never shows the labels.
+     *
+     * @param bool|null $withCounts Null counts only in the admin (the Elementor editor loads there)
      * @return array<int, string> group id => title, library order
      */
-    public static function groupOptions()
+    public static function groupOptions($withCounts = null)
     {
-        if (self::$groupOptions !== null) {
-            return self::$groupOptions;
+        $withCounts = $withCounts === null ? is_admin() : (bool) $withCounts;
+        $cache = $withCounts ? 'counted' : 'plain';
+        if (isset(self::$groupOptions[$cache])) {
+            return self::$groupOptions[$cache];
         }
 
-        self::$groupOptions = [];
-        if (!self::filtersAvailable()) {
-            return self::$groupOptions;
+        $options = [];
+        if (self::filtersAvailable()) {
+            foreach (ShopAttributeFilter::groupOptions() as $group) {
+                $options[(int) $group['id']] = $group['title'];
+            }
+        }
+        if ($withCounts && $options) {
+            // One grouped query over at most 100 groups, as Gutenberg's sidebar counts them.
+            $counts = AttributeTerm::query()
+                ->selectRaw('group_id, COUNT(*) AS total')
+                ->whereIn('group_id', array_keys($options))
+                ->groupBy('group_id')
+                ->get()
+                ->pluck('total', 'group_id')
+                ->all();
+            foreach ($options as $id => $title) {
+                $count = (int) ($counts[$id] ?? 0);
+                $hint = $count === 0 ? esc_html__('No values', 'fluent-cart-elementor-blocks')
+                    /* translators: %d: how many values an attribute has */
+                    : sprintf(_n('%d value', '%d values', $count, 'fluent-cart-elementor-blocks'), $count);
+                $options[$id] = $title . ' · ' . $hint;
+            }
         }
 
-        foreach (ShopAttributeFilter::groupOptions() as $group) {
-            self::$groupOptions[(int) $group['id']] = $group['title'];
-        }
-
-        return self::$groupOptions;
+        return self::$groupOptions[$cache] = $options;
     }
 
     /**
@@ -183,6 +205,17 @@ class ProductAttributeSwatches
             ]
         );
 
+        // Gutenberg's warning: nothing picked and Also Show on No leaves the cards with no options.
+        $host->add_control(
+            'swatch_none_warning',
+            [
+                'type'            => Controls_Manager::RAW_HTML,
+                'raw'             => esc_html__('Pick at least one attribute, or cards will show no options.', 'fluent-cart-elementor-blocks'),
+                'content_classes' => 'elementor-panel-alert elementor-panel-alert-warning',
+                'conditions'      => self::noneWarningConditions($advancedOn, 'swatch_group_ids', 'swatch_show_other_groups'),
+            ]
+        );
+
         $host->add_control(
             'swatch_group_card_attribute',
             [
@@ -247,7 +280,8 @@ class ProductAttributeSwatches
             'swatch_selected_position',
             [
                 'label'       => esc_html__('Where It Appears', 'fluent-cart-elementor-blocks'),
-                'type'        => Controls_Manager::SELECT,
+                'type'        => Controls_Manager::CHOOSE,
+                'toggle'      => false,
                 'default'     => 'name',
                 'options'     => self::positionOptions(),
                 // Attribute rows are not drawn while this tab's switch is off, so the position does nothing then.
@@ -347,6 +381,7 @@ class ProductAttributeSwatches
                     'yes' => esc_html__('Show', 'fluent-cart-elementor-blocks'),
                     'no'  => esc_html__('Hide', 'fluent-cart-elementor-blocks'),
                 ],
+                'description' => esc_html__('e.g. 6 pods', 'fluent-cart-elementor-blocks'),
                 'condition' => $simpleOn,
             ]
         );
@@ -369,7 +404,8 @@ class ProductAttributeSwatches
             'swatch_simple_selected_position',
             [
                 'label'      => esc_html__('Where It Appears', 'fluent-cart-elementor-blocks'),
-                'type'       => Controls_Manager::SELECT,
+                'type'       => Controls_Manager::CHOOSE,
+                'toggle'     => false,
                 'default'    => 'name',
                 'options'     => self::positionOptions(),
                 'conditions' => ['relation' => 'and', 'terms' => $positionTerms],
@@ -423,11 +459,33 @@ class ProductAttributeSwatches
     }
 
     /** Where the selected choice appears; the layout cards and Classic offer the same two places. */
+    /**
+     * Conditions for the "pick at least one" warning: the given conditions, no attribute picked (an empty
+     * multi-select is loosely equal to '' in the editor) and Also Show set to No.
+     */
+    public static function noneWarningConditions(array $condition, $groupIdsKey, $showOtherKey)
+    {
+        $terms = [];
+        foreach ($condition as $name => $value) {
+            $negated = substr($name, -1) === '!';
+            $terms[] = [
+                'name'     => $negated ? substr($name, 0, -1) : $name,
+                'operator' => is_array($value) ? ($negated ? '!in' : 'in') : ($negated ? '!=' : '=='),
+                'value'    => $value,
+            ];
+        }
+        $terms[] = ['name' => $groupIdsKey, 'operator' => '==', 'value' => ''];
+        $terms[] = ['name' => $showOtherKey, 'operator' => '==', 'value' => 'no'];
+
+        return ['relation' => 'and', 'terms' => $terms];
+    }
+
+    /** Where the selected choice appears, as a picture choice like Gutenberg's; the saved values are unchanged. */
     public static function positionOptions()
     {
         return [
-            'name'  => esc_html__('After the Label', 'fluent-cart-elementor-blocks'),
-            'below' => esc_html__('Below the Options', 'fluent-cart-elementor-blocks'),
+            'name'  => ['title' => esc_html__('After the Label', 'fluent-cart-elementor-blocks'), 'icon' => 'eicon-text-align-left'],
+            'below' => ['title' => esc_html__('Below the Options', 'fluent-cart-elementor-blocks'), 'icon' => 'eicon-v-align-bottom'],
         ];
     }
 
