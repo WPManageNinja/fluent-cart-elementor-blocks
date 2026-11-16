@@ -517,7 +517,7 @@ class ProductCardLayouts
             $lastGroup = $entry['group'] ?? null;
             $control = $entry['control'] + ['condition' => $condition];
             // Filled here, so reading saved settings on a render never queries the attribute groups.
-            if ($name === 'group_ids') {
+            if ($name === 'group_ids' || $name === 'hidden_group_ids') {
                 $control['options'] = ProductAttributeSwatches::groupOptions();
             }
             if (isset($entry['attribute'])) {
@@ -540,6 +540,9 @@ class ProductCardLayouts
             }
             if (!empty($entry['shownWith'])) {
                 $control['condition'][self::partKey($part, $entry['shownWith'], $layout)] = 'yes';
+            }
+            foreach ((array) ($entry['whenValue'] ?? []) as $other => $value) {
+                $control['condition'][self::partKey($part, $other, $layout)] = $value;
             }
             if (!empty($entry['shownWhenSelected'])) {
                 // List Products show the selected choice when their own select says Show, or is left on Same as
@@ -624,7 +627,8 @@ class ProductCardLayouts
      * Each part's settings: name => the block's attribute, the block's default, the control. Optional flags:
      * 'tab' and 'group' place it in a tab and a heading group; 'allSwitch' pairs a number with its All switch;
      * 'shownWith' shows it only while another setting is on; 'shownWhenSelected' follows the selected choice's
-     * effective state; 'unsetFollows' is a Show/Hide/Same select that is only passed on when set.
+     * effective state; 'unsetFollows' is a Show/Hide/Same select that is only passed on when set; 'whenValue'
+     * shows it only while other settings hold those values.
      */
     private static function partSettings()
     {
@@ -635,6 +639,8 @@ class ProductCardLayouts
                 'show_other_groups'  => ['tab' => 'attribute', 'attribute' => 'show_other_groups', 'unsetFollows' => true, 'default' => '', 'control' => ['label' => esc_html__('Also show attributes not listed here', 'fluent-cart-elementor-blocks'), 'type' => Controls_Manager::SELECT, 'options' => ['' => esc_html__('Automatic', 'fluent-cart-elementor-blocks'), 'yes' => esc_html__('Yes', 'fluent-cart-elementor-blocks'), 'no' => esc_html__('No', 'fluent-cart-elementor-blocks')], 'description' => esc_html__('Any other attribute a product has shows after the ones above.', 'fluent-cart-elementor-blocks')]],
                 'which_heading'      => ['tab' => 'attribute', 'control' => ['label' => esc_html__('Which Attributes to Show', 'fluent-cart-elementor-blocks'), 'type' => Controls_Manager::HEADING]],
                 'group_ids'          => ['tab' => 'attribute', 'attribute' => 'group_ids', 'default' => [], 'control' => ['label' => esc_html__('Attributes', 'fluent-cart-elementor-blocks'), 'type' => Controls_Manager::SELECT2, 'multiple' => true, 'label_block' => true, 'description' => esc_html__('Empty shows every attribute; rows follow the order you pick.', 'fluent-cart-elementor-blocks')]],
+                // Gutenberg's unticked rows. Core adds the other attributes on Yes, so the list only matters then (as in Bricks).
+                'hidden_group_ids'   => ['tab' => 'attribute', 'attribute' => 'hidden_group_ids', 'default' => [], 'whenValue' => ['show_other_groups' => 'yes'], 'control' => ['label' => esc_html__('Never Show These Attributes', 'fluent-cart-elementor-blocks'), 'type' => Controls_Manager::SELECT2, 'multiple' => true, 'label_block' => true, 'description' => esc_html__('They stay off the card even when the other attributes are added.', 'fluent-cart-elementor-blocks'), 'select2options' => ['placeholder' => esc_html__('None', 'fluent-cart-elementor-blocks')]]],
                 'max_visible'        => ['tab' => 'attribute', 'group' => 'card', 'attribute' => 'max_visible', 'default' => 3, 'allSwitch' => 'max_visible_all', 'control' => ['label' => esc_html__('Show Up To', 'fluent-cart-elementor-blocks'), 'type' => Controls_Manager::NUMBER, 'min' => 1, 'max' => 12, 'step' => 1, 'description' => esc_html__('Extras show as "+2", "+3"…', 'fluent-cart-elementor-blocks')]],
                 'max_visible_all'    => ['tab' => 'attribute', 'group' => 'card', 'control' => ['label' => esc_html__('Show All', 'fluent-cart-elementor-blocks'), 'type' => Controls_Manager::SWITCHER, 'return_value' => 'yes', 'label_on' => esc_html__('Yes', 'fluent-cart-elementor-blocks'), 'label_off' => esc_html__('No', 'fluent-cart-elementor-blocks'), 'description' => esc_html__('Every option shows on the card.', 'fluent-cart-elementor-blocks')]],
                 'show_group_name'    => ['tab' => 'attribute', 'group' => 'card', 'attribute' => 'show_group_name', 'default' => false, 'control' => ['label' => esc_html__('Show Label', 'fluent-cart-elementor-blocks'), 'type' => Controls_Manager::SWITCHER, 'description' => esc_html__('e.g. Color above the row.', 'fluent-cart-elementor-blocks')]],

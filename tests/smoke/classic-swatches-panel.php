@@ -32,7 +32,7 @@ foreach (['fluent_cart_shop_app', 'fluent_cart_product_carousel', 'fluent_cart_p
             return ($c[$name]['inner_tab'] ?? null) === $tab;
         }, $names);
     };
-    $test->same($inTab(['swatch_advanced_enabled', 'swatch_group_ids', 'swatch_max_visible', 'swatch_show_group_name', 'swatch_show_label'], $attributeTab), [true, true, true, true, true], "{$type}: the attribute settings sit in the attribute tab");
+    $test->same($inTab(['swatch_advanced_enabled', 'swatch_group_ids', 'swatch_hidden_group_ids', 'swatch_max_visible', 'swatch_show_group_name', 'swatch_show_label'], $attributeTab), [true, true, true, true, true, true], "{$type}: the attribute settings sit in the attribute tab");
     $test->same($inTab(['swatch_simple_enabled', 'swatch_simple_max_visible', 'swatch_simple_show_label', 'swatch_simple_label'], $listTab), [true, true, true, true], "{$type}: the option list settings sit in the list tab");
     $test->same(array_key_exists('swatch_advanced_enabled', $c['swatch_group_ids']['condition'] ?? []), true, "{$type}: the attribute tab's settings hide while its switch is off");
     $test->same(array_key_exists('swatch_simple_enabled', $c['swatch_simple_max_visible']['condition'] ?? []), true, "{$type}: the list tab's settings hide while its switch is off (the number used to show regardless)");

@@ -66,11 +66,12 @@ class ProductAttributeSwatches
 
     /**
      * @param mixed $value Saved select value
+     * @param int   $limit Ids kept; unticked attributes keep up to 1000, as core reads them
      * @return int[]
      */
-    public static function groupIds($value)
+    public static function groupIds($value, $limit = 20)
     {
-        $ids = array_map('absint', array_slice((array) $value, 0, 20));
+        $ids = array_map('absint', array_slice((array) $value, 0, $limit));
 
         return array_values(array_unique(array_filter($ids)));
     }
@@ -163,6 +164,22 @@ class ProductAttributeSwatches
                 ],
                 'description' => esc_html__('Any other attribute a product has shows after the ones above.', 'fluent-cart-elementor-blocks'),
                 'condition'   => $advancedOn,
+            ]
+        );
+
+        // Gutenberg's unticked rows. Core adds the other attributes on Yes, so the list only matters then (as in Bricks).
+        $host->add_control(
+            'swatch_hidden_group_ids',
+            [
+                'label'       => esc_html__('Never Show These Attributes', 'fluent-cart-elementor-blocks'),
+                'type'        => Controls_Manager::SELECT2,
+                'multiple'    => true,
+                'label_block' => true,
+                'options'     => self::groupOptions(),
+                'default'     => [],
+                'select2options' => ['placeholder' => esc_html__('None', 'fluent-cart-elementor-blocks')],
+                'description' => esc_html__('They stay off the card even when the other attributes are added.', 'fluent-cart-elementor-blocks'),
+                'condition'   => $advancedOn + ['swatch_show_other_groups' => 'yes'],
             ]
         );
 
@@ -465,6 +482,7 @@ class ProductAttributeSwatches
         $showOther = Arr::get($settings, 'swatch_show_other_groups');
         $swatchSettings = [
             'group_ids'          => self::groupIds(Arr::get($settings, 'swatch_group_ids', [])),
+            'hidden_group_ids'   => self::groupIds(Arr::get($settings, 'swatch_hidden_group_ids', []), 1000),
             // Show All is 0 in the swatches block, whatever the number says.
             'max_visible'        => Arr::get($settings, 'swatch_max_visible_all') === 'yes' ? 0 : max(1, min(12, (int) ($maxVisible ?: 3))),
             'show_label'         => Arr::get($settings, 'swatch_show_label') === 'yes',
