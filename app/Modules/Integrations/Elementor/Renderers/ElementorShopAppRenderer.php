@@ -35,6 +35,12 @@ class ElementorShopAppRenderer extends ShopAppRenderer
                 $this->cardElements,
                 48 * HOUR_IN_SECONDS
             );
+            // Masonry is cached with the cards, so a later AJAX page staggers as page 1 does.
+            set_transient(
+                'fc_el_masonry_' . $this->clientId,
+                (bool) Arr::get($config, 'masonry', false),
+                48 * HOUR_IN_SECONDS
+            );
 
             // Cache badge settings on the SAME lifecycle as the card layout (only
             // this uncached render path runs, never a cache hit), so AJAX

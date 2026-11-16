@@ -244,6 +244,9 @@ class ElementorIntegration
             \add_action('fluent_cart/product/group/after_image_block', $badgeHooks['after'], 10, 1);
         }
 
+        // Page 1 staggers its cards when the widget's Masonry is on; its later pages do the same.
+        $cardClass = get_transient('fc_el_masonry_' . $clientId) ? 'fct-product-card fct-card-masonry' : 'fct-product-card';
+
         ob_start();
         $isFirst = true;
 
@@ -257,7 +260,7 @@ class ElementorIntegration
                 $isFirst = false;
             }
             ?>
-            <article data-fluent-cart-shop-app-single-product data-fct-product-card="" class="fct-product-card" <?php echo $providerAttr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> aria-label="<?php echo esc_attr(sprintf(
+            <article data-fluent-cart-shop-app-single-product data-fct-product-card="" class="<?php echo esc_attr($cardClass); ?>" <?php echo $providerAttr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> aria-label="<?php echo esc_attr(sprintf(
                     /* translators: %s: product name. */
                     __('%s product card', 'fluent-cart-elementor-blocks'),
                     $product->post_title
