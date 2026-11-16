@@ -619,6 +619,10 @@ class ProductCardLayouts
             }
             $values[$entry['attribute']] = $entry['control']['type'] === Controls_Manager::SWITCHER ? $settings[$key] === 'yes' : $settings[$key];
         }
+        // Two pickers can hold the same attribute: never wins, as its label says.
+        if (!empty($values['group_ids']) && !empty($values['hidden_group_ids'])) {
+            $values['group_ids'] = array_values(array_diff(array_map('absint', (array) $values['group_ids']), array_map('absint', (array) $values['hidden_group_ids'])));
+        }
 
         return $values;
     }

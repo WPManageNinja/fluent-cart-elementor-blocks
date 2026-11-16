@@ -79,6 +79,12 @@ if ($productId) {
     $other = $groupsIn($render($card + ['layout_swatches_hidden_group_ids_framed' => [(string) $hide]]));
     $test->check(in_array($hide, $other, true), "another layout's unticked attributes are not used");
 
+    // The same attribute in both pickers stays off: never wins, as the label says.
+    $both = $groupsIn($render(['product_id' => $productId, 'card_elements' => [['_id' => 'sw1', 'element_type' => 'swatches', 'swatch_show_other_groups' => 'yes', 'swatch_group_ids' => [(string) $hide, (string) $keep], 'swatch_hidden_group_ids' => [(string) $hide]]]]));
+    $test->check(!in_array($hide, $both, true) && in_array($keep, $both, true), 'Classic: an attribute picked and unticked stays off');
+    $bothLayout = $groupsIn($render($card + ['layout_swatches_group_ids_compact' => [(string) $hide, (string) $keep], 'layout_swatches_hidden_group_ids_compact' => [(string) $hide]]));
+    $test->check(!in_array($hide, $bothLayout, true) && in_array($keep, $bothLayout, true), 'a layout card: an attribute picked and unticked stays off');
+
     // Past the group limit a long list keeps every id, up to core's 1000.
     $test->same(count(ProductAttributeSwatches::groupIds(range(1, 40), 1000)), 40, 'the unticked list is not cut at the group limit');
     $test->same(count(ProductAttributeSwatches::groupIds(range(1, 1500), 1000)), 1000, 'and is bounded at 1000, as core reads it');

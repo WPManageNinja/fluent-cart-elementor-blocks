@@ -480,9 +480,11 @@ class ProductAttributeSwatches
         // Widgets saved before these switches existed have no value; they stay on, as Gutenberg defaults them.
         // Left Automatic (unset), core keeps the old rule.
         $showOther = Arr::get($settings, 'swatch_show_other_groups');
+        $hiddenIds = self::groupIds(Arr::get($settings, 'swatch_hidden_group_ids', []), 1000);
         $swatchSettings = [
-            'group_ids'          => self::groupIds(Arr::get($settings, 'swatch_group_ids', [])),
-            'hidden_group_ids'   => self::groupIds(Arr::get($settings, 'swatch_hidden_group_ids', []), 1000),
+            // Two pickers can hold the same attribute: never wins, as its label says.
+            'group_ids'          => array_values(array_diff(self::groupIds(Arr::get($settings, 'swatch_group_ids', [])), $hiddenIds)),
+            'hidden_group_ids'   => $hiddenIds,
             // Show All is 0 in the swatches block, whatever the number says.
             'max_visible'        => Arr::get($settings, 'swatch_max_visible_all') === 'yes' ? 0 : max(1, min(12, (int) ($maxVisible ?: 3))),
             'show_label'         => Arr::get($settings, 'swatch_show_label') === 'yes',
