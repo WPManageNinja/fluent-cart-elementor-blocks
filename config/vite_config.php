@@ -17,6 +17,12 @@
         'src' => 'resources/elementor/swatch-pick-order.js',
         'isEntry' => true
     ],
+    'resources/elementor/swatch-sample-card.js' => [
+        'file' => 'swatch-sample-card.js',
+        'name' => 'swatch-sample-card',
+        'src' => 'resources/elementor/swatch-sample-card.js',
+        'isEntry' => true
+    ],
     'resources/elementor/pro-feature-guard.js' => [
         'file' => 'pro-feature-guard.js',
         'name' => 'pro-feature-guard',

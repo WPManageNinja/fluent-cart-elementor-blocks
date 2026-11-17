@@ -30,6 +30,8 @@ const inputs = [
     'resources/elementor/swatch-label-chips.js',
     // The Attributes picker keeps the order you pick. Built, not copied, so it needs its manifest entry too.
     'resources/elementor/swatch-pick-order.js',
+    // The sample card under each swatch tab's switch. Built, not copied, so it needs its manifest entry too.
+    'resources/elementor/swatch-sample-card.js',
 ];
 
 let viteConfig;

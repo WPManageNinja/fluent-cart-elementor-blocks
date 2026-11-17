@@ -568,6 +568,9 @@ class ProductCardLayouts
                 unset($control['condition']);
             }
             $widget->add_control(self::partKey($part, $name, $layout), $control);
+            if ($tab !== null && $name === $tabs[$tab]['switch']) {
+                $widget->add_control(self::partKey($part, 'sample_' . $tab, $layout), ProductAttributeSwatches::sampleCardControl($tab, 'layout_' . $part . '_', '_' . $layout, $condition));
+            }
         }
         if ($openTab !== null) {
             $widget->end_controls_tab();

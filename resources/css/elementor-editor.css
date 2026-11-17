@@ -287,3 +287,155 @@
     display: inline-flex;
     gap: 6px;
 }
+
+/* ── Quick-pick chips under a swatch row's Label Name (swatch-label-chips.js) ──
+   Pack / Plan / Size / Bundle. The pressed chip matches the text in the field. */
+.elementor-control.fct-swatch-label-chips .fct-label-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+}
+
+.elementor-control.fct-swatch-label-chips .fct-label-chip {
+    padding: 3px 10px;
+    border: 1px solid var(--e-a-border-color-bold, #d5d8dc);
+    border-radius: 999px;
+    background: transparent;
+    color: inherit;
+    font-size: 11px;
+    line-height: 1.6;
+    cursor: pointer;
+}
+
+.elementor-control.fct-swatch-label-chips .fct-label-chip:hover {
+    border-color: var(--e-a-color-primary-bold, #93003f);
+}
+
+.elementor-control.fct-swatch-label-chips .fct-label-chip[aria-pressed="true"] {
+    border-color: var(--e-a-color-primary-bold, #93003f);
+    background: var(--e-a-bg-primary, #f3f3f3);
+    font-weight: 600;
+}
+
+.elementor-control.fct-swatch-label-chips .fct-label-chip:focus-visible {
+    outline: 2px solid var(--e-a-color-primary-bold, #93003f);
+    outline-offset: 1px;
+}
+
+/* ── The sample card under a swatch tab's switch (swatch-sample-card.js), as Gutenberg's preview ──
+   A light card in both editor themes, so its own text colours are set. */
+.fct-swatch-sample-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    background: #fafafa;
+    color: #1e1e1e;
+}
+
+.fct-swatch-sample-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 64px;
+    height: 64px;
+    border-radius: 6px;
+    background: #f0f0f1;
+}
+
+.fct-swatch-sample-image.is-list {
+    background: #f5efe6;
+}
+
+.fct-swatch-sample-details {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    gap: 8px;
+    min-width: 0;
+}
+
+.fct-swatch-sample-name {
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.fct-swatch-sample-row {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.fct-swatch-sample-title,
+.fct-swatch-sample-more,
+.fct-swatch-sample-off {
+    color: #50575e;
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+.fct-swatch-sample-selected {
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.fct-swatch-sample-options {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 5px;
+}
+
+.elementor-control-raw-html .fct-swatch-sample-option {
+    display: inline-flex;
+    align-items: center;
+    height: 22px;
+    margin: 0;
+    padding: 0 8px;
+    border: 1px solid #c3c4c7;
+    border-radius: 999px;
+    background: #ffffff;
+    color: #1e1e1e;
+    font-size: 11px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.elementor-control-raw-html .fct-swatch-sample-option[aria-checked="true"] {
+    border-color: #1e1e1e;
+    background: #1e1e1e;
+    color: #ffffff;
+}
+
+/* A colour dot: white gap, then a ring that darkens when picked. */
+.elementor-control-raw-html .fct-swatch-sample-option.is-dot {
+    width: 22px;
+    padding: 0;
+    border: 2px solid #ffffff;
+    box-shadow: 0 0 0 1px #c3c4c7;
+}
+
+.elementor-control-raw-html .fct-swatch-sample-option.is-dot[aria-checked="true"] {
+    box-shadow: 0 0 0 2px #1e1e1e;
+}
+
+.elementor-control-raw-html .fct-swatch-sample-option.is-sold-out {
+    border-style: dashed;
+    color: #757575;
+    text-decoration: line-through;
+    cursor: not-allowed;
+}
+
+.elementor-control-raw-html .fct-swatch-sample-option.is-sold-out.is-dot {
+    border-style: solid;
+    opacity: 0.3;
+}
+
+.elementor-control-raw-html .fct-swatch-sample-option:focus-visible {
+    outline: 2px solid var(--e-a-color-primary-bold, #93003f);
+    outline-offset: 2px;
+}
