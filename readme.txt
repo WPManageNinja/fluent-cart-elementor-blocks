@@ -4,7 +4,7 @@ Tags: fluentcart, elementor, ecommerce, checkout, cart, shop
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.1.1
+Stable tag: 1.1.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Elementor Blocks for FluentCart lets you build checkout flows, cart interactions, and product layouts visually in Elementor while using FluentCart’s native commerce logic and assets.
@@ -84,6 +84,11 @@ Are FluentCart assets loaded automatically?
 Yes. Required CSS and JavaScript assets are enqueued automatically when widgets are rendered.
 
 == Changelog ==
+
+= 1.1.2 (November 17, 2026) =
+- Added attribute filters to the Products widget: shoppers can filter products by attributes such as Color and Size.
+- Added product swatches to the product card: attribute and variation options show on the card, and shoppers can pick one there.
+- Added four FluentCart product card layouts to the Products, Related Products, Product Carousel and Product Card widgets: Classic, Compact, Floating and Framed. Masonry grid is a switch that works with every layout in the Products and Related Products widgets.
 
 = 1.1.1 (October 16, 2026) =
 - Added an option to the review widgets to show reviews from all products, or from specific products you choose, not just the current product.
