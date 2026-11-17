@@ -382,6 +382,15 @@ class ElementorIntegration
             true
         );
 
+        // The Attributes picker keeps the order you pick, as Gutenberg's list.
+        Enqueue::script(
+            'fluent-cart-elementor-swatch-pick-order',
+            'elementor/swatch-pick-order.js',
+            ['elementor-editor', 'jquery'],
+            FLUENTCART_VERSION,
+            true
+        );
+
         // The sample card under each swatch tab's switch. Reads its strings from fluentCartElementor.i18n.
         Enqueue::script(
             'fluent-cart-elementor-swatch-sample-card',
