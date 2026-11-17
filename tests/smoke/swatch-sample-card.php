@@ -18,7 +18,17 @@ $test = new FceTest('smoke/swatch-sample-card');
 // Not a skip: a run without swatches has nothing to prove, so it must not pass.
 $test->check(ProductAttributeSwatches::swatchesAvailable() && ProductCardLayouts::cardSettingsAvailable(), 'this FluentCart ships the swatches and the card layout settings');
 if (!ProductAttributeSwatches::swatchesAvailable() || !ProductCardLayouts::cardSettingsAvailable()) {
-    $test->finish();
+    // A cleared count falls back to the control's default, as the renderers do: Classic's 3 attribute and 4 list
+// options, a layout's own number. The script reads that default from the control, so each must have one.
+foreach (['swatch_max_visible' => 3, 'swatch_simple_max_visible' => 4] as $key => $default) {
+    $test->same((int) ($c[$key]['default']['size'] ?? 0), $default, "{$key}: a cleared count falls back to {$default}, as Classic's card");
+}
+foreach (['layout_swatches_max_visible_compact', 'layout_swatches_simple_max_visible_compact'] as $key) {
+    $test->check((int) ($c[$key]['default'] ?? 0) >= 1, "{$key}: a cleared count falls back to the layout's own number");
+}
+$test->check(strpos($script, 'settings.controls') !== false && strpos($script, 'control.default') !== false, 'the script falls back to the control default for a cleared count');
+
+$test->finish();
 }
 
 $layouts = array_values(array_filter(array_keys(ProductCardLayouts::options()), function ($layout) {
@@ -69,7 +79,7 @@ foreach (['fluent_cart_shop_app', 'fluent_cart_product_carousel', 'fluent_cart_p
 $read = ['advanced_enabled', 'max_visible', 'max_visible_all', 'show_group_name', 'show_label', 'selected_position', 'simple_enabled', 'simple_max_visible', 'simple_max_visible_all', 'simple_show_label', 'simple_label', 'simple_show_selected', 'simple_selected_position', 'sold_out_display'];
 $script = (string) file_get_contents(dirname(__DIR__, 2) . '/resources/elementor/swatch-sample-card.js');
 foreach ($read as $name) {
-    $test->check(strpos($script, "get('" . $name . "')") !== false, "the script reads {$name}");
+    $test->check(strpos($script, "'" . $name . "'") !== false, "the script reads {$name}");
     $test->check(isset($c['swatch_' . $name], $c['layout_swatches_' . $name . '_compact']), "{$name} exists for Classic and Compact");
 }
 

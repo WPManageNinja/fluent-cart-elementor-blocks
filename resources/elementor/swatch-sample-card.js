@@ -65,12 +65,24 @@
         return found;
     }
 
-    function readCount(value, all) {
+    // Classic's slider saves {size}, a layout's number saves the number; the renderer keeps it within 1–12.
+    // A cleared count falls back to the control's default (3 attribute, 4 list in Classic, the layout's own
+    // otherwise); Classic reads a typed 0 as cleared too, a layout reads it as one option.
+    function readCount(settings, key, all, isClassic) {
         if (all === 'yes') {
             return 0;
         }
-        // Classic's slider saves {size}, a layout's number saves the number; the renderer keeps it within 1–12.
+
+        var value = settings.get(key);
         var size = value && typeof value === 'object' ? value.size : value;
+        var control = settings.controls && settings.controls[key];
+        var fallback = control && control.default;
+
+        fallback = parseInt(fallback && typeof fallback === 'object' ? fallback.size : fallback, 10) || 1;
+
+        if (size === '' || size === null || size === undefined || (isClassic && !parseInt(size, 10))) {
+            size = fallback;
+        }
 
         return Math.max(1, Math.min(12, parseInt(size, 10) || 1));
     }
@@ -85,7 +97,7 @@
         if (type === 'attribute') {
             return {
                 enabled: get('advanced_enabled') !== '',
-                maxVisible: readCount(get('max_visible'), get('max_visible_all')),
+                maxVisible: readCount(settings, prefix + 'max_visible' + suffix, get('max_visible_all'), suffix === ''),
                 showName: get('show_group_name') === 'yes',
                 rowName: '',
                 showSelected: get('show_label') === 'yes',
@@ -98,7 +110,7 @@
 
         return {
             enabled: get('simple_enabled') !== '',
-            maxVisible: readCount(get('simple_max_visible'), get('simple_max_visible_all')),
+            maxVisible: readCount(settings, prefix + 'simple_max_visible' + suffix, get('simple_max_visible_all'), suffix === ''),
             showName: get('simple_show_label') === 'yes',
             rowName: get('simple_label') || '',
             // Left on Same as Attribute Products, it follows the attribute tab, as the card does.
