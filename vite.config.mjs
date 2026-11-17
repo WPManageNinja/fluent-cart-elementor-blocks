@@ -28,6 +28,8 @@ const inputs = [
     'resources/elementor/review-layout-picker.js',
     // Quick-pick chips under a swatch row's Label Name. Built, not copied, so it needs its manifest entry too.
     'resources/elementor/swatch-label-chips.js',
+    // The Attributes picker keeps the order you pick. Built, not copied, so it needs its manifest entry too.
+    'resources/elementor/swatch-pick-order.js',
 ];
 
 let viteConfig;

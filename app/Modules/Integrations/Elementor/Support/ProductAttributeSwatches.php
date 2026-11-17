@@ -166,8 +166,10 @@ class ProductAttributeSwatches
                 'label_block' => true,
                 'options'     => self::groupOptions(),
                 'default'     => [],
+                // Rows follow the order picked (swatch-pick-order.js), as Gutenberg's list.
+                'classes'     => 'fct-swatch-pick-order',
                 'select2options' => ['placeholder' => esc_html__('All attributes', 'fluent-cart-elementor-blocks')],
-                'description' => esc_html__('Empty shows every attribute.', 'fluent-cart-elementor-blocks'),
+                'description' => esc_html__('Empty shows every attribute; rows follow the order you pick.', 'fluent-cart-elementor-blocks'),
                 'condition'   => $advancedOn,
             ]
         );

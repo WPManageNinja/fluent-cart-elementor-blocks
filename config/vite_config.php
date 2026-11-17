@@ -11,6 +11,12 @@
         'src' => 'resources/elementor/swatch-label-chips.js',
         'isEntry' => true
     ],
+    'resources/elementor/swatch-pick-order.js' => [
+        'file' => 'swatch-pick-order.js',
+        'name' => 'swatch-pick-order',
+        'src' => 'resources/elementor/swatch-pick-order.js',
+        'isEntry' => true
+    ],
     'resources/elementor/pro-feature-guard.js' => [
         'file' => 'pro-feature-guard.js',
         'name' => 'pro-feature-guard',
