@@ -148,6 +148,8 @@ class ProductAttributeSwatches
             ]
         );
 
+        $host->add_control('swatch_sample_attribute', self::sampleCardControl('attribute', 'swatch_', '', $condition));
+
         $host->add_control(
             'swatch_which_heading',
             [
@@ -305,6 +307,8 @@ class ProductAttributeSwatches
             ]
         );
 
+        $host->add_control('swatch_sample_list', self::sampleCardControl('list', 'swatch_', '', $condition));
+
         $host->add_control(
             'swatch_group_card_list',
             [
@@ -456,6 +460,19 @@ class ProductAttributeSwatches
                 'condition'  => $condition,
             ]
         );
+    }
+
+    /**
+     * Gutenberg's sample card under a swatch tab's switch. swatch-sample-card.js draws it from the settings
+     * named prefix + setting + suffix, so Classic and every layout copy share it.
+     */
+    public static function sampleCardControl($type, $prefix, $suffix, array $condition)
+    {
+        return [
+            'type'      => Controls_Manager::RAW_HTML,
+            'raw'       => sprintf('<div class="fct-swatch-sample" data-type="%s" data-prefix="%s" data-suffix="%s"></div>', esc_attr($type), esc_attr($prefix), esc_attr($suffix)),
+            'condition' => $condition,
+        ];
     }
 
     /** Where the selected choice appears; the layout cards and Classic offer the same two places. */
