@@ -28,6 +28,8 @@ const inputs = [
     'resources/elementor/review-layout-picker.js',
     // Quick-pick chips under a swatch row's Label Name. Built, not copied, so it needs its manifest entry too.
     'resources/elementor/swatch-label-chips.js',
+    // The sample card under each swatch tab's switch. Built, not copied, so it needs its manifest entry too.
+    'resources/elementor/swatch-sample-card.js',
 ];
 
 let viteConfig;

@@ -382,6 +382,15 @@ class ElementorIntegration
             true
         );
 
+        // The sample card under each swatch tab's switch. Reads its strings from fluentCartElementor.i18n.
+        Enqueue::script(
+            'fluent-cart-elementor-swatch-sample-card',
+            'elementor/swatch-sample-card.js',
+            ['elementor-editor', 'fluent-cart-elementor-editor'],
+            FLUENTCART_VERSION,
+            true
+        );
+
         Enqueue::script(
             'fluent-cart-elementor-review-layout-picker',
             'elementor/review-layout-picker.js',
@@ -409,6 +418,33 @@ class ElementorIntegration
                     \__('Plan', 'fluent-cart-elementor-blocks'),
                     \__('Size', 'fluent-cart-elementor-blocks'),
                     \__('Bundle', 'fluent-cart-elementor-blocks'),
+                ],
+                // The sample card under each swatch tab's switch (swatch-sample-card.js), as Gutenberg's.
+                'swatchSample'      => [
+                    'cardPreview'  => \__('Card preview', 'fluent-cart-elementor-blocks'),
+                    'off'          => \__('Off: no options on the card.', 'fluent-cart-elementor-blocks'),
+                    'tee'          => \__('Classic Tee', 'fluent-cart-elementor-blocks'),
+                    'pods'         => \__('Espresso Pods', 'fluent-cart-elementor-blocks'),
+                    'color'        => \__('Color', 'fluent-cart-elementor-blocks'),
+                    'size'         => \__('Size', 'fluent-cart-elementor-blocks'),
+                    'option'       => \__('Option', 'fluent-cart-elementor-blocks'),
+                    'colors'       => [
+                        \__('Navy', 'fluent-cart-elementor-blocks'),
+                        \__('Mustard', 'fluent-cart-elementor-blocks'),
+                        \__('Sage', 'fluent-cart-elementor-blocks'),
+                        \__('Rust', 'fluent-cart-elementor-blocks'),
+                        \__('Sand', 'fluent-cart-elementor-blocks'),
+                        \__('Plum', 'fluent-cart-elementor-blocks'),
+                    ],
+                    /* translators: %s is a pack size, e.g. 6 */
+                    'podsCount'    => \__('%s pods', 'fluent-cart-elementor-blocks'),
+                    'sampler'      => \__('Sampler', 'fluent-cart-elementor-blocks'),
+                    /* translators: %s is an attribute value, e.g. XL */
+                    'soldOut'      => \__('%s, sold out', 'fluent-cart-elementor-blocks'),
+                    /* translators: %s is how many more options the card has */
+                    'more'         => \__('%s more', 'fluent-cart-elementor-blocks'),
+                    /* translators: %s is the picked value of each row, e.g. Navy · S */
+                    'selected'     => \__('Selected: %s', 'fluent-cart-elementor-blocks'),
                 ],
             ],
         ]);
