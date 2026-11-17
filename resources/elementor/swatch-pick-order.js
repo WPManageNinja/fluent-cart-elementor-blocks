@@ -1,10 +1,6 @@
 /**
- * The swatch Attributes picker keeps the order you pick, as Gutenberg's list does.
- *
- * Elementor saves a multi-select in the order of its options, so picking Size then Color saved Color
- * first. The widget marks the picker with fct-swatch-pick-order. Here a picked option moves to the end
- * of the list before it is selected, so the saved value and the chips follow the clicks. When the panel
- * opens, the options are put back in the saved order.
+ * Keeps the Attributes picker in the order you pick: Elementor saves a multi-select in option order.
+ * A picked option moves last before Select2 selects it; saved values are put back in order on open.
  */
 (function () {
     'use strict';
@@ -35,17 +31,22 @@
         return found;
     }
 
-    // The saved ids, in their saved order, go to the end of the list, so the chips show that order.
-    function restoreOrder(select) {
-        var settings = settingsFor(select);
-        var saved = settings && settings.get(select.getAttribute('data-setting'));
+    // The saved ids go to the end of the list, in their saved order. Options are matched by value, never by
+    // a selector built from the saved text.
+    function restoreOrder(select, settings) {
+        var saved = settings.get(select.getAttribute('data-setting'));
 
         if (!saved || !saved.length) {
             return;
         }
 
+        var byValue = {};
+        [].forEach.call(select.options, function (option) {
+            byValue[option.value] = option;
+        });
+
         [].concat(saved).forEach(function (id) {
-            var option = select.querySelector('option[value="' + String(id).replace(/"/g, '') + '"]');
+            var option = byValue[String(id)];
 
             if (option) {
                 select.appendChild(option);
@@ -63,8 +64,26 @@
             return;
         }
 
+        // The panel links the control to its container a moment after it is drawn; try again until it does.
+        var settings = settingsFor(select);
+
+        var tries = Number(select.getAttribute('data-fct-pick-tries') || 0);
+
+        if (!settings) {
+            if (tries < 20) {
+                select.setAttribute('data-fct-pick-tries', String(tries + 1));
+                window.setTimeout(schedule, 100);
+            }
+            return;
+        }
+
         select.setAttribute('data-fct-pick-order', '1');
-        restoreOrder(select);
+        restoreOrder(select, settings);
+
+        // Undo, redo and a reset set the saved value again: put the order back after each of them.
+        settings.on('change:' + select.getAttribute('data-setting'), function () {
+            restoreOrder(select, settings);
+        });
 
         // Before Select2 selects it: the option moves last, so the change Elementor saves has it last.
         window.jQuery(select).on('select2:selecting', function (event) {
@@ -125,22 +144,6 @@
         }).observe(document.documentElement, {
             childList: true,
             subtree: true,
-        });
-    }
-
-    // Undo and redo set the saved value back without moving the options, so the order is restored after them.
-    if (window.$e && window.$e.commands && typeof window.$e.commands.on === 'function') {
-        window.$e.commands.on('run:after', function (component, command) {
-            if (String(command).indexOf('document/history') === 0) {
-                // Elementor re-applies the saved value to the select just after the command, so wait for it.
-                window.setTimeout(function () {
-                    var selects = document.querySelectorAll(CONTROL + ' select[data-fct-pick-order]');
-
-                    for (var i = 0; i < selects.length; i++) {
-                        restoreOrder(selects[i]);
-                    }
-                }, 60);
-            }
         });
     }
 
