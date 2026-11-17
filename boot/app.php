@@ -13,7 +13,7 @@ return function($file) {
     // plugin with nothing on screen to say why.
     add_action('plugins_loaded', function () use ($file) {
         new \FluentCartElementorBlocks\App\Services\PluginManager\Updater(
-            'https://fluentcart.com/',
+            'https://api.fluentcart.com/addons',
             $file,
             [
                 'version'           => FLUENTCART_ELEMENTOR_BLOCKS_VERSION,
