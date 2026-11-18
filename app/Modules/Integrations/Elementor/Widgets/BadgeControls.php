@@ -256,9 +256,9 @@ class BadgeControls
 
             return;
         }
-        $shown = function ($toggle) use ($soldOutCondition) {
+        $shown = function ($toggle, array $extraCondition = []) {
             $extra = [];
-            foreach ($soldOutCondition as $name => $value) {
+            foreach ($extraCondition as $name => $value) {
                 $extra[] = ['name' => $name, 'operator' => '==', 'value' => $value];
             }
             $terms = [
@@ -270,7 +270,7 @@ class BadgeControls
             return $extra ? ['relation' => 'and', 'terms' => array_merge($extra, [$either])] : $either;
         };
         self::badgeStyleSection($widget, 'sale_badge_style_section', esc_html__('Sale Badge', 'fluent-cart-elementor-blocks'), '{{WRAPPER}} .fct-sale-badge', 'sale_badge', [], $shown('show_sale_badge'));
-        self::badgeStyleSection($widget, 'sold_out_badge_style_section', esc_html__('Sold Out Badge', 'fluent-cart-elementor-blocks'), '{{WRAPPER}} .fct-sold-out-badge', 'sold_out_badge', [], $shown('show_sold_out_badge'));
+        self::badgeStyleSection($widget, 'sold_out_badge_style_section', esc_html__('Sold Out Badge', 'fluent-cart-elementor-blocks'), '{{WRAPPER}} .fct-sold-out-badge', 'sold_out_badge', [], $shown('show_sold_out_badge', $soldOutCondition));
     }
 
     /**
