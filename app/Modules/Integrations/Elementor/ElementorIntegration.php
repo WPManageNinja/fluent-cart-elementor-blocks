@@ -119,6 +119,8 @@ class ElementorIntegration
 
         // Disable FluentCart core's auto single product rendering when a Theme Builder template is active
         \add_filter('fluent_cart/disable_auto_single_product_page', [$this, 'maybeDisableAutoSingleProduct']);
+        // Core appends reviews to the product content; a Theme Builder single template places its own reviews widget.
+        \add_filter('fluent_cart/product/append_reviews_to_content', [$this, 'maybeSkipReviewAppendForSingleTemplate'], 10, 2);
     }
 
     public function registerCategories($elements_manager)
@@ -773,5 +775,16 @@ class ElementorIntegration
         $documents = $module->get_conditions_manager()->get_documents_for_location('single');
 
         return !empty($documents) ? true : $disable;
+    }
+
+    public function maybeSkipReviewAppendForSingleTemplate($append, $postId)
+    {
+        if (!$append || !is_singular('fluent-products') || !class_exists('\ElementorPro\Modules\ThemeBuilder\Module')) {
+            return $append;
+        }
+
+        $documents = \ElementorPro\Modules\ThemeBuilder\Module::instance()->get_conditions_manager()->get_documents_for_location('single');
+
+        return empty($documents);
     }
 }
