@@ -3,6 +3,7 @@
 namespace FluentCartElementorBlocks\App\Modules\Integrations\Elementor\Renderers;
 
 use FluentCart\Api\Resource\ShopResource;
+use FluentCart\Api\Taxonomy;
 use FluentCart\App\Helpers\Helper;
 use FluentCart\App\Hooks\Handlers\ShortCodes\ShopAppHandler;
 use FluentCart\Framework\Support\Arr;
@@ -98,7 +99,8 @@ class ElementorShopAppHandler extends ShopAppHandler
         $defaultTerms = Helper::parseTermIdsForFilter($defaultFilters);
         $mergedTerms = Helper::mergeTermIdsForFilter($defaultTerms, $urlTerms);
 
-        $filters = array_merge($filters, $this->urlFilters);
+        // URL term ids reach the query via taxonomy_filters; replacing the taxonomy settings would drop show_empty and the label.
+        $filters = array_merge($filters, array_diff_key($this->urlFilters, Taxonomy::getTaxonomies()));
 
         // Auto-scope to the queried term on a product taxonomy archive (parity
         // with the Divi module) — this is what makes the Product Category
